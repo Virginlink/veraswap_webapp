@@ -1,0 +1,620 @@
+import { createGlobalStyle} from "styled-components"
+export const GlobalStyles = createGlobalStyle`
+    body {
+        margin: 0;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        min-height: 100vh;
+        background-position: 0px -30vh;
+        background-repeat: no-repeat;
+        background-color: ${({theme}) => theme.bodyBackgroundColor};
+        ${({theme}) => theme.bodyBackground === 'radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 122, 0.1) 0%, rgba(255, 255, 255, 0) 100%)' ? 'background: radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 122, 0.1) 0%, rgba(255, 255, 255, 0) 100%);' : ''}
+    }
+
+    .navbar-pages-container a {
+        display: flex;
+        flex-flow: row nowrap;
+        border-radius: 3rem;
+        outline: none;
+        cursor: pointer;
+        text-decoration: none;
+        color: ${({theme}) => theme.pageLinkText};
+        font-size: 1rem;
+        width: fit-content;
+        margin: 0px 12px;
+        font-weight: 500;
+    }
+    
+    .navbar-pages-container a:hover {
+        color: ${({theme}) => theme.pageLinkTextonHover};
+    }
+    
+    .navbar-pages-container a:nth-child(1) {
+        font-weight: bold;
+        color: ${({theme}) => theme.pageLinkTextPrimary};
+    }
+
+    .connect-to-wallet-button {
+        text-align: center;
+        outline: none;
+        text-decoration: none;
+        -webkit-box-pack: center;
+        justify-content: center;
+        position: relative;
+        z-index: 1;
+        font-size: 16px;
+        display: flex;
+        flex-flow: row nowrap;
+        width: 100%;
+        -webkit-box-align: center;
+        align-items: center;
+        padding: 0.35rem 0.5rem;
+        border-radius: 12px;
+        cursor: pointer;
+        user-select: none;
+        font-weight: 500;
+        background-color: ${({theme}) => theme.connectToWalletBackgroundColor};
+        border: 1px solid ${({theme}) => theme.connectToWalletBorderColor};
+        color: ${({theme}) => theme.connectToWalletText};
+    }
+
+    .modal-content-button-title {
+        display: flex;
+        flex-flow: column nowrap;
+        -webkit-box-pack: center;
+        justify-content: center;
+        height: 100%;
+        color: ${({theme}) => theme.modalContentColor};
+    }
+
+    .modal-footer span {
+        color: ${({theme}) => theme.modalContentColor};
+    }
+
+    .modal-close-button {
+        cursor: pointer;
+        position: absolute;
+        right: 1rem;
+        top: 14px;
+        color: ${({theme}) => theme.modalContentColor};
+    }
+    
+    .connect-to-wallet-container:hover .connect-to-wallet-button {
+        border: 1px solid ${({theme}) => theme.connectToWalletonHover};
+    }
+
+    .modal-header {
+        display: flex;
+        flex-flow: row nowrap;
+        padding: 1rem;
+        font-size: 16px;
+        font-weight: 500;
+        background-color: ${({theme}) => theme.modalHeaderBackgroundColor};
+        color: ${({theme}) => theme.modalHeaderTextColor};
+    }
+
+    .modal-back-header {
+        display: flex;
+        flex-flow: row nowrap;
+        padding: 1rem;
+        font-size: 16px;
+        font-weight: 500;
+        background-color: ${({theme}) => theme.modalHeaderBackgroundColor};
+        color: ${({theme}) => theme.primary};
+    }
+    
+    .modal-content {
+        background-color: ${({theme}) => theme.modalContentBackgroundColor};
+        padding: 2rem;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+    }
+
+    .modal-content-button {
+        cursor: pointer;
+        background-color: ${({theme}) => theme.modalButtonBackgroundColor};
+        outline: none;
+        border: 1px solid ${({theme}) => theme.modalButtonBorderColor};
+        border-radius: 12px;
+        display: flex;
+        flex-direction: row;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        padding: 1rem;
+        margin-top: 0px;
+        opacity: 1;
+        width: 100% !important;
+    }
+
+
+    .modal-content-button-disabled {
+        display: flex;
+        flex-flow: row nowrap;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: start;
+        justify-content: flex-start;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        color: inherit;
+        width: 100%;
+        border: 1px solid ${({theme}) => theme.modalButtonDisabledBorderColor};
+    }
+
+    .connection-status {
+        display: flex;
+        flex-flow: row nowrap;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        justify-content: center;
+        padding: 1rem;
+        font-size: 16px;
+        font-family: 'Inter var', sans-serif;
+        color: ${({theme}) => theme.modalHeaderTextColor};
+    }
+
+    .connection-status svg {
+        margin-right: 1rem;
+        color: ${({theme}) => theme.primary};
+        animation: rotation 2s infinite linear;
+        -webkit-animation: rotation 2s infinite linear;
+        height: 16px;
+        width: 16px;
+    }
+
+    .connection-status svg path {
+        stroke: ${({theme}) => theme.primary};
+    }
+
+    @-webkit-keyframes rotation {
+		from {
+			-webkit-transform: rotate(0deg);
+		}
+		to {
+			-webkit-transform: rotate(359deg);
+		}
+    }
+
+    @keyframes rotation {
+		from {
+			transform: rotate(0deg);
+		}
+		to {
+			transform: rotate(359deg);
+		}
+    }
+
+    .retry-button {
+        cursor: pointer;
+        border-radius: 8px;
+        font-size: 12px;
+        color: ${({theme}) => theme.modalHeaderTextColor};
+        background-color: ${({theme}) => theme.retryButtonBackgroundColor};
+        margin-left: 1rem;
+        padding: 0.5rem;
+        font-weight: 600;
+        user-select: none;
+    }
+
+    .retry-button:hover {
+        background-color: ${({theme}) => theme.retryButtonBackgroundColoronHover};
+    }
+
+    .wallet-description {
+        background-color: ${({theme}) => theme.settingsMenuBackgroundColor};
+        outline: none;
+        border: 1px solid ${({theme}) => theme.modalButtonBorderColor};
+        border-radius: 12px;
+        display: flex;
+        flex-direction: row;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        padding: 1rem;
+        margin-top: 0px;
+        opacity: 1;
+        width: 100% !important;
+    }
+
+    .wallet-title {
+        display: flex;
+        flex-flow: row nowrap;
+        color: ${({theme}) => theme.modalHeaderTextColor};
+        font-size: 1rem;
+        font-weight: 500;
+    }
+
+    .wallet-caption {
+        color: ${({theme}) => theme.modalHeaderTextColor};
+        margin-top: 10px;
+        font-size: 12px;
+    }
+    
+    .modal-content-button:hover {
+        border-color: ${({theme}) => theme.modalButtonBorderColoronHover};
+    }
+
+    .modal-footer {
+        display: flex;
+        flex-flow: row wrap;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        justify-content: center;
+        margin-top: 2rem;
+        font-size: 16px;
+        color: ${({theme}) => theme.modalFooterText};
+    }
+    
+    .modal-footer-link {
+        text-decoration: none;
+        cursor: pointer;
+        color: ${({theme}) => theme.modalFooterLinkText};
+        font-weight: 500;
+        margin-left: 5px;
+    }
+    
+    .modal-footer-link:hover {
+        text-decoration: underline;
+        color: ${({theme}) => theme.modalFooterLinkText};
+    }
+
+    .navbar-action-button {
+        outline: none;
+        cursor: pointer;
+        position: relative;
+        width: 100%;
+        border: none;
+        margin: 0px;
+        height: 35px;
+        background-color: ${({theme}) => theme.navbarButtonBackgroundColor};
+        padding: 0.15rem 0.5rem;
+        border-radius: 0.5rem;
+        color: ${({theme}) => theme.navbarButtonIconColor};
+    }
+    
+    .navbar-action-button:hover {
+        background-color: ${({theme}) => theme.navbarButtonBackgroundColoronHover};
+    }
+
+    .navbar-action-button svg{
+        margin-top: 5px;
+        height: 20px;
+        width: 20px;
+        stroke: ${({theme}) => theme.modalContentColor};
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .settings-menu {
+        min-width: 20.125rem;
+        background-color: ${({theme}) => theme.settingsMenuBackgroundColor};
+        box-shadow: rgba(0, 0, 0, 0.01) 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 8px, rgba(0, 0, 0, 0.04) 0px 16px 24px, rgba(0, 0, 0, 0.01) 0px 24px 32px;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        font-size: 1rem;
+        position: absolute;
+        top: 4rem;
+        right: 0rem;
+        z-index: 200 !important;
+    }
+
+    .settings-title {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        font-weight: 600;
+        font-size: 14px;
+        color: ${({theme}) => theme.settingsTitleText};
+    }
+
+    .settings-option-title {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        font-weight: 400;
+        color: ${({theme}) => theme.settingsOptionTitleText};
+        font-size: 14px;
+    }
+    
+    .info-icon {
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        justify-content: center;
+        padding: 0.2rem;
+        border: none;
+        background: none ${({theme}) => theme.settingsInfoIconBackground};
+        outline: none;
+        cursor: default;
+        border-radius: 36px;
+        color: ${({theme}) => theme.settingsInfoIconColor};
+    }
+
+    .ant-tooltip-inner {
+        background-color: ${({theme}) => theme.tooltipBackgroundColor} !important;
+        color: ${({theme}) => theme.tooltipTextColor} !important;
+        box-shadow: rgba(0, 0, 0, 0.01) 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 8px, rgba(0, 0, 0, 0.04) 0px 16px 24px, rgba(0, 0, 0, 0.01) 0px 24px 32px !important;
+        padding: 0.9rem !important;
+        font-family: 'Inter var';
+        font-size: 16px;
+        border-radius: 12px !important;
+        line-height: 1.6rem;
+    }
+    
+    .ant-tooltip-arrow-content {
+        background-color: ${({theme}) => theme.tooltipArrowBackgroundColor} !important;
+    }
+
+    .tolerance-button {
+        cursor: pointer;
+        -webkit-box-align: center;
+        align-items: center;
+        height: 2rem;
+        border-radius: 36px;
+        font-size: 1rem;
+        width: auto;
+        min-width: 3.5rem;
+        border: 1px solid ${({theme}) => theme.toleranceButtonBorderColor};
+        outline: none;
+        background: ${({theme}) => theme.toleranceButtonBackgroundColor};
+        margin-right: 8px;
+        color: ${({theme}) => theme.toleranceButtonTextColor};
+    }
+    
+    .tolerance-button:hover, .tolerance-input-button:hover {
+        border-color: ${({theme}) => theme.toleranceButtonBorderColoronHover};
+    }
+    
+    .tolerance-active {
+        background: ${({theme}) => theme.toleranceButtonActiveBackgroundColor};
+        color: #FFF;
+    }
+
+    .tolerance-input-button {
+        color: rgb(0, 0, 0);
+        -webkit-box-align: center;
+        align-items: center;
+        border-radius: 36px;
+        font-size: 1rem;
+        width: auto;
+        min-width: 3.5rem;
+        border: 1px solid ${({theme}) => theme.toleranceButtonInputBorderColor};
+        outline: none;
+        background: ${({theme}) => theme.toleranceButtonInputBackgroundColor};
+        height: 2rem;
+        position: relative;
+        padding: 0px 0.75rem;
+        flex: 1 1 0%;
+    }
+    
+    .tolerance-input {
+        width: 100%;
+        height: 100%;
+        border: 0px;
+        border-radius: 2rem;
+        background: ${({theme}) => theme.toleranceInputBackgroundColor};
+        font-size: 16px;
+        outline: none;
+        color: ${({theme}) => theme.toleranceInputTextColor};
+        text-align: right;
+        font-family: 'Inrer var', 'sans-serif';
+    }
+    
+    .tolerance-input:focus .tolerance-input-button{
+        border: 1px solid rgb(255, 0, 122);
+    }
+
+    .tolerance-input-container span {
+        color: ${({theme}) => theme.deadlineTextColor};
+    }
+
+    .toggle-button {
+        border-radius: 12px;
+        border: none;
+        background: ${({theme}) => theme.toggleButtonBackgroundColor};
+        display: flex;
+        width: fit-content;
+        cursor: pointer;
+        outline: none;
+        padding: 0px;
+        user-select: none;
+    }
+    
+    .toggle-on {
+        padding: 0.35rem 0.6rem;
+        border-radius: 12px;
+        background: none;
+        color: ${({theme}) => theme.toggleButtonOnTextColor};
+        font-size: 1rem;
+        font-weight: 500;
+    }
+    
+    .toggle-on:hover {
+        opacity: ${({theme}) => theme.toggleButtonOnOpacityonHover};
+    }
+
+    .toggle-off {
+        padding: 0.35rem 0.6rem;
+        border-radius: 12px;
+        background: ${({theme}) => theme.toggleButtonOffBackgroundColor};
+        color: ${({theme}) => theme.toggleButtonOffTextColor};
+        font-size: 1rem;
+        font-weight: 400;
+    }
+    
+    .toggle-off:hover {
+        background: ${({theme}) => theme.toggleButtonOffBackgroundColoronHover};
+    }
+    
+    .toggle-active {
+        padding: 0.35rem 0.6rem;
+        border-radius: 12px;
+        background: ${({theme}) => theme.toggleActiveBackgroundColor};
+        color: #FFF;
+        font-size: 1rem;
+        font-weight: 500;
+    }
+
+    .confirmation-modal-container {
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        justify-content: center;
+        padding: 2rem 0px;
+        background-color: ${({theme}) => theme.confirmationModalBackgroundColor};
+        border-radius: 20px;
+    }
+
+    .confirmation-modal-header {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        width: 100%;
+        display: flex;
+        padding: 0 2rem;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        color: ${({theme}) => theme.modalContentColor};
+    }
+
+    .modal-divider {
+        width: 100%;
+        background-color: ${({theme}) => theme.modalDividerColor};
+        height: 1px;
+    }
+
+    .confirmation-modal-title {
+        box-sizing: border-box;
+        margin: 0px auto;
+        min-width: 0px;
+        font-family: 'Inter var', 'sans-serif';
+        font-weight: 500;
+        font-size: 20px;
+        color: ${({theme}) => theme.modalContentColor};
+    }
+
+    .confirmation-modal-content {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        font-weight: 500;
+        font-size: 20px;
+        color: ${({theme}) => theme.modalContentColor};
+        padding: 0 2rem;
+    }
+    
+    .confirmation-modal-content-bold {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        font-weight: 600;
+        font-size: 20px;
+        color: ${({theme}) => theme.modalContentBoldColor};
+        padding: 0 2rem;
+    }
+
+    .links-container {
+        min-width: 9.125rem;
+        background-color: ${({theme}) => theme.linksContainerBackgroundColor};
+        box-shadow: rgba(0, 0, 0, 0.01) 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 8px, rgba(0, 0, 0, 0.04) 0px 16px 24px, rgba(0, 0, 0, 0.01) 0px 24px 32px;
+        border-radius: 12px;
+        padding: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        font-size: 1rem;
+        position: absolute;
+        top: 4rem;
+        right: 0rem;
+        z-index: 100;
+    }
+    
+    .link {
+        flex: 1 1 0%;
+        padding: 0.5rem;
+        color: ${({theme}) => theme.linkTextColor};
+    }
+    
+    .link:hover {
+        color: ${({theme}) => theme.linkTextColoronHover};
+    }
+
+    .countdown {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        font-weight: 400;
+        text-align: center;
+        color: ${({theme}) => theme.countdownTextColor};
+        font-size: 16px;
+    }
+    
+    .countdown code {
+        color: ${({theme}) => theme.countdownTextColor};
+    }
+
+    .buy-button {
+        padding: 8px;
+        width: 160px;
+        font-weight: 500;
+        text-align: center;
+        border-radius: 8px;
+        outline: none;
+        border: 1px solid transparent;
+        text-decoration: none;
+        display: flex;
+        -webkit-box-pack: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        -webkit-box-align: center;
+        align-items: center;
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+        background-color: ${({theme}) => theme.buyButtonBackgroundColor};
+        color: white;
+    }
+    
+    .buy-button:hover {
+        background-color: ${({theme}) => theme.buyButtonBackgroundColoronHover};
+    }
+
+    @media only screen and (max-width: 960px) {
+        .navbar-actions-main-container {
+            flex-direction: row;
+            -webkit-box-pack: justify;
+            justify-content: space-between;
+            justify-self: center;
+            max-width: 960px;
+            padding: 1rem;
+            position: fixed;
+            bottom: 0px;
+            left: 0px;
+            width: 100%;
+            z-index: 99;
+            height: 72px;
+            border-radius: 12px 12px 0px 0px;
+            background-color: ${({theme}) => theme.navbarBottomBackgroundColorr} !important;
+        }
+
+        .settings-menu {
+            min-width: 18.125rem;
+            top: -22rem;
+        }
+    
+        .links-container {
+            top: -17.25rem;
+        }
+    }
+    
+`
