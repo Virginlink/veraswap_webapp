@@ -128,6 +128,9 @@ export const GlobalStyles = createGlobalStyle`
         width: 100% !important;
     }
 
+    .active-wallet-button {
+        background-color: ${({theme}) => theme.activeWalletButtonBackgroundColor} !important;
+    }
 
     .modal-content-button-disabled {
         display: flex;
@@ -167,6 +170,188 @@ export const GlobalStyles = createGlobalStyle`
 
     .connection-status svg path {
         stroke: ${({theme}) => theme.primary};
+    }
+
+    .wallet-main-container {
+        background-color: ${({theme}) => theme.connectionWalletBackgroundColor};
+        padding: 0rem;
+    }
+
+    .connected-wallet-container {
+        padding: 1rem;
+        border: 1px solid ${({theme}) => theme.modalButtonBorderColor};
+        border-radius: 20px;
+        position: relative;
+        display: grid;
+        row-gap: 12px;
+        margin: 0 1rem 20px 1rem;
+    }
+
+    .connected-wallet-title-container {
+        display: flex;
+        flex-flow: row nowrap;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        -webkit-box-align: center;
+        align-items: center;
+        font-weight: 400;
+        color: ${({theme}) => theme.modalHeaderTextColor};
+    }
+
+    .connected-wallet-title {
+        width: initial;
+        font-size: 0.825rem;
+        font-weight: 500;
+        color: ${({theme}) => theme.connectedWalletTextColor};
+    }
+
+    .change-wallet-button {
+        cursor: pointer;
+        text-align: center;
+        outline: none;
+        text-decoration: none;
+        display: flex;
+        -webkit-box-pack: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        -webkit-box-align: center;
+        align-items: center;
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+        border: 1px solid ${({theme}) => theme.changeWalletButtonBorderColor};
+        color: ${({theme}) => theme.primary};
+        background-color: transparent;
+        border-radius: 12px;
+        width: fit-content;
+        font-weight: 400;
+        margin-left: 8px;
+        font-size: 13px !important;
+        padding: 4px 6px;
+    }
+
+    .change-wallet-button:hover {
+        text-decoration: underline;
+        border: 1px solid ${({theme}) => theme.changeWalletButtonBorderColoronHover};
+    }
+
+    .wallet-address-container {
+        display: flex;
+        flex-flow: row nowrap;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        -webkit-box-align: center;
+        align-items: center;
+        font-weight: 400;
+        color: ${({theme}) => theme.modalHeaderTextColor};
+    }
+
+    .wallet-icon-wrapper {
+        height: 1rem;
+        width: 1rem;
+        border-radius: 1.125rem;
+    }
+
+    .connected-wallet-footer-container {
+        display: flex;
+        flex-flow: column nowrap;
+        padding: 1.5rem;
+        -webkit-box-flex: 1;
+        flex-grow: 1;
+        overflow: hidden !important;
+        background-color: ${({theme}) => theme.connectedWalletFooterBackgroundColor};
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+    }
+
+    .connected-wallet-footer-text {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        font-weight: 400;
+        font-size: 16px;
+        color: ${({theme}) => theme.modalHeaderTextColor};
+    }
+
+    .copy-address-button {
+        outline: none;
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-weight: 500;
+        color: ${({theme}) => theme.connectedWalletTextColor};
+        flex-shrink: 0;
+        display: flex;
+        text-decoration: none;
+        font-size: 0.825rem;
+    }
+
+    .copy-address-button:hover {
+        color: ${({theme}) => theme.connectedWalletTextColoronHover};
+    }
+
+    .wallet-address-link {
+        text-decoration: none;
+        color: ${({theme}) => theme.connectedWalletTextColor};
+        margin-left: 1rem;
+        font-size: 0.825rem;
+        display: flex;
+    }
+
+    .wallet-address-link:hover {
+        text-decoration: underline;
+        color: ${({theme}) => theme.connectedWalletTextColoronHover};
+    }
+
+    .wallet-details-container {
+        display: flex;
+        flex-direction: row;
+        -webkit-box-align: center;
+        align-items: center;
+        background-color: ${({theme}) => theme.navbarButtonBackgroundColor};
+        border-radius: 12px;
+        white-space: nowrap;
+        width: 100%;
+        cursor: pointer;
+    }
+
+    .wallet-balance {
+        color: ${({theme}) => theme.pageLinkTextPrimary};
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        padding-left: 0.75rem;
+        padding-right: 0.5rem;
+        font-weight: 500;   
+    }
+
+    .wallet-address-button {
+        text-align: center;
+        outline: none;
+        text-decoration: none;
+        -webkit-box-pack: center;
+        justify-content: center;
+        position: relative;
+        z-index: 1;
+        font-size: 16px;
+        display: flex;
+        flex-flow: row nowrap;
+        width: 100%;
+        -webkit-box-align: center;
+        align-items: center;
+        padding: 0.5rem;
+        border-radius: 12px;
+        cursor: pointer;
+        user-select: none;
+        background-color: ${({theme}) => theme.settingsMenuBackgroundColor};
+        border: 1px solid ${({theme}) => theme.navbarButtonBackgroundColor};
+        color: ${({theme}) => theme.pageLinkTextPrimary};
+        font-weight: 500;
+    }
+
+    .wallet-address-button:hover {
+        background-color: ${({theme}) => theme.walletAddressButtonBackgroundColoronHover});
+        border: 1px solid ${({theme}) => theme.primary};
     }
 
     @-webkit-keyframes rotation {
@@ -279,6 +464,15 @@ export const GlobalStyles = createGlobalStyle`
     
     .navbar-action-button:hover {
         background-color: ${({theme}) => theme.navbarButtonBackgroundColoronHover};
+    }
+
+    .network {
+        color: ${({theme}) => theme.networkColor};
+        background-color: ${({theme}) => theme.networkBackgroundColor};
+    }
+
+    .network:hover {
+        background-color: ${({theme}) => theme.navbarButtonBackgroundColor};
     }
 
     .navbar-action-button svg{

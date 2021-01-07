@@ -13,6 +13,7 @@ export default class Navbar extends Component {
         this.state={
             moonModalVisible: false,
             connectModalVisible: false,
+            walletConnected: false,
             settingsVisible: false,
             tolerance: '0.5',
             deadline: '',
@@ -44,6 +45,10 @@ export default class Navbar extends Component {
         } else if (prevState.modalVisible !== nextProps.modalVisible) {
             return {
                 connectModalVisible: nextProps.modalVisible
+            }
+        } else if (prevState.walletConnected !== nextProps.walletConnected) {
+            return {
+                walletConnected: nextProps.walletConnected
             }
         }
         return null
@@ -85,7 +90,7 @@ export default class Navbar extends Component {
 
     render() {
         //console.log(this.props.modalVisible)
-        const {moonModalVisible, settingsVisible, tolerance, deadline, expertModeOn, expertModeConfirmationModalVisible, darkModeOn, moreLinksVisible} = this.state;
+        const {moonModalVisible, settingsVisible, tolerance, deadline, expertModeOn, expertModeConfirmationModalVisible, darkModeOn, moreLinksVisible, walletConnected} = this.state;
         return (
             <div className="navbar-container">
                 <div className="navbar">
@@ -104,17 +109,42 @@ export default class Navbar extends Component {
                     </div>
                     <div className="navbar-actions-main-container">
                         <div className="navbar-actions-1">
+                            {
+                                this.props.network && 
+
+                                <button disabled style={{cursor: 'default'}} className="navbar-action-button network">
+                                    Ropsten
+                                </button>
+                            }
                             <span className="moon-button-container" onClick={() => this.setState({moonModalVisible: true})}>
                                 <div className="moon-button">
                                     MOON
                                 </div>
                                 <span className="noise" />
                             </span>
-                            <div className="connect-to-wallet-container" onClick={this.props.onModalToggle}>
-                                <button className="connect-to-wallet-button">
-                                    <p>Connect to a wallet</p>
-                                </button>
-                            </div>
+                            {
+                                walletConnected ?
+
+                                <div className="wallet-details-container">
+                                    <div className="wallet-balance" style={{flexShrink: 0}}>
+                                        0 ETH
+                                    </div>
+                                    <button className="wallet-address-button" onClick={this.props.onModalToggle}>
+                                        <p>0x09FD...2842</p>
+                                        <div style={{borderRadius: '50px', overflow: 'hidden', padding: 0, margin: 0, width: '16px', height: '16px', display: 'inline-block'}}>
+											<svg height="100" version="1.1" width="100" xmlns="http://www.w3.org/2000/svg"  xmlnsXlink="http://www.w3.org/1999/xlink" style={{overflow: 'hidden', position: 'relative'}}><desc style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}>Created with Raphaël 2.3.0</desc><defs style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></defs><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#f91e01" stroke="none" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#c81465" stroke="none" transform="matrix(0.6111,-0.7916,0.7916,0.6111,-5.5477,11.7858)" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#237fe1" stroke="none" transform="matrix(-0.7983,-0.6023,0.6023,-0.7983,1.3671,25.6874)" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#18b7f2" stroke="none" transform="matrix(0.9689,-0.2476,0.2476,0.9689,-13.2583,-0.0478)" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect></svg>
+										</div>
+                                    </button>
+                                </div>
+
+                                :
+
+                                <div className="connect-to-wallet-container" onClick={this.props.onModalToggle}>
+                                    <button className="connect-to-wallet-button">
+                                        <p>Connect to a wallet</p>
+                                    </button>
+                                </div>
+                            }
                         </div>
                         <div className="navbar-actions-2">
                             <div className="navbar-action-button-container">
