@@ -22,12 +22,12 @@ export default class Sale extends Component {
                                 <div className="sale-block-inner-grid">
                                     <div className="sale-block-title-container">
                                         <div className="sale-block-title">
-                                            MoonDeFi token sale
+                                            Veraswap token sale
                                         </div>
                                     </div>
                                     <div className="sale-block-content-container">
                                         <div className="sale-block-content">
-                                            The MOON Public Crowdsale will consist of 3 rounds with different prices ranging from $0.25 to $0.75 to allow more community members to participate in the sale. When the first round is sold out, the second round will begin immediately. You can withdraw tokens after the public sale ends.
+                                            The VRAP Public Crowdsale will consist of 3 rounds with different prices ranging from $0.05 to $0.12 to allow more community members to participate in the sale. When the first round is sold out, the second round will begin immediately. Your tokens are distributed immediately to your wallet.
                                         </div>
                                     </div>
                                 </div>
@@ -38,7 +38,7 @@ export default class Sale extends Component {
                     </div>
                     <div className="countdown-container">
                         <div className="countdown">
-                            Public Sale Round 1 ($0.5 per MOON) ends in <Countdown date={new Date(1612119600000)} renderer={this.returnDate} />
+                            Public Sale Round 1 ($0.05 per VRAP) ends in <Countdown date={new Date(1612119600000)} renderer={this.returnDate} />
                         </div>
                     </div>
                     <div className="sale-block-outer-container-wrapper" style={{gap: '24px'}}>
@@ -57,7 +57,7 @@ export default class Sale extends Component {
                                             _
                                         </div>
                                         <div className="sale-block-title">
-                                            MOON
+                                            VRAP
                                         </div>
                                     </div>
                                 </div>

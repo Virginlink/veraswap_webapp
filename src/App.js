@@ -9,10 +9,12 @@ import FortMatic from './assets/images/fortMatic.png';
 import Portis from './assets/images/portis.png';
 import {ThemeProvider} from "styled-components";
 import { GlobalStyles } from "./components/globalStyles";
-import { lightTheme, darkTheme } from "./components/Themes"
+import { lightTheme, darkTheme } from "./components/Themes";
 import './App.css';
 import './components/Navbar.css';
 import './components/Sale/Sale.css';
+
+const {ethers} = require('ethers');
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Fade timeout={{enter: 1000, exit: 2000}} ref={ref} {...props} />;
@@ -26,7 +28,9 @@ class App extends Component {
 			connectWalletModalVisible: false,
 			showWalletConnection: false,
 			selectedWallet: '',
-			connectionError: false
+			connectionError: false,
+			signer : null,
+			address : ''
 		}
 	}
 
@@ -52,6 +56,10 @@ class App extends Component {
 	toggleWalletConnectModal = () => this.setState({connectWalletModalVisible: !this.state.connectWalletModalVisible})
 
 	connectToWallet = (type) => {
+		console.log(type);
+		if(type === 'metamask'){
+			this.handleMetmask()
+		}
 		this.setState({selectedWallet: type, showWalletConnection: true})
 	}
 
@@ -76,6 +84,25 @@ class App extends Component {
 		)
 	}
 
+	async handleMetmask(){
+		try{
+			if(typeof window.ethereum !== undefined){
+			await window.ethereum.enable()
+			let provider = new ethers.providers.Web3Provider(window.ethereum);
+			let address = await provider.listAccounts()[0];
+			let signer = provider.getSigner();
+			this.setState({signer : signer,address : address});
+			}
+			else{
+				this.cancelWalletConnection();
+			}
+		}
+		catch(e){
+			console.log(e);
+			// this.setState({showWalletConnection : false})
+		}
+	}
+
 	render() {
 		const {connectWalletModalVisible, selectedWallet, showWalletConnection, connectionError} = this.state
 		return (
@@ -88,6 +115,7 @@ class App extends Component {
 					onModalToggle={this.toggleWalletConnectModal}
 					theme={this.state.theme}
 					onThemeToggle={this.toggleTheme}
+					address = {this.state.address}
 				/>
 				<Sale onModalOpenRequest={this.toggleWalletConnectModal} />
 				<Dialog
