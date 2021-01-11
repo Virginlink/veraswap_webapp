@@ -116,7 +116,7 @@ class App extends Component {
 					onThemeToggle={this.toggleTheme}
 					walletConnected={walletConnected}
 				/>
-				<Sale onModalOpenRequest={this.toggleWalletConnectModal} />
+				<Sale onModalOpenRequest={this.toggleWalletConnectModal} walletConnected={walletConnected} />
 				<Dialog
 					open={connectWalletModalVisible}
 					TransitionComponent={Transition}

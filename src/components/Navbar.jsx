@@ -11,6 +11,8 @@ export default class Navbar extends Component {
     constructor() {
         super()
         this.state={
+            loggedIn: false,
+            moonBalance: '',
             moonModalVisible: false,
             connectModalVisible: false,
             walletConnected: false,
@@ -20,7 +22,11 @@ export default class Navbar extends Component {
             expertModeOn: false,
             expertModeConfirmationModalVisible: false,
             darkModeOn: false,
-            moreLinksVisible: false
+            moreLinksVisible: false,
+            claimModalVisible: false,
+            walletAddress: '',
+            addressValid: false,
+            addressError: false,
         }
     }
 
@@ -89,8 +95,7 @@ export default class Navbar extends Component {
     }
 
     render() {
-        //console.log(this.props.modalVisible)
-        const {moonModalVisible, settingsVisible, tolerance, deadline, expertModeOn, expertModeConfirmationModalVisible, darkModeOn, moreLinksVisible, walletConnected} = this.state;
+        const {moonModalVisible, settingsVisible, tolerance, deadline, expertModeOn, expertModeConfirmationModalVisible, darkModeOn, moreLinksVisible, walletConnected, loggedIn, claimModalVisible, walletAddress, addressValid, moonBalance, addressError} = this.state;
         return (
             <div className="navbar-container">
                 <div className="navbar">
@@ -296,6 +301,13 @@ export default class Navbar extends Component {
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
                                                 Telegram
                                             </a>
+                                            {
+                                                loggedIn && (
+                                                    <button className="claim-moon-button" onClick={() => this.setState({claimModalVisible: true, moreLinksVisible: false})}>
+                                                        Claim MOON
+                                                    </button>
+                                                )
+                                            }
                                         </div>
                                     </ClickAwayListener>
                                 )}
@@ -334,6 +346,37 @@ export default class Navbar extends Component {
                                     </div>
                                 </div>
                                 <div className="coloured-modal-divider" />
+                                {
+                                    walletConnected && (
+                                        <>
+                                            <div className="grid-8px" style={{padding: '1rem', zIndex: 1}}>
+                                                <div className="grid" style={{justifyContent: 'center'}}>
+                                                    <img width="48px" src={Logo} alt="Logo" class="spinning-logo" />
+                                                    <div className="balance-large">0.00</div>
+                                                </div>
+                                            </div>
+                                            <div className="coloured-modal-content-rows-container">
+                                                <div className="coloured-modal-content-row">
+                                                    <div className="coloured-modal-text">
+                                                        Balance:
+                                                    </div>
+                                                    <div className="coloured-modal-text">
+                                                        0.00
+                                                    </div>
+                                                </div>
+                                                <div className="coloured-modal-content-row">
+                                                    <div className="coloured-modal-text">
+                                                        Unclaimed:
+                                                    </div>
+                                                    <div className="coloured-modal-text">
+                                                        0.0000
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="coloured-modal-divider" />
+                                        </>
+                                    )
+                                }
                                 <div className="coloured-modal-content">
                                     <div className="coloured-modal-content-rows-container">
                                         <div className="coloured-modal-content-row">
@@ -403,6 +446,72 @@ export default class Navbar extends Component {
                                     Turn On Expert Mode
                                 </div>
                             </button>
+                        </div>
+                    </div>
+                </Dialog>
+                <Dialog
+                    open={claimModalVisible}
+                    TransitionComponent={Transition}
+                    onClose={() => this.setState({claimModalVisible: false})}
+                    onBackdropClick={() => this.setState({claimModalVisible: false})}
+                    BackdropProps={{style: {backgroundColor: 'rgba(0, 0, 0, 0.3)'}}}
+                    PaperProps={{
+                        style: {
+                            width: '50vw',
+                            backgroundColor: '#FFF',
+                            boxShadow: 'rgba(47, 128, 237, 0.05) 0px 4px 8px 0px',
+                            maxWidth: '420px',
+                            maxHeight: '90vh',
+                            display: 'flex',
+                            borderRadius: '20px',
+                            margin: '0 0 2rem'
+                        }
+                    }}
+                >
+                    <div className="claim-modal-container">
+                        <div style={{display: 'grid', gridAutoRows: 'auto', rowGap: '24px', width: '100%'}}>
+                            <div className="gradient-header" style={{marginBottom: '-24px'}}>
+                                <div className="rotation" />
+                                <div className="noise" />
+                                <div style={{display: 'grid', gridAutoRows: 'auto', rowGap: '12px', padding: '1rem', zIndex: 1}}>
+                                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                                        <div className="coloured-modal-header-title">
+                                            Claim MOON Token
+                                        </div>
+                                        <svg style={{cursor: 'pointer'}} onClick={() => this.setState({claimModalVisible: false})} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sc-dTdPqK bptfJp"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                    </div>
+                                    <div style={{margin: 0, minWidth: 0, fontWeight: 700, color: '#FFF', fontSize: '36px'}}>0 MOON</div>
+                                </div>
+                            </div>
+                            <div className="modal-divider" />
+                            <div className="grid" style={{padding: '0px 1rem 1rem'}}>
+                                <div className="claim-description">
+                                    Enter an address to trigger a MOON claim. If the address has any claimable MOON it will be sent to them on submission.
+                                </div>
+                                <div style={{display: 'flex', flexFlow: 'column nowrap', position: 'relative', borderRadius: '1.25rem', zIndex: 1, width: '100%'}}>
+                                    <div className="claim-input-outer-container" style={{borderColor: !addressError ? 'auto' : 'rgb(255, 104, 113)'}}>
+                                        <div style={{flex: '1 1 0%', padding: '1rem'}}>
+                                            <div className="grid">
+                                                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 0, width: '100%', margin: 0, minWidth: 0}}>
+                                                    <div className="input-label">Recipient</div>
+                                                    {
+                                                        addressValid && (
+                                                            <a target="_blank" rel="noopener noreferrer" href="https://etherscan.io" class="external-link">(View on Etherscan)</a>
+                                                        )
+                                                    }
+                                                </div>
+                                                <input className="claim-input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Wallet Address or ENS name" pattern="^(0x[a-fA-F0-9]{40})$" value={walletAddress} onChange={e => this.setState({walletAddress: e.target.value})} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {
+                                        addressValid && moonBalance === 0 ? (
+                                            <div style={{fontSize: '16px', color: 'rgb(255, 104, 113)', textAlign: 'center', fontWeight: 500, marginTop: '0.5rem'}}>Address has no available claim</div>
+                                        ) : null
+                                    }
+                                    <button disabled className="buy-action-button" style={{marginTop: '1.75rem'}}>Claim MOON</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </Dialog>
