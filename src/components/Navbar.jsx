@@ -33,7 +33,6 @@ export default class Navbar extends Component {
         } else {
             this.setState({darkModeOn: true})
         }
-        this.setState({connectModalVisible: this.props.modalVisible})
     }
     
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -85,7 +84,7 @@ export default class Navbar extends Component {
 
     render() {
         //console.log(this.props.modalVisible)
-        const {moonModalVisible, settingsVisible, tolerance, deadline, expertModeOn, expertModeConfirmationModalVisible, darkModeOn, moreLinksVisible} = this.state;
+        const {moonModalVisible, settingsVisible, tolerance, deadline, expertModeOn, expertModeConfirmationModalVisible, darkModeOn, moreLinksVisible, walletConnected} = this.state;
         return (
             <div className="navbar-container">
                 <div className="navbar">
@@ -104,17 +103,42 @@ export default class Navbar extends Component {
                     </div>
                     <div className="navbar-actions-main-container">
                         <div className="navbar-actions-1">
+                            {
+                                this.props.network && 
+
+                                <button disabled style={{cursor: 'default'}} className="navbar-action-button network">
+                                    Ropsten
+                                </button>
+                            }
                             <span className="moon-button-container" onClick={() => this.setState({moonModalVisible: true})}>
                                 <div className="moon-button">
                                     VRAP
                                 </div>
                                 <span className="noise" />
                             </span>
-                            <div className="connect-to-wallet-container" onClick={this.props.onModalToggle}>
-                                <button className="connect-to-wallet-button">
-                                    <p>Connect to a wallet</p>
-                                </button>
-                            </div>
+                            {
+                                this.props.modalVisible ?
+
+                                <div className="wallet-details-container">
+                                    <div className="wallet-balance" style={{flexShrink: 0}}>
+                                        0 ETH
+                                    </div>
+                                    <button className="wallet-address-button" onClick={this.props.onModalToggle}>
+                                        <p>0x09FD...2842</p>
+                                        <div style={{borderRadius: '50px', overflow: 'hidden', padding: 0, margin: 0, width: '16px', height: '16px', display: 'inline-block'}}>
+											<svg height="100" version="1.1" width="100" xmlns="http://www.w3.org/2000/svg"  xmlnsXlink="http://www.w3.org/1999/xlink" style={{overflow: 'hidden', position: 'relative'}}><desc style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}>Created with Raphaël 2.3.0</desc><defs style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></defs><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#f91e01" stroke="none" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#c81465" stroke="none" transform="matrix(0.6111,-0.7916,0.7916,0.6111,-5.5477,11.7858)" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#237fe1" stroke="none" transform="matrix(-0.7983,-0.6023,0.6023,-0.7983,1.3671,25.6874)" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#18b7f2" stroke="none" transform="matrix(0.9689,-0.2476,0.2476,0.9689,-13.2583,-0.0478)" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect></svg>
+										</div>
+                                    </button>
+                                </div>
+
+                                :
+
+                                <div className="connect-to-wallet-container" onClick={this.props.onModalToggle}>
+                                    <button className="connect-to-wallet-button">
+                                        <p>Connect to a wallet</p>
+                                    </button>
+                                </div>
+                            }
                         </div>
                         <div className="navbar-actions-2">
                             <div className="navbar-action-button-container">
@@ -246,23 +270,23 @@ export default class Navbar extends Component {
                                 {moreLinksVisible && (
                                     <ClickAwayListener onClickAway={() => this.setState({moreLinksVisible: false})}>
                                         <div className="links-container">
-                                            <a className="link" target="_blank" rel="noopener noreferrer" href="https://info.moondefi.org/about/">
+                                            <a className="link" target="_blank" rel="noopener noreferrer" href="#">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                                                 About
                                             </a>
-                                            <a className="link" target="_blank" rel="noopener noreferrer" href="https://moondefi.org/docs/whitepaper.pdf">
+                                            <a className="link" target="_blank" rel="noopener noreferrer" href="#">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
                                                 Whitepaper
                                             </a>
-                                            <a className="link" target="_blank" rel="noopener noreferrer" href="https://info.moondefi.org/blog/moon">
+                                            <a className="link" target="_blank" rel="noopener noreferrer" href="#">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
                                                 VRAP
                                             </a>
-                                            <a className="link" target="_blank" rel="noopener noreferrer" href="https://twitter.com/moondefi_info">
+                                            <a className="link" target="_blank" rel="noopener noreferrer" href="#">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
                                                 Twitter
                                             </a>
-                                            <a className="link" target="_blank" rel="noopener noreferrer" href="https://t.me/moondefiofficialgroup">
+                                            <a className="link" target="_blank" rel="noopener noreferrer" href="#">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
                                                 Telegram
                                             </a>
