@@ -5,7 +5,7 @@ export const GlobalStyles = createGlobalStyle`
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         min-height: 100vh;
-        background-position: 0px -30vh;
+        background-position: 0px -30vh !important;
         background-repeat: no-repeat;
         background-color: ${({theme}) => theme.bodyBackgroundColor};
         ${({theme}) => theme.bodyBackground === 'radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 122, 0.1) 0%, rgba(255, 255, 255, 0) 100%)' ? 'background: radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 122, 0.1) 0%, rgba(255, 255, 255, 0) 100%);' : ''}
@@ -718,6 +718,235 @@ export const GlobalStyles = createGlobalStyle`
         padding: 0 2rem;
     }
 
+    .buy-modal-grid {
+        display: grid;
+        grid-auto-rows: auto;
+        row-gap: 24px;
+        width: 100%;
+        padding: 1rem;
+        background-color: ${({theme}) => theme.buyModalBackgroundColor};
+    }
+
+    .buy-modal-header {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        width: 100%;
+        display: flex;
+        padding: 0;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        color: ${({theme}) => theme.modalContentColor};
+    }
+
+    .buy-modal-title {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        font-family: 'Inter var', sans-serif;
+        font-weight: 600;
+        font-size: 20px;
+        color: ${({theme}) => theme.modalContentColor};
+    }
+
+    .buy-modal-container {
+        display: flex;
+        flex-flow: column nowrap;
+        position: relative;
+        border-radius: 20px;
+        background-color: ${({theme}) => theme.modalContentBackgroundColor};
+        z-index: 1;
+    }
+
+    .tokens-modal-container {
+        background-color: ${({theme}) => theme.tokensModalBackgroundColor};
+    }
+
+    .buy-inner-container {
+        border-radius: 20px;
+        width: 100%;
+        border: 1px solid ${({theme}) => theme.modalContentBackgroundColor};
+        background-color: ${({theme}) => theme.modalHeaderBackgroundColor};
+    }
+
+    .available-deposit-container {
+        display: flex;
+        flex-flow: row nowrap;
+        -webkit-box-align: center;
+        align-items: center;
+        color: ${({theme}) => theme.modalHeaderTextColor};
+        font-size: 0.75rem;
+        line-height: 1rem;
+        padding: 0.75rem 1rem 0px;
+    }
+
+    .available-deposit-inner-container {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        font-weight: 500;
+        font-size: 14px;
+        color: ${({theme}) => theme.settingsOptionTitleText};
+    }
+
+    .deposit-input-container input {
+        color: ${({theme}) => theme.settingsTitleText};
+        width: 0px;
+        position: relative;
+        font-weight: 500 !important;
+        outline: none;
+        border: none;
+        flex: 1 1 auto;
+        background-color: ${({theme}) => theme.buyModalBackgroundColor};
+        font-size: 24px !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 0px;
+        appearance: textfield;
+    }
+
+    .max-deposit-button {
+        outline: none;
+        height: 28px;
+        background-color: ${({theme}) => theme.connectToWalletBackgroundColor};
+        border: 1px solid ${({theme}) => theme.connectToWalletBackgroundColor};
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        margin-right: 0.5rem;
+        color: ${({theme}) => theme.primary};
+    }
+
+    .max-deposit-button:hover {
+        border: 1px solid ${({theme}) => theme.primary};
+    }
+
+    .token-select-button {
+        -webkit-box-align: center;
+        align-items: center;
+        height: 2.2rem;
+        font-size: 20px;
+        font-weight: 600;
+        background-color: ${({theme}) => theme.buyModalBackgroundColor};
+        color: ${({theme}) => theme.modalHeaderTextColor};
+        border-radius: 12px;
+        box-shadow: none;
+        outline: none;
+        cursor: pointer;
+        user-select: none;
+        border: none;
+        padding: 0px 0.5rem;
+    }
+
+    .token-select-button:hover, .token-select-button:focus {
+        background-color: ${({theme}) => theme.modalContentBackgroundColor};
+    }
+
+    .received-amount {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        font-size: 16px;
+        font-weight: 600;
+        color: ${({theme}) => theme.modalHeaderTextColor};
+    }
+
+    .buy-action-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+        background-color: ${({theme}) => theme.buyModalButtonBackgroundColor};
+        color: ${({theme}) => theme.buyModalButtonTextColor};
+        cursor: pointer;
+        box-shadow: none;
+        border: 1px solid transparent;
+        outline: none;
+        opacity: 1;
+        padding: 18px;
+        margin: 0px 0.5rem 0px 0px;
+        width: 100%;
+        font-weight: 500;
+        text-align: center;
+        border-radius: 12px;
+    }
+
+    .buy-action-button:hover {
+        background-color: ${({theme}) => theme.buyModalButtonBackgroundColoronHover};
+    }
+
+    .buy-action-button:disabled {
+        cursor: auto;
+        background-color: ${({theme}) => theme.buyModalInactiveButtonBackgroundColor};
+        color: ${({theme}) => theme.buyModalInactiveButtonTextColor};
+    }
+
+    .step {
+        min-width: 20px;
+        min-height: 20px;
+        background-color: ${({theme}) => theme.stepBackgroundColor};
+        border-radius: 50%;
+        color: rgb(255, 255, 255);
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        justify-content: center;
+        line-height: 8px;
+        font-size: 12px;
+    }
+
+    .step-bar {
+        width: 100%;
+        height: 2px;
+        background: ${({theme}) => theme.stepBarBackgroundColor};
+        opacity: 0.6;
+    }
+
+    .tokens-modal-title {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        font-weight: 500;
+        font-size: 16px;
+        color: ${({theme}) => theme.modalHeaderTextColor};
+    }
+
+    .individual-token {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        width: 100%;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        padding: 4px 20px;
+        height: 56px;
+        display: grid;
+        grid-template-columns: auto minmax(auto, 1fr) auto minmax(0px, 72px);
+        gap: 16px;
+        cursor: pointer;
+        opacity: 1;
+    }
+
+    .individual-token:hover {
+        background-color: ${({theme}) => theme.tokenHoverBackgroundColor};
+    }
+
+    .token-title {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        font-weight: 500;
+        font-size: 16px;
+        color: ${({theme}) => theme.modalHeaderTextColor};
+    }
+
     .links-container {
         min-width: 9.125rem;
         background-color: ${({theme}) => theme.linksContainerBackgroundColor};
@@ -781,6 +1010,93 @@ export const GlobalStyles = createGlobalStyle`
     
     .buy-button:hover {
         background-color: ${({theme}) => theme.buyButtonBackgroundColoronHover};
+    }
+
+    .claim-moon-button {
+        padding: 8px 16px;
+        width: 100%;
+        font-weight: 500;
+        text-align: center;
+        border-radius: 12px;
+        outline: none;
+        border: 1px solid transparent;
+        text-decoration: none;
+        display: flex;
+        -webkit-box-pack: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        -webkit-box-align: center;
+        align-items: center;
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+        background-color: ${({theme}) => theme.buyModalButtonBackgroundColor};
+        color: ${({theme}) => theme.buyModalButtonTextColor};
+    }
+
+    .claim-moon-button:hover {
+        background-color: ${({theme}) => theme.buyModalButtonBackgroundColoronHover};
+    }
+
+    .claim-modal-container {
+        background-color: ${({theme}) => theme.tokensModalBackgroundColor};
+    }
+
+    .claim-description {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        font-weight: 500;
+        font-size: 14px;
+        color: ${({theme}) => theme.countdownTextColor};
+    }
+
+    .claim-input-outer-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 1.25rem;
+        width: 100%;
+        border: 1px solid ${({theme}) => theme.modalContentBackgroundColor};
+        background-color: ${({theme}) => theme.modalHeaderBackgroundColor};
+        transition: border-color 300ms step-start 0s, color 500ms step-start 0s;
+    }
+
+    .input-label {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        font-weight: 500;
+        color: ${({theme}) => theme.pageLinkText};
+        font-size: 14px;
+    }
+
+    .claim-input {
+        font-size: 1.25rem !important;
+        outline: none;
+        border: none;
+        flex: 1 1 auto;
+        transition: color 300ms step-start 0s;
+        color: ${({theme}) => theme.primary};
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: 500;
+        width: 100%;
+        padding: 0px;
+        background-color: ${({theme}) => theme.tokensModalBackgroundColor};
+        appearance: textfield;
+    }
+
+    .external-link {
+        font-size: 14px !important;
+        color: ${({theme}) => theme.primary};
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .external-link:hover {
+        color: ${({theme}) => theme.primary};
+        text-decoration: underline;
     }
 
     @media only screen and (max-width: 960px) {

@@ -70,6 +70,16 @@ export const lightTheme = {
     walletAddressButtonBackgroundColoronHover: '#FFF',
     networkBackgroundColor: 'rgb(237, 238, 242)',
     networkColor: '#000',
+    buyModalBackgroundColor: '#FFF',
+    buyModalInactiveButtonBackgroundColor: 'rgb(237, 238, 242)',
+    buyModalInactiveButtonTextColor: 'rgb(136, 141, 155)',
+    buyModalButtonTextColor: '#FFF',
+    buyModalButtonBackgroundColor: 'rgb(255, 0, 122)',
+    buyModalButtonBackgroundColoronHover: 'rgb(230, 0, 110)',
+    stepBackgroundColor: 'rgb(206, 208, 217)',
+    stepBarBackgroundColor: 'linear-gradient(90deg, rgb(206, 208, 217) 0%, rgb(206, 208, 217) 80%)',
+    tokensModalBackgroundColor: '#FFF',
+    tokenHoverBackgroundColor: 'rgb(247, 248, 250)',
 }
 
 export const darkTheme = {
@@ -144,4 +154,14 @@ export const darkTheme = {
     walletAddressButtonBackgroundColoronHover: 'rgb(55, 59, 68)',
     networkBackgroundColor: '#2C2B33',
     networkColor: '#E26D06',
+    buyModalBackgroundColor: 'rgb(33, 36, 41)',
+    buyModalInactiveButtonBackgroundColor: 'rgb(64, 68, 79)',
+    buyModalInactiveButtonTextColor: 'rgb(108, 114, 132)',
+    buyModalButtonTextColor: '#FFF',
+    buyModalButtonBackgroundColor: 'rgb(33, 114, 229)',
+    buyModalButtonBackgroundColoronHover: 'rgb(25, 102, 212)',
+    stepBackgroundColor: 'rgb(86, 90, 105)',
+    stepBarBackgroundColor: 'linear-gradient(90deg, rgb(86, 90, 105) 0%, rgb(86, 90, 105) 80%)',
+    tokensModalBackgroundColor: 'rgb(33, 36, 41)',
+    tokenHoverBackgroundColor: 'rgb(44, 47, 54)',
 }
