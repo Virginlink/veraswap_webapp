@@ -6,10 +6,14 @@ import Metamask from './assets/images/metamask.png';
 import WalletConnect from './assets/images/walletConnect.svg';
 import CoinbaseWallet from './assets/images/coinbaseWallet.svg';
 import FortMatic from './assets/images/fortMatic.png';
-import Portis from './assets/images/portis.png';
+import PorTis from './assets/images/portis.png';
 import {ThemeProvider} from "styled-components";
 import { GlobalStyles } from "./components/globalStyles";
+import {PROVIDER,TOKEN_ABI,TOKEN_ADDRESS,TETHER_ABI,TETHER_ADDRESS,PRESALE_ABI,PRESALE_ADDRESS} from './utils/contracts';
 import { lightTheme, darkTheme } from "./components/Themes";
+import WalletConnectProvider from "@walletconnect/web3-provider";
+import Fortmatic from 'fortmatic';
+import Portis from '@portis/web3';
 import './App.css';
 import './components/Navbar.css';
 import './components/Sale/Sale.css';
@@ -33,7 +37,18 @@ class App extends Component {
 			walletConnectionActive: false,
 			activeWallet: '',
 			copied: false,
+			walletAddress : '',
+			ethBalance : '',
+			vrapBalance : '',
+			usdtBalance : '',
+			signer : null,
+			approved : false,
+			approving : false
 		}
+		this.fetchBalance = this.fetchBalance.bind(this);
+		this.buyWithEther = this.buyWithEther.bind(this);
+		this.approveTether = this.approveTether.bind(this);
+		this.buyWithTether = this.buyWithTether.bind(this);
 	}
 
 	componentDidMount() {
@@ -68,7 +83,183 @@ class App extends Component {
 		if(type === 'metamask'){
 			this.handleMetmask()
 		}
+		else if(type === 'walletConnect'){
+			this.handleWalletConnect()
+		}
+		else if(type === 'portis'){
+			this.handlePortisWallet()
+		}
+		else {
+			this.handleFormaticWallet()
+		}
 		this.setState({selectedWallet: type, showWalletConnection: true})
+	}
+
+	fetchBalance(){
+		if(this.state.walletAddress){
+		this.fetchEthBalance(this.state.walletAddress)
+		this.fetchVrapBalance(this.state.walletAddress)
+		this.fetchTetherBalance(this.state.walletAddress)
+		}
+	}
+
+	async approveTether(value){
+		this.setState({approving : true})
+		let contract = new ethers.Contract(TETHER_ADDRESS,TETHER_ABI,this.state.signer);
+		try{
+		let tx = await contract.approve(PRESALE_ADDRESS,parseFloat(value) * 10 ** 6)
+		if(tx.hash){
+			let intervalId = setInterval(()=>{
+				PROVIDER.getTransactionReceipt(tx.hash)
+				.then(res=>{
+					try{
+					if(typeof res!==null){
+						if(typeof res.blockNumber!==null){
+						this.setState({approved : true,approving : false});
+						clearInterval(intervalId);
+						}
+					}
+					}   
+					catch(e){
+						console.log(e)
+					}
+				})
+			},1000)
+		}
+		else{
+			this.setState({approving : false})
+			return false;
+		}
+		}
+		catch(e){
+			this.setState({approving : false})
+			return false;
+		}
+	}
+
+	async buyWithEther(value){
+		let contract  = new ethers.Contract(PRESALE_ADDRESS,PRESALE_ABI,this.state.signer);
+		let status = await contract.PurchaseWithEther({value : ethers.utils.parseEther(value)})
+		if(status.hash){
+			return status.hash
+		}
+		else { 
+			return false
+		}
+	}
+
+	async buyWithTether(value){
+		let contract  = new ethers.Contract(PRESALE_ADDRESS,PRESALE_ABI,this.state.signer);
+		let status = await contract.PurchaseWithTether(parseFloat(value) * 10 ** 6)
+		console.log(status)
+		if(status.hash){
+			return status.hash
+		}
+		else { 
+			this.setState({approved : false, approving : false})
+			return false
+		}
+	}
+
+	async handleMetmask(){
+		try{
+			if(typeof window.ethereum !== undefined){
+				let provider = new ethers.providers.Web3Provider(window.ethereum);
+				await window.ethereum.enable();
+				const address = await provider.listAccounts();
+				let signer = provider.getSigner();
+				this.fetchEthBalance(address[0])
+				this.fetchVrapBalance(address[0])
+				this.fetchTetherBalance(address[0])
+				this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'metamask',signer : signer})
+			}
+			else{
+				console.log("Error")
+			}
+		}
+		catch(e){
+			console.log(e)
+		}
+	}
+
+	async handleWalletConnect(){
+		try{
+			const web3Provider = new WalletConnectProvider({
+                infuraId: "b001cbdee80c4e52806e2e072e601ce4" // Required
+            });      
+			web3Provider.enable()
+			.catch(e=>{
+				console.log(e)
+			})
+			const provider = new ethers.providers.Web3Provider(web3Provider);
+			const address = await provider.listAccounts();
+			const signer = provider.getSigner();
+			this.fetchEthBalance(address[0])
+			this.fetchVrapBalance(address[0])
+			this.fetchTetherBalance(address[0])
+			this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'walletConnect',signer : signer})
+		}
+		catch(e){
+			console.log(e)
+		}
+	}
+
+	async handlePortisWallet(){
+		try{
+			const portis = new Portis('YOUR_DAPP_ID', 'kovan')
+			.catch(e=>{
+				console.log(e)
+			})
+			const provider = new ethers.providers.Web3Provider(portis.provider);
+			const address = await provider.listAccounts();
+			const signer = provider.getSigner();
+			this.fetchEthBalance(address[0])
+			this.fetchVrapBalance(address[0])
+			this.fetchTetherBalance(address[0])
+			this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'walletConnect',signer : signer})
+		}
+		catch(e){
+			console.log(e)
+		}
+	}
+
+	async handleFormaticWallet(){
+		try{
+			const fm = new Fortmatic('YOUR_API_KEY')
+			.catch(e=>{
+				console.log(e)
+			})
+			const provider = new ethers.providers.Web3Provider(fm.getProvider());
+			const address = await provider.listAccounts();
+			const signer = provider.getSigner();
+			this.fetchEthBalance(address[0])
+			this.fetchVrapBalance(address[0])
+			this.fetchTetherBalance(address[0])
+			this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'walletConnect',signer : signer})
+		}
+		catch(e){
+			console.log(e)
+		}
+	}
+
+	async fetchEthBalance(address){
+		let balance = await PROVIDER.getBalance(address);
+			balance = ethers.utils.formatEther(balance);  
+		this.setState({ethBalance : balance});
+	}
+
+	async fetchVrapBalance(address){
+		let contract = new ethers.Contract(TOKEN_ADDRESS,TOKEN_ABI,PROVIDER);
+		let balance	 = await contract.balanceOf(address)
+			balance = ethers.utils.formatEther(balance);
+		this.setState({vrapBalance : balance})
+	}
+
+	async fetchTetherBalance(address){
+		let contract = new ethers.Contract(TETHER_ADDRESS,TETHER_ABI,PROVIDER);
+		let balance	 = await contract.balanceOf(address)
+			balance = ethers.utils.formatEther(balance) * 10 ** 12;
+		this.setState({usdtBalance : balance})
 	}
 
 	cancelWalletConnection = () => {
@@ -121,8 +312,24 @@ class App extends Component {
 					theme={this.state.theme}
 					onThemeToggle={this.toggleTheme}
 					walletConnected={walletConnected}
+					walletAddress = {this.state.walletAddress}
+					ethBalance = {this.state.ethBalance}
+					vrapBalance = {this.state.vrapBalance}
 				/>
-				<Sale onModalOpenRequest={this.toggleWalletConnectModal} walletConnected={walletConnected} />
+				<Sale 
+					onModalOpenRequest={this.toggleWalletConnectModal} 
+					walletConnected={walletConnected} 
+					vrapBalance={this.state.vrapBalance}
+					ethBalance = {this.state.ethBalance}
+					usdtBalance = {this.state.usdtBalance}
+					address = {this.state.address}
+					fetchBalance={this.fetchBalance}
+					buyWithEther = {this.buyWithEther}
+					approved = {this.state.approved}
+					approving = {this.state.approving}
+					approveTether={this.approveTether}
+					buyWithTether = {this.buyWithTether}
+					/>
 				<Dialog
 					open={connectWalletModalVisible}
 					TransitionComponent={Transition}
@@ -219,10 +426,6 @@ class App extends Component {
 
 															'WalletConnect'
 
-															: activeWallet === 'coinbaseWallet' ?
-
-															'Coinbase Wallet'
-
 															: activeWallet === 'fortmatic' ?
 
 															'Fortmatic'
@@ -241,7 +444,7 @@ class App extends Component {
 														<div style={{borderRadius: '50px', overflow: 'hidden', padding: 0, margin: 0, width: '16px', height: '16px', display: 'inline-block'}}>
 															<svg height="100" version="1.1" width="100" xmlns="http://www.w3.org/2000/svg"  xmlnsXlink="http://www.w3.org/1999/xlink" style={{overflow: 'hidden', position: 'relative'}}><desc style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}>Created with Raphaël 2.3.0</desc><defs style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></defs><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#f91e01" stroke="none" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#c81465" stroke="none" transform="matrix(0.6111,-0.7916,0.7916,0.6111,-5.5477,11.7858)" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#237fe1" stroke="none" transform="matrix(-0.7983,-0.6023,0.6023,-0.7983,1.3671,25.6874)" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#18b7f2" stroke="none" transform="matrix(0.9689,-0.2476,0.2476,0.9689,-13.2583,-0.0478)" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect></svg>
 														</div>
-														<p>0x09FD...2842</p>
+														<p>{`${this.state.walletAddress}`.substring(0,6) + '...' + `${this.state.walletAddress}`.substring(37,42)}</p>
 													</div>
 												</div>
 												<div className="wallet-address-container">
@@ -265,7 +468,7 @@ class App extends Component {
 																<span style={{marginLeft: '4px', fontSize: '13px'}}>Copied</span>
 															</button>
 														}
-														<a target="_blank" rel="noopener noreferrer" href="https://etherscan.io" className="wallet-address-link">
+														<a target="_blank" rel="noopener noreferrer" href={`https://etherscan.io/address/${this.state.walletAddress}`} className="wallet-address-link">
 															<svg style={{marginRight: '3px', position: 'relative', top: '3px'}} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
 															<span style={{fontSize: '13px'}}>View on Etherscan</span>
 														</a>
@@ -288,10 +491,6 @@ class App extends Component {
 
 															'WalletConnect'
 
-															: selectedWallet === 'coinbaseWallet' ?
-
-															'Coinbase Wallet'
-
 															: selectedWallet === 'fortmatic' ?
 
 															'Fortmatic'
@@ -308,10 +507,6 @@ class App extends Component {
 															: selectedWallet === 'walletConnect' ?
 
 															'Connect to Trust Wallet, Rainbow Wallet and more...'
-
-															: selectedWallet === 'coinbaseWallet' ?
-
-															'Use Coinbase Wallet app on mobile device'
 
 															: selectedWallet === 'fortmatic' ?
 
@@ -339,7 +534,7 @@ class App extends Component {
 
 														<img src={FortMatic} alt="icon" width="24px" height="24px" />
 
-														: <img src={Portis} alt="icon" width="24px" height="24px" />
+														: <img src={PorTis} alt="icon" width="24px" height="24px" />
 													}
 												</div>
 											</div>
@@ -388,21 +583,6 @@ class App extends Component {
 													<img src={WalletConnect} alt="icon" />
 												</div>
 											</button>
-											<button className={`modal-content-button ${activeWallet === 'coinbaseWallet' && 'active-wallet-button'}`} onClick={() => this.connectToWallet('coinbaseWallet')} style={{display: 'flex', flexDirection: activeWallet === 'coinbaseWallet' && 'row'}}>
-												<div className="modal-content-button-title">
-													{
-														activeWallet === 'coinbaseWallet' &&
-
-														<div className="wallet-active-dot">
-															<div />
-														</div>
-													}
-													Coinbase Wallet
-												</div>
-												<div className="modal-content-button-icon">
-													<img src={CoinbaseWallet} alt="icon" />
-												</div>
-											</button>
 											<button className={`modal-content-button ${activeWallet === 'fortmatic' && 'active-wallet-button'}`} onClick={() => this.connectToWallet('fortmatic')} style={{display: 'flex', flexDirection: activeWallet === 'fortmatic' && 'row'}}>
 												<div className="modal-content-button-title">
 													{
@@ -430,7 +610,7 @@ class App extends Component {
 													Portis
 												</div>
 												<div className="modal-content-button-icon">
-													<img src={Portis} alt="icon" />
+													<img src={PorTis} alt="icon" />
 												</div>
 											</button>
 										</div>

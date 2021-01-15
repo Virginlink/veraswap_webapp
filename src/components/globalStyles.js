@@ -172,6 +172,32 @@ export const GlobalStyles = createGlobalStyle`
         stroke: ${({theme}) => theme.primary};
     }
 
+    .transaction-status {
+        display: flex;
+        flex-flow: row nowrap;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        justify-content: center;
+        padding: 0.1rem;
+        font-size: 16px;
+        font-family: 'Inter var', sans-serif;
+        color: ${({theme}) => theme.modalHeaderTextColor};
+    }
+
+    .transaction-status svg {
+        margin-right: 1rem;
+        color: ${({theme}) => theme.primary};
+        animation: rotation 2s infinite linear;
+        -webkit-animation: rotation 2s infinite linear;
+        height: 16px;
+        width: 16px;
+    }
+
+    .transaction-status svg path {
+        stroke: ${({theme}) => theme.primary};
+    }
+
     .wallet-main-container {
         background-color: ${({theme}) => theme.connectionWalletBackgroundColor};
         padding: 0rem;

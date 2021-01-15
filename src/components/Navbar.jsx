@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Tooltip } from 'antd';
 import { ClickAwayListener, Dialog, Fade } from '@material-ui/core';
 import Logo from '../assets/images/logo.png';
-
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Fade timeout={{enter: 1000, exit: 2000}} ref={ref} {...props} />;
 });
@@ -41,7 +40,7 @@ export default class Navbar extends Component {
         }
     }
     
-    static getDerivedStateFromProps(nextProps, prevState) {
+    static async getDerivedStateFromProps(nextProps, prevState) {
         if (prevState.theme !== nextProps.theme) {
             return {
                 darkModeOn: nextProps.theme === 'light' ? false : true
@@ -117,19 +116,19 @@ export default class Navbar extends Component {
                             }
                             <span className="moon-button-container" onClick={() => this.setState({moonModalVisible: true})}>
                                 <div className="moon-button">
-                                    VRAP
+                                    {this.props.vrapBalance === '' ? "VRAP" : parseFloat(this.props.vrapBalance).toFixed(3) + " VRAP"} 
                                 </div>
                                 <span className="noise" />
                             </span>
                             {
-                                this.props.modalVisible ?
+                                this.props.walletConnected ?
 
                                 <div className="wallet-details-container">
                                     <div className="wallet-balance" style={{flexShrink: 0}}>
-                                        0 ETH
+                                        {this.props.ethBalance === '' ? 0.00 : parseFloat(this.props.ethBalance).toFixed(3)} ETH
                                     </div>
                                     <button className="wallet-address-button" onClick={this.props.onModalToggle}>
-                                        <p>0x09FD...2842</p>
+                                        <p>{`${this.props.walletAddress}`.substring(0,6) + '...' + `${this.props.walletAddress}`.substring(37,42)}</p>
                                         <div style={{borderRadius: '50px', overflow: 'hidden', padding: 0, margin: 0, width: '16px', height: '16px', display: 'inline-block'}}>
 											<svg height="100" version="1.1" width="100" xmlns="http://www.w3.org/2000/svg"  xmlnsXlink="http://www.w3.org/1999/xlink" style={{overflow: 'hidden', position: 'relative'}}><desc style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}>Created with Raphaël 2.3.0</desc><defs style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></defs><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#f91e01" stroke="none" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#c81465" stroke="none" transform="matrix(0.6111,-0.7916,0.7916,0.6111,-5.5477,11.7858)" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#237fe1" stroke="none" transform="matrix(-0.7983,-0.6023,0.6023,-0.7983,1.3671,25.6874)" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#18b7f2" stroke="none" transform="matrix(0.9689,-0.2476,0.2476,0.9689,-13.2583,-0.0478)" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect></svg>
 										</div>
