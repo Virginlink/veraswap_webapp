@@ -148,7 +148,7 @@ export default class Sale extends Component {
                                 <div className="sale-block-inner-grid">
                                     <div className="sale-block-title-container">
                                         <div className="sale-block-title">
-                                            Virign Link Protocol token sale
+                                            VeraSwap token sale
                                         </div>
                                     </div>
                                     <div className="sale-block-content-container">
