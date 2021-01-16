@@ -62,13 +62,18 @@ export default class Sale extends Component {
        let status = await this.props.buyWithEther(this.state.depositAmount);
        if(status !== false){
             const hashArrayString = localStorage.getItem('hashData');
+            const tx = {
+                hash: status,
+                amount: parseFloat(this.state.depositAmount).toFixed(4),
+                summary: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} ETH`
+            }
             if (hashArrayString) {
                 let hashArray = JSON.parse(hashArrayString)
-                hashArray.data.push(status)
+                hashArray.data.push(tx)
                 localStorage.setItem('hashData', JSON.stringify(hashArray))
             } else {
                 const newHashArray = {
-                    data: [status]
+                    data: [tx]
                 }
                 localStorage.setItem('hashData', JSON.stringify(newHashArray))
             }
@@ -83,13 +88,18 @@ export default class Sale extends Component {
         let status = await this.props.buyWithTether(this.state.depositAmount);
         if(status !== false){
             const hashArrayString = localStorage.getItem('hashData');
+            const tx = {
+                hash: status,
+                amount: parseFloat(this.state.depositAmount).toFixed(4),
+                summary: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} USDT`
+            }
             if (hashArrayString) {
                 let hashArray = JSON.parse(hashArrayString)
-                hashArray.data.push(status)
+                hashArray.data.push(tx)
                 localStorage.setItem('hashData', JSON.stringify(hashArray))
             } else {
                 const newHashArray = {
-                    data: [status]
+                    data: [tx]
                 }
                 localStorage.setItem('hashData', JSON.stringify(newHashArray))
             }

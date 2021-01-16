@@ -46,7 +46,7 @@
 .sale-block-outer-container {
     display: grid;
     grid-auto-rows: auto;
-    background: radial-gradient(76.02% 75.41% at 1.84% 0%, rgb(255, 0, 122) 0%, rgb(33, 114, 229) 100%);
+    background: radial-gradient(76.02% 75.41% at 1.84% 0%, #DE0102 0%, #22162C 100%);
     border-radius: 12px;
     width: 100%;
     position: relative;
@@ -142,7 +142,7 @@
 .sale-block-2-outer-container {
     display: grid;
     grid-auto-rows: auto;
-    background: radial-gradient(91.85% 100% at 1.84% 0%, rgb(33, 114, 229) 0%, rgb(0, 0, 0) 100%);
+    background: radial-gradient(91.85% 100% at 1.84% 0%, #EDB56E 0%, rgb(24, 10, 10) 100%);
     border-radius: 12px;
     width: 100%;
     position: relative;
@@ -180,5 +180,5 @@
 }
 
 .eg {
-    color: rgba(222, 182, 1, 0.4);
+    color: rgba(223, 0, 4, 0.555);
 }

@@ -30,7 +30,7 @@ export default class Transactions extends Component {
                             <a style={{fontSize: '13px'}}>(clear all)</a>
                         </div>
                         {
-                            transactions.map((hash) => <Transaction hash={hash} />)
+                            transactions.map((tx) => <Transaction tx={tx} />)
                         }
                     </div>
 
