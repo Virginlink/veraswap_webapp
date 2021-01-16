@@ -487,11 +487,6 @@
 
 .wallet-active-dot {
     color: rgb(39, 174, 96);
-    display: flex;
-    -webkit-box-pack: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    align-items: center;
 }
 
 .wallet-active-dot div {

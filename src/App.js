@@ -294,7 +294,7 @@ class App extends Component {
 	}
 
 	render() {
-		const {connectWalletModalVisible, selectedWallet, showWalletConnection, connectionError, walletConnected, copied, walletConnectionActive, activeWallet} = this.state
+		const {connectWalletModalVisible, selectedWallet, showWalletConnection, connectionError, walletConnected, copied, walletConnectionActive, activeWallet, theme} = this.state
 		return (
 			<div>
 				<ThemeProvider theme={this.state.theme === 'light' ? lightTheme : darkTheme}>
@@ -303,7 +303,7 @@ class App extends Component {
 				<Navbar
 					modalVisible={connectWalletModalVisible}
 					onModalToggle={this.toggleWalletConnectModal}
-					theme={this.state.theme}
+					theme={theme}
 					onThemeToggle={this.toggleTheme}
 					walletConnected={walletConnected}
 					walletAddress = {this.state.walletAddress}

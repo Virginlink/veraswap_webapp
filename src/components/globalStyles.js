@@ -59,11 +59,11 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     .modal-content-button-title {
+        position: relative;
         display: flex;
-        flex-flow: column nowrap;
         -webkit-box-pack: center;
         justify-content: center;
-        height: 100%;
+        align-items: center;
         color: ${({theme}) => theme.modalContentColor};
     }
 

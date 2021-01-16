@@ -19,7 +19,7 @@ export default class Navbar extends Component {
             deadline: '',
             expertModeOn: false,
             expertModeConfirmationModalVisible: false,
-            darkModeOn: false,
+            theme: 'light',
             moreLinksVisible: false,
             claimModalVisible: false,
             walletAddress: '',
@@ -33,17 +33,14 @@ export default class Navbar extends Component {
         if (expertMode && expertMode === 'true') {
             this.setState({expertModeOn: true})
         }
-        if (this.props.theme === 'light') {
-            this.setState({darkModeOn: false})
-        } else {
-            this.setState({darkModeOn: true})
-        }
+        this.setState({theme: this.props.theme})
     }
     
-    static async getDerivedStateFromProps(nextProps, prevState) {
+    static getDerivedStateFromProps(nextProps, prevState) {
+        console.log(prevState.theme, nextProps.theme)
         if (prevState.theme !== nextProps.theme) {
             return {
-                darkModeOn: nextProps.theme === 'light' ? false : true
+                theme: nextProps.theme
             }
         } else if (prevState.modalVisible !== nextProps.modalVisible) {
             return {
@@ -88,7 +85,7 @@ export default class Navbar extends Component {
     }
 
     render() {
-        const {moonModalVisible, settingsVisible, tolerance, deadline, expertModeOn, expertModeConfirmationModalVisible, darkModeOn, moreLinksVisible, walletConnected, loggedIn, claimModalVisible, walletAddress, addressValid, moonBalance, addressError} = this.state;
+        const {moonModalVisible, settingsVisible, tolerance, deadline, expertModeOn, expertModeConfirmationModalVisible, theme, moreLinksVisible, walletConnected, loggedIn, claimModalVisible, walletAddress, addressValid, moonBalance, addressError} = this.state;
         return (
             <div className="navbar-container">
                 <div className="navbar">
@@ -254,8 +251,8 @@ export default class Navbar extends Component {
                                                         <div className="settings-option-title">Toggle Dark Mode</div>
                                                     </div>
                                                     <div className="toggle-button" onClick={this.props.onThemeToggle}>
-                                                        <span className={`toggle-on ${darkModeOn && 'toggle-active'}`}>On</span>
-                                                        <span className={darkModeOn ? 'toggle-on' : 'toggle-off'}>Off</span>
+                                                        <span className={`toggle-on ${theme === 'dark' && 'toggle-active'}`}>On</span>
+                                                        <span className={theme === 'dark' ? 'toggle-on' : 'toggle-off'}>Off</span>
                                                     </div>
                                                 </div>
                                             </div>
