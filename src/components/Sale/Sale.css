@@ -11,7 +11,6 @@
 }
 
 .empty-grid {
-    display: grid;
     grid-auto-rows: auto;
     row-gap: 20px;
     position: fixed;
@@ -178,4 +177,8 @@
     .sale-main-container {
         padding: 2rem 16px 16px;
     }
+}
+
+.eg {
+    color: rgba(222, 182, 1, 0.4);
 }

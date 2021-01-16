@@ -1,5 +1,6 @@
 import { Dialog, Fade } from '@material-ui/core'
 import { Tooltip } from 'antd';
+import ETH from '../../assets/images/eth.png'
 import React, { Component } from 'react'
 import Countdown from 'react-countdown'
 import {PRESALE_ABI,PRESALE_ADDRESS,PROVIDER} from '../../utils/contracts';
@@ -22,7 +23,7 @@ export default class Sale extends Component {
             ethPrice : '',
             txSuccess : false,
             txHash : '',
-            error  : true
+            error  : false
         }
     }
 
@@ -60,7 +61,18 @@ export default class Sale extends Component {
     async handleEthBuy(){
        let status = await this.props.buyWithEther(this.state.depositAmount);
        if(status !== false){
-           this.setState({txSuccess : true,txHash : status})
+            const hashArrayString = localStorage.getItem('hashData');
+            if (hashArrayString) {
+                let hashArray = JSON.parse(hashArrayString)
+                hashArray.data.push(status)
+                localStorage.setItem('hashData', JSON.stringify(hashArray))
+            } else {
+                const newHashArray = {
+                    data: [status]
+                }
+                localStorage.setItem('hashData', JSON.stringify(newHashArray))
+            }
+            this.setState({txSuccess : true, txHash : status})
        }
        else {
            this.setState({txSuccess : false, error : true})
@@ -70,7 +82,18 @@ export default class Sale extends Component {
     async handleTetherBuy(){
         let status = await this.props.buyWithTether(this.state.depositAmount);
         if(status !== false){
-            this.setState({txSuccess : true,txHash : status})
+            const hashArrayString = localStorage.getItem('hashData');
+            if (hashArrayString) {
+                let hashArray = JSON.parse(hashArrayString)
+                hashArray.data.push(status)
+                localStorage.setItem('hashData', JSON.stringify(hashArray))
+            } else {
+                const newHashArray = {
+                    data: [status]
+                }
+                localStorage.setItem('hashData', JSON.stringify(newHashArray))
+            }
+            this.setState({txSuccess : true, txHash : status})
         }
         else {
             this.setState({txSuccess : false, error : true})
@@ -148,8 +171,8 @@ export default class Sale extends Component {
                 <Dialog
                     open={buyModalVisible}
                     TransitionComponent={Transition}
-                    onClose={() => this.setState({buyModalVisible: false})}
-                    onBackdropClick={() => this.setState({buyModalVisible: false})}
+                    onClose={() => this.setState({buyModalVisible: false, txSuccess: false})}
+                    onBackdropClick={() => this.setState({buyModalVisible: false, txSuccess: false})}
                     BackdropProps={{style: {backgroundColor: 'rgba(0, 0, 0, 0.3)'}}}
                     PaperProps={{
                         style: {
@@ -168,9 +191,9 @@ export default class Sale extends Component {
                     <div className="buy-modal-grid">
                       <div className="buy-modal-header">
                         <div className="buy-modal-title">Transaction Successful</div>
-                        <svg style={{cursor: 'pointer'}} onClick={() => this.setState({buyModalVisible: false})} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sc-jnlKLf fEBVhk"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        <svg style={{cursor: 'pointer'}} onClick={() => this.setState({buyModalVisible: false, txSuccess: false})} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sc-jnlKLf fEBVhk"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                       </div>
-                        <p style={{width:'80%',marginLeft:'10%',textAlign:'center',lineHeight:'2rem'}}>
+                        <p className="connected-wallet-footer-text" style={{width:'80%',marginLeft:'10%',textAlign:'center',lineHeight:'2rem'}}>
                             It takes upto 5 minutes to mine your transaction. Once done your tokens will be automatically credited to your wallet address.
                             If you wish to track your transaction <a href={`https://kovan.etherscan.io/tx/${this.state.txHash}`} target="_blank">click here</a>
                         </p>
@@ -182,7 +205,7 @@ export default class Sale extends Component {
                             <svg style={{cursor: 'pointer'}} onClick={() => this.setState({buyModalVisible: false})} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sc-jnlKLf fEBVhk"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                         </div>
                         {this.state.error ?
-                        <p>Error occured while purchasing VRAP tokens. Please contact support.</p>
+                        <p className="connected-wallet-footer-text">Error occured while purchasing VRAP tokens. Please contact support.</p>
                         :
                         null
                         }
@@ -201,7 +224,7 @@ export default class Sale extends Component {
                                       {
                                         this.state.currentToken === "ETH" ?
                                         <span style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                                            <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} class="sc-fZwumE evMpaO" alt="USDT logo" src="https://bin.bnbstatic.com/static/images/home/coin-logo/ETH.png" />
+                                            <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} class="sc-fZwumE evMpaO" alt="ETH logo" src={ETH} />
                                             <span style={{margin: '0px 0.25rem 0px 0.75rem', fontSize: '20px'}}>ETH</span>
                                             <svg width="12" height="7" viewBox="0 0 12 7" fill="none" style={{margin: '0px 0.25rem 0px 0.5rem', height: '35%'}}><path d="M0.97168 1L6.20532 6L11.439 1" stroke="#AEAEAE"></path></svg>
                                         </span>
@@ -222,6 +245,8 @@ export default class Sale extends Component {
                                 this.state.currentToken === "ETH" ?
                                 <div className="received-amount">
                                     {
+                                    parseFloat(this.state.depositAmount) < 0 ?
+                                    0 : parseFloat(this.state.depositAmount) === 0 ? 0 : parseFloat(this.state.depositAmount) === 0. ? 0 :
                                      isNaN(parseFloat( (parseFloat(this.state.depositAmount) * parseFloat(this.state.ethPrice)) / parseFloat(this.state.price) ).toFixed(4)) ?
                                      0.0000 :
                                      parseFloat( (parseFloat(this.state.depositAmount) * parseFloat(this.state.ethPrice)) / parseFloat(this.state.price) ).toFixed(4)
@@ -231,6 +256,8 @@ export default class Sale extends Component {
                                 :
                                 <div className="received-amount">
                                     {
+                                        parseFloat(this.state.depositAmount) < 0 ?
+                                        0 : parseFloat(this.state.depositAmount) === 0 ? 0 : parseFloat(this.state.depositAmount) === 0. ? 0 :
                                       isNaN(parseFloat(parseFloat(this.state.depositAmount) / parseFloat(this.state.price) ).toFixed(4))
                                       ?
                                       0.0000
@@ -243,12 +270,12 @@ export default class Sale extends Component {
                         </div>
                         {this.state.currentToken === "ETH" ? 
                         <div className="buy-modal-header">
-                            <button onClick={()=>{this.handleEthBuy()}} className="buy-action-button">Buy Now</button>
+                            <button disabled={!this.state.depositAmount || parseFloat(this.state.depositAmount) === 0 || parseFloat(this.state.depositAmount) === 0. || parseFloat(this.state.depositAmount) < 0} onClick={()=>{this.handleEthBuy()}} className="buy-action-button">{this.state.depositAmount ? (parseFloat(this.state.depositAmount) === 0 || parseFloat(this.state.depositAmount) === 0. || parseFloat(this.state.depositAmount) < 0) ? 'Invalid amount' : "Approve" : 'Enter an amount'}</button>
                         </div>
                         :
                         <div className="buy-modal-header">
                             <button 
-                                disabled={this.props.approved || this.props.approving} 
+                                disabled={(!this.state.depositAmount || parseFloat(this.state.depositAmount) === 0 || parseFloat(this.state.depositAmount) === 0. || parseFloat(this.state.depositAmount) < 0)||(this.props.approved || this.props.approving)} 
                                 className="buy-action-button"
                                 onClick={()=>{this.props.approveTether(this.state.depositAmount)}}
                                 >
@@ -261,7 +288,7 @@ export default class Sale extends Component {
                                     </span>
                                 </div> 
                                 :
-                                "approve"
+                                this.state.depositAmount ? (parseFloat(this.state.depositAmount) === 0 || parseFloat(this.state.depositAmount) === 0. || parseFloat(this.state.depositAmount) < 0) ? 'Invalid amount' : "Approve" : 'Enter an amount'
                                 }
                             </button>
                             <button onClick={()=>{this.handleTetherBuy()}} disabled={!this.props.approved || this.props.approving} className="buy-action-button">Buy Now</button>
@@ -273,10 +300,10 @@ export default class Sale extends Component {
                             <div style={{display: 'grid', gridAutoRows: 'auto', justifyContent: 'center'}}>
                             <div style={{boxSizing: 'border-box', margin: 0, minWidth: 0, display: 'flex', padding: 0, alignItems: 'center', justifyContent: 'space-between', width: '200px'}}>
                                 <div style={{width: 'calc(100% - 20px)', display: 'flex', alignItems: 'center'}}>
-                                    <div className="step">1</div>
+                                    <div className={`step ${this.props.approved && 'step-active'}`}>1</div>
                                     <div className="step-bar"></div>
                                 </div>
-                                <div className="step">2</div>
+                                <div className={`step ${this.state.txSuccess && 'step-active'}`}>2</div>
                             </div>
                         </div>
                         }
@@ -338,12 +365,12 @@ export default class Sale extends Component {
 
                                                         :
 
-                                                        <div className="token-title" style={{whiteSpace: 'nowrap', overflow: 'hidden', maxWidth: '5rem', textOverflow: 'ellipsis', textAlign: 'right', position: 'relative', right: '-22px'}}>{parseFloat(this.props.usdtBalance).toFixed(4)}</div>
+                                                        <div className="token-title" style={{position: 'absolute', right: '10px'}}>{parseFloat(this.props.usdtBalance).toFixed(4)}</div>
                                                     }
                                                 </div>
                                             </div>
                                             <div onClick={()=>{this.setState({currentToken : "ETH",tokensModalVisible : false, buyModalVisible : true})}} className={this.state.currentToken === "USDT" ? "individual-token" : "individual-token token-disabled"}>
-                                                <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} alt="ETH logo" src="https://bin.bnbstatic.com/static/images/home/coin-logo/ETH.png" />
+                                                <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} alt="ETH logo" src={ETH} />
                                                 <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
                                                     <div className="token-title">ETH</div>
                                                 </div>
@@ -358,7 +385,7 @@ export default class Sale extends Component {
 
                                                         :
 
-                                                        <div className="token-title" style={{whiteSpace: 'nowrap', overflow: 'hidden', maxWidth: '5rem', textOverflow: 'ellipsis', textAlign: 'right', position: 'relative', right: '-22px'}}>{parseFloat(this.props.ethBalance).toFixed(4)}</div>
+                                                        <div className="token-title" style={{position: 'absolute', right: '10px'}}>{parseFloat(this.props.ethBalance).toFixed(4)}</div>
                                                     }
                                                 </div>
                                             </div>

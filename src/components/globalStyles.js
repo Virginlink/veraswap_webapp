@@ -8,7 +8,7 @@ export const GlobalStyles = createGlobalStyle`
         background-position: 0px -30vh !important;
         background-repeat: no-repeat;
         background-color: ${({theme}) => theme.bodyBackgroundColor};
-        ${({theme}) => theme.bodyBackground === 'radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 122, 0.1) 0%, rgba(255, 255, 255, 0) 100%)' ? 'background: radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 122, 0.1) 0%, rgba(255, 255, 255, 0) 100%);' : ''}
+        ${({theme}) => theme.bodyBackground === 'radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 122, 0.1) 0%, rgba(255, 255, 255, 0) 100%)' ? 'background: radial-gradient(50% 50% at 50% 50%, rgba(222, 1, 1, 0.1) 0%, rgba(255, 255, 255, 0) 100%);' : ''}
     }
 
     .navbar-pages-container a {
@@ -210,7 +210,7 @@ export const GlobalStyles = createGlobalStyle`
         position: relative;
         display: grid;
         row-gap: 12px;
-        margin: 0 1rem 20px 1rem;
+        margin: 0 0 20px 0;
     }
 
     .connected-wallet-title-container {
@@ -279,15 +279,14 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     .connected-wallet-footer-container {
-        display: flex;
         flex-flow: column nowrap;
         padding: 1.5rem;
         -webkit-box-flex: 1;
         flex-grow: 1;
-        overflow: hidden !important;
+        overflow: scroll !important;
         background-color: ${({theme}) => theme.connectedWalletFooterBackgroundColor};
-        border-bottom-left-radius: 20px;
-        border-bottom-right-radius: 20px;
+        border-radius: 20px;
+        min-height: 80px !important;
     }
 
     .connected-wallet-footer-text {
@@ -926,6 +925,10 @@ export const GlobalStyles = createGlobalStyle`
         font-size: 12px;
     }
 
+    .step-active {
+        background-color: ${({theme}) => theme.primary};
+    }
+
     .step-bar {
         width: 100%;
         height: 2px;
@@ -1140,7 +1143,7 @@ export const GlobalStyles = createGlobalStyle`
             z-index: 99;
             height: 72px;
             border-radius: 12px 12px 0px 0px;
-            background-color: ${({theme}) => theme.navbarBottomBackgroundColorr} !important;
+            background-color: ${({theme}) => theme.navbarBottomBackgroundColor} !important;
         }
 
         .settings-menu {
@@ -1150,6 +1153,14 @@ export const GlobalStyles = createGlobalStyle`
     
         .links-container {
             top: -17.25rem;
+        }
+    }
+
+    @media only screen and (max-width: 500px) {
+        .navbar-actions-main-container {
+            flex-direction: column;
+            align-items: flex-end;
+            height: 122px;
         }
     }
     
