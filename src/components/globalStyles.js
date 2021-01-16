@@ -1128,6 +1128,17 @@ export const GlobalStyles = createGlobalStyle`
         text-decoration: underline;
     }
 
+    .ant-notification-notice {
+        top: 3.25rem;
+        padding: 1rem !important;
+        border-radius: 8px !important;
+        background-color: ${({theme}) => theme.notificationBackgroundColor};
+    }
+
+    .ant-notification-notice-message, .ant-notification-close-icon {
+        color: ${({theme}) => theme.modalHeaderTextColor};
+    }
+
     @media only screen and (max-width: 960px) {
         .navbar-actions-main-container {
             flex-direction: row;

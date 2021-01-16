@@ -1,5 +1,5 @@
 import { Dialog, Fade } from '@material-ui/core'
-import { Tooltip } from 'antd';
+import { notification, Tooltip } from 'antd';
 import ETH from '../../assets/images/eth.png'
 import React, { Component } from 'react'
 import Countdown from 'react-countdown'
@@ -8,6 +8,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Fade timeout={{enter: 1000, exit: 2000}} ref={ref} {...props} />;
 });
 const {ethers} = require('ethers');
+
+const SuccessIcon = (
+    <div style={{color: 'rgb(39, 174, 96)'}}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" style={{position: 'relative', top: '4px'}} viewBox="0 0 24 24" fill="none" stroke="currentColor" color="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+    </div> 
+)
 export default class Sale extends Component {
 
     constructor() {
@@ -77,6 +83,12 @@ export default class Sale extends Component {
                 }
                 localStorage.setItem('hashData', JSON.stringify(newHashArray))
             }
+            notification['info']({
+                message: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} ETH`,
+                duration: 0,
+                icon: SuccessIcon,
+                btn: (<a href={`https://etherscan.io/tx/${status}`} target="_blank" rel="noreferrer noopener">View on Etherscan</a>)
+            })
             this.setState({txSuccess : true, txHash : status})
        }
        else {
@@ -103,6 +115,12 @@ export default class Sale extends Component {
                 }
                 localStorage.setItem('hashData', JSON.stringify(newHashArray))
             }
+            notification['info']({
+                message: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} USDT`,
+                duration: 0,
+                icon: SuccessIcon,
+                btn: (<a href={`https://etherscan.io/tx/${status}`} target="_blank" rel="noreferrer noopener">View on Etherscan</a>)
+            })
             this.setState({txSuccess : true, txHash : status})
         }
         else {

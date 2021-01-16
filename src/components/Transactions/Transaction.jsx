@@ -23,7 +23,7 @@ export default class Transaction extends Component {
                         }
                     })
                     .catch((err) => {
-                        console.log(err)
+                        //console.log(err)
                     })
             }, 1000
         )
@@ -32,10 +32,10 @@ export default class Transaction extends Component {
     render() {
         const {txSuccess} = this.state;
         return (
-            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                <div>
-                    Buy 0.001 ETH
-                </div>
+            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem'}}>
+                <a style={{fontSize: '14px'}} href={`https://kovan.etherscan.io/tx/${this.props.tx.hash}`} target="_blank" rel="noreferrer noopener">
+                    {this.props.tx.summary}
+                </a>
                 {
                     !txSuccess ?
 
@@ -45,9 +45,9 @@ export default class Transaction extends Component {
 
                     :
 
-                    <div style={{color: 'rgb(39, 174, 96)'}}>
+                    <a style={{color: 'rgb(39, 174, 96)'}} href={`https://kovan.etherscan.io/tx/${this.props.tx.hash}`} target="_blank" rel="noreferrer noopener">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" color="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                    </div>
+                    </a>
                 }
             </div>
         )

@@ -80,6 +80,7 @@ export const lightTheme = {
     stepBarBackgroundColor: 'linear-gradient(90deg, rgb(206, 208, 217) 0%, rgb(206, 208, 217) 80%)',
     tokensModalBackgroundColor: '#FFF',
     tokenHoverBackgroundColor: 'rgb(247, 248, 250)',
+    notificationBackgroundColor: '#FFF',
 }
 
 export const darkTheme = {
@@ -164,4 +165,5 @@ export const darkTheme = {
     stepBarBackgroundColor: 'linear-gradient(90deg, rgb(86, 90, 105) 0%, rgb(86, 90, 105) 80%)',
     tokensModalBackgroundColor: 'rgb(33, 36, 41)',
     tokenHoverBackgroundColor: 'rgb(44, 47, 54)',
+    notificationBackgroundColor: 'rgb(64,68,79)'
 }

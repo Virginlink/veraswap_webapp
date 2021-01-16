@@ -18,6 +18,7 @@ import './App.css';
 import './components/Navbar.css';
 import './components/Sale/Sale.css';
 import Transactions from './components/Transactions/Transactions';
+import { notification } from 'antd';
 
 const {ethers} = require('ethers');
 
@@ -80,7 +81,6 @@ class App extends Component {
 	}
 
 	connectToWallet = (type) => {
-		console.log(type);
 		if(type === 'metamask'){
 			this.handleMetmask()
 		}
@@ -545,8 +545,8 @@ class App extends Component {
 
 											<div className="connected-wallet-footer-container">
 												<div className="connected-wallet-footer-text">
-													Your transactions will appear here...
-													{/* <Transactions /> */}
+													{/* Your transactions will appear here... */}
+													<Transactions />
 												</div>
 											</div>
 										}
