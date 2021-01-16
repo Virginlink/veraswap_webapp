@@ -206,10 +206,7 @@ class App extends Component {
 
 	async handlePortisWallet(){
 		try{
-			const portis = new Portis('YOUR_DAPP_ID', 'kovan')
-			.catch(e=>{
-				console.log(e)
-			})
+			const portis = new Portis('742043e8-8ef8-4196-9f44-4998a8299858', 'kovan')
 			const provider = new ethers.providers.Web3Provider(portis.provider);
 			const address = await provider.listAccounts();
 			const signer = provider.getSigner();
@@ -225,10 +222,7 @@ class App extends Component {
 
 	async handleFormaticWallet(){
 		try{
-			const fm = new Fortmatic('YOUR_API_KEY')
-			.catch(e=>{
-				console.log(e)
-			})
+			const fm = new Fortmatic('pk_test_78A36EA9A1974567','kovan')
 			const provider = new ethers.providers.Web3Provider(fm.getProvider());
 			const address = await provider.listAccounts();
 			const signer = provider.getSigner();
