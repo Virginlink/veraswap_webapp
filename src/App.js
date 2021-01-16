@@ -79,7 +79,6 @@ class App extends Component {
 	}
 
 	connectToWallet = (type) => {
-		console.log(type);
 		if(type === 'metamask'){
 			this.handleMetmask()
 		}
@@ -92,7 +91,7 @@ class App extends Component {
 		else {
 			this.handleFormaticWallet()
 		}
-		this.setState({selectedWallet: type, showWalletConnection: true})
+		this.setState({selectedWallet: type, showWalletConnection: true,walletConnected : false})
 	}
 
 	fetchBalance(){
@@ -213,7 +212,7 @@ class App extends Component {
 			this.fetchEthBalance(address[0])
 			this.fetchVrapBalance(address[0])
 			this.fetchTetherBalance(address[0])
-			this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'walletConnect',signer : signer})
+			this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'portis',signer : signer})
 		}
 		catch(e){
 			console.log(e)
@@ -229,7 +228,7 @@ class App extends Component {
 			this.fetchEthBalance(address[0])
 			this.fetchVrapBalance(address[0])
 			this.fetchTetherBalance(address[0])
-			this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'walletConnect',signer : signer})
+			this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'formatic',signer : signer})
 		}
 		catch(e){
 			console.log(e)
