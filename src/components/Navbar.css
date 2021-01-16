@@ -100,7 +100,7 @@
     font-size: 16px;
     height: 36px;
     font-weight: 500;
-    background: radial-gradient(174.47% 188.91% at 1.84% 0%, rgb(255, 0, 122) 0%, rgb(33, 114, 229) 100%), rgb(237, 238, 242);
+    background: radial-gradient(174.47% 188.91% at 1.84% 0%, #DE0102 0%, #22162C 100%), rgb(237, 238, 242);
 }
 
 .moon-button-container:hover .moon-button {
@@ -175,7 +175,7 @@
     position: relative;
     overflow: hidden;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 10px;
-    background: radial-gradient(76.02% 75.41% at 1.84% 0%, rgb(255, 0, 122) 0%, rgb(2, 29, 67) 100%);
+    background: radial-gradient(76.02% 75.41% at 1.84% 0%, #DE0102 0%, #22162C 100%);
     padding: 0.5rem;
 }
 
@@ -487,11 +487,6 @@
 
 .wallet-active-dot {
     color: rgb(39, 174, 96);
-    display: flex;
-    -webkit-box-pack: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    align-items: center;
 }
 
 .wallet-active-dot div {

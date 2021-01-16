@@ -17,6 +17,8 @@ import Portis from '@portis/web3';
 import './App.css';
 import './components/Navbar.css';
 import './components/Sale/Sale.css';
+import Transactions from './components/Transactions/Transactions';
+import { notification } from 'antd';
 
 const {ethers} = require('ethers');
 
@@ -74,7 +76,7 @@ class App extends Component {
 		if (this.state.walletConnected) {
 			this.setState({showWalletConnection: true, connectWalletModalVisible: !this.state.connectWalletModalVisible})
 		} else {
-			this.setState({connectWalletModalVisible: !this.state.connectWalletModalVisible})
+			this.setState({connectWalletModalVisible: !this.state.connectWalletModalVisible, showWalletConnection: false})
 		}
 	}
 
@@ -103,47 +105,51 @@ class App extends Component {
 	}
 
 	async approveTether(value){
-		this.setState({approving : true})
-		let contract = new ethers.Contract(TETHER_ADDRESS,TETHER_ABI,this.state.signer);
-		try{
-		let tx = await contract.approve(PRESALE_ADDRESS,parseFloat(value) * 10 ** 6)
-		if(tx.hash){
-			let intervalId = setInterval(()=>{
-				PROVIDER.getTransactionReceipt(tx.hash)
-				.then(res=>{
-					try{
-					if(typeof res!==null){
-						if(typeof res.blockNumber!==null){
-						this.setState({approved : true,approving : false});
-						clearInterval(intervalId);
+		if (value) {
+			this.setState({approving : true})
+			let contract = new ethers.Contract(TETHER_ADDRESS,TETHER_ABI,this.state.signer);
+			try{
+			let tx = await contract.approve(PRESALE_ADDRESS,parseFloat(value) * 10 ** 6)
+			if(tx.hash){
+				let intervalId = setInterval(()=>{
+					PROVIDER.getTransactionReceipt(tx.hash)
+					.then(res=>{
+						try{
+						if(typeof res!==null){
+							if(res.blockNumber){
+							this.setState({approved : true,approving : false});
+							clearInterval(intervalId);
+							}
 						}
-					}
-					}   
-					catch(e){
-						console.log(e)
-					}
-				})
-			},1000)
-		}
-		else{
-			this.setState({approving : false})
-			return false;
-		}
-		}
-		catch(e){
-			this.setState({approving : false})
-			return false;
+						}   
+						catch(e){
+							console.log(e)
+						}
+					})
+				},1000)
+			}
+			else{
+				this.setState({approving : false})
+				return false;
+			}
+			}
+			catch(e){
+				this.setState({approving : false})
+				return false;
+			}
 		}
 	}
 
 	async buyWithEther(value){
-		let contract  = new ethers.Contract(PRESALE_ADDRESS,PRESALE_ABI,this.state.signer);
-		let status = await contract.PurchaseWithEther({value : ethers.utils.parseEther(value)})
-		if(status.hash){
-			return status.hash
-		}
-		else { 
-			return false
+		if (value) {
+			let contract  = new ethers.Contract(PRESALE_ADDRESS,PRESALE_ABI,this.state.signer);
+			let status = await contract.PurchaseWithEther({value : ethers.utils.parseEther(value)})
+			if(status.hash){
+				return status.hash
+			}
+			else { 
+				return false
+			}
 		}
 	}
 
@@ -152,6 +158,10 @@ class App extends Component {
 		let status = await contract.PurchaseWithTether(parseFloat(value) * 10 ** 6)
 		console.log(status)
 		if(status.hash){
+			setTimeout(
+				() => this.setState({approved: false, approving: false}),
+				5000
+			)
 			return status.hash
 		}
 		else { 
@@ -293,16 +303,15 @@ class App extends Component {
 	}
 
 	render() {
-		const {connectWalletModalVisible, selectedWallet, showWalletConnection, connectionError, walletConnected, copied, walletConnectionActive, activeWallet} = this.state
+		const {connectWalletModalVisible, selectedWallet, showWalletConnection, connectionError, walletConnected, copied, walletConnectionActive, activeWallet, theme} = this.state
 		return (
 			<div>
 				<ThemeProvider theme={this.state.theme === 'light' ? lightTheme : darkTheme}>
-				<>
 				<GlobalStyles/>
 				<Navbar
 					modalVisible={connectWalletModalVisible}
 					onModalToggle={this.toggleWalletConnectModal}
-					theme={this.state.theme}
+					theme={theme}
 					onThemeToggle={this.toggleTheme}
 					walletConnected={walletConnected}
 					walletAddress = {this.state.walletAddress}
@@ -322,7 +331,7 @@ class App extends Component {
 					approving = {this.state.approving}
 					approveTether={this.approveTether}
 					buyWithTether = {this.buyWithTether}
-					/>
+				/>
 				<Dialog
 					open={connectWalletModalVisible}
 					TransitionComponent={Transition}
@@ -536,7 +545,8 @@ class App extends Component {
 
 											<div className="connected-wallet-footer-container">
 												<div className="connected-wallet-footer-text">
-													Your transactions will appear here...
+													{/* Your transactions will appear here... */}
+													<Transactions />
 												</div>
 											</div>
 										}
@@ -617,7 +627,6 @@ class App extends Component {
 						</div>
 					</div>
 				</Dialog>
-				</>
 				</ThemeProvider>
 			</div>
 		)

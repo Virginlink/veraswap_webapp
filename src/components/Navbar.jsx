@@ -19,7 +19,7 @@ export default class Navbar extends Component {
             deadline: '',
             expertModeOn: false,
             expertModeConfirmationModalVisible: false,
-            darkModeOn: false,
+            theme: 'light',
             moreLinksVisible: false,
             claimModalVisible: false,
             walletAddress: '',
@@ -33,17 +33,13 @@ export default class Navbar extends Component {
         if (expertMode && expertMode === 'true') {
             this.setState({expertModeOn: true})
         }
-        if (this.props.theme === 'light') {
-            this.setState({darkModeOn: false})
-        } else {
-            this.setState({darkModeOn: true})
-        }
+        this.setState({theme: this.props.theme})
     }
     
-    static async getDerivedStateFromProps(nextProps, prevState) {
+    static getDerivedStateFromProps(nextProps, prevState) {
         if (prevState.theme !== nextProps.theme) {
             return {
-                darkModeOn: nextProps.theme === 'light' ? false : true
+                theme: nextProps.theme
             }
         } else if (prevState.modalVisible !== nextProps.modalVisible) {
             return {
@@ -88,7 +84,7 @@ export default class Navbar extends Component {
     }
 
     render() {
-        const {moonModalVisible, settingsVisible, tolerance, deadline, expertModeOn, expertModeConfirmationModalVisible, darkModeOn, moreLinksVisible, walletConnected, loggedIn, claimModalVisible, walletAddress, addressValid, moonBalance, addressError} = this.state;
+        const {moonModalVisible, settingsVisible, tolerance, deadline, expertModeOn, expertModeConfirmationModalVisible, theme, moreLinksVisible, walletConnected, loggedIn, claimModalVisible, walletAddress, addressValid, moonBalance, addressError} = this.state;
         return (
             <div className="navbar-container">
                 <div className="navbar">
@@ -254,8 +250,8 @@ export default class Navbar extends Component {
                                                         <div className="settings-option-title">Toggle Dark Mode</div>
                                                     </div>
                                                     <div className="toggle-button" onClick={this.props.onThemeToggle}>
-                                                        <span className={`toggle-on ${darkModeOn && 'toggle-active'}`}>On</span>
-                                                        <span className={darkModeOn ? 'toggle-on' : 'toggle-off'}>Off</span>
+                                                        <span className={`toggle-on ${theme === 'dark' && 'toggle-active'}`}>On</span>
+                                                        <span className={theme === 'dark' ? 'toggle-on' : 'toggle-off'}>Off</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -297,7 +293,7 @@ export default class Navbar extends Component {
                                             {
                                                 loggedIn && (
                                                     <button className="claim-moon-button" onClick={() => this.setState({claimModalVisible: true, moreLinksVisible: false})}>
-                                                        Claim MOON
+                                                        Claim VRAP
                                                     </button>
                                                 )
                                             }
@@ -334,7 +330,7 @@ export default class Navbar extends Component {
                             <div className="coloured-modal-header">
                                 <div className="coloured-modal-header-inner">
                                     <div className="coloured-modal-header-title">
-                                        Your MOON Breakdown
+                                        Your VRAP Breakdown
                                         <svg onClick={() => this.setState({moonModalVisible: false})} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sc-dTdPqK bptfJp"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                                     </div>
                                 </div>
@@ -374,7 +370,7 @@ export default class Navbar extends Component {
                                     <div className="coloured-modal-content-rows-container">
                                         <div className="coloured-modal-content-row">
                                             <div className="coloured-modal-text">
-                                                MOON Price:
+                                                VRAP Price:
                                             </div>
                                             <div className="coloured-modal-text">
                                                 $1.67
@@ -382,7 +378,7 @@ export default class Navbar extends Component {
                                         </div>
                                         <div className="coloured-modal-content-row">
                                             <div className="coloured-modal-text">
-                                                MOON in circulation:
+                                                VRAP in circulation:
                                             </div>
                                             <div className="coloured-modal-text">
                                                 210,000,000
@@ -469,17 +465,17 @@ export default class Navbar extends Component {
                                 <div style={{display: 'grid', gridAutoRows: 'auto', rowGap: '12px', padding: '1rem', zIndex: 1}}>
                                     <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                                         <div className="coloured-modal-header-title">
-                                            Claim MOON Token
+                                            Claim VRAP Token
                                         </div>
                                         <svg style={{cursor: 'pointer'}} onClick={() => this.setState({claimModalVisible: false})} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sc-dTdPqK bptfJp"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                                     </div>
-                                    <div style={{margin: 0, minWidth: 0, fontWeight: 700, color: '#FFF', fontSize: '36px'}}>0 MOON</div>
+                                    <div style={{margin: 0, minWidth: 0, fontWeight: 700, color: '#FFF', fontSize: '36px'}}>0 VRAP</div>
                                 </div>
                             </div>
                             <div className="modal-divider" />
                             <div className="grid" style={{padding: '0px 1rem 1rem'}}>
                                 <div className="claim-description">
-                                    Enter an address to trigger a MOON claim. If the address has any claimable MOON it will be sent to them on submission.
+                                    Enter an address to trigger a VRAP claim. If the address has any claimable VRAP it will be sent to them on submission.
                                 </div>
                                 <div style={{display: 'flex', flexFlow: 'column nowrap', position: 'relative', borderRadius: '1.25rem', zIndex: 1, width: '100%'}}>
                                     <div className="claim-input-outer-container" style={{borderColor: !addressError ? 'auto' : 'rgb(255, 104, 113)'}}>
@@ -502,7 +498,7 @@ export default class Navbar extends Component {
                                             <div style={{fontSize: '16px', color: 'rgb(255, 104, 113)', textAlign: 'center', fontWeight: 500, marginTop: '0.5rem'}}>Address has no available claim</div>
                                         ) : null
                                     }
-                                    <button disabled className="buy-action-button" style={{marginTop: '1.75rem'}}>Claim MOON</button>
+                                    <button disabled className="buy-action-button" style={{marginTop: '1.75rem'}}>Claim VRAP</button>
                                 </div>
                             </div>
                         </div>
