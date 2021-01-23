@@ -373,7 +373,7 @@ export default class Navbar extends Component {
                                                 VRAP Price:
                                             </div>
                                             <div className="coloured-modal-text">
-                                                $1.67
+                                                $ 0.05
                                             </div>
                                         </div>
                                         <div className="coloured-modal-content-row">

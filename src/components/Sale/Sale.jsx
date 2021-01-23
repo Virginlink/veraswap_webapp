@@ -223,7 +223,7 @@ export default class Sale extends Component {
                       </div>
                         <p className="connected-wallet-footer-text" style={{width:'80%',marginLeft:'10%',textAlign:'center',lineHeight:'2rem'}}>
                             It takes upto 5 minutes to mine your transaction. Once done your tokens will be automatically credited to your wallet address.
-                            If you wish to track your transaction <a href={`https://kovan.etherscan.io/tx/${this.state.txHash}`} target="_blank">click here</a>
+                            If you wish to track your transaction <a href={`https://etherscan.io/tx/${this.state.txHash}`} target="_blank">click here</a>
                         </p>
                     </div>
                     :
