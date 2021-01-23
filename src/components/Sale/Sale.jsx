@@ -246,8 +246,8 @@ export default class Sale extends Component {
                                     </div>
                                 </div>
                                 <div className="deposit-input-container">
-                                    <input inputMode="decimal" type="text" autoComplete="off" autoCorrect="off" placeholder="0.0" pattern="^[0-9]*[.,]?[0-9]*$" minLength="1" maxLength="79" spellCheck="false" value={depositAmount} onChange={e => this.setState({depositAmount: e.target.value})} />
-                                    <button className="max-deposit-button" onClick={()=>{this.setState({depositAmount : this.state.currentToken === "ETH" ? this.props.ethBalance : this.props.usdtBalance})}}>MAX</button>
+                                    <input inputMode="decimal" type="text" autoComplete="off" autoCorrect="off" placeholder="0.0" pattern="^[0-9]*[.,]?[0-9]*$" minLength="1" maxLength="79" spellCheck="false" value={depositAmount} onChange={e => this.setState({depositAmount: e.target.value, error : false})} />
+                                    <button className="max-deposit-button" onClick={()=>{this.setState({depositAmount : this.state.currentToken === "ETH" ? this.props.ethBalance : this.props.usdtBalance,error : false})}}>MAX</button>
                                     <button className="token-select-button" onClick={() => this.setState({tokensModalVisible: true, buyModalVisible: false})}>
                                       {
                                         this.state.currentToken === "ETH" ?
