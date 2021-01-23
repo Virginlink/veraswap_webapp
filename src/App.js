@@ -45,7 +45,8 @@ class App extends Component {
 			usdtBalance : '',
 			signer : null,
 			approved : false,
-			approving : false
+			approving : false,
+			ethBuying : false
 		}
 		this.fetchBalance = this.fetchBalance.bind(this);
 		this.buyWithEther = this.buyWithEther.bind(this);
@@ -142,12 +143,21 @@ class App extends Component {
 
 	async buyWithEther(value){
 		if (value) {
+			this.setState({ethBuying : true})
+			try{
 			let contract  = new ethers.Contract(PRESALE_ADDRESS,PRESALE_ABI,this.state.signer);
 			let status = await contract.PurchaseWithEther({value : ethers.utils.parseEther(value)})
 			if(status.hash){
+				this.setState({ethBuying : false})
 				return status.hash
 			}
 			else { 
+				this.setState({ethBuying : false})
+				return false
+			}
+			}
+			catch(e){
+				this.setState({ethBuying : false})
 				return false
 			}
 		}
@@ -331,6 +341,7 @@ class App extends Component {
 					approving = {this.state.approving}
 					approveTether={this.approveTether}
 					buyWithTether = {this.buyWithTether}
+					ethBuying = {this.state.ethBuying}
 				/>
 				<Dialog
 					open={connectWalletModalVisible}
