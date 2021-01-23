@@ -298,7 +298,7 @@ export default class Sale extends Component {
                         </div>
                         {this.state.currentToken === "ETH" ? 
                         <div className="buy-modal-header">
-                            <button disabled={!this.state.depositAmount || parseFloat(this.state.depositAmount) === 0 || parseFloat(this.state.depositAmount) === 0. || parseFloat(this.state.depositAmount) < 0} onClick={()=>{this.handleEthBuy()}} className="buy-action-button">{this.state.depositAmount ? (parseFloat(this.state.depositAmount) === 0 || parseFloat(this.state.depositAmount) === 0. || parseFloat(this.state.depositAmount) < 0) ? 'Invalid amount' : "Approve" : 'Enter an amount'}</button>
+                            <button disabled={!this.state.depositAmount || parseFloat(this.state.depositAmount) === 0 || parseFloat(this.state.depositAmount) === 0. || parseFloat(this.state.depositAmount) < 0} onClick={()=>{this.handleEthBuy()}} className="buy-action-button">{this.state.depositAmount ? (parseFloat(this.state.depositAmount) === 0 || parseFloat(this.state.depositAmount) === 0. || parseFloat(this.state.depositAmount) < 0) ? 'Invalid amount' : "Buy Now" : 'Enter an amount'}</button>
                         </div>
                         :
                         <div className="buy-modal-header">
