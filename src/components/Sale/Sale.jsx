@@ -148,7 +148,7 @@ export default class Sale extends Component {
                                 <div className="sale-block-inner-grid">
                                     <div className="sale-block-title-container">
                                         <div className="sale-block-title">
-                                            Veraswap token sale
+                                            VeraSwap token sale
                                         </div>
                                     </div>
                                     <div className="sale-block-content-container">
@@ -164,7 +164,7 @@ export default class Sale extends Component {
                     </div>
                     <div className="countdown-container">
                         <div className="countdown">
-                            Pre Sale Round {this.state.phase} (${parseFloat(this.state.price).toFixed(3)} per VRAP) ends in <Countdown date={new Date(1612119600000)} renderer={this.returnDate} />
+                            Pre Sale Round {this.state.phase} (${parseFloat(this.state.price).toFixed(3)} per VRAP) ends in <Countdown date={new Date(1612483200000)} renderer={this.returnDate} />
                         </div>
                     </div>
                     <div className="sale-block-outer-container-wrapper" style={{gap: '24px'}}>
@@ -199,8 +199,8 @@ export default class Sale extends Component {
                 <Dialog
                     open={buyModalVisible}
                     TransitionComponent={Transition}
-                    onClose={() => this.setState({buyModalVisible: false, txSuccess: false})}
-                    onBackdropClick={() => this.setState({buyModalVisible: false, txSuccess: false})}
+                    onClose={() => this.setState({buyModalVisible: false, txSuccess: false, error : false})}
+                    onBackdropClick={() => this.setState({buyModalVisible: false, txSuccess: false, error : false})}
                     BackdropProps={{style: {backgroundColor: 'rgba(0, 0, 0, 0.3)'}}}
                     PaperProps={{
                         style: {
@@ -223,7 +223,7 @@ export default class Sale extends Component {
                       </div>
                         <p className="connected-wallet-footer-text" style={{width:'80%',marginLeft:'10%',textAlign:'center',lineHeight:'2rem'}}>
                             It takes upto 5 minutes to mine your transaction. Once done your tokens will be automatically credited to your wallet address.
-                            If you wish to track your transaction <a href={`https://kovan.etherscan.io/tx/${this.state.txHash}`} target="_blank">click here</a>
+                            If you wish to track your transaction <a href={`https://etherscan.io/tx/${this.state.txHash}`} target="_blank">click here</a>
                         </p>
                     </div>
                     :
@@ -246,8 +246,8 @@ export default class Sale extends Component {
                                     </div>
                                 </div>
                                 <div className="deposit-input-container">
-                                    <input inputMode="decimal" type="text" autoComplete="off" autoCorrect="off" placeholder="0.0" pattern="^[0-9]*[.,]?[0-9]*$" minLength="1" maxLength="79" spellCheck="false" value={depositAmount} onChange={e => this.setState({depositAmount: e.target.value})} />
-                                    <button className="max-deposit-button" onClick={()=>{this.setState({depositAmount : this.state.currentToken === "ETH" ? this.props.ethBalance : this.props.usdtBalance})}}>MAX</button>
+                                    <input inputMode="decimal" type="text" autoComplete="off" autoCorrect="off" placeholder="0.0" pattern="^[0-9]*[.,]?[0-9]*$" minLength="1" maxLength="79" spellCheck="false" value={depositAmount} onChange={e => this.setState({depositAmount: e.target.value, error : false})} />
+                                    <button className="max-deposit-button" onClick={()=>{this.setState({depositAmount : this.state.currentToken === "ETH" ? this.props.ethBalance : this.props.usdtBalance,error : false})}}>MAX</button>
                                     <button className="token-select-button" onClick={() => this.setState({tokensModalVisible: true, buyModalVisible: false})}>
                                       {
                                         this.state.currentToken === "ETH" ?
@@ -298,7 +298,18 @@ export default class Sale extends Component {
                         </div>
                         {this.state.currentToken === "ETH" ? 
                         <div className="buy-modal-header">
-                            <button disabled={!this.state.depositAmount || parseFloat(this.state.depositAmount) === 0 || parseFloat(this.state.depositAmount) === 0. || parseFloat(this.state.depositAmount) < 0} onClick={()=>{this.handleEthBuy()}} className="buy-action-button">{this.state.depositAmount ? (parseFloat(this.state.depositAmount) === 0 || parseFloat(this.state.depositAmount) === 0. || parseFloat(this.state.depositAmount) < 0) ? 'Invalid amount' : "Approve" : 'Enter an amount'}</button>
+                        {this.props.ethBuying ? 
+                            <button className="buy-action-button" disabled={true}>
+                                <div className="transaction-status">
+                                <svg style={{position: 'relative', right: '-13px', width: '20px', height: '20px'}} className="connection-loader" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="sc-bYSBpT fhfZBu sc-gqPbQI dCfdPK"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 9.27455 20.9097 6.80375 19.1414 5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>
+                                    Purchasing
+                                </span>
+                                </div>  
+                            </button>                           
+                            :
+                            <button disabled={!this.state.depositAmount || parseFloat(this.state.depositAmount) === 0 || parseFloat(this.state.depositAmount) === 0. || parseFloat(this.state.depositAmount) < 0} onClick={()=>{this.handleEthBuy()}} className="buy-action-button">{this.state.depositAmount ? (parseFloat(this.state.depositAmount) === 0 || parseFloat(this.state.depositAmount) === 0. || parseFloat(this.state.depositAmount) < 0) ? 'Invalid amount' : "Buy Now" : 'Enter an amount'}</button>
+                            }
                         </div>
                         :
                         <div className="buy-modal-header">
@@ -340,8 +351,8 @@ export default class Sale extends Component {
                 <Dialog
                     open={tokensModalVisible}
                     TransitionComponent={Transition}
-                    onClose={() => this.setState({tokensModalVisible: false, buyModalVisible: true})}
-                    onBackdropClick={() => this.setState({tokensModalVisible: false, buyModalVisible: true})}
+                    onClose={() => this.setState({tokensModalVisible: false, buyModalVisible: true, error : false})}
+                    onBackdropClick={() => this.setState({tokensModalVisible: false, buyModalVisible: true , error : false})}
                     BackdropProps={{style: {backgroundColor: 'rgba(0, 0, 0, 0.3)'}}}
                     PaperProps={{
                         style: {

@@ -48,7 +48,8 @@ class App extends Component {
 			usdtBalance : '',
 			signer : null,
 			approved : false,
-			approving : false
+			approving : false,
+			ethBuying : false
 		}
 		this.fetchBalance = this.fetchBalance.bind(this);
 		this.buyWithEther = this.buyWithEther.bind(this);
@@ -96,7 +97,7 @@ class App extends Component {
 		else {
 			this.handleFormaticWallet()
 		}
-		this.setState({selectedWallet: type, showWalletConnection: true})
+		this.setState({selectedWallet: type, showWalletConnection: true,walletConnected : false})
 	}
 
 	fetchBalance(){
@@ -145,12 +146,21 @@ class App extends Component {
 
 	async buyWithEther(value){
 		if (value) {
+			this.setState({ethBuying : true})
+			try{
 			let contract  = new ethers.Contract(PRESALE_ADDRESS,PRESALE_ABI,this.state.signer);
 			let status = await contract.PurchaseWithEther({value : ethers.utils.parseEther(value)})
 			if(status.hash){
+				this.setState({ethBuying : false})
 				return status.hash
 			}
 			else { 
+				this.setState({ethBuying : false})
+				return false
+			}
+			}
+			catch(e){
+				this.setState({ethBuying : false})
 				return false
 			}
 		}
@@ -218,14 +228,14 @@ class App extends Component {
 
 	async handlePortisWallet(){
 		try{
-			const portis = new Portis('742043e8-8ef8-4196-9f44-4998a8299858', 'kovan')
+			const portis = new Portis('742043e8-8ef8-4196-9f44-4998a8299858', 'mainnet')
 			const provider = new ethers.providers.Web3Provider(portis.provider);
 			const address = await provider.listAccounts();
 			const signer = provider.getSigner();
 			this.fetchEthBalance(address[0])
 			this.fetchVrapBalance(address[0])
 			this.fetchTetherBalance(address[0])
-			this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'walletConnect',signer : signer})
+			this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'portis',signer : signer})
 		}
 		catch(e){
 			console.log(e)
@@ -234,14 +244,14 @@ class App extends Component {
 
 	async handleFormaticWallet(){
 		try{
-			const fm = new Fortmatic('pk_test_78A36EA9A1974567','kovan')
+			const fm = new Fortmatic('pk_live_BF6CBA62373566D4')
 			const provider = new ethers.providers.Web3Provider(fm.getProvider());
 			const address = await provider.listAccounts();
 			const signer = provider.getSigner();
 			this.fetchEthBalance(address[0])
 			this.fetchVrapBalance(address[0])
 			this.fetchTetherBalance(address[0])
-			this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'walletConnect',signer : signer})
+			this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'formatic',signer : signer})
 		}
 		catch(e){
 			console.log(e)
