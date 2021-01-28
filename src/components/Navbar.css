@@ -583,11 +583,6 @@
         justify-content: flex-end;
     }
 
-    .navbar-pages-container a:nth-child(1) {
-        position: absolute;
-        left: 78px;
-    }
-
     .navbar-actions-1 {
         flex-direction: row-reverse;
         -webkit-box-align: center;

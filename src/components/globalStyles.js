@@ -29,7 +29,7 @@ export const GlobalStyles = createGlobalStyle`
         color: ${({theme}) => theme.pageLinkTextonHover};
     }
     
-    .navbar-pages-container a:nth-child(1) {
+    .navbar-pages-container .active-page {
         font-weight: bold;
         color: ${({theme}) => theme.pageLinkTextPrimary};
     }
@@ -1137,6 +1137,15 @@ export const GlobalStyles = createGlobalStyle`
 
     .ant-notification-notice-message, .ant-notification-close-icon {
         color: ${({theme}) => theme.modalHeaderTextColor};
+    }
+
+    .heading {
+        box-sizing: border-box;
+        margin: 0.5rem 0 0 0;
+        min-width: 0px;
+        font-weight: 500;
+        font-size: 20px;
+        color: ${({theme}) => theme.modalHeaderTextColor}
     }
 
     @media only screen and (max-width: 960px) {

@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { Tooltip } from 'antd';
+import { withRouter } from 'react-router-dom';
 import { ClickAwayListener, Dialog, Fade } from '@material-ui/core';
 import Logo from '../assets/images/logo.png';
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Fade timeout={{enter: 1000, exit: 2000}} ref={ref} {...props} />;
 });
 
-export default class Navbar extends Component {
+class Navbar extends Component {
     constructor() {
         super()
         this.state={
@@ -95,8 +96,8 @@ export default class Navbar extends Component {
                             </div>
                         </a>
                         <div className="navbar-pages-container">
-                            <a id="sale-nav-link" href=".">Sale</a>
-                            <a id="stake-nav-link" href=".">Stake</a>
+                            <a className={`${this.props.active === 'sale' && 'active-page'}`} onClick={() => this.props.history.push('/sale')}>Sale</a>
+                            <a className={`${this.props.active === 'stake' && 'active-page'}`} onClick={() => this.props.history.push('/stake')}>Stake</a>
                             <a id="swap-nav-link" href=".">Swap</a>
                             <a id="pool-nav-link" href=".">Pool</a>
                         </div>
@@ -508,3 +509,5 @@ export default class Navbar extends Component {
         )
     }
 }
+
+export default withRouter(Navbar);
