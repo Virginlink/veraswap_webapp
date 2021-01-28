@@ -1148,6 +1148,15 @@ export const GlobalStyles = createGlobalStyle`
         color: ${({theme}) => theme.modalHeaderTextColor}
     }
 
+    .stake-card-heading {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        font-weight: 600;
+        color: white;
+        font-size: 18px;
+    }
+
     @media only screen and (max-width: 960px) {
         .navbar-actions-main-container {
             flex-direction: row;
