@@ -3,6 +3,7 @@ import AnimatedNumber from 'react-animated-number';
 import NumericLabel from 'react-pretty-numbers';
 import VRAP from '../../assets/images/logo.png';
 import ETH from '../../assets/images/eth.png';
+import { withRouter } from 'react-router-dom';
 
 const WBTC = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png';
 const USDC = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png';
@@ -20,7 +21,7 @@ const CRV = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockch
 const YFI = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/logo.png';
 const USDT = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png';
 
-export default class Stake extends Component {
+class Stake extends Component {
     constructor() {
         super();
         this.state = {
@@ -286,7 +287,7 @@ export default class Stake extends Component {
                                             <div style={{marginLeft: '8px'}} className="stake-card-heading">
                                                 {ticker}
                                             </div>
-                                            <button className="buy-action-button" style={{height: '38px', borderRadius: '8px', fontSize: '16px'}}>Deposit</button>
+                                            <button onClick={() => this.props.history.push('/stake/address')} className="buy-action-button" style={{height: '38px', borderRadius: '8px', fontSize: '16px'}}>Deposit</button>
                                         </div>
                                         <div style={{display: 'flex', justifyContent: 'space-between', flexDirection: 'column', gap: '12px', margin: '0 1rem 1rem 1rem'}}>
                                             <div style={{width: '100%', minWidth: 0, margin: '0 0 -5px 0', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
@@ -329,3 +330,5 @@ export default class Stake extends Component {
         )
     }
 }
+
+export default withRouter(Stake);

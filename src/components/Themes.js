@@ -81,11 +81,14 @@ export const lightTheme = {
     tokensModalBackgroundColor: '#FFF',
     tokenHoverBackgroundColor: 'rgb(247, 248, 250)',
     notificationBackgroundColor: '#FFF',
+    outlinedBoxBorderColor: 'rgb(206, 208, 217)',
+    shadedContainerBackgroundColor: 'rgb(237, 238, 242)',
+    shadedTextColor: 'rgb(86, 90, 105)',
 }
 
 export const darkTheme = {
     primary: '#DEB501',
-    bodyBackground: 'none',
+    bodyBackground: 'radial-gradient(50% 50% at 50% 50%, rgba(222, 182, 1, 0.1) 0%, rgba(33, 36, 41, 0) 100%)',
     bodyBackgroundColor: 'rgb(44, 47, 54)',
     pageLinkText: 'rgb(195, 197, 203)',
     pageLinkTextPrimary: '#FFF',
@@ -165,5 +168,8 @@ export const darkTheme = {
     stepBarBackgroundColor: 'linear-gradient(90deg, rgb(86, 90, 105) 0%, rgb(86, 90, 105) 80%)',
     tokensModalBackgroundColor: 'rgb(33, 36, 41)',
     tokenHoverBackgroundColor: 'rgb(44, 47, 54)',
-    notificationBackgroundColor: 'rgb(64,68,79)'
+    notificationBackgroundColor: 'rgb(64,68,79)',
+    outlinedBoxBorderColor: 'rgb(86, 90, 105)',
+    shadedContainerBackgroundColor: 'rgb(64, 68, 79)',
+    shadedTextColor: 'rgb(195, 197, 203)',
 }

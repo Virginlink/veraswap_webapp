@@ -1145,7 +1145,7 @@ export const GlobalStyles = createGlobalStyle`
         min-width: 0px;
         font-weight: 500;
         font-size: 20px;
-        color: ${({theme}) => theme.modalHeaderTextColor}
+        color: ${({theme}) => theme.modalHeaderTextColor};
     }
 
     .stake-card-heading {
@@ -1155,6 +1155,61 @@ export const GlobalStyles = createGlobalStyle`
         font-weight: 600;
         color: white;
         font-size: 18px;
+    }
+
+    .outlined-box {
+        display: grid;
+        grid-auto-rows: auto;
+        border-radius: 12px;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        background: none;
+        border: 1px solid ${({theme}) => theme.outlinedBoxBorderColor};
+        padding: 1rem;
+        z-index: 1;
+    }
+
+    .text-regular {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        font-weight: 400;
+        color: ${({theme}) => theme.modalHeaderTextColor};
+    }
+
+    .text-semibold {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        font-weight: 500;
+        color: ${({theme}) => theme.modalHeaderTextColor};
+    }
+
+    .text-semibold-2x {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        font-weight: 600;
+        color: ${({theme}) => theme.modalHeaderTextColor};
+    }
+
+    .shaded-container {
+        display: grid;
+        grid-auto-rows: auto;
+        border-radius: 12px;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        background: ${({theme}) => theme.shadedContainerBackgroundColor};
+        opacity: 0.4;
+        margin-top: -40px;
+        padding: 32px 1.25rem 1rem;
+        z-index: -5;
+    }
+
+    .shaded-text {
+        color: ${({theme}) => theme.shadedTextColor};
     }
 
     @media only screen and (max-width: 960px) {

@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { Dialog, Fade } from '@material-ui/core';
-import Navbar from './components/Navbar';
-import Sale from './components/Sale/Sale';
 import Metamask from './assets/images/metamask.png';
 import WalletConnect from './assets/images/walletConnect.svg';
 import CoinbaseWallet from './assets/images/coinbaseWallet.svg';
@@ -14,14 +12,14 @@ import { lightTheme, darkTheme } from "./components/Themes";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import Fortmatic from 'fortmatic';
 import Portis from '@portis/web3';
-import './App.css';
-import './components/Navbar.css';
-import './components/Sale/Sale.css';
 import Transactions from './components/Transactions/Transactions';
-import { notification } from 'antd';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import SalePage from './pages/SalePage';
 import StakePage from './pages/StakePage';
+import StakeDeposit from './pages/StakeDeposit';
+import './App.css';
+import './components/Navbar.css';
+import './components/Sale/Sale.css';
 
 const {ethers} = require('ethers');
 
@@ -358,9 +356,36 @@ class App extends Component {
 						)} 
 					/>
 					<Route 
+						exact
 						path="/stake" 
 						render={(props) => (
 							<StakePage
+								{...props}
+								modalVisible={connectWalletModalVisible}
+								onModalToggle={this.toggleWalletConnectModal}
+								theme={theme}
+								onThemeToggle={this.toggleTheme}
+								walletConnected={walletConnected}
+								walletAddress = {this.state.walletAddress}
+								ethBalance = {this.state.ethBalance}
+								vrapBalance = {this.state.vrapBalance}
+								onModalOpenRequest={this.toggleWalletConnectModal} 
+								usdtBalance = {this.state.usdtBalance}
+								address = {this.state.address}
+								fetchBalance={this.fetchBalance}
+								buyWithEther = {this.buyWithEther}
+								approved = {this.state.approved}
+								approving = {this.state.approving}
+								approveTether={this.approveTether}
+								buyWithTether = {this.buyWithTether}
+							/>
+						)} 
+					/>
+					<Route
+						exact
+						path="/stake/:address" 
+						render={(props) => (
+							<StakeDeposit
 								{...props}
 								modalVisible={connectWalletModalVisible}
 								onModalToggle={this.toggleWalletConnectModal}
