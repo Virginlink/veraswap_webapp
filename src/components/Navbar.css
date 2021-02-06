@@ -565,10 +565,6 @@
     background: radial-gradient(76.02% 75.41% at 1.84% 0%, rgb(255, 0, 122) 0%, rgb(2, 29, 67) 100%);
 }
 
-.eg {
-    background: radial-gradient(50% 50% at 50% 50%, rgba(222, 182, 1, 0.1) 0%, rgba(33, 36, 41, 0) 100%);
-}
-
 @media only screen and (max-width: 960px) {
     .navbar {
         grid-template-columns: 1fr;

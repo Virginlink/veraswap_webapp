@@ -1255,5 +1255,13 @@ export const GlobalStyles = createGlobalStyle`
             top: -19.25rem;
         }
     }
+
+    @media only screen and (max-width: 600px) {
+        .stake-deposit-container {
+            padding-top: 30px !important;
+            padding-bottom: 170px !important;
+            overflow: scroll !important;
+        }
+    }
     
 `
