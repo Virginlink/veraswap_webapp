@@ -9,21 +9,30 @@ export default class LiquidityDeposits extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            liquidity : 0.0
+            liquidity : 0.0,
+            walletAddress : ""
         }
     }
 
     componentDidMount(){
         if(this.props.ticker && this.props.currentToken && this.props.walletAddress !== ""){
-            this.fetch()
+            this.setState({walletAddress : this.props.walletAddress})
+            this.fetch(this.props.walletAddress)
         }
     }
 
-    fetch(){
+    UNSAFE_componentWillReceiveProps(props){
+        if(props.ticker && props.currentToken && props.walletAddress !== this.state.walletAddress){
+            this.setState({walletAddress : props.walletAddress})
+            this.fetch(props.walletAddress)
+        }
+    }
+
+    fetch(walletAddress){
         let token = TOKEN.filter(data => data.contractAddress === this.props.currentToken);
         let decimal = token[0].decimal;
         let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,PROVIDER);
-        contract.users(this.props.walletAddress,this.props.currentToken)
+        contract.users(walletAddress,this.props.currentToken)
         .then(res=>{
             console.log(res);
             let currentStake = ethers.utils.formatEther(res.currentStake) * 10 ** decimal;

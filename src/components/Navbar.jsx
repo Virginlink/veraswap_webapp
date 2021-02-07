@@ -98,8 +98,8 @@ class Navbar extends Component {
                         <div className="navbar-pages-container">
                             <a className={`${this.props.active === 'sale' && 'active-page'}`} onClick={() => this.props.history.push('/sale')}>Sale</a>
                             <a className={`${this.props.active === 'stake' && 'active-page'}`} onClick={() => this.props.history.push('/stake')}>Stake</a>
-                            <a id="swap-nav-link" href=".">Swap</a>
-                            <a id="pool-nav-link" href=".">Pool</a>
+                            <a id="swap-nav-link">Swap</a>
+                            <a id="pool-nav-link">Pool</a>
                         </div>
                     </div>
                     <div className="navbar-actions-main-container">
@@ -108,7 +108,7 @@ class Navbar extends Component {
                                 this.props.network && 
 
                                 <button disabled style={{cursor: 'default'}} className="navbar-action-button network">
-                                    Ropsten
+                                    Kovan
                                 </button>
                             }
                             <span className="moon-button-container" onClick={() => this.setState({moonModalVisible: true})}>
