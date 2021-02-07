@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
-import AnimatedNumber from 'react-animated-number';
-import NumericLabel from 'react-pretty-numbers';
 import VRAP from '../../assets/images/logo.png';
+import {withRouter} from 'react-router-dom';
 import ETH from '../../assets/images/eth.png';
-import { withRouter } from 'react-router-dom';
-
+import AssetCard from './components/assetCard';
 const WBTC = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png';
 const USDC = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png';
 const DAI = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png';
@@ -22,213 +20,16 @@ const YFI = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockch
 const USDT = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png';
 
 class Stake extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             assets: [
                 {
                     icons: [VRAP],
                     ticker: 'VRAP',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
+                    tokenContract: "0x7a5BA153010CF289c9D4E8A6de67eedc715D990a",
                     background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [WBTC],
-                    ticker: 'WBTC',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(124, 118, 136) 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [USDC],
-                    ticker: 'USDC',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [DAI],
-                    ticker: 'DAI',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(187, 141, 0) 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [TUSD],
-                    ticker: 'TUSD',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(44, 68, 124) 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [BUSD],
-                    ticker: 'BUSD',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(187, 141, 0) 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [AUSDC],
-                    ticker: 'AUSDC',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [PAX],
-                    ticker: 'PAX',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(4, 147, 211) 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [UNI],
-                    ticker: 'UNI',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(252, 7, 125) 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [LINK],
-                    ticker: 'LINK',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [AAVE],
-                    ticker: 'AAVE',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(50, 162, 182) 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [MKR],
-                    ticker: 'MKR',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(68, 164, 148) 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [COMP],
-                    ticker: 'COMP',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(0, 170, 112) 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [CRV],
-                    ticker: 'CRV',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(187, 141, 0) 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [YFI],
-                    ticker: 'YFI',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [VRAP, WBTC],
-                    ticker: 'VRAP-WBTC',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [VRAP, ETH],
-                    ticker: 'VRAP-ETH',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [VRAP, DAI],
-                    ticker: 'VRAP-DAI',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [VRAP, UNI],
-                    ticker: 'VRAP-UNI',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [VRAP, USDC],
-                    ticker: 'VRAP-USDC',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [VRAP, USDT],
-                    ticker: 'VRAP-USDT',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [VRAP, LINK],
-                    ticker: 'VRAP-LINK',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [WBTC, USDC],
-                    ticker: 'WBTC-USDC',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(124, 118, 136) 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [ETH, USDT],
-                    ticker: 'ETH-USDT',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(36, 164, 124) 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [ETH, USDC],
-                    ticker: 'ETH-USDC',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(36, 116, 204) 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [ETH, DAI],
-                    ticker: 'ETH-DAI',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(187, 141, 0) 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [ETH, LINK],
-                    ticker: 'ETH-LINK',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(44, 94, 220) 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [ETH, UNI],
-                    ticker: 'ETH-UNI',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(252, 7, 125) 0%, rgb(108, 114, 132) 100%)',
-                },
-                {
-                    icons: [ETH, WBTC],
-                    ticker: 'ETH-WBTC',
-                    totalDeposit: 16439700,
-                    poolRate: '300.00',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(124, 118, 136) 0%, rgb(108, 114, 132) 100%)',
-                },
+                }
             ]
         }
     }
@@ -269,58 +70,9 @@ class Stake extends Component {
                     </div>
                     <div style={{display: 'grid', gridTemplateColumns: '1fr', gap: '15px 10px', width: '100%', justifySelf: 'center', paddingBottom: '3rem'}}>
                         {
-                            assets.map(({ icons, ticker, totalDeposit, poolRate, background }) => {
+                            assets.map(data => {
                                 return (
-                                    <div style={{display: 'grid', gridAutoRows: 'auto', borderRadius: '12px', width: '100%', overflow: 'hidden', position: 'relative', opacity: 1, background: background}}>
-                                        <span className="sale-rotation"></span>
-                                        <span className="noise"></span>
-                                        <div style={{display: 'grid', gridTemplateColumns: '48px 1fr 120px', gap: 0, alignItems: 'center', padding: '1rem', zIndex: 1}}>
-                                            <div style={{position: 'relative',  display: 'flex', flexDirection: 'row'}}>
-                                                {
-                                                    icons.map((icon) => {
-                                                        return (
-                                                            <img width="24px" height="24px" style={{borderRadius: '24px',  boxShadow: 'rgb(0 0 0 / 8%) 0px 6px 10px'}} alt={`${ticker} logo`} src={icon} />
-                                                        )
-                                                    })
-                                                }
-                                            </div>
-                                            <div style={{marginLeft: '8px'}} className="stake-card-heading">
-                                                {ticker}
-                                            </div>
-                                            <button onClick={() => this.props.history.push('/stake/address')} className="buy-action-button" style={{height: '38px', borderRadius: '8px', fontSize: '16px'}}>Deposit</button>
-                                        </div>
-                                        <div style={{display: 'flex', justifyContent: 'space-between', flexDirection: 'column', gap: '12px', margin: '0 1rem 1rem 1rem'}}>
-                                            <div style={{width: '100%', minWidth: 0, margin: '0 0 -5px 0', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                                                <div style={{fontSize: '16px', color: '#FFF', fontWeight: 500}}>
-                                                    Total deposited
-                                                </div>
-                                                <div style={{fontSize: '16px', color: '#FFF', fontWeight: 500}}>
-                                                    $<AnimatedNumber 
-                                                        component="text"
-                                                        value={totalDeposit}
-                                                        initialValue={0}
-                                                        default={0}
-                                                        stepPrecision={0}
-                                                        style={{
-                                                            transition: '0.8s ease-out',
-                                                            fontSize: 16,
-                                                            transitionProperty: 'background-color, color, opacity'
-                                                        }}
-                                                        duration={800}
-                                                        formatValue={(deposit) => <NumericLabel>{deposit}</NumericLabel>}
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div style={{width: '100%', minWidth: 0, margin: 0, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                                                <div style={{fontSize: '16px', color: '#FFF', fontWeight: 500}}>
-                                                    Pool rate
-                                                </div>
-                                                <div style={{fontSize: '16px', color: '#FFF', fontWeight: 500}}>
-                                                    {poolRate} % APY
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <AssetCard {...this.props} data={data} routeTo={this.routeTo} />
                                 )
                             })
                         }
@@ -332,3 +84,201 @@ class Stake extends Component {
 }
 
 export default withRouter(Stake);
+
+
+// {
+    // {
+    //     icons: [WBTC],
+    //     ticker: 'WBTC',
+    //     totalDeposit: 16439700,
+    //     poolRate: '300.00',
+    //     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(124, 118, 136) 0%, rgb(108, 114, 132) 100%)',
+    // },
+//     icons: [USDC],
+//     ticker: 'USDC',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [DAI],
+//     ticker: 'DAI',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(187, 141, 0) 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [TUSD],
+//     ticker: 'TUSD',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(44, 68, 124) 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [BUSD],
+//     ticker: 'BUSD',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(187, 141, 0) 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [AUSDC],
+//     ticker: 'AUSDC',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [PAX],
+//     ticker: 'PAX',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(4, 147, 211) 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [UNI],
+//     ticker: 'UNI',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(252, 7, 125) 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [LINK],
+//     ticker: 'LINK',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [AAVE],
+//     ticker: 'AAVE',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(50, 162, 182) 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [MKR],
+//     ticker: 'MKR',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(68, 164, 148) 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [COMP],
+//     ticker: 'COMP',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(0, 170, 112) 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [CRV],
+//     ticker: 'CRV',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(187, 141, 0) 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [YFI],
+//     ticker: 'YFI',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [VRAP, WBTC],
+//     ticker: 'VRAP-WBTC',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [VRAP, ETH],
+//     ticker: 'VRAP-ETH',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [VRAP, DAI],
+//     ticker: 'VRAP-DAI',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [VRAP, UNI],
+//     ticker: 'VRAP-UNI',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [VRAP, USDC],
+//     ticker: 'VRAP-USDC',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [VRAP, USDT],
+//     ticker: 'VRAP-USDT',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [VRAP, LINK],
+//     ticker: 'VRAP-LINK',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [WBTC, USDC],
+//     ticker: 'WBTC-USDC',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(124, 118, 136) 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [ETH, USDT],
+//     ticker: 'ETH-USDT',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(36, 164, 124) 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [ETH, USDC],
+//     ticker: 'ETH-USDC',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(36, 116, 204) 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [ETH, DAI],
+//     ticker: 'ETH-DAI',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(187, 141, 0) 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [ETH, LINK],
+//     ticker: 'ETH-LINK',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(44, 94, 220) 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [ETH, UNI],
+//     ticker: 'ETH-UNI',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(252, 7, 125) 0%, rgb(108, 114, 132) 100%)',
+// },
+// {
+//     icons: [ETH, WBTC],
+//     ticker: 'ETH-WBTC',
+//     totalDeposit: 16439700,
+//     poolRate: '300.00',
+//     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(124, 118, 136) 0%, rgb(108, 114, 132) 100%)',
+// },
