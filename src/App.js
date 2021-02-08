@@ -396,10 +396,12 @@ class App extends Component {
 
 	copyWalletAddress = () => {
 		this.setState({copied: true}, () => {
-			setTimeout(
-				() => this.setState({copied: false}),
-				1000
-			)
+			navigator.clipboard.writeText(this.state.walletAddress).then(() => {
+				setTimeout(
+					() => this.setState({copied: false}),
+					1000
+				)
+			})
 		})
 	}
 
