@@ -33,7 +33,7 @@ export default class Transaction extends Component {
         const {txSuccess} = this.state;
         return (
             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem'}}>
-                <a style={{fontSize: '14px'}} href={`https://etherscan.io/tx/${this.props.tx.hash}`} target="_blank" rel="noreferrer noopener">
+                <a style={{fontSize: '14px'}} href={`https://kovan.etherscan.io/tx/${this.props.tx.hash}`} target="_blank" rel="noreferrer noopener">
                     {this.props.tx.summary}
                 </a>
                 {

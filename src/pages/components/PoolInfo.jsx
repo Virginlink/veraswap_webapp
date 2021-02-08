@@ -37,11 +37,11 @@ export default class PoolInfo extends React.Component{
 
     render(){
         return(
-            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box', margin: 0, padding: 0, minWidth: 0, width: '100%', gap: '24px'}}>
+            <div style={{display: 'flex', justifyContent: 'center', boxSizing: 'border-box', margin: 0, padding: 0, minWidth: 0, width: '100%', gap: '24px'}}>
             <div className="outlined-box">
                 <div style={{display: 'grid', gridAutoRows: 'auto', rowGap: '8px'}}>
                     <div className="text-regular" style={{fontSize: '16px', marginBottom: '-5px'}}>Total deposits</div>
-                    <div className="text-semibold" style={{fontSize: '24px'}}>{this.state.totalDeposit} {this.props.ticker}</div>
+                    <div className="text-semibold" style={{fontSize: '24px'}}>{parseFloat(this.state.totalDeposit).toFixed(6)} {this.props.ticker}</div>
                 </div>
             </div>
             <div className="outlined-box">

@@ -193,9 +193,22 @@ export const GlobalStyles = createGlobalStyle`
         height: 16px;
         width: 16px;
     }
+    
 
     .transaction-status svg path {
         stroke: ${({theme}) => theme.primary};
+    }
+
+    .white-loader {
+        color: #FFF;
+    }
+
+    .white-loader svg {
+        color: #FFF;
+    }
+
+    .white-loader svg path {
+        stroke: #FFF;
     }
 
     .wallet-main-container {

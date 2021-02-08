@@ -21,8 +21,9 @@ import {TOKEN} from './utils/tokens';
 import './App.css';
 import './components/Navbar.css';
 import './components/Sale/Sale.css';
+import { notification } from 'antd';
 
-const {ethers} = require('ethers');
+const {ethers, BigNumber} = require('ethers');
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Fade timeout={{enter: 1000, exit: 2000}} ref={ref} {...props} />;
@@ -50,7 +51,8 @@ class App extends Component {
 			approving : false,
 			ethBuying : false,
 			sapproved : false,
-			sapproving : false
+			sapproving : false,
+			stakeSuccess: false,
 		}
 		this.fetchBalance = this.fetchBalance.bind(this);
 		this.buyWithEther = this.buyWithEther.bind(this);
@@ -156,7 +158,7 @@ class App extends Component {
 		}
 	}
 
-	async stakeToken(value,tokenAddress){
+	async stakeToken(value, depositAmount, tokenAddress){
 		if(value && tokenAddress){
 			let info = TOKEN.filter(data=>data.contractAddress === tokenAddress);
 			if(info.length > 0){
@@ -165,19 +167,55 @@ class App extends Component {
 				let tx = await contract.stake(value,info[0].contractAddress)
 				console.log(tx);
 				if(tx.hash){
+					const hashArrayString = localStorage.getItem('hashData');
+					const newTx = {
+						hash: tx.hash,
+						amount: depositAmount,
+						summary: `Stake ${depositAmount} VRAP`
+					}
+					if (hashArrayString) {
+						let hashArray = JSON.parse(hashArrayString)
+						hashArray.data.push(newTx)
+						localStorage.setItem('hashData', JSON.stringify(hashArray))
+					} else {
+						const newHashArray = {
+							data: [newTx]
+						}
+					localStorage.setItem('hashData', JSON.stringify(newHashArray))
+					}
+					notification['info']({
+						key: 'txInitiation',
+						message: 'Your transaction is being processed. You can view the transaction status by either clicking the button below or monitoring the recent transactions section.',
+						duration: 0,
+						btn: (<a href={`https://kovan.etherscan.io/tx/${tx.hash}`} target="_blank" rel="noreferrer noopener">View on Etherscan</a>)
+					})
 					let intervalId = setInterval(()=>{
 						PROVIDER.getTransactionReceipt(tx.hash)
 						.then(res=>{
 							try{
 							if(typeof res!==null){
 								if(res.blockNumber){
-								clearInterval(intervalId);
-								return true;	
+									const SuccessIcon = (
+										<div style={{color: 'rgb(39, 174, 96)'}}>
+											<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" style={{position: 'relative', top: '4px'}} viewBox="0 0 24 24" fill="none" stroke="currentColor" color="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+										</div> 
+									)
+									notification.close('txInitiation')
+									notification['info']({
+										key: 'txSuccess',
+										message: `Stake ${depositAmount} VRAP`,
+										duration: 0,
+										icon: SuccessIcon,
+										btn: (<a href={`https://kovan.etherscan.io/tx/${tx.hash}`} target="_blank" rel="noreferrer noopener">View on Etherscan</a>)
+									})
+									clearInterval(intervalId);
+									this.setState({stakeSuccess: true});
 								}
 							}
 							}   
 							catch(e){
 								console.log(e)
+								return false;
 							}
 						})
 					},1000)
@@ -189,10 +227,10 @@ class App extends Component {
 				}
 			}
 			else{
-				return false
+				return false;
 			}}
 			else{
-				return false
+				return false;
 			}
 	}
 
@@ -439,6 +477,8 @@ class App extends Component {
 		})
 	}
 
+	resetStakeStatus = () => this.setState({stakeSuccess: false})
+
 	render() {
 		const {connectWalletModalVisible, selectedWallet, showWalletConnection, connectionError, walletConnected, copied, walletConnectionActive, activeWallet, theme} = this.state
 		return (
@@ -535,6 +575,8 @@ class App extends Component {
 								approveStaking = {this.approveStaking}
 								stakeToken = {this.stakeToken}
 								claim={this.claim}
+								stakeSuccess={this.state.stakeSuccess}
+								onResetStakeStatus={this.resetStakeStatus}
 							/>
 						)} 
 					/>
