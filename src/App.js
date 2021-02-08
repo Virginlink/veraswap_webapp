@@ -7,7 +7,7 @@ import FortMatic from './assets/images/fortMatic.png';
 import PorTis from './assets/images/portis.png';
 import {ThemeProvider} from "styled-components";
 import { GlobalStyles } from "./components/globalStyles";
-import {PROVIDER,TOKEN_ABI,TOKEN_ADDRESS,TETHER_ABI,TETHER_ADDRESS,PRESALE_ABI,PRESALE_ADDRESS} from './utils/contracts';
+import {PROVIDER,TOKEN_ABI,TOKEN_ADDRESS,TETHER_ABI,TETHER_ADDRESS,PRESALE_ABI,PRESALE_ADDRESS,STAKING_ADDRESS, STAKING_ABI} from './utils/contracts';
 import { lightTheme, darkTheme } from "./components/Themes";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import Fortmatic from 'fortmatic';
@@ -17,6 +17,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import SalePage from './pages/SalePage';
 import StakePage from './pages/StakePage';
 import StakeDeposit from './pages/StakeDeposit';
+import {TOKEN} from './utils/tokens';
 import './App.css';
 import './components/Navbar.css';
 import './components/Sale/Sale.css';
@@ -47,12 +48,17 @@ class App extends Component {
 			signer : null,
 			approved : false,
 			approving : false,
-			ethBuying : false
+			ethBuying : false,
+			sapproved : false,
+			sapproving : false
 		}
 		this.fetchBalance = this.fetchBalance.bind(this);
 		this.buyWithEther = this.buyWithEther.bind(this);
 		this.approveTether = this.approveTether.bind(this);
 		this.buyWithTether = this.buyWithTether.bind(this);
+		this.approveStaking = this.approveStaking.bind(this);
+		this.stakeToken = this.stakeToken.bind(this);
+		this.claim = this.claim.bind(this);
 	}
 
 	componentDidMount() {
@@ -104,6 +110,90 @@ class App extends Component {
 		this.fetchVrapBalance(this.state.walletAddress)
 		this.fetchTetherBalance(this.state.walletAddress)
 		}
+	}
+
+	async approveStaking(value,tokenAddress){
+		if(value && tokenAddress){
+		this.setState({sapproving : true})
+		let info = TOKEN.filter(data=>data.contractAddress === tokenAddress);
+		if(info.length > 0){
+			let contract = new ethers.Contract(info[0].contractAddress,info[0].contractABI,this.state.signer);
+			try{
+			let tx = await contract.approve(STAKING_ADDRESS,value)
+			console.log(tx.hash)
+			if(tx.hash){
+				let intervalId = setInterval(()=>{
+					PROVIDER.getTransactionReceipt(tx.hash)
+					.then(res=>{
+						try{
+						if(typeof res!==null){
+							if(res.blockNumber){
+							this.setState({sapproved : true,sapproving : false});
+							clearInterval(intervalId);
+							}
+						}
+						}   
+						catch(e){
+							console.log(e)
+						}
+					})
+				},1000)
+			}
+			}
+			catch(e){
+				console.log(e)
+				this.setState({sapproving : false});
+				return false;
+			}
+		}
+		else{
+			this.setState({sapproving : false})
+			return false
+		}}
+		else{
+			this.setState({sapproving : false})
+			return false
+		}
+	}
+
+	async stakeToken(value,tokenAddress){
+		if(value && tokenAddress){
+			let info = TOKEN.filter(data=>data.contractAddress === tokenAddress);
+			if(info.length > 0){
+				let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,this.state.signer);
+				try{
+				let tx = await contract.stake(value,info[0].contractAddress)
+				console.log(tx);
+				if(tx.hash){
+					let intervalId = setInterval(()=>{
+						PROVIDER.getTransactionReceipt(tx.hash)
+						.then(res=>{
+							try{
+							if(typeof res!==null){
+								if(res.blockNumber){
+								clearInterval(intervalId);
+								return true;	
+								}
+							}
+							}   
+							catch(e){
+								console.log(e)
+							}
+						})
+					},1000)
+				}
+				}
+				catch(e){
+					console.log(e)
+					return false;
+				}
+			}
+			else{
+				return false
+			}}
+			else{
+				return false
+			}
 	}
 
 	async approveTether(value){
@@ -313,6 +403,40 @@ class App extends Component {
 		})
 	}
 
+	claim(contractAddress){
+		console.log(contractAddress);
+		let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,this.state.signer);
+		contract.claim(contractAddress)
+		.then(res=>{
+			console.log(res);
+			if(res.hash){
+				let intervalId = setInterval(()=>{
+					PROVIDER.getTransactionReceipt(res.hash)
+					.then(res=>{
+						try{
+						if(typeof res!==null){
+							if(res.blockNumber){
+								clearInterval(intervalId);
+								return true;
+							}
+						}
+						}   
+						catch(e){
+							console.log(e)
+						}
+					})
+				},1000)
+			}
+			else{
+				return false;
+			}
+		})
+		.catch(err=>{
+			console.log(err);
+			return false;
+		})
+	}
+
 	render() {
 		const {connectWalletModalVisible, selectedWallet, showWalletConnection, connectionError, walletConnected, copied, walletConnectionActive, activeWallet, theme} = this.state
 		return (
@@ -404,6 +528,11 @@ class App extends Component {
 								approving = {this.state.approving}
 								approveTether={this.approveTether}
 								buyWithTether = {this.buyWithTether}
+								sapproved = {this.state.sapproved}
+								sapproving = {this.state.sapproving}
+								approveStaking = {this.approveStaking}
+								stakeToken = {this.stakeToken}
+								claim={this.claim}
 							/>
 						)} 
 					/>
