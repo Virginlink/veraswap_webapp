@@ -1,6 +1,7 @@
 import { Dialog, Fade } from '@material-ui/core'
 import { notification, Tooltip } from 'antd';
-import ETH from '../../assets/images/eth.png'
+import ETH from '../../assets/images/eth.png';
+import BUSD from '../../assets/images/busd.png';
 import React, { Component } from 'react'
 import Countdown from 'react-countdown'
 import {PRESALE_ABI,PRESALE_ADDRESS,PROVIDER} from '../../utils/contracts';
@@ -87,7 +88,7 @@ export default class Sale extends Component {
                 message: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} BNB`,
                 duration: 0,
                 icon: SuccessIcon,
-                btn: (<a href={`https://etherscan.io/tx/${status}`} target="_blank" rel="noreferrer noopener">View on Etherscan</a>)
+                btn: (<a href={`https://testnet.bscscan.com/tx/${status}`} target="_blank" rel="noreferrer noopener">View on Explorer</a>)
             })
             this.setState({txSuccess : true, txHash : status})
        }
@@ -103,7 +104,7 @@ export default class Sale extends Component {
             const tx = {
                 hash: status,
                 amount: parseFloat(this.state.depositAmount).toFixed(4),
-                summary: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} USDT`
+                summary: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} BUSD`
             }
             if (hashArrayString) {
                 let hashArray = JSON.parse(hashArrayString)
@@ -116,10 +117,10 @@ export default class Sale extends Component {
                 localStorage.setItem('hashData', JSON.stringify(newHashArray))
             }
             notification['info']({
-                message: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} USDT`,
+                message: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} BUSD`,
                 duration: 0,
                 icon: SuccessIcon,
-                btn: (<a href={`https://etherscan.io/tx/${status}`} target="_blank" rel="noreferrer noopener">View on Etherscan</a>)
+                btn: (<a href={`https://testnet.bscscan.com/tx/${status}`} target="_blank" rel="noreferrer noopener">View on Explorer</a>)
             })
             this.setState({txSuccess : true, txHash : status})
         }
@@ -223,7 +224,7 @@ export default class Sale extends Component {
                       </div>
                         <p className="connected-wallet-footer-text" style={{width:'80%',marginLeft:'10%',textAlign:'center',lineHeight:'2rem'}}>
                             It takes upto 5 minutes to mine your transaction. Once done your tokens will be automatically credited to your wallet address.
-                            If you wish to track your transaction <a href={`https://etherscan.io/tx/${this.state.txHash}`} target="_blank">click here</a>
+                            If you wish to track your transaction <a href={`https://testnet.bscscan.com/tx/${this.state.txHash}`} target="_blank">click here</a>
                         </p>
                     </div>
                     :
@@ -258,8 +259,8 @@ export default class Sale extends Component {
                                         </span>
                                         :
                                         <span style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                                            <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} class="sc-fZwumE evMpaO" alt="USDT logo" src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" />
-                                            <span style={{margin: '0px 0.25rem 0px 0.75rem', fontSize: '20px'}}>USDT</span>
+                                            <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} class="sc-fZwumE evMpaO" alt="BUSD logo" src={BUSD} />
+                                            <span style={{margin: '0px 0.25rem 0px 0.75rem', fontSize: '20px'}}>BUSD</span>
                                             <svg width="12" height="7" viewBox="0 0 12 7" fill="none" style={{margin: '0px 0.25rem 0px 0.5rem', height: '35%'}}><path d="M0.97168 1L6.20532 6L11.439 1" stroke="#AEAEAE"></path></svg>
                                         </span>
                                       }
@@ -388,10 +389,10 @@ export default class Sale extends Component {
                             <div style={{position: 'relative', flex: '1 1 0%', marginTop: '-1rem'}}>
                                     <div style={{position: 'relative', height: '556px', width: '100%', overflow: 'auto', willChange: 'transform', direction: 'ltr'}}>
                                         <div style={{width: '100%'}}>
-                                            <div onClick={()=>{this.setState({currentToken : "USDT",tokensModalVisible : false,buyModalVisible : true})}} className={this.state.currentToken === "ETH" ? "individual-token" : "individual-token token-disabled"}>
-                                                <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} alt="USDT logo" src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" />
+                                            <div onClick={()=>{this.setState({currentToken : "BUSD",tokensModalVisible : false,buyModalVisible : true})}} className={this.state.currentToken === "ETH" ? "individual-token" : "individual-token token-disabled"}>
+                                                <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} alt="BUSD logo" src={BUSD} />
                                                 <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
-                                                    <div className="token-title">USDT</div>
+                                                    <div className="token-title">BUSD</div>
                                                 </div>
                                                 <span></span>
                                                 <div style={{display: 'flex', justifyContent: 'flex-end', margin: 0, padding: 0, minWidth: 0, boxSizing: 'border-box', alignItems: 'center', width: 'fit-content'}}>
@@ -408,7 +409,7 @@ export default class Sale extends Component {
                                                     }
                                                 </div>
                                             </div>
-                                            <div onClick={()=>{this.setState({currentToken : "ETH",tokensModalVisible : false, buyModalVisible : true})}} className={this.state.currentToken === "USDT" ? "individual-token" : "individual-token token-disabled"}>
+                                            <div onClick={()=>{this.setState({currentToken : "ETH",tokensModalVisible : false, buyModalVisible : true})}} className={this.state.currentToken === "BUSD" ? "individual-token" : "individual-token token-disabled"}>
                                                 <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} alt="BNB logo" src={ETH} />
                                                 <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
                                                     <div className="token-title">BNB</div>

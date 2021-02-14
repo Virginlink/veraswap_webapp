@@ -201,7 +201,7 @@ class App extends Component {
 			this.setState({approving : true})
 			let contract = new ethers.Contract(TETHER_ADDRESS,TETHER_ABI,this.state.signer);
 			try{
-			let tx = await contract.approve(PRESALE_ADDRESS,parseFloat(value) * 10 ** 6)
+			let tx = await contract.approve(PRESALE_ADDRESS,ethers.utils.parseEther(value))
 			if(tx.hash){
 				let intervalId = setInterval(()=>{
 					PROVIDER.getTransactionReceipt(tx.hash)
@@ -226,6 +226,7 @@ class App extends Component {
 			}
 			}
 			catch(e){
+				console.log(e)
 				this.setState({approving : false})
 				return false;
 			}
@@ -256,7 +257,7 @@ class App extends Component {
 
 	async buyWithTether(value){
 		let contract  = new ethers.Contract(PRESALE_ADDRESS,PRESALE_ABI,this.state.signer);
-		let status = await contract.PurchaseWithTether(parseFloat(value) * 10 ** 6)
+		let status = await contract.PurchaseWithTether(ethers.utils.parseEther(value))
 		console.log(status)
 		if(status.hash){
 			setTimeout(
@@ -364,7 +365,7 @@ class App extends Component {
 	async fetchTetherBalance(address){
 		let contract = new ethers.Contract(TETHER_ADDRESS,TETHER_ABI,PROVIDER);
 		let balance	 = await contract.balanceOf(address)
-			balance = ethers.utils.formatEther(balance) * 10 ** 12;
+			balance = ethers.utils.formatEther(balance);
 		this.setState({usdtBalance : balance})
 	}
 
