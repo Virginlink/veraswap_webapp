@@ -30,7 +30,7 @@ export default class PoolInfo extends React.Component{
     async fetch(){
         let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,PROVIDER);
         let poolRate = await contract.rFactor(this.props.currentToken);
-            poolRate = ethers.utils.formatEther(poolRate) * 10 ** 8;
+            poolRate = ethers.utils.formatEther(poolRate) * 3154 * 10 ** 5;
         this.setState({poolRate : poolRate});
         this.props.setAPY(poolRate);
     }

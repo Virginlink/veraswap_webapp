@@ -71,7 +71,7 @@ export default class Sale extends Component {
             const tx = {
                 hash: status,
                 amount: parseFloat(this.state.depositAmount).toFixed(4),
-                summary: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} ETH`
+                summary: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} BNB`
             }
             if (hashArrayString) {
                 let hashArray = JSON.parse(hashArrayString)
@@ -84,7 +84,7 @@ export default class Sale extends Component {
                 localStorage.setItem('hashData', JSON.stringify(newHashArray))
             }
             notification['info']({
-                message: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} ETH`,
+                message: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} BNB`,
                 duration: 0,
                 icon: SuccessIcon,
                 btn: (<a href={`https://etherscan.io/tx/${status}`} target="_blank" rel="noreferrer noopener">View on Etherscan</a>)
@@ -229,7 +229,7 @@ export default class Sale extends Component {
                     :
                     <div className="buy-modal-grid">
                         <div className="buy-modal-header">
-                            <div className="buy-modal-title">Buy VRAP with {this.state.currentToken}</div>
+                            <div className="buy-modal-title">Buy VRAP with {this.state.currentToken === "ETH" ? "BNB" : this.state.currentToken}</div>
                             <svg style={{cursor: 'pointer'}} onClick={() => this.setState({buyModalVisible: false})} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sc-jnlKLf fEBVhk"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                         </div>
                         {this.state.error ?
@@ -252,8 +252,8 @@ export default class Sale extends Component {
                                       {
                                         this.state.currentToken === "ETH" ?
                                         <span style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                                            <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} class="sc-fZwumE evMpaO" alt="ETH logo" src={ETH} />
-                                            <span style={{margin: '0px 0.25rem 0px 0.75rem', fontSize: '20px'}}>ETH</span>
+                                            <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} class="sc-fZwumE evMpaO" alt="BNB logo" src={ETH} />
+                                            <span style={{margin: '0px 0.25rem 0px 0.75rem', fontSize: '20px'}}>BNB</span>
                                             <svg width="12" height="7" viewBox="0 0 12 7" fill="none" style={{margin: '0px 0.25rem 0px 0.5rem', height: '35%'}}><path d="M0.97168 1L6.20532 6L11.439 1" stroke="#AEAEAE"></path></svg>
                                         </span>
                                         :
@@ -409,9 +409,9 @@ export default class Sale extends Component {
                                                 </div>
                                             </div>
                                             <div onClick={()=>{this.setState({currentToken : "ETH",tokensModalVisible : false, buyModalVisible : true})}} className={this.state.currentToken === "USDT" ? "individual-token" : "individual-token token-disabled"}>
-                                                <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} alt="ETH logo" src={ETH} />
+                                                <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} alt="BNB logo" src={ETH} />
                                                 <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
-                                                    <div className="token-title">ETH</div>
+                                                    <div className="token-title">BNB</div>
                                                 </div>
                                                 <span></span>
                                                 <div style={{display: 'flex', justifyContent: 'flex-end', margin: 0, padding: 0, minWidth: 0, boxSizing: 'border-box', alignItems: 'center', width: 'fit-content'}}>

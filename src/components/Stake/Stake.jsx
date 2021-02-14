@@ -27,7 +27,7 @@ class Stake extends Component {
                 {
                     icons: [VRAP],
                     ticker: 'VRAP',
-                    tokenContract: "0x7a5BA153010CF289c9D4E8A6de67eedc715D990a",
+                    tokenContract: "0x7B236a68EbfD62830c35152B499B8c626e5D6176",
                     background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
                 }
             ]

@@ -272,11 +272,13 @@ class App extends Component {
 	}
 
 	async handleMetmask(){
+		console.log(window.ethereum)
 		try{
 			if(typeof window.ethereum !== undefined){
 				let provider = new ethers.providers.Web3Provider(window.ethereum);
 				await window.ethereum.enable();
 				const address = await provider.listAccounts();
+				console.log(address);
 				let signer = provider.getSigner();
 				this.fetchEthBalance(address[0])
 				this.fetchVrapBalance(address[0])
@@ -792,7 +794,7 @@ class App extends Component {
 													<img src={WalletConnect} alt="icon" />
 												</div>
 											</button>
-											<button className={`modal-content-button ${activeWallet === 'fortmatic' && 'active-wallet-button'}`} onClick={() => this.connectToWallet('fortmatic')} style={{display: 'flex', flexDirection: activeWallet === 'fortmatic' && 'row'}}>
+											{/* <button className={`modal-content-button ${activeWallet === 'fortmatic' && 'active-wallet-button'}`} onClick={() => this.connectToWallet('fortmatic')} style={{display: 'flex', flexDirection: activeWallet === 'fortmatic' && 'row'}}>
 												<div className="modal-content-button-title">
 													{
 														activeWallet === 'fortmatic' &&
@@ -806,8 +808,8 @@ class App extends Component {
 												<div className="modal-content-button-icon">
 													<img src={FortMatic} alt="icon" />
 												</div>
-											</button>
-											<button className={`modal-content-button ${activeWallet === 'portis' && 'active-wallet-button'}`} onClick={() => this.connectToWallet('portis')}>
+											</button> */}
+											{/* <button className={`modal-content-button ${activeWallet === 'portis' && 'active-wallet-button'}`} onClick={() => this.connectToWallet('portis')}>
 												<div className="modal-content-button-title" style={{display: 'flex', flexDirection: activeWallet === 'portis' && 'row'}}>
 													{
 														activeWallet === 'portis' &&
@@ -821,7 +823,7 @@ class App extends Component {
 												<div className="modal-content-button-icon">
 													<img src={PorTis} alt="icon" />
 												</div>
-											</button>
+											</button> */}
 										</div>
 										<div className="modal-footer">
 											<span>New to Ethereum?</span>

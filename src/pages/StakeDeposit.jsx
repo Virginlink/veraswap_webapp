@@ -44,6 +44,7 @@ export default class StakeDeposit extends Component {
         let balance = await contract.balanceOf(this.props.walletAddress);
             balance = ethers.utils.formatEther(balance) * 10 ** info[0].decimal;
             balance = parseFloat(balance).toFixed(2);
+        console.log(balance)
         this.setState({loading : false, balance : balance, decimal : info[0].decimalCorrection});
         }
         else{
@@ -200,7 +201,7 @@ export default class StakeDeposit extends Component {
                                 <div className="available-deposit-container">
                                     <div className="available-deposit-inner-container">
                                         <div />
-                                        <div style={{display: 'inline', cursor: 'pointer'}}>_</div>
+                                        <div style={{display: 'inline', cursor: 'pointer'}}>{this.state.balance}</div>
                                     </div>
                                 </div>
                                 <div className="deposit-input-container">
@@ -219,9 +220,12 @@ export default class StakeDeposit extends Component {
                             <div className="received-amount">Daily Rewards</div>
                             <div className="received-amount">
                                 {
-                                parseFloat(parseFloat(this.state.apy) * 86400 * parseFloat(this.state.depositAmount)).toFixed(2)
+                                parseFloat(
+                                    parseFloat(this.state.apy) * 10 ** -2 * parseFloat(this.state.depositAmount)
+                                    / 365
+                                ).toFixed(2)
                                 } {this.state.ticker}
-                               <span style={{marginLeft:"0.5rem"}}>{this.props.ticker} / day</span> 
+                               <span style={{marginLeft:"0.5rem"}}>{this.props.ticker} / Day</span> 
                             </div>
                         </div>
                         

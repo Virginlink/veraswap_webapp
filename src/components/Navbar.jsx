@@ -122,7 +122,7 @@ class Navbar extends Component {
 
                                 <div className="wallet-details-container">
                                     <div className="wallet-balance" style={{flexShrink: 0}}>
-                                        {this.props.ethBalance === '' ? 0.00 : parseFloat(this.props.ethBalance).toFixed(3)} ETH
+                                        {this.props.ethBalance === '' ? 0.00 : parseFloat(this.props.ethBalance).toFixed(3)} BNB
                                     </div>
                                     <button className="wallet-address-button" onClick={this.props.onModalToggle}>
                                         <p>{`${this.props.walletAddress}`.substring(0,6) + '...' + `${this.props.walletAddress}`.substring(37,42)}</p>

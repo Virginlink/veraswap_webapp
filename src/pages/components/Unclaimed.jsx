@@ -33,8 +33,8 @@ export default class Unclaimed extends React.Component{
         let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,PROVIDER);
         contract.fetchUnclaimed(walletAddress,this.props.currentToken)
         .then(res=>{
-            let unclaimed = ethers.utils.formatEther(res) * 10 ** decimal * 10 ** 3;
-            this.setState({unclaimed : parseFloat(unclaimed).toFixed(4)});
+            let unclaimed = ethers.utils.formatEther(res) * 10 ** decimal;
+            this.setState({unclaimed : parseFloat(unclaimed).toFixed(12)});
         })
         .catch(err=>{
             console.log(err)
@@ -53,9 +53,9 @@ export default class Unclaimed extends React.Component{
                 <div className="text-semibold-2x" style={{fontSize: '36px'}}>{this.state.unclaimed}</div>
                 <div className="text-semibold" style={{fontSize: '16px'}}>
                     <span role="img" aria-label="wizard-icon" style={{marginRight: '8px'}}>⚡</span>
-                    {
-                    parseFloat(parseFloat(this.props.apy) * 86400 * parseFloat(this.props.liquidity)).toFixed(4) * 10 ** -3
-                    } {this.props.ticker} / day
+                    { 
+                    this.state.unclaimed
+                    }
                 </div>
             </div>
         </div>      
