@@ -209,8 +209,8 @@ export default class StakeDeposit extends Component {
                                     <button onClick={()=>this.setState({depositAmount : this.state.balance})} className="max-deposit-button">MAX</button>
                                     <button className="token-select-button">
                                         <span style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                                            <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} class="sc-fZwumE evMpaO" alt="ETH logo" src={Logo} />
-                                            <span style={{margin: '0px 0.25rem 0px 0.75rem', fontSize: '20px'}}>VRAP</span>
+                                            <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} class="sc-fZwumE evMpaO" alt="logo" src={this.state.icon} />
+                                            <span style={{margin: '0px 0.25rem 0px 0.75rem', fontSize: '20px'}}>{this.state.ticker}</span>
                                         </span>
                                     </button>
                                 </div>

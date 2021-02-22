@@ -46,7 +46,7 @@ export default class Unclaimed extends React.Component{
         <div style={{display: 'grid', gridAutoRows: 'auto', rowGap: '8px'}}>
             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxSizing: 'border-box', width: '100%', margin: 0, padding: 0, minWidth: 0}}>
                 <div>
-                    <div className="text-semibold" style={{fontSize: '16px'}}>Your unclaimed VRAP</div>
+                    <div className="text-semibold" style={{fontSize: '16px'}}>Your unclaimed {this.props.ticker}</div>
                 </div>
             </div>
             <div style={{display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', boxSizing: 'border-box', width: '100%', margin: 0, padding: 0, minWidth: 0}}>
