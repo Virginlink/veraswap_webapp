@@ -202,7 +202,6 @@ class App extends Component {
 			let contract = new ethers.Contract(TETHER_ADDRESS,TETHER_ABI,this.state.signer);
 			try{
 			let tx = await contract.approve(PRESALE_ADDRESS,ethers.utils.parseEther(value))
-			console.log(tx);
 			if(tx.hash){
 				let intervalId = setInterval(()=>{
 					PROVIDER.getTransactionReceipt(tx.hash)
@@ -235,12 +234,10 @@ class App extends Component {
 	}
 
 	async buyWithEther(value){
-		console.log(value)
 		if (value) {
 			this.setState({ethBuying : true})
 			try{
 			let contract  = new ethers.Contract(PRESALE_ADDRESS,PRESALE_ABI,this.state.signer);
-			console.log(contract);
 			let status = await contract.PurchaseWithEther({value : ethers.utils.parseEther(value)})
 			if(status.hash){
 				this.setState({ethBuying : false})
@@ -252,7 +249,6 @@ class App extends Component {
 			}
 			}
 			catch(e){
-				console.log(e,"Error")
 				this.setState({ethBuying : false})
 				return false
 			}
@@ -302,21 +298,18 @@ class App extends Component {
 		try{
 			const web3Provider = new WalletConnectProvider({
                 rpc : {
-					56 : 'https://bsc-dataseed.binance.org/',
+					97 : 'https://data-seed-prebsc-1-s1.binance.org:8545/'
 				},
-				qrcode : true,
-				chainId : 56
+				bridge : 'https://bridge.walletconnect.org',
+				qrcode : true
             });      
 			await web3Provider.enable()
 			.catch(e=>{
 				console.log(e)
 			})
-			console.log(web3Provider)
 			const provider = new ethers.providers.Web3Provider(web3Provider);
 			const address = await provider.listAccounts();
 			const signer = provider.getSigner();
-			console.log(signer)
-			console.log(address[0])
 			this.fetchEthBalance(address[0])
 			this.fetchVrapBalance(address[0])
 			this.fetchTetherBalance(address[0])

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import VRAP from '../../assets/images/logo.png';
 import {withRouter} from 'react-router-dom';
-import ETH from '../../assets/images/eth.png';
 import AssetCard from './components/assetCard';
 const WBTC = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png';
 const USDC = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png';
@@ -18,7 +17,7 @@ const COMP = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockc
 const CRV = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xD533a949740bb3306d119CC777fa900bA034cd52/logo.png';
 const YFI = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/logo.png';
 const USDT = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png';
-
+const TWT = 'https://github.com/trustwallet/assets/blob/master/blockchains/binance/assets/TWT-8C2/logo.png?raw=true';
 class Stake extends Component {
     constructor(props) {
         super(props);
@@ -27,7 +26,13 @@ class Stake extends Component {
                 {
                     icons: [VRAP],
                     ticker: 'VRAP',
-                    tokenContract: "0x7B236a68EbfD62830c35152B499B8c626e5D6176",
+                    tokenContract: "0x271C418B045d05A1D52c6bF849d47b5B5B4d769e",
+                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
+                },
+                {
+                    icons: [TWT],
+                    ticker: 'TWT',
+                    tokenContract: "0x4b0f1812e5df2a09796481ff14017e6005508003",
                     background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
                 }
             ]

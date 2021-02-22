@@ -5,11 +5,14 @@ import App from './App';
 import './index.css';
 import 'antd/dist/antd.css';
 import reportWebVitals from './reportWebVitals';
-
+import bsc from '@binance-chain/bsc-use-wallet'
+import { UseWalletProvider } from 'use-wallet'
 ReactDOM.render(
   <React.StrictMode>
     <Router>
+    <UseWalletProvider connectors={{ bsc }}>
       <App />
+    </UseWalletProvider>
     </Router>
   </React.StrictMode>,
   document.getElementById('root')
