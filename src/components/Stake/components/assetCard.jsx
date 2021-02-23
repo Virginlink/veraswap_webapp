@@ -33,9 +33,8 @@ class AssetCard extends React.Component{
     async fetch(){
         let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,PROVIDER);
         let poolRate = await contract.rFactor(this.props.data.tokenContract);
-            poolRate = ethers.utils.formatEther(poolRate) * 3154 * 10 ** 5 ;
-        console.log(poolRate)
-        this.setState({poolRate : poolRate})
+            poolRate = ethers.utils.formatEther(poolRate) * 3.154 * 10 ** 9;
+        this.setState({poolRate : parseFloat(poolRate).toFixed(2)})
     }
 
     render(){

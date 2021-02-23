@@ -223,7 +223,7 @@ export default class StakeDeposit extends Component {
                                 parseFloat(
                                     parseFloat(this.state.apy) * 10 ** -2 * parseFloat(this.state.depositAmount)
                                     / 365
-                                ).toFixed(2)
+                                ).toFixed(4)
                                 } {this.state.ticker}
                                <span style={{marginLeft:"0.5rem"}}>{this.props.ticker} / Day</span> 
                             </div>
