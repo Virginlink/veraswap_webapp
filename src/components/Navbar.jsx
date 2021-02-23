@@ -382,7 +382,7 @@ class Navbar extends Component {
                                                 VRAP in circulation:
                                             </div>
                                             <div className="coloured-modal-text">
-                                                210,000,000
+                                                100,000,000
                                             </div>
                                         </div>
                                         <div className="coloured-modal-content-row">
@@ -390,7 +390,7 @@ class Navbar extends Component {
                                                 Total supply:
                                             </div>
                                             <div className="coloured-modal-text">
-                                                210,000,000
+                                                100,000,000
                                             </div>
                                         </div>
                                     </div>
