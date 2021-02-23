@@ -17,12 +17,16 @@ class AssetCard extends React.Component{
     async componentDidMount(){
         if(this.props.data){
             this.fetch()
+            try{
             let token = TOKEN.filter(data => data.contractAddress === this.props.data.tokenContract);
             let ContractABI = token[0].contractABI;
             let contract = new ethers.Contract(this.props.data.tokenContract,ContractABI,PROVIDER);
             let balance = await contract.balanceOf(STAKING_ADDRESS);
                 balance = ethers.utils.formatEther(balance) * 10 ** token[0].decimal;
             this.setState({totalDeposit : balance})
+            }catch(e){
+                console.log(e,this.props.data)
+            }
         }
     }
 
