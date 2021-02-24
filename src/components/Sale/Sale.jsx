@@ -155,8 +155,7 @@ export default class Sale extends Component {
                                     </div>
                                     <div className="sale-block-content-container">
                                         <div className="sale-block-content">
-                                            The VRAP Public Crowdsale will consist of 3 rounds with different prices ranging from $0.05 to $0.12 to allow more community members to participate in the sale. When the first round is sold out, the second round will begin immediately. Your tokens are distributed immediately to your wallet.
-                                        </div>
+                                        The VRAP Public Crowdsale will consist of 3 rounds with different prices ranging from $0.05 to $0.075 to allow more community members to participate in the sale. When the first round is sold out, the second round will begin immediately. Your tokens are distributed immediately to your wallet.                                        </div>
                                     </div>
                                 </div>
                             </div>

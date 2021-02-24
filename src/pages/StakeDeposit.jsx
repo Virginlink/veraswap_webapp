@@ -104,7 +104,7 @@ export default class StakeDeposit extends Component {
 					ethBalance = {this.props.ethBalance}
 					vrapBalance = {this.props.vrapBalance}
 				/>
-                <div style={{display: 'flex', flexDirection: 'column', width: '100%', paddingTop: '100px', alignItems: 'center', flex: '1 1 0%', overflow: 'hidden auto', zIndex: 1}}>
+                <div style={{display: 'flex', flexDirection: 'column', alignItems : 'center', justifyContent:'center', marginLeft : window.innerWidth < 720 ? '2%' : '0' ,width: window.innerWidth < 720 ? '96%' : '100%', paddingTop: window.innerWidth < 600 ? '30px' : '100px',paddingBottom : window.innerWidth < 600 ? '20px' : '0px', alignItems: 'center', flex: '1 1 0%', zIndex: 1, overflow : 'scroll auto'}}>
                     <div style={{display: 'grid', gridAutoRows: 'auto', rowGap: '24px', justifyItems: 'center', maxWidth: '640px', width: '100%'}}>
                         <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxSizing: 'border-box', margin: 0, padding: 0, minWidth: 0, width: '100%', gap: '24px'}}>
                             <div className="heading" style={{margin: 0}}>

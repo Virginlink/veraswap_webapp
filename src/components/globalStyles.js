@@ -1242,9 +1242,9 @@ export const GlobalStyles = createGlobalStyle`
 
     @media only screen and (max-width: 500px) {
         .navbar-actions-main-container {
-            flex-direction: column;
+            flex-direction: row;
             align-items: flex-end;
-            height: 122px;
+            height: 82px;
         }
 
         .settings-menu {
