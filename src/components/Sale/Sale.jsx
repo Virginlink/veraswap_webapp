@@ -55,10 +55,11 @@ export default class Sale extends Component {
     }
 
     fetchEthPrice(){
-        fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
+        fetch('https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd')
         .then(response => response.json())
         .then(resJson => {
-            this.setState({ethPrice : resJson.ethereum.usd})
+            console.log(resJson)
+            this.setState({ethPrice : resJson.binancecoin.usd})
         })
         .catch(err=>{
             console.log(err)
