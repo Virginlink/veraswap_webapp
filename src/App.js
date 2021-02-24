@@ -655,7 +655,7 @@ class App extends Component {
 														}
 													</div>
 													<div>
-														<button className="change-wallet-button" onClick={() => this.setState({showWalletConnection: false})}>
+														<button className="change-wallet-button" onClick={() => {localStorage.clear();this.setState({showWalletConnection: false, walletConnected : false, activeWallet : ''})}}>
 															Change
 														</button>
 													</div>

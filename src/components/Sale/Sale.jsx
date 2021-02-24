@@ -89,7 +89,7 @@ export default class Sale extends Component {
                 message: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} BNB`,
                 duration: 0,
                 icon: SuccessIcon,
-                btn: (<a href={`https://testnet.bscscan.com/tx/${status}`} target="_blank" rel="noreferrer noopener">View on Explorer</a>)
+                btn: (<a href={`https://bscscan.com/tx/${status}`} target="_blank" rel="noreferrer noopener">View on Explorer</a>)
             })
             this.setState({txSuccess : true, txHash : status})
        }
@@ -121,7 +121,7 @@ export default class Sale extends Component {
                 message: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} BUSD`,
                 duration: 0,
                 icon: SuccessIcon,
-                btn: (<a href={`https://testnet.bscscan.com/tx/${status}`} target="_blank" rel="noreferrer noopener">View on Explorer</a>)
+                btn: (<a href={`https://bscscan.com/tx/${status}`} target="_blank" rel="noreferrer noopener">View on Explorer</a>)
             })
             this.setState({txSuccess : true, txHash : status})
         }
@@ -224,7 +224,7 @@ export default class Sale extends Component {
                       </div>
                         <p className="connected-wallet-footer-text" style={{width:'80%',marginLeft:'10%',textAlign:'center',lineHeight:'2rem'}}>
                             It takes upto 5 minutes to mine your transaction. Once done your tokens will be automatically credited to your wallet address.
-                            If you wish to track your transaction <a href={`https://testnet.bscscan.com/tx/${this.state.txHash}`} target="_blank">click here</a>
+                            If you wish to track your transaction <a href={`https://bscscan.com/tx/${this.state.txHash}`} target="_blank">click here</a>
                         </p>
                     </div>
                     :
