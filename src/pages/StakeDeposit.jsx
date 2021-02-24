@@ -65,7 +65,7 @@ export default class StakeDeposit extends Component {
         this.setState({claiming : true}, async ()=> {
            let result = await this.props.claim(this.state.currentToken);
            if(result){
-            alert('Claim Successful');
+            this.forceUpdate()
             this.setState({liquidity : 0.0, claiming : false})
            }else{
             this.setState({claiming : false})
@@ -81,7 +81,8 @@ export default class StakeDeposit extends Component {
             this.state.currentToken
         );
         if(result){
-            this.setState({txSuccess : true});
+            this.setState({txSuccess : true,depositModalVisible : false});
+            this.forceUpdate()
         }
         else{
             this.setState({txSuccess : false});
@@ -254,7 +255,19 @@ export default class StakeDeposit extends Component {
                                 depositAmount ? (parseFloat(depositAmount) === 0 || parseFloat(depositAmount) === 0. || parseFloat(depositAmount) < 0) ? 'Invalid amount' : "Approve" : 'Enter an amount'
                                 }
                             </button>
-                            <button onClick={()=>{this.handleStake()}} disabled={!this.props.sapproved || this.props.sapproving} className="buy-action-button">Stake Now</button>
+                            <button onClick={()=>{this.handleStake()}} disabled={!this.props.sapproved || this.props.sapproving || this.props.staking} className="buy-action-button">  
+                            {
+                                this.props.staking ?
+                                <div className="transaction-status">
+                                   <svg style={{position: 'relative', right: '-13px', width: '20px', height: '20px'}} className="connection-loader" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="sc-bYSBpT fhfZBu sc-gqPbQI dCfdPK"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 9.27455 20.9097 6.80375 19.1414 5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    <span>
+                                        Staking
+                                    </span>
+                                </div>  
+                                :
+                                "Stake Now"
+                            }
+                            </button>
                         </div>
                         <div style={{display: 'grid', gridAutoRows: 'auto', justifyContent: 'center'}}>
                             <div style={{boxSizing: 'border-box', margin: 0, minWidth: 0, display: 'flex', padding: 0, alignItems: 'center', justifyContent: 'space-between', width: '200px'}}>

@@ -163,8 +163,8 @@ class App extends Component {
 				let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,this.state.signer);
 				try{
 				let tx = await contract.stake(value,info[0].contractAddress)
-				console.log(tx);
 				if(tx.hash){
+					this.setState({staking : true})
 					let intervalId = setInterval(()=>{
 						PROVIDER.getTransactionReceipt(tx.hash)
 						.then(res=>{
@@ -172,6 +172,7 @@ class App extends Component {
 							if(typeof res!==null){
 								if(res.blockNumber){
 								clearInterval(intervalId);
+								this.setState({staking : false})
 								return true;	
 								}
 							}
@@ -185,6 +186,7 @@ class App extends Component {
 				}
 				catch(e){
 					console.log(e)
+					this.setState({staking : false})
 					return false;
 				}
 			}
@@ -543,6 +545,7 @@ class App extends Component {
 								buyWithTether = {this.buyWithTether}
 								sapproved = {this.state.sapproved}
 								sapproving = {this.state.sapproving}
+								staking={this.state.staking}
 								approveStaking = {this.approveStaking}
 								stakeToken = {this.stakeToken}
 								claim={this.claim}
