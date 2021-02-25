@@ -50,7 +50,8 @@ class App extends Component {
 			approving : false,
 			ethBuying : false,
 			sapproved : false,
-			sapproving : false
+			sapproving : false,
+			claiming : false
 		}
 		this.fetchBalance = this.fetchBalance.bind(this);
 		this.buyWithEther = this.buyWithEther.bind(this);
@@ -419,11 +420,10 @@ class App extends Component {
 	}
 
 	claim(contractAddress){
-		console.log(contractAddress);
+		this.setState({claiming : true})
 		let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,this.state.signer);
 		contract.claim(contractAddress)
 		.then(res=>{
-			console.log(res);
 			if(res.hash){
 				let intervalId = setInterval(()=>{
 					PROVIDER.getTransactionReceipt(res.hash)
@@ -432,22 +432,25 @@ class App extends Component {
 						if(typeof res!==null){
 							if(res.blockNumber){
 								clearInterval(intervalId);
+								this.setState({claiming : false})
 								return true;
 							}
 						}
 						}   
 						catch(e){
-							console.log(e)
+							return false
 						}
 					})
 				},1000)
 			}
 			else{
+				this.setState({claiming : false})
 				return false;
 			}
 		})
 		.catch(err=>{
 			console.log(err);
+			this.setState({claiming : false})
 			return false;
 		})
 	}
@@ -529,6 +532,7 @@ class App extends Component {
 								modalVisible={connectWalletModalVisible}
 								onModalToggle={this.toggleWalletConnectModal}
 								theme={theme}
+								claiming = {this.state.claiming}
 								onThemeToggle={this.toggleTheme}
 								walletConnected={walletConnected}
 								walletAddress = {this.state.walletAddress}

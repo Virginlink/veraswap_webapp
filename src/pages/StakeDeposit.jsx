@@ -7,6 +7,7 @@ import LiquidityDeposits from './components/LiquidityDeposits';
 import Unclaimed from './components/Unclaimed';
 import {PROVIDER} from '../utils/contracts';
 import {TOKEN} from '../utils/tokens';
+import {notification} from 'antd'
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Fade timeout={{enter: 1000, exit: 2000}} ref={ref} {...props} />;
 });
@@ -27,8 +28,7 @@ export default class StakeDeposit extends Component {
             loading : true,
             apy : 0.0,
             liquidity : 0.0,
-            decimal : 0,
-            claiming : false
+            decimal : 0
         }
         this.setAPY = this.setAPY.bind(this);
         this.setLiquidity = this.setLiquidity.bind(this);
@@ -63,16 +63,12 @@ export default class StakeDeposit extends Component {
         this.setState({liquidity : liquidity})
     }
 
-    handleClaim(){
-        this.setState({claiming : true}, async ()=> {
-           let result = await this.props.claim(this.state.currentToken);
-           if(result){
+    async handleClaim(){
+        let result = await this.props.claim(this.state.currentToken);
+        console.log(result,'===Claim Result===')
+        if(result){
             this.forceUpdate()
-            this.setState({liquidity : 0.0, claiming : false})
-           }else{
-            this.setState({claiming : false})
-           }
-        })
+        }
     }
 
     async handleStake(){
@@ -93,6 +89,7 @@ export default class StakeDeposit extends Component {
 
     render() {
         const { depositModalVisible, txSuccess, txHash, error, depositAmount } = this.state;
+        const {claiming} = this.props
         return (
             (this.state.ticker !== "" && this.state.icon !== "") || !this.state.loading ? 
             <div>
@@ -139,10 +136,10 @@ export default class StakeDeposit extends Component {
                             </div>
                             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box', width: '100%', minWidth: 0, margin: '0 0 1rem 0', padding: 0, gap: '12px'}}>
                                 {
-                                    parseFloat(this.state.liquidity) > 0 && !this.state.claiming ?
+                                    parseFloat(this.state.liquidity) > 0 && !claiming ?
                                     <button className="buy-button" onClick={this.props.walletConnected ? () => this.handleClaim() : this.props.onModalOpenRequest}>Claim Now</button>
                                     :
-                                    parseFloat(this.state.liquidity) > 0 && this.state.claiming ?
+                                    claiming ?
                                     <div className="transaction-status">
                                     <svg style={{position: 'relative', right: '-13px', width: '20px', height: '20px'}} className="connection-loader" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="sc-bYSBpT fhfZBu sc-gqPbQI dCfdPK"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 9.27455 20.9097 6.80375 19.1414 5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                                         <span>
@@ -153,6 +150,9 @@ export default class StakeDeposit extends Component {
                                     <button className="buy-button" onClick={this.props.walletConnected ? () => this.setState({depositModalVisible: true}) : this.props.onModalOpenRequest}>
                                         Stake Now
                                     </button>
+                                    // <button className="buy-button" onClick={ () => notification['info']({message : 'Staking is under maintainance. Please come back after some time.'})}>
+                                    //     Stake Now
+                                    // </button>
                                 }
                             </div>
                         </div>
