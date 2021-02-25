@@ -186,7 +186,7 @@ class App extends Component {
 				}
 				catch(e){
 					console.log(e)
-					this.setState({staking : false})
+					this.setState({staking : false, sapproving : false, sapproved : false})
 					return false;
 				}
 			}
@@ -692,9 +692,9 @@ class App extends Component {
 																<span style={{marginLeft: '4px', fontSize: '13px'}}>Copied</span>
 															</button>
 														}
-														<a target="_blank" rel="noopener noreferrer" href={`https://etherscan.io/address/${this.state.walletAddress}`} className="wallet-address-link">
+														<a target="_blank" rel="noopener noreferrer" href={`https://bscscan.com/address/${this.state.walletAddress}`} className="wallet-address-link">
 															<svg style={{marginRight: '3px', position: 'relative', top: '3px'}} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-															<span style={{fontSize: '13px'}}>View on Etherscan</span>
+															<span style={{fontSize: '13px'}}>View on Explorer</span>
 														</a>
 													</div>
 												</div>

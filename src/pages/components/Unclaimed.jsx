@@ -33,6 +33,7 @@ export default class Unclaimed extends React.Component{
         let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,PROVIDER);
         contract.fetchUnclaimed(walletAddress,this.props.currentToken)
         .then(res=>{
+            console.log(ethers.utils.formatEther(res))
             let unclaimed = ethers.utils.formatEther(res) * 10 ** decimal;
             this.setState({unclaimed : parseFloat(unclaimed).toFixed(8)});
         })

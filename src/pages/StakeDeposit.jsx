@@ -53,6 +53,8 @@ export default class StakeDeposit extends Component {
         }
     }
 
+
+
     setAPY(apy){
         this.setState({apy : apy});
     }
@@ -85,7 +87,7 @@ export default class StakeDeposit extends Component {
             this.forceUpdate()
         }
         else{
-            this.setState({txSuccess : false});
+            this.setState({error : true});
         }
     }
 
@@ -138,7 +140,7 @@ export default class StakeDeposit extends Component {
                             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box', width: '100%', minWidth: 0, margin: '0 0 1rem 0', padding: 0, gap: '12px'}}>
                                 {
                                     parseFloat(this.state.liquidity) > 0 && !this.state.claiming ?
-                                    <button className="buy-button" onClick={this.props.walletConnected ? () => this.handleClaim() : this.props.onModalOpenRequest}>Claim Now</button>
+                                    <button className="buy-action-button" disabled onClick={this.props.walletConnected ? () => this.handleClaim() : this.props.onModalOpenRequest}>Claim Now</button>
                                     :
                                     parseFloat(this.state.liquidity) > 0 && this.state.claiming ?
                                     <div className="transaction-status">
@@ -225,7 +227,7 @@ export default class StakeDeposit extends Component {
                                     parseFloat(this.state.apy) * 10 ** -2 * parseFloat(this.state.depositAmount)
                                     / 365
                                 ).toFixed(4)
-                                } {this.state.ticker}
+                                } VRAP
                                <span style={{marginLeft:"0.5rem"}}>{this.props.ticker} / Day</span> 
                             </div>
                         </div>

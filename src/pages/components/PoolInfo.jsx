@@ -41,7 +41,7 @@ export default class PoolInfo extends React.Component{
             <div className="outlined-box">
                 <div style={{display: 'grid', gridAutoRows: 'auto', rowGap: '8px'}}>
                     <div className="text-regular" style={{fontSize: '16px', marginBottom: '-5px'}}>Total deposits</div>
-                    <div className="text-semibold" style={{fontSize: '24px'}}>{this.state.totalDeposit} {this.props.ticker}</div>
+                    <div className="text-semibold" style={{fontSize: '24px'}}>{parseFloat(this.state.totalDeposit).toFixed(4)} {this.props.ticker}</div>
                 </div>
             </div>
             <div className="outlined-box">
