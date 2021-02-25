@@ -140,7 +140,7 @@ export default class StakeDeposit extends Component {
                             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box', width: '100%', minWidth: 0, margin: '0 0 1rem 0', padding: 0, gap: '12px'}}>
                                 {
                                     parseFloat(this.state.liquidity) > 0 && !this.state.claiming ?
-                                    <button className="buy-action-button" disabled onClick={this.props.walletConnected ? () => this.handleClaim() : this.props.onModalOpenRequest}>Claim Now</button>
+                                    <button className="buy-button" onClick={this.props.walletConnected ? () => this.handleClaim() : this.props.onModalOpenRequest}>Claim Now</button>
                                     :
                                     parseFloat(this.state.liquidity) > 0 && this.state.claiming ?
                                     <div className="transaction-status">
