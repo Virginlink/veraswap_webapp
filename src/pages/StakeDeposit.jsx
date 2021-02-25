@@ -147,12 +147,12 @@ export default class StakeDeposit extends Component {
                                         </span>
                                     </div> 
                                     :
-                                    <button className="buy-button" onClick={this.props.walletConnected ? () => this.setState({depositModalVisible: true}) : this.props.onModalOpenRequest}>
-                                        Stake Now
-                                    </button>
-                                    // <button className="buy-button" onClick={ () => notification['info']({message : 'Staking is under maintainance. Please come back after some time.'})}>
+                                    // <button className="buy-button" onClick={this.props.walletConnected ? () => this.setState({depositModalVisible: true}) : this.props.onModalOpenRequest}>
                                     //     Stake Now
                                     // </button>
+                                    <button className="buy-button" onClick={ () => notification['info']({message : 'Staking is under maintainance. Please come back after some time.'})}>
+                                        Stake Now
+                                    </button>
                                 }
                             </div>
                         </div>
