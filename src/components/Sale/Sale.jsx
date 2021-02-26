@@ -194,7 +194,10 @@ export default class Sale extends Component {
                         </div>
                     </div>
                     <div className="buy-container" style={{marginBottom: '1rem'}}>
-                        <button className="buy-button" onClick={this.props.walletConnected ? () => this.setState({buyModalVisible: true}) : this.props.onModalOpenRequest}>Buy Now</button>
+                        {/* <button className="buy-button" onClick={this.props.walletConnected ? () => this.setState({buyModalVisible: true}) : this.props.onModalOpenRequest}>Buy Now</button> */}
+                        <button className="buy-button" onClick={ () => notification['info']({message : 'Purchase is under maintainance. Please come back after some time.'})}>
+                            Buy Now
+                        </button>
                     </div>
                 </div>
                 <Dialog
