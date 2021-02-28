@@ -17,7 +17,7 @@ export default class StakeDeposit extends Component {
         super()
         this.state = {
             depositModalVisible: false,
-            txSuccess: false,
+            txSuccess: true,
             error: false,
             txHash: '',
             depositAmount: '',
@@ -147,12 +147,12 @@ export default class StakeDeposit extends Component {
                                         </span>
                                     </div> 
                                     :
-                                    // <button className="buy-button" onClick={this.props.walletConnected ? () => this.setState({depositModalVisible: true}) : this.props.onModalOpenRequest}>
-                                    //     Stake Now
-                                    // </button>
-                                    <button className="buy-button" onClick={ () => notification['info']({message : 'Staking is under maintainance. Please come back after some time.'})}>
+                                    <button className="buy-button" onClick={this.props.walletConnected ? () => this.setState({depositModalVisible: true}) : this.props.onModalOpenRequest}>
                                         Stake Now
                                     </button>
+                                    // <button className="buy-button" onClick={ () => notification['info']({message : 'Staking is under maintainance. Please come back after some time.'})}>
+                                    //     Stake Now
+                                    // </button>
                                 }
                             </div>
                         </div>
@@ -184,7 +184,7 @@ export default class StakeDeposit extends Component {
                         <svg style={{cursor: 'pointer'}} onClick={() => this.setState({depositModalVisible: false, txSuccess: false})} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sc-jnlKLf fEBVhk"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                       </div>
                         <p className="connected-wallet-footer-text" style={{width:'80%',marginLeft:'10%',textAlign:'center',lineHeight:'2rem'}}>
-                            It takes upto 5 minutes to mine your transaction. Once done your tokens will be automatically credited to your wallet address.
+                            It takes upto 5 minutes to mine your transaction. Once done your tokens will be automatically staked from your wallet.
                             If you wish to track your transaction <a href={`https://etherscan.io/tx/${txHash}`} target="_blank">click here</a>
                         </p>
                     </div>
