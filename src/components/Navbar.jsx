@@ -271,17 +271,13 @@ class Navbar extends Component {
                                 {moreLinksVisible && (
                                     <ClickAwayListener onClickAway={() => this.setState({moreLinksVisible: false})}>
                                         <div className="links-container">
-                                            <a className="link" target="_blank" rel="noopener noreferrer" href="#">
+                                            <a className="link" target="_blank" rel="noopener noreferrer" href="https://veraswap.medium.com/about">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                                                About
+                                                Blog
                                             </a>
-                                            <a className="link" target="_blank" rel="noopener noreferrer" href="#">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-                                                Whitepaper
-                                            </a>
-                                            <a className="link" target="_blank" rel="noopener noreferrer" href="#">
+                                            <a className="link" target="_blank" rel="noopener noreferrer" href="https://docs.veraswap.org/">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                                                VRAP
+                                                Docs
                                             </a>
                                             <a className="link" target="_blank" rel="noopener noreferrer" href="https://twitter.com/veraswap">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
