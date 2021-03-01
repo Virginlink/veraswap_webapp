@@ -257,7 +257,7 @@ export default class StakeDeposit extends Component {
                                 depositAmount ? (parseFloat(depositAmount) === 0 || parseFloat(depositAmount) === 0. || parseFloat(depositAmount) < 0) ? 'Invalid amount' : "Approve" : 'Enter an amount'
                                 }
                             </button>
-                            <button onClick={()=>{this.handleStake()}} disabled={!this.props.sapproved || this.props.sapproving || this.props.staking} className="buy-action-button">  
+                            <button disabled onClick={()=>{this.handleStake()}} disabled={!this.props.sapproved || this.props.sapproving || this.props.staking} className="buy-action-button">  
                             {
                                 this.props.staking ?
                                 <div className="transaction-status">
