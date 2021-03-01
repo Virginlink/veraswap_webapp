@@ -2,6 +2,7 @@ import { createGlobalStyle} from "styled-components"
 export const GlobalStyles = createGlobalStyle`
     body {
         margin: 0;
+        height : 110vh;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         min-height: 100vh;
@@ -1244,7 +1245,7 @@ export const GlobalStyles = createGlobalStyle`
         .navbar-actions-main-container {
             flex-direction: row;
             align-items: flex-end;
-            height: 82px;
+            height: 60px;
         }
 
         .settings-menu {
@@ -1255,5 +1256,6 @@ export const GlobalStyles = createGlobalStyle`
             top: -19.25rem;
         }
     }
+    
     
 `
