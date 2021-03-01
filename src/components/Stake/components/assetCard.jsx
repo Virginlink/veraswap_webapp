@@ -33,7 +33,7 @@ class AssetCard extends React.Component{
     async fetch(){
         let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,PROVIDER);
         let poolRate = await contract.rFactor(this.props.data.tokenContract);
-            poolRate = ethers.utils.formatEther(poolRate) * 3.154 * 10 ** 10;
+            poolRate = ethers.utils.formatEther(poolRate) * 3.154 * 10 ** 11;
         this.setState({poolRate : parseFloat(poolRate).toFixed(2)})
     }
 
@@ -57,7 +57,7 @@ class AssetCard extends React.Component{
                 <div style={{marginLeft: '8px'}} className="stake-card-heading">
                     {ticker}
                 </div>
-                <button disabled={ticker !== "VRAP"} onClick={() => this.props.history.push(`/stake/${this.props.data.tokenContract}`)} className="buy-action-button" style={{height: '38px', borderRadius: '8px', fontSize: '16px'}}>Deposit</button>
+                <button disabled={true} onClick={() => this.props.history.push(`/stake/${this.props.data.tokenContract}`)} className="buy-action-button" style={{height: '38px', borderRadius: '8px', fontSize: '16px'}}>Deposit</button>
             </div>
             <div style={{display: 'flex', justifyContent: 'space-between', flexDirection: 'column', gap: '12px', margin: '0 1rem 1rem 1rem'}}>
                 <div style={{width: '100%', minWidth: 0, margin: '0 0 -5px 0', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>

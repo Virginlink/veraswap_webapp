@@ -22,6 +22,7 @@ import './App.css';
 import './components/Navbar.css';
 import './components/Sale/Sale.css';
 import { useWallet } from 'use-wallet'
+import { notification } from 'antd';
 const {ethers} = require('ethers');
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -285,13 +286,20 @@ class App extends Component {
 				let provider = new ethers.providers.Web3Provider(window.ethereum);
 				await window.ethereum.enable();
 				const address = await provider.listAccounts();
-				console.log(address);
-				let signer = provider.getSigner();
+				let network = await provider.getNetwork()
+				if(network.chainId !== 56){
+					notification['error']({
+						message : 'Wrong Network Detected. Please connect to Binance Smart Chain'
+					})
+					this.setState({connectWalletModalVisible : false})
+				}
+				else{
+				let signer = await provider.getSigner();
 				this.fetchEthBalance(address[0])
 				this.fetchVrapBalance(address[0])
 				this.fetchTetherBalance(address[0])
 				this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'metamask',signer : signer})
-			}
+			}}
 			else{
 				console.log("Error")
 			}
@@ -314,17 +322,22 @@ class App extends Component {
 			.catch(e=>{
 				console.log(e)
 			})
-			console.log(web3Provider)
 			const provider = new ethers.providers.Web3Provider(web3Provider);
 			const address = await provider.listAccounts();
 			const signer = provider.getSigner();
-			console.log(signer)
-			console.log(address[0])
+			let network = await provider.getNetwork()
+				if(network.chainId !== 56){
+					notification['error']({
+						message : 'Wrong Network Detected. Please connect to Binance Smart Chain'
+					})
+					this.setState({connectWalletModalVisible : false})
+			}
+			else{
 			this.fetchEthBalance(address[0])
 			this.fetchVrapBalance(address[0])
 			this.fetchTetherBalance(address[0])
 			this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'walletConnect',signer : signer})
-		}
+		}}
 		catch(e){
 			console.log(e)
 		}

@@ -165,8 +165,7 @@ export default class Sale extends Component {
                     </div>
                     <div className="countdown-container">
                         <div className="countdown">
-                            {/* Pre Sale Round {this.state.phase} (${parseFloat(this.state.price).toFixed(3)} per VRAP) ends in <Countdown date={new Date(0)} renderer={this.returnDate} /> */}
-                            Pre Sale Round 1 is expected to start on 1 Mar 2021
+                            Pre Sale Round {this.state.phase} (${parseFloat(this.state.price).toFixed(3)} per VRAP) ends in <Countdown date={new Date(1615507200000)} renderer={this.returnDate} />
                         </div>
                     </div>
                     <div className="sale-block-outer-container-wrapper" style={{gap: '24px'}}>
@@ -195,10 +194,10 @@ export default class Sale extends Component {
                         </div>
                     </div>
                     <div className="buy-container" style={{marginBottom: '1rem'}}>
-                        {/* <button className="buy-button" onClick={this.props.walletConnected ? () => this.setState({buyModalVisible: true}) : this.props.onModalOpenRequest}>Buy Now</button> */}
-                        <button className="buy-button" onClick={ () => notification['info']({message : 'Purchase is under maintainance. Please come back after some time.'})}>
+                        <button className="buy-button" onClick={this.props.walletConnected ? () => this.setState({buyModalVisible: true}) : this.props.onModalOpenRequest}>Buy Now</button>
+                        {/* <button className="buy-button" onClick={ () => notification['info']({message : 'Purchase is under maintainance. Please come back after some time.'})}>
                             Buy Now
-                        </button>
+                        </button> */}
                     </div>
                 </div>
                 <Dialog
