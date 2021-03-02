@@ -165,7 +165,8 @@ export default class Sale extends Component {
                     </div>
                     <div className="countdown-container">
                         <div className="countdown">
-                            Pre Sale Round {this.state.phase} (${parseFloat(this.state.price).toFixed(3)} per VRAP) ends in <Countdown date={new Date(1614683343000)} renderer={this.returnDate} />
+                            Phase 2 has ended and 1500 BNB Raised. Phase 3 Starts 5th March 2021, 12 PM UTC and last for only one hour.
+                            {/* Pre Sale Round {this.state.phase} (${parseFloat(this.state.price).toFixed(3)} per VRAP) ends in <Countdown date={new Date(1614683343000)} renderer={this.returnDate} /> */}
                         </div>
                     </div>
                     <div className="sale-block-outer-container-wrapper" style={{gap: '24px'}}>
@@ -194,10 +195,10 @@ export default class Sale extends Component {
                         </div>
                     </div>
                     <div className="buy-container" style={{marginBottom: '1rem'}}>
-                        <button className="buy-button" onClick={this.props.walletConnected ? () => this.setState({buyModalVisible: true}) : this.props.onModalOpenRequest}>Buy Now</button>
-                        {/* <button className="buy-button" onClick={ () => notification['info']({message : 'Purchase is under maintainance. Please come back after some time.'})}>
+                        {/* <button className="buy-button" onClick={this.props.walletConnected ? () => this.setState({buyModalVisible: true}) : this.props.onModalOpenRequest}>Buy Now</button> */}
+                        <button className="buy-button" onClick={ () => notification['info']({message : 'Phase 2 Ended Successfully. Next Phase of Sale opens on 5th March 2021, 12 PM UTC.'})}>
                             Buy Now
-                        </button> */}
+                        </button>
                     </div>
                 </div>
                 <Dialog

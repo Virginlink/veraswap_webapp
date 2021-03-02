@@ -110,9 +110,15 @@ export default class StakeDeposit extends Component {
                             <div className="heading" style={{margin: 0}}>
                                 {this.state.ticker} Liquidity Mining
                             </div>
-                            <div style={{display: 'flex', flexDirection: 'row', position: 'relative'}}>
-                                <img width="30px" height="100%" alt={this.state.ticker + " logo"} src={this.state.icon} />
-                            </div>
+                            <div style={{position: 'relative',  display: 'flex', flexDirection: 'row'}}>
+                                    {
+                                        this.state.icon.map((icon) => {
+                                            return (
+                                                <img width="24px" height="24px" style={{borderRadius: '24px',  boxShadow: 'rgb(0 0 0 / 8%) 0px 6px 10px'}} alt={`logo`} src={icon} />
+                                            )
+                                        })
+                                    }
+                                </div>
                         </div>
                         <PoolInfo ticker={this.state.ticker} currentToken={this.state.currentToken} setAPY={this.setAPY} />
                         <div style={{display: 'grid', gridAutoRows: 'auto', rowGap: '24px', justifyItems: 'center', position: 'relative', maxWidth: '640px', width: '100%', opacity: 1}}>
