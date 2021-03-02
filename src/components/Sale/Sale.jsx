@@ -165,7 +165,7 @@ export default class Sale extends Component {
                     </div>
                     <div className="countdown-container">
                         <div className="countdown">
-                            Phase 2 has ended and 1500 BNB Raised. Phase 3 Starts 5th March 2021, 12 PM UTC and last for only one hour.
+                            Phase1 and phase2 have ended and 1500 BNB raised.Phase 3 starts 5th March 12 PM UTC and last for only 1 hour at the cost of 0.075 $ per VRAP
                             {/* Pre Sale Round {this.state.phase} (${parseFloat(this.state.price).toFixed(3)} per VRAP) ends in <Countdown date={new Date(1614683343000)} renderer={this.returnDate} /> */}
                         </div>
                     </div>
