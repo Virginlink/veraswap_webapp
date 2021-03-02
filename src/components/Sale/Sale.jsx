@@ -165,7 +165,7 @@ export default class Sale extends Component {
                     </div>
                     <div className="countdown-container">
                         <div className="countdown">
-                            Pre Sale Round {this.state.phase} (${parseFloat(this.state.price).toFixed(3)} per VRAP) ends in <Countdown date={new Date(1614673800000)} renderer={this.returnDate} />
+                            Pre Sale Round {this.state.phase} (${parseFloat(this.state.price).toFixed(3)} per VRAP) ends in <Countdown date={new Date(1614683343000)} renderer={this.returnDate} />
                         </div>
                     </div>
                     <div className="sale-block-outer-container-wrapper" style={{gap: '24px'}}>

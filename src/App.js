@@ -137,6 +137,7 @@ class App extends Component {
 						}   
 						catch(e){
 							console.log(e)
+							this.setState({sapproving : false})
 						}
 					})
 				},1000)
