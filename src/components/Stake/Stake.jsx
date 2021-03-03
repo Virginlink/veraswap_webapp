@@ -76,12 +76,12 @@ class Stake extends Component {
                     tokenContract: '0xcF6BB5389c92Bdda8a3747Ddb454cB7a64626C63',
                     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(252, 7, 125) 0%, rgb(108, 114, 132) 100%)',
                 },
-                {
-                    icons : [BUSDT,XVS],
-                    ticker : 'CAKE_LP',
-                    tokenContract : '0x610e7a287c27dfFcaC0F0a94f547Cc1B770cF483',
-                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(124, 118, 136) 0%, rgb(108, 114, 132) 100%)'
-                }
+                // {
+                //     icons : [BUSDT,XVS],
+                //     ticker : 'CAKE_LP',
+                //     tokenContract : '0x610e7a287c27dfFcaC0F0a94f547Cc1B770cF483',
+                //     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(124, 118, 136) 0%, rgb(108, 114, 132) 100%)'
+                // }
             ]
         }
     }

@@ -23,7 +23,7 @@ export default class StakeDeposit extends Component {
             depositAmount: '',
             currentToken : '',
             ticker : '',
-            icon : "",
+            icon : [],
             balance : 0.0,
             loading : true,
             apy : 0.0,
@@ -90,6 +90,7 @@ export default class StakeDeposit extends Component {
     render() {
         const { depositModalVisible, txSuccess, txHash, error, depositAmount } = this.state;
         const {claiming} = this.props
+        console.log(this.state.icon,"ICON")
         return (
             (this.state.ticker !== "" && this.state.icon !== "") || !this.state.loading ? 
             <div>
@@ -112,7 +113,7 @@ export default class StakeDeposit extends Component {
                             </div>
                             <div style={{position: 'relative',  display: 'flex', flexDirection: 'row'}}>
                                     {
-                                        this.state.icon.map((icon) => {
+                                        !this.state.loading && this.state.icon.map((icon) => {
                                             return (
                                                 <img width="24px" height="24px" style={{borderRadius: '24px',  boxShadow: 'rgb(0 0 0 / 8%) 0px 6px 10px'}} alt={`logo`} src={icon} />
                                             )
