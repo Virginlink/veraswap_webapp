@@ -49,6 +49,7 @@ class App extends Component {
 			signer : null,
 			approved : false,
 			approving : false,
+			staking: false,
 			ethBuying : false,
 			sapproved : false,
 			sapproving : false,
@@ -511,11 +512,18 @@ class App extends Component {
 	}
 
 	resetStakeStatus = () => {
-		this.setState({stakeSuccess: false, sapproving: false})
+		this.setState({
+			stakeSuccess: false,
+			sapproving: false,
+			staking: false,
+		})
 	}
 
 	resetBuyStatus = () => {
-		this.setState({approving: false})
+		this.setState({
+			approving: false,
+			ethBuying: false
+		})
 	}
 
 	render() {
