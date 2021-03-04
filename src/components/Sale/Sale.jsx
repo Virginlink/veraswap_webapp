@@ -1,6 +1,7 @@
 import { Dialog, Fade } from '@material-ui/core'
 import { notification, Tooltip } from 'antd';
-import ETH from '../../assets/images/eth.png'
+import ETH from '../../assets/images/eth.png';
+import BUSD from '../../assets/images/busd.png';
 import React, { Component } from 'react'
 import Countdown from 'react-countdown'
 import {PRESALE_ABI,PRESALE_ADDRESS,PROVIDER} from '../../utils/contracts';
@@ -54,10 +55,11 @@ export default class Sale extends Component {
     }
 
     fetchEthPrice(){
-        fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
+        fetch('https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd')
         .then(response => response.json())
         .then(resJson => {
-            this.setState({ethPrice : resJson.ethereum.usd})
+            console.log(resJson)
+            this.setState({ethPrice : resJson.binancecoin.usd})
         })
         .catch(err=>{
             console.log(err)
@@ -71,7 +73,7 @@ export default class Sale extends Component {
             const tx = {
                 hash: status,
                 amount: parseFloat(this.state.depositAmount).toFixed(4),
-                summary: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} ETH`
+                summary: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} BNB`
             }
             if (hashArrayString) {
                 let hashArray = JSON.parse(hashArrayString)
@@ -84,10 +86,10 @@ export default class Sale extends Component {
                 localStorage.setItem('hashData', JSON.stringify(newHashArray))
             }
             notification['info']({
-                message: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} ETH`,
+                message: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} BNB`,
                 duration: 0,
                 icon: SuccessIcon,
-                btn: (<a href={`https://etherscan.io/tx/${status}`} target="_blank" rel="noreferrer noopener">View on Etherscan</a>)
+                btn: (<a href={`https://bscscan.com/tx/${status}`} target="_blank" rel="noreferrer noopener">View on Explorer</a>)
             })
             this.setState({txSuccess : true, txHash : status})
        }
@@ -103,7 +105,7 @@ export default class Sale extends Component {
             const tx = {
                 hash: status,
                 amount: parseFloat(this.state.depositAmount).toFixed(4),
-                summary: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} USDT`
+                summary: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} BUSD`
             }
             if (hashArrayString) {
                 let hashArray = JSON.parse(hashArrayString)
@@ -116,10 +118,10 @@ export default class Sale extends Component {
                 localStorage.setItem('hashData', JSON.stringify(newHashArray))
             }
             notification['info']({
-                message: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} USDT`,
+                message: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} BUSD`,
                 duration: 0,
                 icon: SuccessIcon,
-                btn: (<a href={`https://etherscan.io/tx/${status}`} target="_blank" rel="noreferrer noopener">View on Etherscan</a>)
+                btn: (<a href={`https://bscscan.com/tx/${status}`} target="_blank" rel="noreferrer noopener">View on Explorer</a>)
             })
             this.setState({txSuccess : true, txHash : status})
         }
@@ -153,8 +155,7 @@ export default class Sale extends Component {
                                     </div>
                                     <div className="sale-block-content-container">
                                         <div className="sale-block-content">
-                                            The VRAP Public Crowdsale will consist of 3 rounds with different prices ranging from $0.05 to $0.12 to allow more community members to participate in the sale. When the first round is sold out, the second round will begin immediately. Your tokens are distributed immediately to your wallet.
-                                        </div>
+                                        The VRAP Public Crowdsale will consist of 3 rounds with different prices ranging from $0.05 to $0.075 to allow more community members to participate in the sale. When the first round is sold out, the second round will begin immediately. Your tokens are distributed immediately to your wallet.                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -164,7 +165,7 @@ export default class Sale extends Component {
                     </div>
                     <div className="countdown-container">
                         <div className="countdown">
-                            Pre Sale Round {this.state.phase} (${parseFloat(this.state.price).toFixed(3)} per VRAP) ends in <Countdown date={new Date(1612483200000)} renderer={this.returnDate} />
+                            Pre Sale Round {this.state.phase} (${parseFloat(this.state.price).toFixed(3)} per VRAP) ends in <Countdown date={new Date(1614673800000)} renderer={this.returnDate} />
                         </div>
                     </div>
                     <div className="sale-block-outer-container-wrapper" style={{gap: '24px'}}>
@@ -194,13 +195,16 @@ export default class Sale extends Component {
                     </div>
                     <div className="buy-container" style={{marginBottom: '1rem'}}>
                         <button className="buy-button" onClick={this.props.walletConnected ? () => this.setState({buyModalVisible: true}) : this.props.onModalOpenRequest}>Buy Now</button>
+                        {/* <button className="buy-button" onClick={ () => notification['info']({message : 'Purchase is under maintainance. Please come back after some time.'})}>
+                            Buy Now
+                        </button> */}
                     </div>
                 </div>
                 <Dialog
                     open={buyModalVisible}
                     TransitionComponent={Transition}
-                    onClose={() => this.setState({buyModalVisible: false, txSuccess: false, error : false})}
-                    onBackdropClick={() => this.setState({buyModalVisible: false, txSuccess: false, error : false})}
+                    onClose={() => this.setState({buyModalVisible: false, txSuccess: false, error : false, depositAmount: ''}, () => this.props.onResetBuyStatus())}
+                    onBackdropClick={() => this.setState({buyModalVisible: false, txSuccess: false, error : false, depositAmount: ''}, () => this.props.onResetBuyStatus())}
                     BackdropProps={{style: {backgroundColor: 'rgba(0, 0, 0, 0.3)'}}}
                     PaperProps={{
                         style: {
@@ -219,18 +223,18 @@ export default class Sale extends Component {
                     <div className="buy-modal-grid">
                       <div className="buy-modal-header">
                         <div className="buy-modal-title">Transaction Successful</div>
-                        <svg style={{cursor: 'pointer'}} onClick={() => this.setState({buyModalVisible: false, txSuccess: false})} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sc-jnlKLf fEBVhk"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        <svg style={{cursor: 'pointer'}} onClick={() => this.setState({buyModalVisible: false, txSuccess: false, depositAmount: ''}, () => this.props.onResetBuyStatus())} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sc-jnlKLf fEBVhk"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                       </div>
                         <p className="connected-wallet-footer-text" style={{width:'80%',marginLeft:'10%',textAlign:'center',lineHeight:'2rem'}}>
                             It takes upto 5 minutes to mine your transaction. Once done your tokens will be automatically credited to your wallet address.
-                            If you wish to track your transaction <a href={`https://etherscan.io/tx/${this.state.txHash}`} target="_blank">click here</a>
+                            If you wish to track your transaction <a href={`https://bscscan.com/tx/${this.state.txHash}`} target="_blank">click here</a>
                         </p>
                     </div>
                     :
                     <div className="buy-modal-grid">
                         <div className="buy-modal-header">
-                            <div className="buy-modal-title">Buy VRAP with {this.state.currentToken}</div>
-                            <svg style={{cursor: 'pointer'}} onClick={() => this.setState({buyModalVisible: false})} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sc-jnlKLf fEBVhk"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            <div className="buy-modal-title">Buy VRAP with {this.state.currentToken === "ETH" ? "BNB" : this.state.currentToken}</div>
+                            <svg style={{cursor: 'pointer'}} onClick={() => this.setState({buyModalVisible: false, depositAmount: ''}, () => this.props.onResetBuyStatus())} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sc-jnlKLf fEBVhk"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                         </div>
                         {this.state.error ?
                         <p className="connected-wallet-footer-text">Error occured while purchasing VRAP tokens. Please contact support.</p>
@@ -252,14 +256,14 @@ export default class Sale extends Component {
                                       {
                                         this.state.currentToken === "ETH" ?
                                         <span style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                                            <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} class="sc-fZwumE evMpaO" alt="ETH logo" src={ETH} />
-                                            <span style={{margin: '0px 0.25rem 0px 0.75rem', fontSize: '20px'}}>ETH</span>
+                                            <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} class="sc-fZwumE evMpaO" alt="BNB logo" src={ETH} />
+                                            <span style={{margin: '0px 0.25rem 0px 0.75rem', fontSize: '20px'}}>BNB</span>
                                             <svg width="12" height="7" viewBox="0 0 12 7" fill="none" style={{margin: '0px 0.25rem 0px 0.5rem', height: '35%'}}><path d="M0.97168 1L6.20532 6L11.439 1" stroke="#AEAEAE"></path></svg>
                                         </span>
                                         :
                                         <span style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                                            <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} class="sc-fZwumE evMpaO" alt="USDT logo" src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" />
-                                            <span style={{margin: '0px 0.25rem 0px 0.75rem', fontSize: '20px'}}>USDT</span>
+                                            <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} class="sc-fZwumE evMpaO" alt="BUSD logo" src={BUSD} />
+                                            <span style={{margin: '0px 0.25rem 0px 0.75rem', fontSize: '20px'}}>BUSD</span>
                                             <svg width="12" height="7" viewBox="0 0 12 7" fill="none" style={{margin: '0px 0.25rem 0px 0.5rem', height: '35%'}}><path d="M0.97168 1L6.20532 6L11.439 1" stroke="#AEAEAE"></path></svg>
                                         </span>
                                       }
@@ -388,10 +392,10 @@ export default class Sale extends Component {
                             <div style={{position: 'relative', flex: '1 1 0%', marginTop: '-1rem'}}>
                                     <div style={{position: 'relative', height: '556px', width: '100%', overflow: 'auto', willChange: 'transform', direction: 'ltr'}}>
                                         <div style={{width: '100%'}}>
-                                            <div onClick={()=>{this.setState({currentToken : "USDT",tokensModalVisible : false,buyModalVisible : true})}} className={this.state.currentToken === "ETH" ? "individual-token" : "individual-token token-disabled"}>
-                                                <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} alt="USDT logo" src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png" />
+                                            <div onClick={()=>{this.setState({currentToken : "BUSD",tokensModalVisible : false,buyModalVisible : true})}} className={this.state.currentToken === "ETH" ? "individual-token" : "individual-token token-disabled"}>
+                                                <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} alt="BUSD logo" src={BUSD} />
                                                 <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
-                                                    <div className="token-title">USDT</div>
+                                                    <div className="token-title">BUSD</div>
                                                 </div>
                                                 <span></span>
                                                 <div style={{display: 'flex', justifyContent: 'flex-end', margin: 0, padding: 0, minWidth: 0, boxSizing: 'border-box', alignItems: 'center', width: 'fit-content'}}>
@@ -408,10 +412,10 @@ export default class Sale extends Component {
                                                     }
                                                 </div>
                                             </div>
-                                            <div onClick={()=>{this.setState({currentToken : "ETH",tokensModalVisible : false, buyModalVisible : true})}} className={this.state.currentToken === "USDT" ? "individual-token" : "individual-token token-disabled"}>
-                                                <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} alt="ETH logo" src={ETH} />
+                                            <div onClick={()=>{this.setState({currentToken : "ETH",tokensModalVisible : false, buyModalVisible : true})}} className={this.state.currentToken === "BUSD" ? "individual-token" : "individual-token token-disabled"}>
+                                                <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} alt="BNB logo" src={ETH} />
                                                 <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
-                                                    <div className="token-title">ETH</div>
+                                                    <div className="token-title">BNB</div>
                                                 </div>
                                                 <span></span>
                                                 <div style={{display: 'flex', justifyContent: 'flex-end', margin: 0, padding: 0, minWidth: 0, boxSizing: 'border-box', alignItems: 'center', width: 'fit-content'}}>

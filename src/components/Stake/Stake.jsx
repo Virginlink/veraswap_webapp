@@ -1,24 +1,16 @@
 import React, { Component } from 'react'
 import VRAP from '../../assets/images/logo.png';
 import {withRouter} from 'react-router-dom';
-import ETH from '../../assets/images/eth.png';
 import AssetCard from './components/assetCard';
-const WBTC = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png';
-const USDC = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png';
-const DAI = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png';
-const TUSD = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x0000000000085d4780B73119b644AE5ecd22b376/logo.png';
-const BUSD = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x4Fabb145d64652a948d72533023f6E7A623C7C53/logo.png';
-const AUSDC = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x9bA00D6856a4eDF4665BcA2C2309936572473B7E/logo.png';
-const PAX = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x8E870D67F660D95d5be530380D0eC0bd388289E1/logo.png';
-const UNI = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png';
-const LINK = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x514910771AF9Ca656af840dff83E8264EcF986CA/logo.png';
-const AAVE = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9/logo.png';
-const MKR = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2/logo.png';
-const COMP = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xc00e94Cb662C3520282E6f5717214004A7f26888/logo.png';
-const CRV = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xD533a949740bb3306d119CC777fa900bA034cd52/logo.png';
-const YFI = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/logo.png';
-const USDT = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png';
-
+const TWT = 'https://github.com/trustwallet/assets/blob/master/blockchains/binance/assets/TWT-8C2/logo.png?raw=true';
+const CAKE = 'https://github.com/trustwallet/assets/blob/master/blockchains/smartchain/assets/0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82/logo.png?raw=true';
+const JULD = 'https://github.com/trustwallet/assets/blob/master/blockchains/smartchain/assets/0x5A41F637C3f7553dBa6dDC2D3cA92641096577ea/logo.png?raw=true';
+const BAKE = 'https://github.com/trustwallet/assets/blob/master/blockchains/smartchain/assets/0xE02dF9e3e622DeBdD69fb838bB799E3F168902c5/logo.png?raw=true';
+const JULB = 'https://github.com/trustwallet/assets/blob/master/blockchains/smartchain/assets/0x32dFFc3fE8E3EF3571bF8a72c0d0015C5373f41D/logo.png?raw=true';
+const BURGER = 'https://github.com/trustwallet/assets/blob/master/blockchains/smartchain/assets/0xAe9269f27437f0fcBC232d39Ec814844a51d6b8f/logo.png?raw=true';
+const BUSD = 'https://github.com/trustwallet/assets/blob/master/blockchains/smartchain/assets/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56/logo.png?raw=true';
+const BUSDT = 'https://github.com/trustwallet/assets/blob/master/blockchains/smartchain/assets/0x55d398326f99059fF775485246999027B3197955/logo.png?raw=true';
+const XVS = 'https://github.com/trustwallet/assets/blob/master/blockchains/smartchain/assets/0xcF6BB5389c92Bdda8a3747Ddb454cB7a64626C63/logo.png?raw=true';
 class Stake extends Component {
     constructor(props) {
         super(props);
@@ -27,8 +19,62 @@ class Stake extends Component {
                 {
                     icons: [VRAP],
                     ticker: 'VRAP',
-                    tokenContract: "0x7a5BA153010CF289c9D4E8A6de67eedc715D990a",
+                    tokenContract: "0x271C418B045d05A1D52c6bF849d47b5B5B4d769e",
                     background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
+                },
+                {
+                    icons: [TWT],
+                    ticker: 'TWT',
+                    tokenContract: "0x4B0F1812e5Df2A09796481Ff14017e6005508003",
+                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
+                },
+                {
+                    icons: [CAKE],
+                    ticker: 'CAKE',
+                    tokenContract : '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82',
+                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(124, 118, 136) 0%, rgb(108, 114, 132) 100%)',
+                },
+                {
+                icons: [BAKE],
+                ticker: 'BAKE',
+                tokenContract : '0xE02dF9e3e622DeBdD69fb838bB799E3F168902c5',
+                background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
+                },
+                {
+                    icons: [JULD],
+                    ticker: 'JULD',
+                    tokenContract: '0x5A41F637C3f7553dBa6dDC2D3cA92641096577ea',
+                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(187, 141, 0) 0%, rgb(108, 114, 132) 100%)',
+                },
+                {
+                    icons: [JULB],
+                    ticker: 'JULB',
+                    tokenContract: '0x32dFFc3fE8E3EF3571bF8a72c0d0015C5373f41D',
+                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(44, 68, 124) 0%, rgb(108, 114, 132) 100%)',
+                },
+                {
+                    icons: [BURGER],
+                    ticker: 'BURGER',
+                    tokenContract : '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
+                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(187, 141, 0) 0%, rgb(108, 114, 132) 100%)',
+                },
+                {
+                    icons: [BUSD],
+                    ticker: 'BUSD',
+                    tokenContract : '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
+                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, #22162C 0%, rgb(108, 114, 132) 100%)',
+                },
+                {
+                    icons: [BUSDT],
+                    ticker: 'BUSDT',
+                    tokenContract: '0x55d398326f99059ff775485246999027b3197955',
+                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(4, 147, 211) 0%, rgb(108, 114, 132) 100%)',
+                },
+                {
+                    icons: [XVS],
+                    ticker: 'XVS',
+                    tokenContract: '0xcF6BB5389c92Bdda8a3747Ddb454cB7a64626C63',
+                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(252, 7, 125) 0%, rgb(108, 114, 132) 100%)',
                 }
             ]
         }
@@ -56,7 +102,7 @@ class Stake extends Component {
                                             Deposit your Liquidity Provider tokens to receive VRAP, the Veraswap protocol governance token.
                                         </div>
                                     </div>
-                                    <a style={{color: '#FFF', fontSize: '14px', textDecoration: 'underline'}}>Read more about VRAP</a>
+                                    <a href="https://docs.veraswap.org/yield-farming/liquidity-mining" target="_blank" rel="no-opener no-referrer" style={{color: '#FFF', fontSize: '14px', textDecoration: 'underline'}}>Read more about VRAP</a>
                                 </div>
                             </div>
                             <span className="sale-rotation"></span>

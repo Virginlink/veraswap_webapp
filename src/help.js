@@ -22,7 +22,6 @@ import './App.css';
 import './components/Navbar.css';
 import './components/Sale/Sale.css';
 import { useWallet } from 'use-wallet'
-import { notification } from 'antd';
 const {ethers} = require('ethers');
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -51,8 +50,7 @@ class App extends Component {
 			approving : false,
 			ethBuying : false,
 			sapproved : false,
-			sapproving : false,
-			claiming : false
+			sapproving : false
 		}
 		this.fetchBalance = this.fetchBalance.bind(this);
 		this.buyWithEther = this.buyWithEther.bind(this);
@@ -120,7 +118,6 @@ class App extends Component {
 		let info = TOKEN.filter(data=>data.contractAddress === tokenAddress);
 		if(info.length > 0){
 			let contract = new ethers.Contract(info[0].contractAddress,info[0].contractABI,this.state.signer);
-			console.log('CONTRACT', contract)
 			try{
 			let tx = await contract.approve(STAKING_ADDRESS,value)
 			console.log(tx.hash)
@@ -140,7 +137,7 @@ class App extends Component {
 							console.log(e)
 						}
 					})
-				}, 1000)
+				},1000)
 			}
 			}
 			catch(e){
@@ -159,67 +156,28 @@ class App extends Component {
 		}
 	}
 
-	async stakeToken(value, depositAmount, tokenAddress){
+	async stakeToken(value,tokenAddress){
 		if(value && tokenAddress){
 			let info = TOKEN.filter(data=>data.contractAddress === tokenAddress);
 			if(info.length > 0){
 				let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,this.state.signer);
 				try{
 				let tx = await contract.stake(value,info[0].contractAddress)
+				console.log(tx);
 				if(tx.hash){
-					// const hashArrayString = localStorage.getItem('hashData');
-					// const newTx = {
-					// 	hash: tx.hash,
-					// 	amount: depositAmount,
-					// 	summary: `Stake ${depositAmount} VRAP`
-					// }
-					// if (hashArrayString) {
-					// 	let hashArray = JSON.parse(hashArrayString)
-					// 	hashArray.data.push(newTx)
-					// 	localStorage.setItem('hashData', JSON.stringify(hashArray))
-					// } else {
-					// 	const newHashArray = {
-					// 		data: [newTx]
-					// 	}
-					// localStorage.setItem('hashData', JSON.stringify(newHashArray))
-					// }
-					// notification['info']({
-					// 	key: 'txInitiation',
-					// 	message: 'Your transaction is being processed. You can view the transaction status by either clicking the button below or monitoring the recent transactions section.',
-					// 	duration: 0,
-					// 	btn: (<a href={`https://kovan.etherscan.io/tx/${tx.hash}`} target="_blank" rel="noreferrer noopener">View on Etherscan</a>)
-					// })
-					this.setState({staking : true})
 					let intervalId = setInterval(()=>{
 						PROVIDER.getTransactionReceipt(tx.hash)
 						.then(res=>{
 							try{
 							if(typeof res!==null){
 								if(res.blockNumber){
-									// const SuccessIcon = (
-									// 	<div style={{color: 'rgb(39, 174, 96)'}}>
-									// 		<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" style={{position: 'relative', top: '4px'}} viewBox="0 0 24 24" fill="none" stroke="currentColor" color="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-									// 	</div> 
-									// )
-									// notification.close('txInitiation')
-									// notification['info']({
-									// 	key: 'txSuccess',
-									// 	message: `Stake ${depositAmount} VRAP`,
-									// 	duration: 0,
-									// 	icon: SuccessIcon,
-									// 	btn: (<a href={`https://kovan.etherscan.io/tx/${tx.hash}`} target="_blank" rel="noreferrer noopener">View on Etherscan</a>)
-									// })
-									// clearInterval(intervalId);
-									// this.setState({stakeSuccess: true});
 								clearInterval(intervalId);
-								this.setState({staking : false})
 								return true;	
 								}
 							}
 							}   
 							catch(e){
 								console.log(e)
-								return false;
 							}
 						})
 					},1000)
@@ -227,15 +185,14 @@ class App extends Component {
 				}
 				catch(e){
 					console.log(e)
-					this.setState({staking : false, sapproving : false, sapproved : false})
 					return false;
 				}
 			}
 			else{
-				return false;
+				return false
 			}}
 			else{
-				return false;
+				return false
 			}
 	}
 
@@ -245,7 +202,6 @@ class App extends Component {
 			let contract = new ethers.Contract(TETHER_ADDRESS,TETHER_ABI,this.state.signer);
 			try{
 			let tx = await contract.approve(PRESALE_ADDRESS,ethers.utils.parseEther(value))
-			console.log(tx);
 			if(tx.hash){
 				let intervalId = setInterval(()=>{
 					PROVIDER.getTransactionReceipt(tx.hash)
@@ -278,12 +234,10 @@ class App extends Component {
 	}
 
 	async buyWithEther(value){
-		console.log(value)
 		if (value) {
 			this.setState({ethBuying : true})
 			try{
 			let contract  = new ethers.Contract(PRESALE_ADDRESS,PRESALE_ABI,this.state.signer);
-			console.log(contract);
 			let status = await contract.PurchaseWithEther({value : ethers.utils.parseEther(value)})
 			if(status.hash){
 				this.setState({ethBuying : false})
@@ -295,7 +249,6 @@ class App extends Component {
 			}
 			}
 			catch(e){
-				console.log(e,"Error")
 				this.setState({ethBuying : false})
 				return false
 			}
@@ -325,20 +278,13 @@ class App extends Component {
 				let provider = new ethers.providers.Web3Provider(window.ethereum);
 				await window.ethereum.enable();
 				const address = await provider.listAccounts();
-				let network = await provider.getNetwork()
-				if(network.chainId !== 56){
-					notification['error']({
-						message : 'Wrong Network Detected. Please connect to Binance Smart Chain'
-					})
-					this.setState({connectWalletModalVisible : false})
-				}
-				else{
-				let signer = await provider.getSigner();
+				console.log(address);
+				let signer = provider.getSigner();
 				this.fetchEthBalance(address[0])
 				this.fetchVrapBalance(address[0])
 				this.fetchTetherBalance(address[0])
 				this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'metamask',signer : signer})
-			}}
+			}
 			else{
 				console.log("Error")
 			}
@@ -352,10 +298,10 @@ class App extends Component {
 		try{
 			const web3Provider = new WalletConnectProvider({
                 rpc : {
-					56 : 'https://bsc-dataseed.binance.org/',
+					97 : 'https://data-seed-prebsc-1-s1.binance.org:8545/'
 				},
-				qrcode : true,
-				chainId : 56
+				bridge : 'https://bridge.walletconnect.org',
+				qrcode : true
             });      
 			await web3Provider.enable()
 			.catch(e=>{
@@ -364,19 +310,11 @@ class App extends Component {
 			const provider = new ethers.providers.Web3Provider(web3Provider);
 			const address = await provider.listAccounts();
 			const signer = provider.getSigner();
-			let network = await provider.getNetwork()
-				if(network.chainId !== 56){
-					notification['error']({
-						message : 'Wrong Network Detected. Please connect to Binance Smart Chain'
-					})
-					this.setState({connectWalletModalVisible : false})
-			}
-			else{
 			this.fetchEthBalance(address[0])
 			this.fetchVrapBalance(address[0])
 			this.fetchTetherBalance(address[0])
 			this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'walletConnect',signer : signer})
-		}}
+		}
 		catch(e){
 			console.log(e)
 		}
@@ -464,20 +402,19 @@ class App extends Component {
 
 	copyWalletAddress = () => {
 		this.setState({copied: true}, () => {
-			navigator.clipboard.writeText(this.state.walletAddress).then(() => {
-				setTimeout(
-					() => this.setState({copied: false}),
-					1000
-				)
-			})
+			setTimeout(
+				() => this.setState({copied: false}),
+				1000
+			)
 		})
 	}
 
 	claim(contractAddress){
-		this.setState({claiming : true})
+		console.log(contractAddress);
 		let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,this.state.signer);
 		contract.claim(contractAddress)
 		.then(res=>{
+			console.log(res);
 			if(res.hash){
 				let intervalId = setInterval(()=>{
 					PROVIDER.getTransactionReceipt(res.hash)
@@ -486,35 +423,24 @@ class App extends Component {
 						if(typeof res!==null){
 							if(res.blockNumber){
 								clearInterval(intervalId);
-								this.setState({claiming : false})
 								return true;
 							}
 						}
 						}   
 						catch(e){
-							return false
+							console.log(e)
 						}
 					})
 				},1000)
 			}
 			else{
-				this.setState({claiming : false})
 				return false;
 			}
 		})
 		.catch(err=>{
 			console.log(err);
-			this.setState({claiming : false})
 			return false;
 		})
-	}
-
-	resetStakeStatus = () => {
-		this.setState({stakeSuccess: false, sapproving: false})
-	}
-
-	resetBuyStatus = () => {
-		this.setState({approving: false})
 	}
 
 	render() {
@@ -556,8 +482,6 @@ class App extends Component {
 								approving = {this.state.approving}
 								approveTether={this.approveTether}
 								buyWithTether = {this.buyWithTether}
-								onResetBuyStatus={this.resetBuyStatus}
-								ethBuying={this.state.ethBuying}
 							/>
 						)} 
 					/>
@@ -596,7 +520,6 @@ class App extends Component {
 								modalVisible={connectWalletModalVisible}
 								onModalToggle={this.toggleWalletConnectModal}
 								theme={theme}
-								claiming = {this.state.claiming}
 								onThemeToggle={this.toggleTheme}
 								walletConnected={walletConnected}
 								walletAddress = {this.state.walletAddress}
@@ -613,12 +536,9 @@ class App extends Component {
 								buyWithTether = {this.buyWithTether}
 								sapproved = {this.state.sapproved}
 								sapproving = {this.state.sapproving}
-								staking={this.state.staking}
 								approveStaking = {this.approveStaking}
 								stakeToken = {this.stakeToken}
 								claim={this.claim}
-								stakeSuccess={this.state.stakeSuccess}
-								onResetStakeStatus={this.resetStakeStatus}
 							/>
 						)} 
 					/>
@@ -728,7 +648,7 @@ class App extends Component {
 														}
 													</div>
 													<div>
-														<button className="change-wallet-button" onClick={() => {localStorage.clear();this.setState({showWalletConnection: false, walletConnected : false, activeWallet : ''})}}>
+														<button className="change-wallet-button" onClick={() => this.setState({showWalletConnection: false})}>
 															Change
 														</button>
 													</div>
@@ -762,9 +682,9 @@ class App extends Component {
 																<span style={{marginLeft: '4px', fontSize: '13px'}}>Copied</span>
 															</button>
 														}
-														<a target="_blank" rel="noopener noreferrer" href={`https://bscscan.com/address/${this.state.walletAddress}`} className="wallet-address-link">
+														<a target="_blank" rel="noopener noreferrer" href={`https://etherscan.io/address/${this.state.walletAddress}`} className="wallet-address-link">
 															<svg style={{marginRight: '3px', position: 'relative', top: '3px'}} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-															<span style={{fontSize: '13px'}}>View on Explorer</span>
+															<span style={{fontSize: '13px'}}>View on Etherscan</span>
 														</a>
 													</div>
 												</div>

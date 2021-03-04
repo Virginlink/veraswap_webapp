@@ -2,6 +2,7 @@ import { createGlobalStyle} from "styled-components"
 export const GlobalStyles = createGlobalStyle`
     body {
         margin: 0;
+        height : 110vh;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         min-height: 100vh;
@@ -1255,9 +1256,9 @@ export const GlobalStyles = createGlobalStyle`
 
     @media only screen and (max-width: 500px) {
         .navbar-actions-main-container {
-            flex-direction: column;
+            flex-direction: row;
             align-items: flex-end;
-            height: 122px;
+            height: 60px;
         }
 
         .settings-menu {
@@ -1276,5 +1277,6 @@ export const GlobalStyles = createGlobalStyle`
             overflow: scroll !important;
         }
     }
+    
     
 `

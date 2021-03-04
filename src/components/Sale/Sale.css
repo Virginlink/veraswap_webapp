@@ -6,7 +6,7 @@
     -webkit-box-align: center;
     align-items: center;
     flex: 1 1 0%;
-    overflow: hidden auto;
+    overflow: scroll auto;
     z-index: 10 !important;
 }
 

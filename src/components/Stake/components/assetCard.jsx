@@ -17,20 +17,24 @@ class AssetCard extends React.Component{
     async componentDidMount(){
         if(this.props.data){
             this.fetch()
+            try{
             let token = TOKEN.filter(data => data.contractAddress === this.props.data.tokenContract);
             let ContractABI = token[0].contractABI;
             let contract = new ethers.Contract(this.props.data.tokenContract,ContractABI,PROVIDER);
             let balance = await contract.balanceOf(STAKING_ADDRESS);
                 balance = ethers.utils.formatEther(balance) * 10 ** token[0].decimal;
             this.setState({totalDeposit : balance})
+            }catch(e){
+                console.log(e,this.props.data)
+            }
         }
     }
 
     async fetch(){
         let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,PROVIDER);
         let poolRate = await contract.rFactor(this.props.data.tokenContract);
-            poolRate = ethers.utils.formatEther(poolRate) * 10 ** 8;
-        this.setState({poolRate : poolRate})
+            poolRate = ethers.utils.formatEther(poolRate) * 3154 * 10 ** 6;
+        this.setState({poolRate : parseFloat(poolRate).toFixed(2)})
     }
 
     render(){
@@ -53,7 +57,7 @@ class AssetCard extends React.Component{
                 <div style={{marginLeft: '8px'}} className="stake-card-heading">
                     {ticker}
                 </div>
-                <button onClick={() => this.props.history.push(`/stake/${this.props.data.tokenContract}`)} className="buy-action-button" style={{height: '38px', borderRadius: '8px', fontSize: '16px'}}>Deposit</button>
+                <button disabled={true} onClick={() => this.props.history.push(`/stake/${this.props.data.tokenContract}`)} className="buy-action-button" style={{height: '38px', borderRadius: '8px', fontSize: '16px'}}>Deposit</button>
             </div>
             <div style={{display: 'flex', justifyContent: 'space-between', flexDirection: 'column', gap: '12px', margin: '0 1rem 1rem 1rem'}}>
                 <div style={{width: '100%', minWidth: 0, margin: '0 0 -5px 0', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>

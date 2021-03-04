@@ -17,7 +17,7 @@ export default class StakeDeposit extends Component {
         super()
         this.state = {
             depositModalVisible: false,
-            txSuccess: false,
+            txSuccess: true,
             error: false,
             txHash: '',
             depositAmount: '',
@@ -28,9 +28,7 @@ export default class StakeDeposit extends Component {
             loading : true,
             apy : 0.0,
             liquidity : 0.0,
-            decimal : 0,
-            claiming : false,
-            staking: false,
+            decimal : 0
         }
         this.setAPY = this.setAPY.bind(this);
         this.setLiquidity = this.setLiquidity.bind(this);
@@ -46,6 +44,7 @@ export default class StakeDeposit extends Component {
         let balance = await contract.balanceOf(this.props.walletAddress);
             balance = ethers.utils.formatEther(balance) * 10 ** info[0].decimal;
             balance = parseFloat(balance).toFixed(2);
+        console.log(balance)
         this.setState({loading : false, balance : balance, decimal : info[0].decimalCorrection});
         }
         else{
@@ -54,14 +53,6 @@ export default class StakeDeposit extends Component {
         }
     }
 
-    static getDerivedStateFromProps(prevState, nextProps) {
-        if (prevState.txSuccess !== nextProps.stakeSuccess) {
-            return {
-                txSuccess: nextProps.stakeSuccess
-            }
-        }
-        return null
-    }
 
     setAPY(apy){
         this.setState({apy : apy});
@@ -71,42 +62,33 @@ export default class StakeDeposit extends Component {
         this.setState({liquidity : liquidity})
     }
 
-    handleClaim(){
-        this.setState({claiming : true}, async ()=> {
-           let result = await this.props.claim(this.state.currentToken);
-           if(result){
-               notification.success({
-                   message: 'Claim Successful',
-               })
-            this.setState({liquidity : 0.0, claiming : false})
-           }else{
-            this.setState({claiming : false})
-           }
-        })
+    async handleClaim(){
+        let result = await this.props.claim(this.state.currentToken);
+        console.log(result,'===Claim Result===')
+        if(result){
+            this.forceUpdate()
+        }
     }
 
     async handleStake(){
-        this.setState({staking: true}, async () => {
-            let result = await this.props.stakeToken(
-                ethers.utils.parseEther(
-                    parseFloat(this.state.depositAmount * 10 ** this.state.decimal).toFixed(2)
-                ),
-                parseFloat(this.state.depositAmount).toFixed(4),
-                this.state.currentToken,
-            );
-            this.setState({staking: false})
-            // console.log('STAKING RESULT', result)
-            // if(result){
-            //     this.setState({txSuccess : true, depositModalVisible: false});
-            // }
-            // else{
-            //     this.setState({txSuccess : false});
-            // }
-        })
+        let result = await this.props.stakeToken(
+            ethers.utils.parseEther(
+                parseFloat(this.state.depositAmount * 10 ** this.state.decimal).toFixed(2)
+            ),
+            this.state.currentToken
+        );
+        if(result){
+            this.setState({txSuccess : true,depositModalVisible : false});
+            this.forceUpdate()
+        }
+        else{
+            this.setState({error : true});
+        }
     }
 
     render() {
         const { depositModalVisible, txSuccess, txHash, error, depositAmount } = this.state;
+        const {claiming} = this.props
         return (
             (this.state.ticker !== "" && this.state.icon !== "") || !this.state.loading ? 
             <div>
@@ -121,8 +103,8 @@ export default class StakeDeposit extends Component {
 					ethBalance = {this.props.ethBalance}
 					vrapBalance = {this.props.vrapBalance}
 				/>
-                <div style={{display: 'flex', flexDirection: 'column', width: '100%', paddingTop: '100px', alignItems: 'center', flex: '1 1 0%', overflow: 'scroll', zIndex: 1, paddingLeft: '0.5rem', paddingRight: '0.5rem'}} className="stake-deposit-container">
-                    <div style={{display: 'grid', gridAutoRows: 'auto', rowGap: '24px', justifyItems: 'center', maxWidth: '650px', width: '100%'}}>
+                <div style={{display: 'flex', flexDirection: 'column', alignItems : 'center', justifyContent:'center', marginLeft : window.innerWidth < 720 ? '2%' : '0' ,width: window.innerWidth < 720 ? '96%' : '100%', paddingTop: window.innerWidth < 600 ? '30px' : '100px',paddingBottom : window.innerWidth < 600 ? '20px' : '0px', alignItems: 'center', flex: '1 1 0%', zIndex: 1, overflow : 'scroll auto'}}>
+                    <div style={{display: 'grid', gridAutoRows: 'auto', rowGap: '24px', justifyItems: 'center', maxWidth: '640px', width: '100%'}}>
                         <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxSizing: 'border-box', margin: 0, padding: 0, minWidth: 0, width: '100%', gap: '24px'}}>
                             <div className="heading" style={{margin: 0}}>
                                 {this.state.ticker} Liquidity Mining
@@ -153,10 +135,10 @@ export default class StakeDeposit extends Component {
                             </div>
                             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box', width: '100%', minWidth: 0, margin: '0 0 1rem 0', padding: 0, gap: '12px'}}>
                                 {
-                                    parseFloat(this.state.liquidity) > 0 && !this.state.claiming ?
+                                    parseFloat(this.state.liquidity) > 0 && !claiming ?
                                     <button className="buy-button" onClick={this.props.walletConnected ? () => this.handleClaim() : this.props.onModalOpenRequest}>Claim Now</button>
                                     :
-                                    parseFloat(this.state.liquidity) > 0 && this.state.claiming ?
+                                    claiming ?
                                     <div className="transaction-status">
                                     <svg style={{position: 'relative', right: '-13px', width: '20px', height: '20px'}} className="connection-loader" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="sc-bYSBpT fhfZBu sc-gqPbQI dCfdPK"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 9.27455 20.9097 6.80375 19.1414 5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                                         <span>
@@ -167,6 +149,9 @@ export default class StakeDeposit extends Component {
                                     <button className="buy-button" onClick={this.props.walletConnected ? () => this.setState({depositModalVisible: true}) : this.props.onModalOpenRequest}>
                                         Stake Now
                                     </button>
+                                    // <button className="buy-button" onClick={ () => notification['info']({message : 'Staking is under maintainance. Please come back after some time.'})}>
+                                    //     Stake Now
+                                    // </button>
                                 }
                             </div>
                         </div>
@@ -175,8 +160,8 @@ export default class StakeDeposit extends Component {
                 <Dialog
                     open={depositModalVisible}
                     TransitionComponent={Transition}
-                    onClose={() => {this.setState({depositModalVisible: false, txSuccess: false, error : false}); this.props.onResetStakeStatus()}}
-                    onBackdropClick={() => {this.setState({depositModalVisible: false, txSuccess: false, error : false}); this.props.onResetStakeStatus()}}
+                    onClose={() => {this.setState({depositModalVisible: false, txSuccess: false, error : false, depositAmount: ''}); this.props.onResetStakeStatus()}}
+                    onBackdropClick={() => {this.setState({depositModalVisible: false, txSuccess: false, error : false, depositAmount: ''}); this.props.onResetStakeStatus()}}
                     BackdropProps={{style: {backgroundColor: 'rgba(0, 0, 0, 0.3)'}}}
                     PaperProps={{
                         style: {
@@ -195,18 +180,18 @@ export default class StakeDeposit extends Component {
                     <div className="buy-modal-grid">
                       <div className="buy-modal-header">
                         <div className="buy-modal-title">Transaction Successful</div>
-                        <svg style={{cursor: 'pointer'}} onClick={() => this.setState({depositModalVisible: false, txSuccess: false})} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sc-jnlKLf fEBVhk"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        <svg style={{cursor: 'pointer'}} onClick={() => this.setState({depositModalVisible: false, txSuccess: false, depositAmount: ''}), () => this.props.onResetStakeStatus()} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sc-jnlKLf fEBVhk"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                       </div>
                         <p className="connected-wallet-footer-text" style={{width:'80%',marginLeft:'10%',textAlign:'center',lineHeight:'2rem'}}>
-                            It takes upto 5 minutes to mine your transaction. Once done your tokens will be automatically credited to your wallet address.
-                            If you wish to track your transaction <a href={`https://kovan.etherscan.io/tx/${txHash}`} target="_blank">click here</a>
+                            It takes upto 5 minutes to mine your transaction. Once done your tokens will be automatically staked from your wallet.
+                            If you wish to track your transaction <a href={`https://etherscan.io/tx/${txHash}`} target="_blank">click here</a>
                         </p>
                     </div>
                     :
                     <div className="buy-modal-grid">
                         <div className="buy-modal-header">
                             <div className="buy-modal-title">Deposit</div>
-                            <svg style={{cursor: 'pointer'}} onClick={() => this.setState({depositModalVisible: false})} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sc-jnlKLf fEBVhk"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            <svg style={{cursor: 'pointer'}} onClick={() => this.setState({depositModalVisible: false, depositAmount: ''}, () => this.props.onResetStakeStatus())} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sc-jnlKLf fEBVhk"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                         </div>
                         {error ?
                         <p className="connected-wallet-footer-text">Error occured while depositing VRAP tokens. Please contact support.</p>
@@ -218,7 +203,7 @@ export default class StakeDeposit extends Component {
                                 <div className="available-deposit-container">
                                     <div className="available-deposit-inner-container">
                                         <div />
-                                        <div style={{display: 'inline', cursor: 'pointer'}}>_</div>
+                                        <div style={{display: 'inline', cursor: 'pointer'}}>{this.state.balance}</div>
                                     </div>
                                 </div>
                                 <div className="deposit-input-container">
@@ -226,8 +211,8 @@ export default class StakeDeposit extends Component {
                                     <button onClick={()=>this.setState({depositAmount : this.state.balance})} className="max-deposit-button">MAX</button>
                                     <button className="token-select-button">
                                         <span style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                                            <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} class="sc-fZwumE evMpaO" alt="ETH logo" src={Logo} />
-                                            <span style={{margin: '0px 0.25rem 0px 0.75rem', fontSize: '20px'}}>VRAP</span>
+                                            <img style={{width: '24px', height: '24px', borderRadius: '24px', boxShadow: 'rgba(0, 0, 0, 0.075) 0px 6px 10px'}} class="sc-fZwumE evMpaO" alt="logo" src={this.state.icon} />
+                                            <span style={{margin: '0px 0.25rem 0px 0.75rem', fontSize: '20px'}}>{this.state.ticker}</span>
                                         </span>
                                     </button>
                                 </div>
@@ -237,9 +222,12 @@ export default class StakeDeposit extends Component {
                             <div className="received-amount">Daily Rewards</div>
                             <div className="received-amount">
                                 {
-                                !isNaN(parseFloat(parseFloat(this.state.apy) * 86400 * parseFloat(this.state.depositAmount)).toFixed(2)) ? parseFloat(parseFloat(this.state.apy) * 86400 * parseFloat(this.state.depositAmount)).toFixed(2) : 0
-                                } {this.state.ticker}
-                               <span style={{marginLeft:"0.5rem"}}>{this.props.ticker} / day</span> 
+                                parseFloat(
+                                    parseFloat(this.state.apy) * 10 ** -2 * parseFloat(this.state.depositAmount)
+                                    / 365
+                                ).toFixed(4)
+                                } VRAP
+                               <span style={{marginLeft:"0.5rem"}}>{this.props.ticker} / Day</span> 
                             </div>
                         </div>
                         
@@ -268,21 +256,18 @@ export default class StakeDeposit extends Component {
                                 depositAmount ? (parseFloat(depositAmount) === 0 || parseFloat(depositAmount) === 0. || parseFloat(depositAmount) < 0) ? 'Invalid amount' : "Approve" : 'Enter an amount'
                                 }
                             </button>
-                            <button onClick={()=>{this.handleStake()}} disabled={!this.props.sapproved || this.props.sapproving} className="buy-action-button">
-                                {
-                                    this.state.staking ?
-
-                                    <div className="transaction-status white-loader">
-                                    <svg style={{position: 'relative', right: '-13px', width: '20px', height: '20px'}} className="connection-loader" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="sc-bYSBpT fhfZBu sc-gqPbQI dCfdPK"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 9.27455 20.9097 6.80375 19.1414 5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                                        <span className="white-loader">
-                                            Staking
-                                        </span>
-                                    </div>
-
-                                    :
-
-                                    "Stake Now"
-                                }
+                            <button onClick={()=>{this.handleStake()}} disabled={!this.props.sapproved || this.props.sapproving || this.props.staking} className="buy-action-button">  
+                            {
+                                this.props.staking ?
+                                <div className="transaction-status">
+                                   <svg style={{position: 'relative', right: '-13px', width: '20px', height: '20px'}} className="connection-loader" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="sc-bYSBpT fhfZBu sc-gqPbQI dCfdPK"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 9.27455 20.9097 6.80375 19.1414 5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    <span>
+                                        Staking
+                                    </span>
+                                </div>  
+                                :
+                                "Stake Now"
+                            }
                             </button>
                         </div>
                         <div style={{display: 'grid', gridAutoRows: 'auto', justifyContent: 'center'}}>

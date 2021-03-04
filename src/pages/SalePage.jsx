@@ -30,6 +30,8 @@ export default class SalePage extends Component {
 					approving = {this.props.approving}
 					approveTether={this.props.approveTether}
 					buyWithTether = {this.props.buyWithTether}
+					onResetBuyStatus={this.props.onResetBuyStatus}
+					ethBuying={this.props.ethBuying}
 				/>
             </div>
         )

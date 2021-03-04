@@ -30,8 +30,8 @@ export default class PoolInfo extends React.Component{
     async fetch(){
         let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,PROVIDER);
         let poolRate = await contract.rFactor(this.props.currentToken);
-            poolRate = ethers.utils.formatEther(poolRate) * 10 ** 8;
-        this.setState({poolRate : poolRate});
+            poolRate = ethers.utils.formatEther(poolRate) * 3154 * 10 ** 6;
+        this.setState({poolRate : parseFloat(poolRate).toFixed(2)});
         this.props.setAPY(poolRate);
     }
 
@@ -41,7 +41,7 @@ export default class PoolInfo extends React.Component{
             <div className="outlined-box">
                 <div style={{display: 'grid', gridAutoRows: 'auto', rowGap: '8px'}}>
                     <div className="text-regular" style={{fontSize: '16px', marginBottom: '-5px'}}>Total deposits</div>
-                    <div className="text-semibold" style={{fontSize: '24px'}}>{parseFloat(this.state.totalDeposit).toFixed(6)} {this.props.ticker}</div>
+                    <div className="text-semibold" style={{fontSize: '24px'}}>{parseFloat(this.state.totalDeposit).toFixed(4)} {this.props.ticker}</div>
                 </div>
             </div>
             <div className="outlined-box">
