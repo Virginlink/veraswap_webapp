@@ -195,10 +195,10 @@ export default class Sale extends Component {
                         </div>
                     </div>
                     <div className="buy-container" style={{marginBottom: '1rem'}}>
-                        {/* <button className="buy-button" onClick={this.props.walletConnected ? () => this.setState({buyModalVisible: true}) : this.props.onModalOpenRequest}>Buy Now</button> */}
-                        <button className="buy-button" onClick={ () => notification['info']({message : 'Phase 2 Ended Successfully. Next Phase of Sale opens on 5th March 2021, 12 PM UTC.'})}>
+                        <button className="buy-button" onClick={this.props.walletConnected ? () => this.setState({buyModalVisible: true}) : this.props.onModalOpenRequest}>Buy Now</button>
+                        {/* <button className="buy-button" onClick={ () => notification['info']({message : 'Phase 2 Ended Successfully. Next Phase of Sale opens on 5th March 2021, 12 PM UTC.'})}>
                             Buy Now
-                        </button>
+                        </button> */}
                     </div>
                 </div>
                 <Dialog
