@@ -4,7 +4,6 @@ import Metamask from './assets/images/metamask.png';
 import WalletConnect from './assets/images/walletConnect.svg';
 import CoinbaseWallet from './assets/images/coinbaseWallet.svg';
 import FortMatic from './assets/images/fortMatic.png';
-import PorTis from './assets/images/portis.png';
 import TrustWallet from './assets/images/trustWallet.svg';
 import {ThemeProvider} from "styled-components";
 import { GlobalStyles } from "./components/globalStyles";
@@ -12,7 +11,6 @@ import {PROVIDER,TOKEN_ABI,TOKEN_ADDRESS,TETHER_ABI,TETHER_ADDRESS,PRESALE_ABI,P
 import { lightTheme, darkTheme } from "./components/Themes";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import Fortmatic from 'fortmatic';
-import Portis from '@portis/web3';
 import Transactions from './components/Transactions/Transactions';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import SalePage from './pages/SalePage';
@@ -140,7 +138,9 @@ class App extends Component {
 						}   
 						catch(e){
 							console.log(e)
-							this.setState({sapproving : false})
+							if (e.toString() !== "TypeError: Cannot read property 'blockNumber' of null") {
+								this.setState({sapproving : false})
+							}
 						}
 					})
 				}, 1000)
@@ -393,21 +393,21 @@ class App extends Component {
 				await window.ethereum.enable();
 				const address = await provider.listAccounts();
 				let network = await provider.getNetwork()
-				if(network.chainId !== 56){
-					notification['error']({
-						message : 'Wrong Network Detected. Please connect to Binance Smart Chain'
-					})
-					this.setState({connectWalletModalVisible : false})
-				}
-				else{
+				// if(network.chainId !== 56){
+				// 	notification['error']({
+				// 		message : 'Wrong Network Detected. Please connect to Binance Smart Chain'
+				// 	})
+				// 	this.setState({connectWalletModalVisible : false})
+				// }
+				// else{
 				let signer = await provider.getSigner();
 				this.fetchEthBalance(address[0])
 				this.fetchVrapBalance(address[0])
 				this.fetchTetherBalance(address[0])
 				this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'metamask',signer : signer})
-			}}
-			else{
-				console.log("Error")
+			// }}
+			// else{
+			// 	console.log("Error")
 			}
 		}
 		catch(e){

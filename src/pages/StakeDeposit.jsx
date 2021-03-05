@@ -78,7 +78,7 @@ export default class StakeDeposit extends Component {
             this.state.currentToken
         );
         if(result){
-            this.setState({txSuccess : true,depositModalVisible : false});
+            this.setState({txSuccess : true, depositModalVisible : false});
             this.forceUpdate()
         }
         else{
