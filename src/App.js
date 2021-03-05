@@ -140,7 +140,9 @@ class App extends Component {
 						}   
 						catch(e){
 							console.log(e)
-							this.setState({sapproving : false})
+							if (e.toString() !== "TypeError: Cannot read property 'blockNumber' of null") {
+								this.setState({sapproving : false})
+							}
 						}
 					})
 				}, 1000)
@@ -529,6 +531,7 @@ class App extends Component {
 		this.setState({
 			stakeSuccess: false,
 			sapproving: false,
+			sapproved: false,
 			staking: false,
 		})
 	}
