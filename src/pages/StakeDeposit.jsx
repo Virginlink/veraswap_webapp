@@ -89,7 +89,7 @@ export default class StakeDeposit extends Component {
     render() {
         const { depositModalVisible, txSuccess, txHash, error, depositAmount } = this.state;
         const {claiming} = this.props
-        console.log(this.state.icon,"ICON")
+        //console.log(this.state.icon,"ICON")
         return (
             (this.state.ticker !== "" && this.state.icon !== "") || !this.state.loading ? 
             <div>
@@ -104,7 +104,7 @@ export default class StakeDeposit extends Component {
 					ethBalance = {this.props.ethBalance}
 					vrapBalance = {this.props.vrapBalance}
 				/>
-                <div style={{display: 'flex', flexDirection: 'column', alignItems : 'center', justifyContent:'center', marginLeft : window.innerWidth < 720 ? '2%' : '0' ,width: window.innerWidth < 720 ? '96%' : '100%', paddingTop: window.innerWidth < 600 ? '30px' : '100px',paddingBottom : window.innerWidth < 600 ? '20px' : '0px', alignItems: 'center', flex: '1 1 0%', zIndex: 1, overflow : 'scroll auto'}}>
+                <div style={{display: 'flex', flexDirection: 'column', alignItems : 'center', justifyContent:'center', marginLeft : window.innerWidth < 720 ? '2%' : '0' ,width: window.innerWidth < 720 ? '96%' : '100%', paddingTop: window.innerWidth < 600 ? '30px' : '100px',paddingBottom : window.innerWidth < 600 ? '20px' : '0px', flex: '1 1 0%', zIndex: 1, overflow : 'scroll auto'}}>
                     <div style={{display: 'grid', gridAutoRows: 'auto', rowGap: '24px', justifyItems: 'center', maxWidth: '640px', width: '100%'}}>
                         <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxSizing: 'border-box', margin: 0, padding: 0, minWidth: 0, width: '100%', gap: '24px'}}>
                             <div className="heading" style={{margin: 0}}>
@@ -187,7 +187,7 @@ export default class StakeDeposit extends Component {
                     <div className="buy-modal-grid">
                       <div className="buy-modal-header">
                         <div className="buy-modal-title">Transaction Successful</div>
-                        <svg style={{cursor: 'pointer'}} onClick={() => this.setState({depositModalVisible: false, txSuccess: false, depositAmount: ''}), () => this.props.onResetStakeStatus()} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sc-jnlKLf fEBVhk"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        <svg style={{cursor: 'pointer'}} onClick={() => this.setState({depositModalVisible: false, txSuccess: false, depositAmount: '', error: false}, () => this.props.onResetStakeStatus())} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sc-jnlKLf fEBVhk"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                       </div>
                         <p className="connected-wallet-footer-text" style={{width:'80%',marginLeft:'10%',textAlign:'center',lineHeight:'2rem'}}>
                             It takes upto 5 minutes to mine your transaction. Once done your tokens will be automatically staked from your wallet.
@@ -198,7 +198,7 @@ export default class StakeDeposit extends Component {
                     <div className="buy-modal-grid">
                         <div className="buy-modal-header">
                             <div className="buy-modal-title">Deposit</div>
-                            <svg style={{cursor: 'pointer'}} onClick={() => this.setState({depositModalVisible: false, depositAmount: ''}, () => this.props.onResetStakeStatus())} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sc-jnlKLf fEBVhk"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            <svg style={{cursor: 'pointer'}} onClick={() => this.setState({depositModalVisible: false, depositAmount: '', error: false}, () => this.props.onResetStakeStatus())} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sc-jnlKLf fEBVhk"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                         </div>
                         {error ?
                         <p className="connected-wallet-footer-text">Error occured while depositing VRAP tokens. Please contact support.</p>
@@ -229,10 +229,15 @@ export default class StakeDeposit extends Component {
                             <div className="received-amount">Daily Rewards</div>
                             <div className="received-amount">
                                 {
-                                parseFloat(
+                                !isNaN(
                                     parseFloat(this.state.apy) * 10 ** -2 * parseFloat(this.state.depositAmount)
                                     / 365
-                                ).toFixed(4)
+                                ) ? 
+                                (parseFloat(
+                                    parseFloat(this.state.apy) * 10 ** -2 * parseFloat(this.state.depositAmount)
+                                    / 365
+                                ).toFixed(4))
+                                : "0.0000"
                                 } VRAP
                                <span style={{marginLeft:"0.5rem"}}>{this.props.ticker} / Day</span> 
                             </div>
