@@ -334,7 +334,8 @@ export default class Sale extends Component {
                                 this.state.depositAmount ? (parseFloat(this.state.depositAmount) === 0 || parseFloat(this.state.depositAmount) === 0. || parseFloat(this.state.depositAmount) < 0) ? 'Invalid amount' : "Approve" : 'Enter an amount'
                                 }
                             </button>
-                            <button onClick={()=>{this.handleTetherBuy()}} disabled={!this.props.approved || this.props.approving} className="buy-action-button">Buy Now</button>
+                            {/* <button onClick={()=>{this.handleTetherBuy()}} disabled={!this.props.approved || this.props.approving} className="buy-action-button">Buy Now</button> */}
+                            <button disabled className="buy-action-button">Buy Now</button>
                         </div>
                         }
                         {

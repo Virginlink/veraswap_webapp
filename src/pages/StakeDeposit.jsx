@@ -229,15 +229,15 @@ export default class StakeDeposit extends Component {
                             <div className="received-amount">Daily Rewards</div>
                             <div className="received-amount">
                                 {
-                                !isNaN(
-                                    parseFloat(this.state.apy) * 10 ** -2 * parseFloat(this.state.depositAmount)
-                                    / 365
-                                ) ? 
-                                (parseFloat(
-                                    parseFloat(this.state.apy) * 10 ** -2 * parseFloat(this.state.depositAmount)
-                                    / 365
-                                ).toFixed(4))
-                                : "0.0000"
+                                    !isNaN(
+                                        parseFloat(this.state.apy) * 10 ** -2 * parseFloat(this.state.depositAmount)
+                                        / 365
+                                    ) ?
+                                    (parseFloat(
+                                        parseFloat(this.state.apy) * 10 ** -2 * parseFloat(this.state.depositAmount)
+                                        / 365
+                                    ).toFixed(4))
+                                    : "0.0000"
                                 } VRAP
                                <span style={{marginLeft:"0.5rem"}}>{this.props.ticker} / Day</span> 
                             </div>
@@ -254,8 +254,8 @@ export default class StakeDeposit extends Component {
                                         ),
                                         this.state.currentToken
                                     )
-                                    }}
-                                >
+                                }}
+                            >
                                 {
                                 this.props.sapproving ?
                                 <div className="transaction-status">
