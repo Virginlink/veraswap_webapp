@@ -5,6 +5,7 @@ import WalletConnect from './assets/images/walletConnect.svg';
 import CoinbaseWallet from './assets/images/coinbaseWallet.svg';
 import FortMatic from './assets/images/fortMatic.png';
 import PorTis from './assets/images/portis.png';
+import TrustWallet from './assets/images/trustWallet.svg';
 import {ThemeProvider} from "styled-components";
 import { GlobalStyles } from "./components/globalStyles";
 import {PROVIDER,TOKEN_ABI,TOKEN_ADDRESS,TETHER_ABI,TETHER_ADDRESS,PRESALE_ABI,PRESALE_ADDRESS,STAKING_ADDRESS, STAKING_ABI} from './utils/contracts';
@@ -98,8 +99,8 @@ class App extends Component {
 		else if(type === 'walletConnect'){
 			this.handleWalletConnect()
 		}
-		else if(type === 'portis'){
-			this.handlePortisWallet()
+		else if(type === 'trustwallet'){
+			this.handleTrustWallet()
 		}
 		else {
 			this.handleFormaticWallet()
@@ -384,16 +385,29 @@ class App extends Component {
 		}
 	}
 
-	async handlePortisWallet(){
+	async handleTrustWallet(){
 		try{
-			const portis = new Portis('742043e8-8ef8-4196-9f44-4998a8299858', 'mainnet')
-			const provider = new ethers.providers.Web3Provider(portis.provider);
-			const address = await provider.listAccounts();
-			const signer = provider.getSigner();
-			this.fetchEthBalance(address[0])
-			this.fetchVrapBalance(address[0])
-			this.fetchTetherBalance(address[0])
-			this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'portis',signer : signer})
+			if(typeof window.ethereum !== undefined){
+				let provider = new ethers.providers.Web3Provider(window.ethereum);
+				await window.ethereum.enable();
+				const address = await provider.listAccounts();
+				let network = await provider.getNetwork()
+				if(network.chainId !== 56){
+					notification['error']({
+						message : 'Wrong Network Detected. Please connect to Binance Smart Chain'
+					})
+					this.setState({connectWalletModalVisible : false})
+				}
+				else{
+				let signer = await provider.getSigner();
+				this.fetchEthBalance(address[0])
+				this.fetchVrapBalance(address[0])
+				this.fetchTetherBalance(address[0])
+				this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'metamask',signer : signer})
+			}}
+			else{
+				console.log("Error")
+			}
 		}
 		catch(e){
 			console.log(e)
@@ -794,9 +808,9 @@ class App extends Component {
 
 															'WalletConnect'
 
-															: selectedWallet === 'fortmatic' ?
+															: selectedWallet === 'trustwallet' ?
 
-															'Fortmatic'
+															'Trust Wallet'
 
 															: 'Portis'
 														}
@@ -811,9 +825,9 @@ class App extends Component {
 
 															'Connect to Trust Wallet, Rainbow Wallet and more...'
 
-															: selectedWallet === 'fortmatic' ?
+															: selectedWallet === 'trustwallet' ?
 
-															'Login using Fortmatic hosted wallet'
+															'Login using Trust Wallet Dapp Browser'
 
 															: 'Login using Portis hosted wallet'
 														}
@@ -837,7 +851,7 @@ class App extends Component {
 
 														<img src={FortMatic} alt="icon" width="24px" height="24px" />
 
-														: <img src={PorTis} alt="icon" width="24px" height="24px" />
+														: <img src={TrustWallet} alt="icon" width="24px" height="24px" />
 													}
 												</div>
 											</div>
@@ -857,6 +871,7 @@ class App extends Component {
 
 									<>
 										<div className="modal-content-grid">
+											{window.innerWidth > 900 ?
 											<button className={`modal-content-button ${activeWallet === 'metamask' && 'active-wallet-button'}`} onClick={() => this.connectToWallet('metamask')}>
 												<div className="modal-content-button-title" style={{display: 'flex', flexDirection: activeWallet === 'metamask' && 'row'}}>
 													{
@@ -871,7 +886,7 @@ class App extends Component {
 												<div className="modal-content-button-icon">
 													<img src={Metamask} alt="icon" />
 												</div>
-											</button>
+											</button> : null }
 											<button className={`modal-content-button ${activeWallet === 'walletConnect' && 'active-wallet-button'}`} onClick={() => this.connectToWallet('walletConnect')} style={{display: 'flex', flexDirection: activeWallet === 'walletConnect' && 'row'}}>
 												<div className="modal-content-button-title">
 													{
@@ -887,21 +902,21 @@ class App extends Component {
 													<img src={WalletConnect} alt="icon" />
 												</div>
 											</button>
-											{/* <button className={`modal-content-button ${activeWallet === 'fortmatic' && 'active-wallet-button'}`} onClick={() => this.connectToWallet('fortmatic')} style={{display: 'flex', flexDirection: activeWallet === 'fortmatic' && 'row'}}>
+											<button className={`modal-content-button ${activeWallet === 'trustwallet' && 'active-wallet-button'}`} onClick={() => this.connectToWallet('trustwallet')} style={{display: 'flex', flexDirection: activeWallet === 'trustwallet' && 'row'}}>
 												<div className="modal-content-button-title">
 													{
-														activeWallet === 'fortmatic' &&
+														activeWallet === 'trustwallet' &&
 
 														<div className="wallet-active-dot">
 															<div />
 														</div>
 													}
-													Fortmatic
+													Trust Wallet
 												</div>
 												<div className="modal-content-button-icon">
-													<img src={FortMatic} alt="icon" />
+													<img src={TrustWallet} alt="icon" />
 												</div>
-											</button> */}
+											</button>
 											{/* <button className={`modal-content-button ${activeWallet === 'portis' && 'active-wallet-button'}`} onClick={() => this.connectToWallet('portis')}>
 												<div className="modal-content-button-title" style={{display: 'flex', flexDirection: activeWallet === 'portis' && 'row'}}>
 													{
