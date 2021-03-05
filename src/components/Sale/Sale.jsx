@@ -194,10 +194,10 @@ export default class Sale extends Component {
                         </div>
                     </div>
                     <div className="buy-container" style={{marginBottom: '1rem'}}>
-                          {/* <button className="buy-button" onClick={ () => notification['info']({message : 'Phase 3 Ended Successfully. We will update you shortly'})}>
+                        <button className="buy-button" onClick={ () => notification['info']({message : 'Phase 3 Ended Successfully. We will update you shortly'})}>
                             Sale Ended
-                           </button> */}
-                        <button className="buy-button" onClick={this.props.walletConnected ? () => this.setState({buyModalVisible: true}) : this.props.onModalOpenRequest}>Buy Now</button>
+                        </button>
+                        {/* <button className="buy-button" onClick={this.props.walletConnected ? () => this.setState({buyModalVisible: true}) : this.props.onModalOpenRequest}>Buy Now</button> */}
                     </div>
                 </div>
                 <Dialog
@@ -334,8 +334,7 @@ export default class Sale extends Component {
                                 this.state.depositAmount ? (parseFloat(this.state.depositAmount) === 0 || parseFloat(this.state.depositAmount) === 0. || parseFloat(this.state.depositAmount) < 0) ? 'Invalid amount' : "Approve" : 'Enter an amount'
                                 }
                             </button>
-                            {/* <button onClick={()=>{this.handleTetherBuy()}} disabled={!this.props.approved || this.props.approving} className="buy-action-button">Buy Now</button> */}
-                            <button disabled className="buy-action-button">Buy Now</button>
+                            <button onClick={()=>{this.handleTetherBuy()}} disabled={!this.props.approved || this.props.approving} className="buy-action-button">Buy Now</button>
                         </div>
                         }
                         {
