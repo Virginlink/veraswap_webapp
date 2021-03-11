@@ -151,7 +151,7 @@ class Stake extends Component {
                                             Deposit your Liquidity Provider tokens to receive VRAP, the Veraswap protocol governance token.
                                         </div>
                                     </div>
-                                    <a href="https://docs.veraswap.org/yield-farming/liquidity-mining" target="_blank" rel="no-opener no-referrer" style={{color: '#FFF', fontSize: '14px', textDecoration: 'underline'}}>Read more about VRAP</a>
+                                    <a href="https://certik.org/projects/veraswap" target="_blank" rel="no-opener no-referrer" style={{color: '#FFF', fontSize: '14px', textDecoration: 'underline'}}>Audit By <b>CERTIK</b></a>
                                 </div>
                             </div>
                             <span className="sale-rotation"></span>

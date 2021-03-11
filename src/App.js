@@ -163,6 +163,7 @@ class App extends Component {
 	}
 
 	async stakeToken(value, depositAmount, tokenAddress){
+		console.log('Staking...')
 		if(value && tokenAddress){
 			let info = TOKEN.filter(data=>data.contractAddress === tokenAddress);
 			if(info.length > 0){
