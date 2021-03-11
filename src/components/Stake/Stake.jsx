@@ -124,7 +124,7 @@ class Stake extends Component {
                     ticker : 'DAI-BNB',
                     tokenContract : '0x3aB77e40340AB084c3e23Be8e5A6f7afed9D41DC',
                     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(124, 118, 136) 0%, rgb(108, 114, 132) 100%)'
-                },
+                }
             ]
         }
     }

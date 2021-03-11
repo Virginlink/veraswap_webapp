@@ -12,6 +12,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Fade timeout={{enter: 1000, exit: 2000}} ref={ref} {...props} />;
 });
 const {ethers} = require('ethers');
+
 export default class StakeDeposit extends Component {
     constructor() {
         super()
@@ -28,7 +29,8 @@ export default class StakeDeposit extends Component {
             loading : true,
             apy : 0.0,
             liquidity : 0.0,
-            decimal : 0
+            decimal : 0,
+            claiming : false
         }
         this.setAPY = this.setAPY.bind(this);
         this.setLiquidity = this.setLiquidity.bind(this);
@@ -44,7 +46,6 @@ export default class StakeDeposit extends Component {
         let balance = await contract.balanceOf(this.props.walletAddress);
             balance = ethers.utils.formatEther(balance) * 10 ** info[0].decimal;
             balance = parseFloat(balance).toFixed(2);
-        console.log(balance)
         this.setState({loading : false, balance : balance, decimal : info[0].decimalCorrection});
         }
         else{
@@ -63,10 +64,19 @@ export default class StakeDeposit extends Component {
     }
 
     async handleClaim(){
+        this.setState({claiming : true})
         let result = await this.props.claim(this.state.currentToken);
-        console.log(result,'===Claim Result===')
-        if(result){
-            this.forceUpdate()
+        if(!result.error){
+            notification['success']({
+                message : result.message
+            });
+            this.setState({claiming : false, liquidity : 0.0})
+        }
+        else{
+            notification['error']({
+                message : result.message
+            });
+            this.setState({claiming : false})
         }
     }
 
@@ -77,18 +87,20 @@ export default class StakeDeposit extends Component {
             ),
             this.state.currentToken
         );
-        if(result){
-            this.setState({txSuccess : true, depositModalVisible : false});
+        if(result.success){
+            this.setState({txSuccess : true, txHash : result.hash});
             this.forceUpdate()
         }
         else{
             this.setState({error : true});
+            notification['error']({
+                message : result.message
+            })
         }
     }
 
     render() {
-        const { depositModalVisible, txSuccess, txHash, error, depositAmount } = this.state;
-        const {claiming} = this.props
+        const { depositModalVisible, txSuccess, txHash, error, depositAmount, claiming } = this.state;
         //console.log(this.state.icon,"ICON")
         return (
             (this.state.ticker !== "" && this.state.icon !== "") || !this.state.loading ? 
@@ -191,7 +203,7 @@ export default class StakeDeposit extends Component {
                       </div>
                         <p className="connected-wallet-footer-text" style={{width:'80%',marginLeft:'10%',textAlign:'center',lineHeight:'2rem'}}>
                             It takes upto 5 minutes to mine your transaction. Once done your tokens will be automatically staked from your wallet.
-                            If you wish to track your transaction <a href={`https://etherscan.io/tx/${txHash}`} target="_blank">click here</a>
+                            If you wish to track your transaction <a href={`https://bscscan.com/tx/${txHash}`} target="_blank">click here</a>
                         </p>
                     </div>
                     :

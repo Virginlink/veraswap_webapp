@@ -162,85 +162,27 @@ class App extends Component {
 		}
 	}
 
-	async stakeToken(value, depositAmount, tokenAddress){
-		console.log('Staking...')
+	async stakeToken(value, tokenAddress){
 		if(value && tokenAddress){
 			let info = TOKEN.filter(data=>data.contractAddress === tokenAddress);
 			if(info.length > 0){
-				let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,this.state.signer);
-				try{
+			let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,this.state.signer);
+			try{
 				let tx = await contract.stake(value,info[0].contractAddress)
-				if(tx.hash){
-					// const hashArrayString = localStorage.getItem('hashData');
-					// const newTx = {
-					// 	hash: tx.hash,
-					// 	amount: depositAmount,
-					// 	summary: `Stake ${depositAmount} VRAP`
-					// }
-					// if (hashArrayString) {
-					// 	let hashArray = JSON.parse(hashArrayString)
-					// 	hashArray.data.push(newTx)
-					// 	localStorage.setItem('hashData', JSON.stringify(hashArray))
-					// } else {
-					// 	const newHashArray = {
-					// 		data: [newTx]
-					// 	}
-					// localStorage.setItem('hashData', JSON.stringify(newHashArray))
-					// }
-					// notification['info']({
-					// 	key: 'txInitiation',
-					// 	message: 'Your transaction is being processed. You can view the transaction status by either clicking the button below or monitoring the recent transactions section.',
-					// 	duration: 0,
-					// 	btn: (<a href={`https://kovan.etherscan.io/tx/${tx.hash}`} target="_blank" rel="noreferrer noopener">View on Etherscan</a>)
-					// })
-					this.setState({staking : true})
-					let intervalId = setInterval(()=>{
-						PROVIDER.getTransactionReceipt(tx.hash)
-						.then(res=>{
-							try{
-							if(typeof res!==null){
-								if(res.blockNumber){
-									// const SuccessIcon = (
-									// 	<div style={{color: 'rgb(39, 174, 96)'}}>
-									// 		<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" style={{position: 'relative', top: '4px'}} viewBox="0 0 24 24" fill="none" stroke="currentColor" color="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-									// 	</div> 
-									// )
-									// notification.close('txInitiation')
-									// notification['info']({
-									// 	key: 'txSuccess',
-									// 	message: `Stake ${depositAmount} VRAP`,
-									// 	duration: 0,
-									// 	icon: SuccessIcon,
-									// 	btn: (<a href={`https://kovan.etherscan.io/tx/${tx.hash}`} target="_blank" rel="noreferrer noopener">View on Etherscan</a>)
-									// })
-									// clearInterval(intervalId);
-									// this.setState({stakeSuccess: true});
-								clearInterval(intervalId);
-								this.setState({staking : false})
-								return true;	
-								}
-							}
-							}   
-							catch(e){
-								console.log(e)
-								return false;
-							}
-						})
-					},1000)
-				}
-				}
-				catch(e){
-					console.log(e)
-					this.setState({staking : false, sapproving : false, sapproved : false})
-					return false;
-				}
+				return({
+					success : true,
+					message : `Transaction Successful. Refer Hash : ${tx.hash}`,
+					hash : tx.hash
+				})
 			}
-			else{
-				return false;
-			}}
-			else{
-				return false;
+			catch(e){
+				return({
+					success : false,
+					message : e.message
+				})
 			}
+		}
+	}
 	}
 
 	async approveTether(value){
@@ -490,40 +432,20 @@ class App extends Component {
 		})
 	}
 
-	claim(contractAddress){
-		this.setState({claiming : true})
+	async claim(contractAddress){
 		let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,this.state.signer);
-		contract.claim(contractAddress)
-		.then(res=>{
-			if(res.hash){
-				let intervalId = setInterval(()=>{
-					PROVIDER.getTransactionReceipt(res.hash)
-					.then(res=>{
-						try{
-						if(typeof res!==null){
-							if(res.blockNumber){
-								clearInterval(intervalId);
-								this.setState({claiming : false})
-								return true;
-							}
-						}
-						}   
-						catch(e){
-							return false
-						}
-					})
-				},1000)
-			}
-			else{
-				this.setState({claiming : false})
-				return false;
-			}
+		try{
+		let result = await contract.claim(contractAddress)
+		return({
+			error : false,
+			message : `Claim Successful ${result.hash}`
 		})
-		.catch(err=>{
-			console.log(err);
-			this.setState({claiming : false})
-			return false;
-		})
+		} catch(e){
+			return({
+				error : true,
+				message : e.message
+			})
+		}
 	}
 
 	resetStakeStatus = () => {
