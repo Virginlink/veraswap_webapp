@@ -7,7 +7,7 @@ import FortMatic from './assets/images/fortMatic.png';
 import TrustWallet from './assets/images/trustWallet.svg';
 import {ThemeProvider} from "styled-components";
 import { GlobalStyles } from "./components/globalStyles";
-import {PROVIDER,TOKEN_ABI,TOKEN_ADDRESS,TETHER_ABI,TETHER_ADDRESS,PRESALE_ABI,PRESALE_ADDRESS,STAKING_ADDRESS, STAKING_ABI} from './utils/contracts';
+import {PROVIDER,TOKEN_ABI,TOKEN_ADDRESS,TETHER_ABI,TETHER_ADDRESS,PRESALE_ABI,PRESALE_ADDRESS,STAKING_ADDRESS, STAKING_ABI,STAKING_ADDRESS_V1} from './utils/contracts';
 import { lightTheme, darkTheme } from "./components/Themes";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import Fortmatic from 'fortmatic';
@@ -432,8 +432,8 @@ class App extends Component {
 		})
 	}
 
-	async claim(contractAddress){
-		let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,this.state.signer);
+	async claim(contractAddress,version){
+		let contract = new ethers.Contract(version === '1' ? STAKING_ADDRESS_V1 : STAKING_ADDRESS,STAKING_ABI,this.state.signer);
 		try{
 		let result = await contract.claim(contractAddress)
 		return({
@@ -536,7 +536,7 @@ class App extends Component {
 					/>
 					<Route
 						exact
-						path="/stake/:address" 
+						path="/stake/:address/:version" 
 						render={(props) => (
 							<StakeDeposit
 								{...props}

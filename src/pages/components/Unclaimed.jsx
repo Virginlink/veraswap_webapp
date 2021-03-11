@@ -1,5 +1,5 @@
 import React from 'react';
-import {STAKING_ABI,STAKING_ADDRESS,PROVIDER} from '../../utils/contracts';
+import {STAKING_ABI,STAKING_ADDRESS,STAKING_ADDRESS_V1,PROVIDER} from '../../utils/contracts';
 import {TOKEN} from '../../utils/tokens';
 
 const {ethers} = require("ethers");
@@ -30,7 +30,7 @@ export default class Unclaimed extends React.Component{
     fetch(walletAddress){
         let token = TOKEN.filter(data => data.contractAddress === this.props.currentToken);
         let decimal = token[0].decimal;
-        let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,PROVIDER);
+        let contract = new ethers.Contract(this.props.version === "1" ? STAKING_ADDRESS_V1 : STAKING_ADDRESS,STAKING_ABI,PROVIDER);
         contract.fetchUnclaimed(walletAddress,this.props.currentToken)
         .then(res=>{
             console.log(ethers.utils.formatEther(res))
