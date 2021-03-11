@@ -1,5 +1,5 @@
 import React from 'react';
-import {STAKING_ABI,STAKING_ADDRESS,PROVIDER} from '../../utils/contracts';
+import {STAKING_ABI,STAKING_ADDRESS,PROVIDER,STAKING_ADDRESS_V1} from '../../utils/contracts';
 import {TOKEN} from '../../utils/tokens';
 
 const {ethers} = require("ethers");
@@ -19,16 +19,15 @@ export default class PoolInfo extends React.Component{
             let token = TOKEN.filter(data => data.contractAddress === this.props.currentToken);
             let ContractABI = token[0].contractABI;
             let contract = new ethers.Contract(this.props.currentToken,ContractABI,PROVIDER);
-            let balance = await contract.balanceOf(STAKING_ADDRESS);
+            let balance = await contract.balanceOf(this.props.version === "1" ? STAKING_ADDRESS_V1 : STAKING_ADDRESS);
                 balance = ethers.utils.formatEther(balance) * 10 ** token[0].decimal;
             this.setState({totalDeposit : balance});
-            console.log(balance)
         }
     }
 
 
     async fetch(){
-        let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,PROVIDER);
+        let contract = new ethers.Contract(this.props.version === "1"  ? STAKING_ADDRESS_V1 : STAKING_ADDRESS,STAKING_ABI,PROVIDER);
         let poolRate = await contract.rFactor(this.props.currentToken);
             poolRate = ethers.utils.formatEther(poolRate) * 3154 * 10 ** 6;
         this.setState({poolRate : parseFloat(poolRate).toFixed(2)});

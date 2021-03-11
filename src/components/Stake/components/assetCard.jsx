@@ -2,7 +2,8 @@ import React from 'react';
 import AnimatedNumber from 'react-animated-number';
 import NumericLabel from 'react-pretty-numbers';
 import {TOKEN} from '../../../utils/tokens';
-import {PROVIDER,STAKING_ADDRESS,STAKING_ABI} from '../../../utils/contracts';
+import {Tag} from 'antd'
+import {PROVIDER,STAKING_ADDRESS,STAKING_ABI, STAKING_ADDRESS_V1} from '../../../utils/contracts';
 const {ethers} = require('ethers');
 class AssetCard extends React.Component{
 
@@ -21,7 +22,7 @@ class AssetCard extends React.Component{
             let token = TOKEN.filter(data => data.contractAddress === this.props.data.tokenContract);
             let ContractABI = token[0].contractABI;
             let contract = new ethers.Contract(this.props.data.tokenContract,ContractABI,PROVIDER);
-            let balance = await contract.balanceOf(STAKING_ADDRESS);
+            let balance = await contract.balanceOf(this.props.data.version === 1 ? STAKING_ADDRESS_V1 : STAKING_ADDRESS);
                 balance = ethers.utils.formatEther(balance) * 10 ** token[0].decimal;
             this.setState({totalDeposit : balance})
             }catch(e){
@@ -31,12 +32,12 @@ class AssetCard extends React.Component{
     }
 
     async fetch(){
-        let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,PROVIDER);
-        console.log(this.props.data.tokenContract)
+        let {data} = this.props;
+        let version = data.version;
+        let contract = new ethers.Contract(version === 1 ? STAKING_ADDRESS_V1 : STAKING_ADDRESS,STAKING_ABI,PROVIDER);
         try{
         let poolRate = await contract.rFactor(this.props.data.tokenContract);
             poolRate = ethers.utils.formatEther(poolRate) * 3154 * 10 ** 6;
-        console.log(poolRate)
         this.setState({poolRate : parseFloat(poolRate).toFixed(2)})
         } catch(e){
             console.log(e)
@@ -61,9 +62,9 @@ class AssetCard extends React.Component{
                     }
                 </div>
                 <div style={{marginLeft: '8px'}} className="stake-card-heading">
-                    {ticker}
+                    {ticker} {this.props.data.version === 1 ? <Tag color="rgba(255,0,0,1)">V1 Deprecated</Tag> : null}
                 </div>
-                <button onClick={() => this.props.history.push(`/stake/${this.props.data.tokenContract}`)} className="buy-action-button" style={{height: '38px', borderRadius: '8px', fontSize: '16px'}}>Deposit</button>
+                <button onClick={() => this.props.history.push(`/stake/${this.props.data.tokenContract}/${this.props.data.version}`)} className="buy-action-button" style={{height: '38px', borderRadius: '8px', fontSize: '16px'}}>Deposit</button>
             </div>
             <div style={{display: 'flex', justifyContent: 'space-between', flexDirection: 'column', gap: '12px', margin: '0 1rem 1rem 1rem'}}>
                 <div style={{width: '100%', minWidth: 0, margin: '0 0 -5px 0', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>

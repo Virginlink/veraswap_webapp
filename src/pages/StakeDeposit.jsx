@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import Navbar from '../components/Navbar'
-import Logo from '../assets/images/logo.png'
 import { Dialog, Fade } from '@material-ui/core'
 import PoolInfo from './components/PoolInfo';
 import LiquidityDeposits from './components/LiquidityDeposits';
 import Unclaimed from './components/Unclaimed';
 import {PROVIDER} from '../utils/contracts';
 import {TOKEN} from '../utils/tokens';
-import { notification } from 'antd';
+import { notification, Tag, Tooltip } from 'antd';
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Fade timeout={{enter: 1000, exit: 2000}} ref={ref} {...props} />;
 });
@@ -30,14 +29,15 @@ export default class StakeDeposit extends Component {
             apy : 0.0,
             liquidity : 0.0,
             decimal : 0,
-            claiming : false
+            claiming : false,
+            version : 2
         }
         this.setAPY = this.setAPY.bind(this);
         this.setLiquidity = this.setLiquidity.bind(this);
     }
 
    async componentDidMount(){
-        this.setState({currentToken : this.props.match.params.address, txSuccess: this.props.stakeSuccess});
+        this.setState({currentToken : this.props.match.params.address, txSuccess: this.props.stakeSuccess, version : this.props.match.params.version});
         let info = TOKEN.filter(data => data.contractAddress === this.props.match.params.address);
         if(info.length > 0){
         this.setState({ticker : info[0].ticker, icon:info[0].icon});
@@ -65,7 +65,7 @@ export default class StakeDeposit extends Component {
 
     async handleClaim(){
         this.setState({claiming : true})
-        let result = await this.props.claim(this.state.currentToken);
+        let result = await this.props.claim(this.state.currentToken,this.state.version);
         if(!result.error){
             notification['success']({
                 message : result.message
@@ -100,7 +100,7 @@ export default class StakeDeposit extends Component {
     }
 
     render() {
-        const { depositModalVisible, txSuccess, txHash, error, depositAmount, claiming } = this.state;
+        const { depositModalVisible, txSuccess, txHash, error, depositAmount, claiming, version } = this.state;
         //console.log(this.state.icon,"ICON")
         return (
             (this.state.ticker !== "" && this.state.icon !== "") || !this.state.loading ? 
@@ -120,7 +120,7 @@ export default class StakeDeposit extends Component {
                     <div style={{display: 'grid', gridAutoRows: 'auto', rowGap: '24px', justifyItems: 'center', maxWidth: '640px', width: '100%'}}>
                         <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxSizing: 'border-box', margin: 0, padding: 0, minWidth: 0, width: '100%', gap: '24px'}}>
                             <div className="heading" style={{margin: 0}}>
-                                {this.state.ticker} Liquidity Mining
+                                {this.state.ticker} Liquidity Mining {this.state.version === "1" ? <Tooltip title="This pool is inactive and you won't get rewards for staking." placement="right"><Tag color="rgba(255,0,0,1)">Deprecated</Tag></Tooltip> : null}
                             </div>
                             <div style={{position: 'relative',  display: 'flex', flexDirection: 'row'}}>
                                     {
@@ -132,20 +132,20 @@ export default class StakeDeposit extends Component {
                                     }
                                 </div>
                         </div>
-                        <PoolInfo ticker={this.state.ticker} currentToken={this.state.currentToken} setAPY={this.setAPY} />
+                        <PoolInfo ticker={this.state.ticker} currentToken={this.state.currentToken} setAPY={this.setAPY} version={version} />
                         <div style={{display: 'grid', gridAutoRows: 'auto', rowGap: '24px', justifyItems: 'center', position: 'relative', maxWidth: '640px', width: '100%', opacity: 1}}>
                             <div style={{display: 'grid', gridAutoRows: 'auto', rowGap: '24px', justifyItems: 'center', borderRadius: '12px', width: '100%', position: 'relative'}}>
                                 <div className="sale-block-2-outer-container">
                                     <span className="sale-rotation"></span>
                                     <span className="noise"></span>
-                                    <LiquidityDeposits walletAddress={this.props.walletAddress} ticker={this.state.ticker} currentToken={this.state.currentToken} setLiquidity={this.setLiquidity} />
+                                    <LiquidityDeposits version={version} walletAddress={this.props.walletAddress} ticker={this.state.ticker} currentToken={this.state.currentToken} setLiquidity={this.setLiquidity} />
                                     <span className="sale-rotation"></span>
                                     <span className="noise"></span>
                                 </div>
                                 <div className="shaded-container">
                                     <span className="sale-rotation"></span>
                                     <span className="noise"></span>
-                                    <Unclaimed ticker={this.state.ticker} currentToken={this.state.currentToken} walletAddress={this.props.walletAddress} liquidity={this.state.liquidity} apy={this.state.apy} />
+                                    <Unclaimed version={version} ticker={this.state.ticker} currentToken={this.state.currentToken} walletAddress={this.props.walletAddress} liquidity={this.state.liquidity} apy={this.state.apy} />
                                 </div>
                             </div>
                             <div className="text-semibold shaded-text" style={{textAlign: 'center', fontSize: '14px'}}>
@@ -165,12 +165,14 @@ export default class StakeDeposit extends Component {
                                         </span>
                                     </div> 
                                     :
+                                    this.state.version === "1" ?
+                                    <button className="buy-button" onClick={ () => notification['info']({message : 'Staking Pool V1 is deprecated . Please use the latest staking pool.'})}>
+                                        Stake Now
+                                    </button>
+                                    :
                                     <button className="buy-button" onClick={this.props.walletConnected ? () => this.setState({depositModalVisible: true}) : this.props.onModalOpenRequest}>
                                         Stake Now
                                     </button>
-                                    // <button className="buy-button" onClick={ () => notification['info']({message : 'Staking is under maintainance. Please come back after some time.'})}>
-                                    //     Stake Now
-                                    // </button>
                                 }
                             </div>
                         </div>
