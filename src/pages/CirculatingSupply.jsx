@@ -10,7 +10,7 @@ export default class CirculatingSupply extends React.Component{
         this.state={
             stakingBalance : 0,
             totalSupply : 100000000,
-            adminWallet : 46000000,
+            adminWallet : 86000000,
             loading : true
         }
     }

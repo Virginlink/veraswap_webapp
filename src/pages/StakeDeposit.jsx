@@ -55,7 +55,7 @@ export default class StakeDeposit extends Component {
         let contract = new ethers.Contract(info[0].contractAddress,info[0].contractABI,PROVIDER)
         let balance = await contract.balanceOf(this.props.walletAddress);
             balance = ethers.utils.formatEther(balance) * 10 ** info[0].decimal;
-            balance = parseFloat(balance).toFixed(2);
+            balance = parseFloat(balance);
         this.setState({loading : false, balance : balance, decimal : info[0].decimalCorrection});
         }
         else{
