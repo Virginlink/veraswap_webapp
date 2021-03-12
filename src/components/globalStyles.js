@@ -1184,6 +1184,39 @@ export const GlobalStyles = createGlobalStyle`
         z-index: 1;
     }
 
+    .stats-wrapper{
+        display : flex;
+        flex-direction : row;
+        justify-content : center;
+        align-items :center;
+        height : 70vh;   
+    }
+
+    .stats-card{
+        background : ${({theme}) => theme.buyModalBackgroundColor};
+        padding : 3rem;
+        border-radius : 12px;
+        display : flex;
+        flex-direction : column;
+        justify-content : center;
+        align-items : center;
+    }
+
+    .stats-text-heading{
+        color : ${({theme})=>theme.deadlineTextColor};
+        font-size : 1.3rem;
+        font-weight : 600;
+        font-family: 'Inter var', sans-serif; 
+    }
+
+    .stats-text{
+        color : ${({theme})=>theme.deadlineTextColor};
+        font-size : 1.2rem;
+        font-weight : 500;
+        padding-top : 2rem;
+        font-family: 'Inter var', sans-serif;
+    }
+
     .text-regular {
         box-sizing: border-box;
         margin: 0px;

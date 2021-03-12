@@ -37,11 +37,21 @@ export default class StakeDeposit extends Component {
     }
 
    async componentDidMount(){
+        this.fetchBalance()
+    }
+
+    async componentDidUpdate(prevProps){
+        if(prevProps.walletAddress !== this.props.walletAddress){
+            this.fetchBalance()
+        }
+    }
+
+    async fetchBalance(){
         this.setState({currentToken : this.props.match.params.address, txSuccess: this.props.stakeSuccess, version : this.props.match.params.version});
         let info = TOKEN.filter(data => data.contractAddress === this.props.match.params.address);
         if(info.length > 0){
         this.setState({ticker : info[0].ticker, icon:info[0].icon});
-        if(this.props.walletAddress){
+        if(this.props.walletAddress) {
         let contract = new ethers.Contract(info[0].contractAddress,info[0].contractABI,PROVIDER)
         let balance = await contract.balanceOf(this.props.walletAddress);
             balance = ethers.utils.formatEther(balance) * 10 ** info[0].decimal;
@@ -53,7 +63,6 @@ export default class StakeDeposit extends Component {
         }
         }
     }
-
 
     setAPY(apy){
         this.setState({apy : apy});
@@ -82,11 +91,10 @@ export default class StakeDeposit extends Component {
 
     async handleStake(){
         let result = await this.props.stakeToken(
-            ethers.utils.parseEther(
-                parseFloat(this.state.depositAmount * 10 ** this.state.decimal).toFixed(2)
-            ),
+            this.state.depositAmount,
             this.state.currentToken
         );
+        console.log(result)
         if(result.success){
             this.setState({txSuccess : true, txHash : result.hash});
             this.forceUpdate()
@@ -224,7 +232,7 @@ export default class StakeDeposit extends Component {
                                 <div className="available-deposit-container">
                                     <div className="available-deposit-inner-container">
                                         <div />
-                                        <div style={{display: 'inline', cursor: 'pointer'}}>{this.state.balance}</div>
+                                        <div style={{display: 'inline', cursor: 'pointer'}}>{this.state.loading ? 'Fetching Balance ....' : this.state.balance}</div>
                                     </div>
                                 </div>
                                 <div className="deposit-input-container">

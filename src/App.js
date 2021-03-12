@@ -16,6 +16,8 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import SalePage from './pages/SalePage';
 import StakePage from './pages/StakePage';
 import StakeDeposit from './pages/StakeDeposit';
+import TotalSupply from './pages/TotalSupply';
+import CirculatingSupply from './pages/CirculatingSupply';
 import {TOKEN} from './utils/tokens';
 import './App.css';
 import './components/Navbar.css';
@@ -163,12 +165,13 @@ class App extends Component {
 	}
 
 	async stakeToken(value, tokenAddress){
+		console.log(value,tokenAddress)
 		if(value && tokenAddress){
 			let info = TOKEN.filter(data=>data.contractAddress === tokenAddress);
 			if(info.length > 0){
 			let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,this.state.signer);
 			try{
-				let tx = await contract.stake(value,info[0].contractAddress)
+				let tx = await contract.stake(`${value * 10 ** info[0].decimalCorrection}`,info[0].contractAddress)
 				return({
 					success : true,
 					message : `Transaction Successful. Refer Hash : ${tx.hash}`,
@@ -176,6 +179,7 @@ class App extends Component {
 				})
 			}
 			catch(e){
+				console.log(e)
 				return({
 					success : false,
 					message : e.message
@@ -470,17 +474,41 @@ class App extends Component {
 			<>
 				<ThemeProvider theme={this.state.theme === 'light' ? lightTheme : darkTheme}>
 				<GlobalStyles/>
-				{/* <Navbar
-					modalVisible={connectWalletModalVisible}
-					onModalToggle={this.toggleWalletConnectModal}
-					theme={theme}
-					onThemeToggle={this.toggleTheme}
-					walletConnected={walletConnected}
-					walletAddress = {this.state.walletAddress}
-					ethBalance = {this.state.ethBalance}
-					vrapBalance = {this.state.vrapBalance}
-				/> */}
 				<Switch>
+					<Route 
+						exact 
+						path="/totalsupply" 
+						render = {(props)=> (
+						<TotalSupply 
+							{...props}
+							modalVisible={connectWalletModalVisible}
+							onModalToggle={this.toggleWalletConnectModal}
+							theme={theme}
+							onThemeToggle={this.toggleTheme}
+							walletConnected={walletConnected}
+							walletAddress = {this.state.walletAddress}
+							ethBalance = {this.state.ethBalance}
+							vrapBalance = {this.state.vrapBalance}
+							/>
+						)} 
+						/>
+					<Route 
+						exact 
+						path="/circulatingsupply" 
+						render = {(props)=> (
+						<CirculatingSupply 
+							{...props}
+							modalVisible={connectWalletModalVisible}
+							onModalToggle={this.toggleWalletConnectModal}
+							theme={theme}
+							onThemeToggle={this.toggleTheme}
+							walletConnected={walletConnected}
+							walletAddress = {this.state.walletAddress}
+							ethBalance = {this.state.ethBalance}
+							vrapBalance = {this.state.vrapBalance}
+							/>
+						)} 
+						/>
 					<Route 
 						path="/sale" 
 						render={(props) => (
@@ -569,7 +597,7 @@ class App extends Component {
 							/>
 						)} 
 					/>
-					<Redirect path="/" to="/sale" />
+					<Redirect path="/" to="/stake" />
 				</Switch>
 				<Dialog
 					open={connectWalletModalVisible}
@@ -841,21 +869,6 @@ class App extends Component {
 													<img src={TrustWallet} alt="icon" />
 												</div>
 											</button>
-											{/* <button className={`modal-content-button ${activeWallet === 'portis' && 'active-wallet-button'}`} onClick={() => this.connectToWallet('portis')}>
-												<div className="modal-content-button-title" style={{display: 'flex', flexDirection: activeWallet === 'portis' && 'row'}}>
-													{
-														activeWallet === 'portis' &&
-
-														<div className="wallet-active-dot">
-															<div />
-														</div>
-													}
-													Portis
-												</div>
-												<div className="modal-content-button-icon">
-													<img src={PorTis} alt="icon" />
-												</div>
-											</button> */}
 										</div>
 										<div className="modal-footer">
 											<span>New to Ethereum?</span>
