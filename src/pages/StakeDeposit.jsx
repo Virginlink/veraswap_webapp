@@ -91,7 +91,7 @@ export default class StakeDeposit extends Component {
 
     async handleStake(){
         let result = await this.props.stakeToken(
-            this.state.depositAmount,
+            parseFloat(this.state.depositAmount - 0.00000001),
             this.state.currentToken
         );
         console.log(result)
@@ -271,8 +271,8 @@ export default class StakeDeposit extends Component {
                                 className="buy-action-button"
                                 onClick={()=>{
                                     this.props.approveStaking(
-                                        ethers.utils.parseEther(
-                                            parseFloat(this.state.depositAmount * 10 ** this.state.decimal).toFixed(2)
+                                        ethers.utils.parseUnits(
+                                            String(this.state.depositAmount),this.state.decimal
                                         ),
                                         this.state.currentToken
                                     )

@@ -165,13 +165,13 @@ class App extends Component {
 	}
 
 	async stakeToken(value, tokenAddress){
-		console.log(value,tokenAddress)
+		console.log(value)
 		if(value && tokenAddress){
 			let info = TOKEN.filter(data=>data.contractAddress === tokenAddress);
 			if(info.length > 0){
 			let contract = new ethers.Contract(STAKING_ADDRESS,STAKING_ABI,this.state.signer);
 			try{
-				let tx = await contract.stake(`${value * 10 ** info[0].decimalCorrection}`,info[0].contractAddress)
+				let tx = await contract.stake(ethers.utils.parseUnits(String(value),info[0].decimalCorrection),info[0].contractAddress)
 				return({
 					success : true,
 					message : `Transaction Successful. Refer Hash : ${tx.hash}`,
