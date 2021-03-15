@@ -54,7 +54,7 @@ export default class CirculatingSupply extends React.Component{
                         {
                           new Intl.NumberFormat('en-US')
                           .format(parseFloat(
-                              totalSupply - (adminWallet - stakingBalance) 
+                              totalSupply - (adminWallet + stakingBalance) 
                           ).toFixed(4))
                         } VRAP
                     </p>
