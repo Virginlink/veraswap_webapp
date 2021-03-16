@@ -148,6 +148,13 @@ class Stake extends Component {
                     version : 2,
                     tokenContract : '0x3aB77e40340AB084c3e23Be8e5A6f7afed9D41DC',
                     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(124, 118, 136) 0%, rgb(108, 114, 132) 100%)'
+                },
+                {
+                    icons : [VRAP,BNB],
+                    ticker : 'VRAP-BNB',
+                    version : 2,
+                    tokenContract : '0xcd01316afcafe8acfc59f4d9236bfcd8345f8f12',
+                    background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(124, 118, 136) 0%, rgb(108, 114, 132) 100%)'
                 }
             ]
         }
