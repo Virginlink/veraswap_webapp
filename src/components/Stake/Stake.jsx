@@ -174,15 +174,14 @@ class Stake extends Component {
                                 <div className="sale-block-inner-grid">
                                     <div className="sale-block-title-container">
                                         <div className="sale-block-title">
-                                            Veraswap liquidity mining
+                                            Veraswap Mining
                                         </div>
                                     </div>
                                     <div className="sale-block-content-container">
                                         <div className="sale-block-content">
-                                            Deposit your Liquidity Provider tokens to receive VRAP, the Veraswap protocol governance token.
-                                        </div>
+                                        Deposit tokens / liquidity tokens to receive VRAP governance tokens                                        </div>
                                     </div>
-                                    <a href="https://certik.org/projects/veraswap" target="_blank" rel="no-opener no-referrer" style={{color: '#FFF', fontSize: '14px', textDecoration: 'underline'}}>Audit By <b>CERTIK</b></a>
+                                    <a href="https://docs.veraswap.org/yield-farming/liquidity-mining" target="_blank" rel="no-opener no-referrer" style={{color: '#FFF', fontSize: '14px', textDecoration: 'underline'}}>More Info on <b>VRAP Mining</b></a>
                                 </div>
                             </div>
                             <span className="sale-rotation"></span>
