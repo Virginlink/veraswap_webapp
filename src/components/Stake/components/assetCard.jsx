@@ -25,6 +25,9 @@ class AssetCard extends React.Component{
             let balance = await contract.balanceOf(this.props.data.version === 1 ? STAKING_ADDRESS_V1 : STAKING_ADDRESS);
                 balance = ethers.utils.formatEther(balance) * 10 ** token[0].decimal;
             this.setState({totalDeposit : balance})
+            if(this.props.data.ticker === "VRAP"){
+                this.props.updateStaked(balance)
+            }
             }catch(e){
                 console.log(e,this.props.data)
             }

@@ -19,6 +19,12 @@ const BUSDT = 'https://github.com/trustwallet/assets/blob/master/blockchains/sma
 const XVS = 'https://github.com/trustwallet/assets/blob/master/blockchains/smartchain/assets/0xcF6BB5389c92Bdda8a3747Ddb454cB7a64626C63/logo.png?raw=true';
 const DODO = 'https://github.com/trustwallet/assets/blob/master/blockchains/smartchain/assets/0x67ee3Cb086F8a16f34beE3ca72FAD36F7Db929e2/logo.png?raw=true';
 
+const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2
+  })
+
 class Stake extends Component {
     constructor(props) {
         super(props);
@@ -156,12 +162,41 @@ class Stake extends Component {
                     tokenContract : '0x3aB77e40340AB084c3e23Be8e5A6f7afed9D41DC',
                     background: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(124, 118, 136) 0%, rgb(108, 114, 132) 100%)'
                 }
-            ]
+            ],
+            totalStakedValue : 0.00,
+            vrapPrice : 0.00
         }
+        this.updateStaked = this.updateStaked.bind(this)
+        this.fetchPrice = this.fetchPrice.bind(this)
+    }
+
+    componentDidMount = () => {
+        this.fetchPrice()
+    }
+
+    updateStaked(staked){
+        this.setState({
+            totalStakedValue : 
+            parseFloat(this.state.totalStakedValue) + 
+            parseFloat(
+                parseFloat(staked) * parseFloat(this.state.vrapPrice)
+            )
+        })
+    }
+
+    fetchPrice(){
+        fetch('https://api.coingecko.com/api/v3/simple/price?ids=veraswap&vs_currencies=usd')
+        .then(response => response.json())
+        .then(resJson => {
+            this.setState({vrapPrice : resJson.veraswap.usd})
+        })
+        .catch(err=>{
+            console.log(err)
+        })
     }
 
     render() {
-        const { assets } = this.state;
+        const { assets, totalStakedValue } = this.state;
         return (
             <div className="sale-main-container">
                 <div className="empty-grid"></div>
@@ -190,14 +225,15 @@ class Stake extends Component {
                     </div>
                 </div>
                 <div className="grid" style={{width: '100%', maxWidth: '640px'}}>
-                    <div>
-                        <p className="heading" style={{marginTop: '1.75rem'}}>Participating pools</p>
+                    <div className = "header-lp">
+                        <p className="heading" style={{marginTop: '1.5rem'}}>Participating pools</p>
+                        <p className="total-liquidity" style={{marginTop: '1.75rem',paddingTop:'.25rem'}}>Total Liquidity : {formatter.format(totalStakedValue)}</p>
                     </div>
                     <div style={{display: 'grid', gridTemplateColumns: '1fr', gap: '15px 10px', width: '100%', justifySelf: 'center', paddingBottom: '3rem'}}>
                         {
                             assets.map(data => {
                                 return (
-                                    <AssetCard {...this.props} data={data} routeTo={this.routeTo} />
+                                    <AssetCard {...this.props} data={data} routeTo={this.routeTo} updateStaked = {this.updateStaked} />
                                 )
                             })
                         }

@@ -1255,6 +1255,19 @@ export const GlobalStyles = createGlobalStyle`
         z-index: -5;
     }
 
+    .header-lp{
+        display : flex;
+        flex-direction : row;
+        justify-content : space-between;
+        align-items : center;
+    }
+
+    .total-liquidity{
+        color: ${({theme}) => theme.modalHeaderTextColor};
+        font-size: 14px;
+        font-weight : 500;
+    }
+
     .shaded-text {
         color: ${({theme}) => theme.shadedTextColor};
     }
@@ -1308,6 +1321,18 @@ export const GlobalStyles = createGlobalStyle`
             padding-top: 30px !important;
             padding-bottom: 170px !important;
             overflow: scroll !important;
+        }
+        .header-lp{
+            display : flex;
+            flex-direction : column;
+            justify-content : space-between;
+            align-items : center;
+        }
+
+        .total-liquidity{
+            color: ${({theme}) => theme.modalHeaderTextColor};
+            font-size: 18px;
+            font-weight : 500;
         }
     }
     
