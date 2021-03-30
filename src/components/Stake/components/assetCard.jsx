@@ -1,10 +1,11 @@
-import React from 'react';
-import AnimatedNumber from 'react-animated-number';
-import NumericLabel from 'react-pretty-numbers';
-import {TOKEN} from '../../../utils/tokens';
+import React from 'react'
+import AnimatedNumber from 'react-animated-number'
+import NumericLabel from 'react-pretty-numbers'
+import {TOKEN} from '../../../utils/tokens'
 import {Tag} from 'antd'
-import {PROVIDER,STAKING_ADDRESS,STAKING_ABI, STAKING_ADDRESS_V1} from '../../../utils/contracts';
-const {ethers} = require('ethers');
+import {PROVIDER,STAKING_ADDRESS,STAKING_ABI, STAKING_ADDRESS_V1} from '../../../utils/contracts'
+const {ethers} = require('ethers')
+
 class AssetCard extends React.Component{
 
     constructor(props){
@@ -24,10 +25,8 @@ class AssetCard extends React.Component{
             let contract = new ethers.Contract(this.props.data.tokenContract,ContractABI,PROVIDER);
             let balance = await contract.balanceOf(this.props.data.version === 1 ? STAKING_ADDRESS_V1 : STAKING_ADDRESS);
                 balance = ethers.utils.formatEther(balance) * 10 ** token[0].decimal;
+            this.fetchPrice(balance)
             this.setState({totalDeposit : balance})
-            if(this.props.data.ticker === "VRAP"){
-                this.props.updateStaked(balance)
-            }
             }catch(e){
                 console.log(e,this.props.data)
             }
@@ -45,6 +44,23 @@ class AssetCard extends React.Component{
         } catch(e){
             console.log(e)
         }
+    }
+
+    fetchPrice(balance){
+        let token = TOKEN.filter(data => data.contractAddress === this.props.data.tokenContract);
+        let ids = token[0].ids;
+        if(token[0].fetchPrice){
+        fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`)
+        .then(response => response.json())
+        .then(resJson => {
+            this.props.updateStaked(
+                parseFloat(resJson[`${token[0].ids}`].usd) * parseFloat(balance)
+            )
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+     }
     }
 
     render(){
