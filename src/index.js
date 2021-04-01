@@ -4,6 +4,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import './index.css';
 import 'antd/dist/antd.css';
+import 'rc-slider/assets/index.css';
 import reportWebVitals from './reportWebVitals';
 import bsc from '@binance-chain/bsc-use-wallet'
 import { UseWalletProvider } from 'use-wallet'

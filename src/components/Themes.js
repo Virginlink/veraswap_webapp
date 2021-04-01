@@ -84,6 +84,15 @@ export const lightTheme = {
     outlinedBoxBorderColor: 'rgb(206, 208, 217)',
     shadedContainerBackgroundColor: 'rgb(237, 238, 242)',
     shadedTextColor: 'rgb(86, 90, 105)',
+    exchangeCardBackgroundColor: '#FFF',
+    formControlBackgroundColor: '#f8f8f8',
+    formControlBorderColor: 'transparent',
+    formControlText: '#000',
+    assetSelectBackgroundColor: '#FFF',
+    actionIconColor: '#ADADAD',
+    exchangeButtonBackgroundColor: 'rgb(222 1 2 / 40%)',
+    poolCardBackgroundColor: '#FFF',
+    rowHoverBackgroundColor: 'rgb(0 0 0 / 5%)',
 }
 
 export const darkTheme = {
@@ -172,4 +181,13 @@ export const darkTheme = {
     outlinedBoxBorderColor: 'rgb(86, 90, 105)',
     shadedContainerBackgroundColor: 'rgb(64, 68, 79)',
     shadedTextColor: 'rgb(195, 197, 203)',
+    exchangeCardBackgroundColor: 'rgb(33,36,41)',
+    formControlBackgroundColor: 'rgb(33,36,41)',
+    formControlBorderColor: 'rgb(64,68,79)',
+    formControlText: '#FFF',
+    assetSelectBackgroundColor: 'rgb(33,36,41)',
+    actionIconColor: 'rgb(195, 197, 203)',
+    exchangeButtonBackgroundColor: 'rgb(222 181 1 / 40%)',
+    poolCardBackgroundColor: 'rgb(64,68,79)',
+    rowHoverBackgroundColor: 'rgb(64,68,79)',
 }

@@ -1226,6 +1226,645 @@ export const GlobalStyles = createGlobalStyle`
         color: ${({theme}) => theme.shadedTextColor};
     }
 
+    .container {
+        padding: 100px 0 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .exchange-card {
+        position: relative;
+        z-index: 10;
+        max-width: 325px;
+        width: 100%;
+        border-radius: 20px;
+        background-color: ${({theme}) => theme.exchangeCardBackgroundColor};
+        padding: 20px 18px;
+      }
+      
+      .form-control {
+        padding: 12px 13px;
+        background-color: ${({theme}) => theme.formControlBackgroundColor};
+        border-radius: 10px;
+        border: 1px solid ${({theme}) => theme.formControlBorderColor};
+        font-size: 10px;
+        text-transform: uppercase;
+        color: ${({theme}) => theme.formControlText} !important;
+      }
+
+      .form-control > .flex-spaced-container > div:nth-child(2) {
+        color: ${({theme}) => theme.formControlText} !important;
+      }
+      
+      .input-container {
+        margin-top: 8px;
+        width: 100%;
+        display: inline-flex;
+      }
+      
+      .input-container input {
+        width: 100%;
+        border: none;
+        outline: none;
+        background-color: transparent;
+        box-shadow: none;
+        font-family: "Inter var", sans-serif;
+        font-size: 19px;
+        padding: 0;
+      }
+      
+      .input-container input::placeholder {
+        opacity: 0.4;
+      }
+      
+      .input-container > div {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
+      
+      .max-button {
+        cursor: pointer;
+        width: 46px;
+        height: 22px;
+        border: none;
+        border-radius: 7px;
+        background-color: ${({theme}) => theme.primary};
+        color: #fff;
+        box-shadow: none;
+        text-transform: uppercase;
+        margin-right: 5px;
+      }
+      
+      .asset-select-button {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        height: 25px;
+        border: none;
+        border-radius: 7px;
+        background-color: ${({theme}) => theme.assetSelectBackgroundColor};
+        box-shadow: none;
+        padding: 0 5px;
+        color: ${({theme}) => theme.formControlText};
+        font-family: "Inter var", sans-serif;
+        font-size: 11px;
+      }
+      
+      .asset-select-button img {
+        width: 14px;
+        height: 14px;
+        margin-right: 8px;
+      }
+      
+      .asset-select-button span {
+        position: relative;
+        top: 1px;
+      }
+      
+      .asset-select-button svg {
+        margin-left: 8px;
+        font-size: 10px;
+      }
+      
+      .max-button:hover,
+      .asset-select-button:hover {
+        opacity: 0.65;
+      }
+      
+      .action {
+        width: 26px;
+        height: 26px;
+        background-color: ${({theme}) => theme.formControlBackgroundColor};
+        color: ${({theme}) => theme.actionIconColor};
+        margin: 1.5rem auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: 16px;
+      }
+      
+      .exchange-button-container {
+        font-family: "Inter var", sans-serif;
+        z-index: 5;
+        margin-top: 20px;
+        max-width: 315px;
+        width: 100%;
+        border-radius: 0 0 10px 10px;
+      }
+      
+      .exchange-button-container a {
+        color: ${({theme}) => theme.formControlText};
+        font-size: 11px;
+      }
+      
+      .exchange-button-container a:hover {
+        text-decoration: underline;
+      }
+      
+      .exchange-button-container p {
+        color: ${({theme}) => theme.formControlText};
+        text-align: center;
+        margin: 0.45rem 0;
+        font-size: 11px;
+      }
+      
+      .exchange-button-container button {
+        cursor: pointer;
+        width: 100%;
+        height: 45px;
+        border: none;
+        border-radius: 10px;
+        background-color: ${({theme}) => theme.primary};
+        color: #FFF;
+      }
+      
+      .exchange-button-container button:disabled, .remove-liquidity-actions button:disabled {
+        cursor: not-allowed;
+        opacity: 0.35;
+      }
+      
+      .add-liquidity-button {
+        cursor: pointer;
+        box-shadow: none;
+        width: 100%;
+        margin: 2rem 0 1.5rem;
+        height: 37px;
+        border: none;
+        border-radius: 10px;
+        background-color: ${({theme}) => theme.primary};
+        color: #fff;
+      }
+      
+      .add-liquidity-button:hover {
+        opacity: 0.75;
+      }
+      
+      .pool-details .flex-spaced-container > div {
+        font-size: 11px;
+        font-family: "Inter var", sans-serif;
+      }
+      
+      .liquidity-section {
+        margin-top: 0.75rem;
+        background-color: ${({theme}) => theme.formControlBackgroundColor};
+        border-radius: 10px;
+        border: 2px solid ${({theme}) => theme.formControlBorderColor};
+        max-height: 260px;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0.5rem;
+      }
+      
+      .liquidity-section > span {
+        opacity: 0.5;
+        margin: 50px auto;
+        font-size: 11px;
+        color: ${({theme}) => theme.formControlText};
+      }
+      
+      .pool-form .flex-spaced-container {
+        color: ${({theme}) => theme.formControlText};
+      }
+      
+      .pool-form .flex-spaced-container span {
+        font-family: "Inter var", sans-serif;
+        font-size: 14px;
+      }
+      
+      .search-currency-input {
+        border-radius: 15px;
+        color: ${({theme}) => theme.formControlText};
+        border: 1px solid ${({theme}) => theme.formControlBorderColor};
+        outline: none;
+        padding: 5px 10px;
+        height: 40px;
+        width: 100%;
+        margin-bottom: 15px;
+        background-color: ${({theme}) => theme.formControlBackgroundColor};
+      }
+
+      .search-currency-input + div {
+        color: ${({theme}) => theme.primary} !important;
+      }
+      
+      .ant-tooltip {
+        z-index: 1302;
+      }
+      
+      .ant-tooltip-arrow {
+        display: none;
+      }
+      
+      .ant-tooltip-inner {
+        background-color: #eee;
+        border-radius: 10px;
+        color: #6e6e6e;
+        padding: 0.75rem;
+      }
+
+      .ant-notification-notice-description {
+        color: ${({theme}) => theme.formControlText} !important;
+      }
+      
+      .common-base {
+        cursor: pointer;
+        display: flex;
+        padding: 6px;
+        margin: 4px;
+        border-radius: 10px;
+        border: 1px solid rgb(237, 238, 242);
+        background-color: #FFF;
+      }
+      
+      .common-base:hover, .currency-row:hover {
+        background-color:  ${({theme}) => theme.rowHoverBackgroundColor};
+      }
+      
+      .common-base img {
+        width: 24px;
+        height: 24px;
+        box-shadow: rgb(0 0 0 / 8%) 0px 6px 10px;
+        border-radius: 24px;
+        margin-right: 8px;
+      }
+      
+      .common-base div {
+        font-weight: 500;
+        font-size: 16px;
+      }
+      
+      .currency-rows-container::before {
+        content: '';
+        height: 1px;
+        width: 360px;
+        position: absolute;
+        left: 0;
+        background-color: ${({theme}) => theme.modalContentBackgroundColor};
+      }
+      
+      .currency-rows-container {
+        height: 328px;
+        width: 100%;
+        overflow: auto;
+        background-color: ${({theme}) => theme.modalContentBackgroundColor};
+      }
+      
+      .currency-row {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 24px;
+        height: 56px;
+        display: grid;
+        grid-template-columns: auto minmax(auto, 1fr) auto minmax(0px, 72px);
+        gap: 16px;
+        cursor: pointer;
+        opacity: 1;
+        color: ${({theme}) => theme.formControlText};
+      }
+      
+      .currency-row img{
+        width: 24px;
+        height: 24px;
+        box-shadow: rgb(0 0 0 / 8%) 0px 6px 10px;
+        border-radius: 24px;
+      }
+      
+      [data-disabled="true"] {
+        opacity: 0.2;
+        cursor: not-allowed;
+      }
+
+      [data-disabled="true"]:hover {
+        opacity: 0.2;
+      }
+      
+      .lp-card {
+        width: 100%;
+        background-color: ${({theme}) => theme.poolCardBackgroundColor};
+        border-radius: 10px;
+        padding: 10px;
+      }
+      
+      .lp-card:not(:nth-last-child(1)) {
+        margin-bottom: 8px;
+      }
+      
+      .lp-card img {
+        width: 15px;
+        height: 15px;
+        box-shadow: rgb(0 0 0 / 8%) 0px 6px 10px;
+        border-radius: 15px;
+      }
+      
+      .lp-card-heading {
+        color: ${({theme}) => theme.formControlText};
+        font-family: "Inter var", sans-serif;
+        display: flex;
+      }
+      
+      .lp-card-heading span {
+        font-weight: 600;
+      }
+      
+      .lp-icons {
+        margin-right: 4px;
+      }
+      
+      .lp-card-heading + a {
+        color: ${({theme}) => theme.primary};
+        font-family: "Inter var", sans-serif;
+        font-size: 13px;
+        text-decoration: underline;
+      }
+      
+      .lp-card .flex-spaced-container {
+        margin: 5px 0;
+        color: ${({theme}) => theme.formControlText};
+      }
+      
+      .lp-card .flex-spaced-container > div:nth-child(1) {
+        font-family: 'Inter var', sans-serif;
+        font-weight: 600;
+      }
+      
+      .lp-card .flex-spaced-container > div:nth-child(2) {
+        display: flex;
+        align-items: center;
+      }
+      
+      .lp-card .flex-spaced-container > div:nth-child(2) img{
+        margin-left: 5px;
+      }
+      
+      .lp-card-buttons {
+        display: grid;
+        align-items: center;
+        justify-content: center;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 8px;
+        width: 100%;
+        margin-top: 12px;
+      }
+      
+      .lp-card-buttons button {
+        cursor: pointer;
+        width: 100%;
+        border: none;
+        border-radius: 10px;
+        background-color: ${({theme}) => theme.primary};
+        color: #FFF;
+        height: 30px;
+        font-size: 13px;
+      }
+
+      .lp-card-buttons button:hover {
+        opacity: 0.8;
+      }
+      
+      .text-large {
+        margin: 5px 0;
+        font-family: 'Inter var', sans-serif;
+        font-weight: bold;
+        font-size: 2.8rem;
+      }
+
+      .percent-slider {
+        width: 90%;
+        margin: auto;
+      }
+      
+      .percent-slider .rc-slider-handle, .percent-slider .rc-slider-handle-click-focused:focus {
+        border-color: ${({theme}) => theme.primary};
+      }
+      
+      .percent-slider .rc-slider-track {
+        background-color: ${({theme}) => theme.primary};
+      }
+      
+      .percent-slider .rc-slider-handle:active, .percent-slider .rc-slider-handle:focus {
+        box-shadow: 0 0 5px ${({theme}) => theme.primary};
+      }
+      
+      .percent-buttons {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        margin: 1.15rem 0 0.5rem;
+      }
+      
+      .percent-buttons button {
+        padding: 0.25rem 0.5rem;
+        background-color: ${({theme}) => theme.exchangeButtonBackgroundColor};
+        border: 1px solid ${({theme}) => theme.exchangeButtonBackgroundColor};
+        border-radius: 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        cursor: pointer;
+        margin: 0.25rem;
+        overflow: hidden;
+        color: ${({theme}) => theme.primary};
+        width: 20%;
+        outline: none;
+      }
+      
+      .percent-buttons button:hover, .percent-buttons button:focus {
+        border-color: ${({theme}) => theme.primary};
+      }
+      
+      .pool-amount-row > div:nth-child(1) {
+        color: ${({theme}) => theme.formControlText};
+        font-family: 'Inter var', sans-serif;
+        font-weight: bold;
+        font-size: 1rem;
+      }
+      
+      .pool-amount-row > div:nth-child(2) {
+        display: flex;
+        align-items: center;
+      }
+      
+      .pool-amount-row > div:nth-child(2) img {
+        width: 20px;
+        height: 20px;
+        box-shadow: rgb(0 0 0 / 8%) 0px 6px 10px;
+        border-radius: 20px;
+        margin-right: 6px;
+      }
+      
+      .remove-liquidity-actions {
+        position: relative;
+        z-index: 5;
+        top: -9px;
+        max-width: 315px;
+        width: 100%;
+        padding: 20px 0 0;
+        background-color: transparent;
+        border-radius: 0 0 10px 10px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 5px;
+      }
+      
+      .remove-liquidity-actions button {
+        cursor: pointer;
+        width: 100%;
+        height: 45px;
+        border: none;
+        border-radius: 10px;
+        color: #fff;
+        background-color: ${({theme}) => theme.primary};
+        width: 100%;
+      }
+      
+      .import-button {
+        cursor: pointer;
+        width: 100%;
+        height: 25px;
+        border: none;
+        border-radius: 10px;
+        color: #fff;
+        background-color: ${({theme}) => theme.primary};
+      }
+      
+      .import-pool-select {
+        padding: 18px;
+        width: 100%;
+        font-weight: 500;
+        text-align: center;
+        border-radius: 20px;
+        outline: none;
+        text-decoration: none;
+        display: flex;
+        justify-content: center;
+        flex-wrap: nowrap;
+        align-items: center;
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+        border: 1px solid ${({theme}) => theme.formControlBorderColor};
+        background-color: ${({theme}) => theme.formControlBackgroundColor};
+        color: ${({theme}) => theme.formControlText};
+      }
+      
+      .import-pool-select:hover, .import-pool-select:focus {
+        border-color: ${({theme}) => theme.formControlText};
+      }
+      
+      .import-pool-select > div {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        width: 100%;
+        display: flex;
+        padding: 0px;
+        align-items: center;
+        justify-content: space-between;
+        user-select: none;
+      }
+      
+      .import-pool-select-icon {
+        width: 24px;
+        height: 24px;
+        box-shadow: rgb(0 0 0 / 8%) 0px 6px 10px;
+        border-radius: 24px;
+        margin-right: 8px;
+      }
+
+      .staking-modal-footer {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        padding: 20px 0 0;
+        gap: 10px;
+    }
+    
+    .staking-modal-button {
+        width: 50%;
+        cursor: pointer;
+        height: 45px;
+        padding: 5px 0;
+        border: 1px solid ${({theme}) => theme.primary};
+        border-radius: 10px;
+        background-color: transparent;
+        color: ${({theme}) => theme.primary};
+        font-family: 'Inter var', sans-serif;
+        font-size: 14px;
+    }
+    
+    .staking-modal-button-primary {
+        width: 50%;
+        cursor: pointer;
+        height: 45px;
+        padding: 5px 0;
+        border: 1px solid ${({theme}) => theme.primary};
+        border-radius: 10px;
+        background-color: ${({theme}) => theme.primary};
+        color: #FFF;
+        font-family: 'Inter var', sans-serif;
+        font-size: 14px;
+    }
+    
+    .staking-modal-button:hover, .staking-modal-button-primary:hover {
+        opacity: 0.65;
+    }
+    
+    .staking-modal-button-primary:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+      .app-modal .modal-header {
+        border-radius: 20px 20px 0 0;
+      }
+
+      .close-modal-button {
+          cursor: pointer;
+          align-items: center;
+          border: 0px;
+          box-shadow: none;
+          display: inline-flex;
+          font-family: inherit;
+          font-size: 24px;
+          -webkit-box-pack: center;
+          justify-content: center;
+          letter-spacing: 0.03em;
+          line-height: 1;
+          opacity: 1;
+          outline: 0px;
+          background-color: transparent;
+          color: ${({theme}) => theme.formControlText};
+      }
+      
+      @-moz-document url-prefix() {
+        .input-container input {
+          width: 51%;
+          border: none;
+          outline: none;
+          background-color: transparent;
+          box-shadow: none;
+          font-family: "Inter var", sans-serif;
+          font-size: 19px;
+          color: var(--text);
+          padding: 0;
+        }
+      
+        .without-max input {
+          width: 70%;
+        }
+      }      
+
     @media only screen and (max-width: 960px) {
         .navbar-actions-main-container {
             flex-direction: row;
