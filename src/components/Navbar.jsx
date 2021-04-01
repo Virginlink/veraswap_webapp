@@ -96,8 +96,8 @@ class Navbar extends Component {
                             </div>
                         </a>
                         <div className="navbar-pages-container">
-                            <a className={`${this.props.active === 'sale' && 'active-page'}`} onClick={() => this.props.history.push('/sale')}>Sale</a>
-                            <a className={`${this.props.active === 'stake' && 'active-page'}`} onClick={() => this.props.history.push('/stake')}>Stake</a>
+                            <a className={`${this.props.active === 'sale' && 'active-page'}`}>Sale</a>
+                            <a className={`${this.props.active === 'stake' && 'active-page'}`}>Stake</a>
                             <a className={`${this.props.active === 'swap' && 'active-page'}`} onClick={() => this.props.history.push('/swap')} id="swap-nav-link">Swap</a>
                             <a className={`${this.props.active === 'pool' && 'active-page'}`} onClick={() => this.props.history.push('/pool')} id="pool-nav-link">Pool</a>
                         </div>

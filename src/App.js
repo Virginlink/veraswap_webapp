@@ -485,7 +485,7 @@ class App extends Component {
 					vrapBalance = {this.state.vrapBalance}
 				/> */}
 				<Switch>
-					<Route 
+					{/* <Route 
 						path="/sale" 
 						render={(props) => (
 							<SalePage 
@@ -511,8 +511,8 @@ class App extends Component {
 								ethBuying={this.state.ethBuying}
 							/>
 						)} 
-					/>
-					<Route 
+					/> */}
+					{/* <Route 
 						exact
 						path="/stake" 
 						render={(props) => (
@@ -572,7 +572,7 @@ class App extends Component {
 								onResetStakeStatus={this.resetStakeStatus}
 							/>
 						)} 
-					/>
+					/> */}
 					<Route
 						exact
 						path="/swap"
@@ -645,7 +645,7 @@ class App extends Component {
 							/>
 						)}
 					/>
-					<Redirect path="/" to="/sale" />
+					<Redirect path="/" to="/swap" />
 				</Switch>
 				<Dialog
 					open={connectWalletModalVisible}
