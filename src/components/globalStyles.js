@@ -156,7 +156,7 @@ export const GlobalStyles = createGlobalStyle`
         justify-content: center;
         padding: 1rem;
         font-size: 16px;
-        font-family: 'Inter var', sans-serif;
+        font-family: 'PT Sans Caption';
         color: ${({theme}) => theme.modalHeaderTextColor};
     }
 
@@ -182,7 +182,7 @@ export const GlobalStyles = createGlobalStyle`
         justify-content: center;
         padding: 0.1rem;
         font-size: 16px;
-        font-family: 'Inter var', sans-serif;
+        font-family: 'PT Sans Caption';
         color: ${({theme}) => theme.modalHeaderTextColor};
     }
 
@@ -576,7 +576,7 @@ export const GlobalStyles = createGlobalStyle`
         color: ${({theme}) => theme.tooltipTextColor} !important;
         box-shadow: rgba(0, 0, 0, 0.01) 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 8px, rgba(0, 0, 0, 0.04) 0px 16px 24px, rgba(0, 0, 0, 0.01) 0px 24px 32px !important;
         padding: 0.9rem !important;
-        font-family: 'Inter var';
+        font-family: 'PT Sans Caption';
         font-size: 16px;
         border-radius: 12px !important;
         line-height: 1.6rem;
@@ -638,7 +638,7 @@ export const GlobalStyles = createGlobalStyle`
         outline: none;
         color: ${({theme}) => theme.toleranceInputTextColor};
         text-align: right;
-        font-family: 'Inrer var', 'sans-serif';
+        font-family: 'Inrer var';
     }
     
     .tolerance-input:focus .tolerance-input-button{
@@ -731,7 +731,7 @@ export const GlobalStyles = createGlobalStyle`
         box-sizing: border-box;
         margin: 0px auto;
         min-width: 0px;
-        font-family: 'Inter var', 'sans-serif';
+        font-family: 'PT Sans Caption';
         font-weight: 500;
         font-size: 20px;
         color: ${({theme}) => theme.modalContentColor};
@@ -784,7 +784,7 @@ export const GlobalStyles = createGlobalStyle`
         box-sizing: border-box;
         margin: 0px;
         min-width: 0px;
-        font-family: 'Inter var', sans-serif;
+        font-family: 'PT Sans Caption';
         font-weight: 600;
         font-size: 20px;
         color: ${({theme}) => theme.modalContentColor};
@@ -1232,12 +1232,12 @@ export const GlobalStyles = createGlobalStyle`
         align-items: center;
         justify-content: center;
         flex-direction: column;
+        z-index : 1;
     }
 
     .exchange-card {
         position: relative;
-        z-index: 10;
-        max-width: 325px;
+        max-width: 400px;
         width: 100%;
         border-radius: 20px;
         background-color: ${({theme}) => theme.exchangeCardBackgroundColor};
@@ -1248,14 +1248,16 @@ export const GlobalStyles = createGlobalStyle`
         padding: 12px 13px;
         background-color: ${({theme}) => theme.formControlBackgroundColor};
         border-radius: 10px;
-        border: 1px solid ${({theme}) => theme.formControlBorderColor};
-        font-size: 10px;
+        border: 1px solid ${({theme}) => theme.exchangeCardBackgroundColor};
+        font-size: 12px;
         text-transform: uppercase;
         color: ${({theme}) => theme.formControlText} !important;
       }
 
       .form-control > .flex-spaced-container > div:nth-child(2) {
         color: ${({theme}) => theme.formControlText} !important;
+        font-family : "PT Sans Caption" !important;
+        font-size : 12px !important;
       }
       
       .input-container {
@@ -1270,7 +1272,7 @@ export const GlobalStyles = createGlobalStyle`
         outline: none;
         background-color: transparent;
         box-shadow: none;
-        font-family: "Inter var", sans-serif;
+        font-family: "PT Sans Caption";
         font-size: 19px;
         padding: 0;
       }
@@ -1296,6 +1298,7 @@ export const GlobalStyles = createGlobalStyle`
         box-shadow: none;
         text-transform: uppercase;
         margin-right: 5px;
+        font-weight : 600;
       }
       
       .asset-select-button {
@@ -1309,8 +1312,8 @@ export const GlobalStyles = createGlobalStyle`
         box-shadow: none;
         padding: 0 5px;
         color: ${({theme}) => theme.formControlText};
-        font-family: "Inter var", sans-serif;
-        font-size: 11px;
+        font-family: "PT Sans Caption";
+        font-size: 12px;
       }
       
       .asset-select-button img {
@@ -1348,17 +1351,17 @@ export const GlobalStyles = createGlobalStyle`
       }
       
       .exchange-button-container {
-        font-family: "Inter var", sans-serif;
+        font-family: "PT Sans Caption";
         z-index: 5;
         margin-top: 20px;
-        max-width: 315px;
+        max-width: 400px;
         width: 100%;
         border-radius: 0 0 10px 10px;
       }
       
       .exchange-button-container a {
-        color: ${({theme}) => theme.formControlText};
-        font-size: 11px;
+        color: ${({theme}) => theme.primary};
+        font-size: 13px;
       }
       
       .exchange-button-container a:hover {
@@ -1369,7 +1372,7 @@ export const GlobalStyles = createGlobalStyle`
         color: ${({theme}) => theme.formControlText};
         text-align: center;
         margin: 0.45rem 0;
-        font-size: 11px;
+        font-size: 13px;
       }
       
       .exchange-button-container button {
@@ -1380,6 +1383,9 @@ export const GlobalStyles = createGlobalStyle`
         border-radius: 10px;
         background-color: ${({theme}) => theme.primary};
         color: #FFF;
+        margin-top:1rem;
+        font-weight : 600;
+        outline : none;
       }
       
       .exchange-button-container button:disabled, .remove-liquidity-actions button:disabled {
@@ -1392,11 +1398,12 @@ export const GlobalStyles = createGlobalStyle`
         box-shadow: none;
         width: 100%;
         margin: 2rem 0 1.5rem;
-        height: 37px;
+        height: 45px;
         border: none;
         border-radius: 10px;
         background-color: ${({theme}) => theme.primary};
         color: #fff;
+        font-weight : bold;
       }
       
       .add-liquidity-button:hover {
@@ -1404,8 +1411,8 @@ export const GlobalStyles = createGlobalStyle`
       }
       
       .pool-details .flex-spaced-container > div {
-        font-size: 11px;
-        font-family: "Inter var", sans-serif;
+        font-size: 15px;
+        font-family: "PT Sans Caption";
       }
       
       .liquidity-section {
@@ -1424,7 +1431,7 @@ export const GlobalStyles = createGlobalStyle`
       .liquidity-section > span {
         opacity: 0.5;
         margin: 50px auto;
-        font-size: 11px;
+        font-size: 14px;
         color: ${({theme}) => theme.formControlText};
       }
       
@@ -1433,8 +1440,8 @@ export const GlobalStyles = createGlobalStyle`
       }
       
       .pool-form .flex-spaced-container span {
-        font-family: "Inter var", sans-serif;
-        font-size: 14px;
+        font-family: "PT Sans Caption";
+        font-size: 16px;
       }
       
       .search-currency-input {
@@ -1568,12 +1575,12 @@ export const GlobalStyles = createGlobalStyle`
       
       .lp-card-heading {
         color: ${({theme}) => theme.formControlText};
-        font-family: "Inter var", sans-serif;
+        font-family: "PT Sans Caption";
         display: flex;
       }
       
       .lp-card-heading span {
-        font-weight: 600;
+        font-weight: 500;
       }
       
       .lp-icons {
@@ -1582,7 +1589,7 @@ export const GlobalStyles = createGlobalStyle`
       
       .lp-card-heading + a {
         color: ${({theme}) => theme.primary};
-        font-family: "Inter var", sans-serif;
+        font-family: "PT Sans Caption";
         font-size: 13px;
         text-decoration: underline;
       }
@@ -1593,8 +1600,7 @@ export const GlobalStyles = createGlobalStyle`
       }
       
       .lp-card .flex-spaced-container > div:nth-child(1) {
-        font-family: 'Inter var', sans-serif;
-        font-weight: 600;
+        font-family: 'PT Sans Caption';
       }
       
       .lp-card .flex-spaced-container > div:nth-child(2) {
@@ -1633,7 +1639,7 @@ export const GlobalStyles = createGlobalStyle`
       
       .text-large {
         margin: 5px 0;
-        font-family: 'Inter var', sans-serif;
+        font-family: 'PT Sans Caption';
         font-weight: bold;
         font-size: 2.8rem;
       }
@@ -1673,7 +1679,7 @@ export const GlobalStyles = createGlobalStyle`
         cursor: pointer;
         margin: 0.25rem;
         overflow: hidden;
-        color: ${({theme}) => theme.primary};
+        color: ${({theme}) => theme.pageLinkTextPrimary};
         width: 20%;
         outline: none;
       }
@@ -1684,8 +1690,7 @@ export const GlobalStyles = createGlobalStyle`
       
       .pool-amount-row > div:nth-child(1) {
         color: ${({theme}) => theme.formControlText};
-        font-family: 'Inter var', sans-serif;
-        font-weight: bold;
+        font-family: 'PT Sans Caption';
         font-size: 1rem;
       }
       
@@ -1704,9 +1709,9 @@ export const GlobalStyles = createGlobalStyle`
       
       .remove-liquidity-actions {
         position: relative;
-        z-index: 5;
-        top: -9px;
-        max-width: 315px;
+        z-index: 1;
+        top: 1px;
+        max-width: 400px;
         width: 100%;
         padding: 20px 0 0;
         background-color: transparent;
@@ -1758,7 +1763,7 @@ export const GlobalStyles = createGlobalStyle`
       }
       
       .import-pool-select:hover, .import-pool-select:focus {
-        border-color: ${({theme}) => theme.formControlText};
+        border-color: ${({theme}) => theme.primary};
       }
       
       .import-pool-select > div {
@@ -1799,7 +1804,7 @@ export const GlobalStyles = createGlobalStyle`
         border-radius: 10px;
         background-color: transparent;
         color: ${({theme}) => theme.primary};
-        font-family: 'Inter var', sans-serif;
+        font-family: 'PT Sans Caption';
         font-size: 14px;
     }
     
@@ -1812,7 +1817,7 @@ export const GlobalStyles = createGlobalStyle`
         border-radius: 10px;
         background-color: ${({theme}) => theme.primary};
         color: #FFF;
-        font-family: 'Inter var', sans-serif;
+        font-family: 'PT Sans Caption';
         font-size: 14px;
     }
     
@@ -1854,7 +1859,7 @@ export const GlobalStyles = createGlobalStyle`
           outline: none;
           background-color: transparent;
           box-shadow: none;
-          font-family: "Inter var", sans-serif;
+          font-family: "PT Sans Caption";
           font-size: 19px;
           color: var(--text);
           padding: 0;

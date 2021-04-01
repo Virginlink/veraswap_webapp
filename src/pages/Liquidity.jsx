@@ -632,7 +632,7 @@ class Liquidity extends Component {
 						<div className="form-control">
 							<div className="flex-spaced-container">
 								<div />
-								<div>balance: <span style={{fontFamily: 'Semibold'}}>{approvalToken === 'A' ? parseFloat(tokenABalance).toFixed(6) : parseFloat(tokenBBalance).toFixed(6)}</span> <span style={{textTransform: 'none'}}>{approvalToken === 'A' ? tokenA : tokenB}</span></div>
+								<div>balance: <span style={{fontFamily: 'PT Sans Caption'}}>{approvalToken === 'A' ? parseFloat(tokenABalance).toFixed(6) : parseFloat(tokenBBalance).toFixed(6)}</span> <span style={{textTransform: 'none'}}>{approvalToken === 'A' ? tokenA : tokenB}</span></div>
 							</div>
 							<div className="input-container without-max">
 								<input

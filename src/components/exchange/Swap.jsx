@@ -38,7 +38,7 @@ export default class Swap extends Component {
                     <div className="flex-spaced-container">
                         <div>from{estimatingB && <CircularProgress size={9} thickness={5} style={{position: 'relative', top: '1px', color: theme === 'light' ? '#DE0102' : '#DEB501', marginLeft: '4px'}} />}</div>
                         {(walletConnected && walletAddress && tokenABalance) && (
-                            <div style={{color: '#000', fontSize: '10px'}}><MdRefresh style={{cursor: 'pointer', position: 'relative', top: '1px'}} onClick={() => onRefresh(tokenA, 'A')} /> balance: <span style={{fontFamily: 'Semibold', fontSize: '10px'}}>{parseFloat(tokenABalance).toFixed(6)}</span></div>
+                            <div style={{color: '#000', fontSize: '10px'}}><MdRefresh style={{cursor: 'pointer', position: 'relative', top: '1px'}} onClick={() => onRefresh(tokenA, 'A')} /> balance: <span style={{fontFamily: 'PT Sans Caption', fontSize: '12px'}}>{parseFloat(tokenABalance).toFixed(6)}</span></div>
                         )}
                     </div>
                     <div className="input-container">
@@ -82,7 +82,7 @@ export default class Swap extends Component {
                     <div className="flex-spaced-container">
                         <div>to{estimatingA && <CircularProgress size={9} thickness={5} style={{position: 'relative', top: '1px', color: theme === 'light' ? '#DE0102' : '#DEB501' , marginLeft: '4px'}} />}</div>
                         {(walletConnected && walletAddress && tokenBBalance) && (
-                            <div style={{color: '#000', fontSize: '10px'}}><MdRefresh style={{cursor: 'pointer', position: 'relative', top: '1px'}} onClick={() => onRefresh(tokenB, 'B')} /> balance: <span style={{fontFamily: 'Semibold', fontSize: '10px'}}>{parseFloat(tokenBBalance).toFixed(6)}</span></div>
+                            <div style={{color: '#000', fontSize: '10px'}}><MdRefresh style={{cursor: 'pointer', position: 'relative', top: '1px'}} onClick={() => onRefresh(tokenB, 'B')} /> balance: <span style={{fontFamily: 'PT Sans Caption', fontSize: '12px'}}>{parseFloat(tokenBBalance).toFixed(6)}</span></div>
                         )}
                     </div>
                     <div className="input-container without-max">

@@ -84,7 +84,7 @@ class RemoveLP extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="flex-spaced-container" style={{alignItems: 'flex-start', marginTop: '1rem', color: theme === 'light' ? '#000' : '#FFF'}}>
+                    <div className="flex-spaced-container" style={{alignItems: 'flex-start', marginTop: '1rem'}}>
                         <div>Price:</div>
                         <div style={{textAlign: 'right'}}>
                             <div style={{marginBottom: '4px'}}>1 {tokenA} = {(parseFloat(tokenBSupply)/parseFloat(tokenASupply)).toFixed(6)} {tokenB}</div>

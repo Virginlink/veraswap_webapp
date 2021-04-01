@@ -1,7 +1,5 @@
-@font-face {
-	font-family: "Inter var";
-	src: url('./assets/fonts/Inter-roman.woff2');
-}
+@import url('https://fonts.googleapis.com/css?family=PT+Sans+Caption&display=swap');
+
 
 h1, h2, h3, h4, h5, h6 {
   color: inherit !important;
@@ -9,7 +7,7 @@ h1, h2, h3, h4, h5, h6 {
 
 html, input, textarea, button, a {
   font-size: 16px;
-  font-family: "Inter var", sans-serif !important;
+  font-family: "PT Sans Caption" !important;
 }
 
 .flex-spaced-container {
