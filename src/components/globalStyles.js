@@ -1315,6 +1315,10 @@ export const GlobalStyles = createGlobalStyle`
         font-family: "PT Sans Caption";
         font-size: 12px;
       }
+
+      .asset-select-button[data-empty=true] {
+        background-color: ${({theme}) => theme.primary};
+      }
       
       .asset-select-button img {
         width: 14px;

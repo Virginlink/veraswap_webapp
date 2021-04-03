@@ -105,8 +105,8 @@ export default class Swap extends Component {
                             )}
                             <button 
                                 className="asset-select-button"
+                                data-empty={!tokenB ? "true" : "false"}
                                 style={!tokenB ? {
-                                    backgroundColor: theme === 'light' ? '#DE0102' : '#DEB501' ,
                                     color: '#FFF',
                                     padding: '0 11px'
                                 } : {}}

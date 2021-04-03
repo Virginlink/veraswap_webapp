@@ -2,16 +2,21 @@ import React, { Component } from 'react'
 import Swap from '../components/exchange/Swap'
 import { withRouter } from 'react-router'
 import { TOKENS } from '../utils/appTokens'
-import { estimateSwapAmount, fetchImportedTokens, getLPAddress, getLPInfo, getTokenBalance, swapTokens } from '../utils/helpers'
-import { CircularProgress } from '@material-ui/core'
-import { notification } from 'antd'
+import { approveToken, estimateSwapAmount, fetchImportedTokens, getLPAddress, getLPInfo, getTokenApproval, getTokenBalance, swapTokens } from '../utils/helpers'
+import { CircularProgress, Dialog } from '@material-ui/core'
+import { notification, Tooltip } from 'antd'
 import moment from 'moment'
 import Navbar from '../components/Navbar'
 import { ethers } from 'ethers'
+import { RiCloseFill } from 'react-icons/ri'
+import { AiOutlineQuestionCircle } from 'react-icons/ai'
+import AppContext from '../state/AppContext'
 
 const PROVIDER = new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-2-s1.binance.org:8545/')
 
 class Exchange extends Component {
+	static contextType = AppContext;
+
     constructor(props) {
         super(props)
         this.state = {
@@ -19,18 +24,34 @@ class Exchange extends Component {
             fetchingPools: false,
             pools: [],
             liquiditySectionVisible: true,
-			tokenA: TOKENS[0].symbol,
+			tokenA: 'tDonut',
 			tokenAAddress: TOKENS[0].contractAddress,
 			tokenAIcon: TOKENS[0].icon,
 			tokenABalance: '',
 			tokenAAmount: '',
+			tokenAAllowance: '',
+			tokenAApproved: false,
+			approvingTokenA: false,
 			tokenB: '',
 			tokenBAddress: '',
 			tokenBIcon: '',
 			tokenBBalance: '',
 			tokenBAmount: '',
+			tokenBAllowance: '',
+			tokenBApproved: false,
+			approvingTokenB: false,
 			liquidityInfo: null,
+			tokensInPool: '',
+			totalSupply: '',
+			tokenASupply: '',
+			tokenBSupply: '',
 			swapping: false,
+			approvalModalVisible: false,
+			approvalToken: '',
+			approvalAmount: '',
+			approving: false,
+			fetchingLiquidity: false,
+			impact: '',
         }
     }
 
@@ -44,11 +65,13 @@ class Exchange extends Component {
 			}
             const selectedToken = allTokens.filter((token) => token.symbol === this.state.tokenA)
 			this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, 'A')
+			this.fetchApproval(walletAddress, selectedToken[0].contractAddress, 'A')
 		}
 	}
 
 	componentDidUpdate(prevProps) {
 		const { walletAddress } = this.props
+		const { tokenB } = this.state
 		if ((walletAddress !== prevProps.walletAddress) && walletAddress) {
 			const importedTokens = fetchImportedTokens()
 			let allTokens = [...TOKENS]
@@ -57,6 +80,12 @@ class Exchange extends Component {
 			}
 			const selectedToken = allTokens.filter((token) => token.symbol === this.state.tokenA)
 			this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, 'A')
+			this.fetchApproval(walletAddress, selectedToken[0].contractAddress, 'A')
+			if (tokenB) {
+				const selectedToken = allTokens.filter((token) => token.symbol === tokenB)
+				this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, 'B')
+				this.fetchApproval(walletAddress, selectedToken[0].contractAddress, 'B')
+			}
 		}
 	}
 
@@ -82,23 +111,51 @@ class Exchange extends Component {
             })
 	}
 
+	fetchApproval = (walletAddress, contractAddress, token) => {
+		this.setState({loading: true}, () => {
+			getTokenApproval(walletAddress, contractAddress)
+				.then((allowance) => {
+					this.setState({loading: false}, () => {
+						// console.log(token, allowance)
+						if (parseFloat(allowance) > 0) {
+							this.setState({
+								[token === 'A' ? 'tokenAApproved' : 'tokenBApproved']: true,
+								[token === 'A' ? 'tokenAAllowance' : 'tokenBAllowance']: allowance,
+							})
+						} else {
+							this.setState({
+								[token === 'A' ? 'tokenAAllowance' : 'tokenBAllowance']: allowance,
+							})
+						}
+					})
+				})
+				.catch((_) => {
+					this.setState({loading: false})
+				})
+		})
+	}
+
 	fetchLiquidity = async () => {
 		const { tokenAAddress, tokenBAddress } = this.state
         if (tokenAAddress && tokenBAddress) {
-			this.setState({loading: true}, async () => {
+			this.setState({fetchingLiquidity: true}, async () => {
 				try {
 					const lpAddress = await getLPAddress(tokenAAddress, tokenBAddress)
 					if (lpAddress === "0x0000000000000000000000000000000000000000") {
-						this.setState({loading: false})
+						this.setState({fetchingLiquidity: false})
 					} else {
 						const liquidityInfo = await getLPInfo(lpAddress, this.props.walletAddress, tokenAAddress, tokenBAddress)
 						this.setState({
-							loading: false,
-							liquidityInfo: liquidityInfo.data
+							fetchingLiquidity: false,
+							liquidityInfo: liquidityInfo.data,
+							tokensInPool: liquidityInfo.data.total,
+							totalSupply: liquidityInfo.data.totalSupply,
+							tokenASupply: liquidityInfo.data.A,
+							tokenBSupply: liquidityInfo.data.B,
 						})
 					}
 				} catch(err) {
-					this.setState({loading: false}, () => {
+					this.setState({fetchingLiquidity: false}, () => {
 						console.log(err.message)
 					})
 				}
@@ -116,6 +173,7 @@ class Exchange extends Component {
 				tokenAAddress: token.contractAddress,
 			}, () => {
 				this.fetchBalance(walletAddress, token.contractAddress, token.contractABI, 'A')
+				this.fetchApproval(walletAddress, token.contractAddress, 'A')
 				this.fetchLiquidity()
 			})
 		} else {
@@ -133,6 +191,7 @@ class Exchange extends Component {
 				tokenBAddress: token.contractAddress,
 			}, () => {
 				this.fetchBalance(walletAddress, token.contractAddress, token.contractABI, 'B')
+				this.fetchApproval(walletAddress, token.contractAddress, 'B')
 				this.fetchLiquidity()
 			})
 		} else {
@@ -141,18 +200,36 @@ class Exchange extends Component {
 	}
 
 	swapTokensInternal = () => {
-		const { tokenA, tokenAIcon, tokenABalance, tokenB, tokenBIcon, tokenBBalance, tokenAAmount, tokenBAmount, tokenAAddress, tokenBAddress } = this.state;
+		const { tokenA, tokenAIcon, tokenB, tokenBIcon, tokenBBalance, tokenAAmount, tokenBAmount, tokenAAddress, tokenBAddress } = this.state;
 		this.setState({
 			tokenB: tokenA,
 			tokenBAddress: tokenAAddress,
 			tokenBIcon: tokenAIcon,
-			tokenBBalance: tokenABalance,
+			tokenBBalance: '',
 			tokenA: tokenB,
 			tokenAAddress: tokenBAddress,
 			tokenAIcon: tokenBIcon,
 			tokenABalance: tokenBBalance,
 			tokenAAmount: tokenBAmount,
 			tokenBAmount: tokenAAmount,
+			tokenAAllowance: '',
+		}, () => {
+			this.fetchLiquidity()
+			const importedTokens = fetchImportedTokens()
+			let allTokens = [...TOKENS]
+			if (importedTokens) {
+				allTokens = [...TOKENS, ...importedTokens.data]
+			}
+			if (this.state.tokenA) {
+				const selectedToken = allTokens.filter((token) => token.symbol === this.state.tokenA)
+				this.fetchBalance(this.props.walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, 'A')
+				this.fetchApproval(this.props.walletAddress, selectedToken[0].contractAddress, 'A')
+			}
+			if (this.state.tokenB) {
+				const selectedToken = allTokens.filter((token) => token.symbol === this.state.tokenB)
+				this.fetchBalance(this.props.walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, 'B')
+				this.fetchApproval(this.props.walletAddress, selectedToken[0].contractAddress, 'B')
+			}
 		})
 	}
 
@@ -182,10 +259,16 @@ class Exchange extends Component {
 				estimateSwapAmount(estimateData)
 					.then((res) => {
 						if (res.success) {
+							let amount;
+							if (type === 'A') {
+								amount = this.state.tokenAAmount
+							} else {
+								amount = this.state.tokenBAmount
+							}
 							this.setState({
-								[type === 'A' ? 'tokenBAmount' : 'tokenAAmount']: parseFloat(res.amount).toFixed(6),
+								[type === 'A' ? 'tokenBAmount' : 'tokenAAmount']: amount ? parseFloat(res.amount).toFixed(6) : '',
 								[type === 'A' ? 'estimatingA' : 'estimatingB']: false
-							})
+							}, () => this.calculatePriceImpact())
 						}
 					})
 					.catch((err) => {
@@ -197,6 +280,16 @@ class Exchange extends Component {
 		}
 	}
 
+	calculatePriceImpact = () => {
+		const { tokenASupply, tokenBSupply, tokenAAmount, tokenBAmount } = this.state;
+		const numerator = (parseFloat(tokenASupply) * parseFloat(tokenBAmount)) + (parseFloat(tokenBSupply) * parseFloat(tokenAAmount))
+		const denominator = parseFloat(tokenBSupply) * (parseFloat(tokenBSupply) + parseFloat(tokenBAmount))
+		const impact = (numerator/denominator) * 100
+		this.setState({
+			impact: impact.toFixed(2)
+		})
+	}
+
 	handleMax = (token) => {
 		const { tokenABalance, tokenBBalance } = this.state;
 		this.setState({
@@ -206,20 +299,113 @@ class Exchange extends Component {
 		})
 	}
 
+	approve = (token) => {
+		const { tokenA, tokenB, tokenAAddress, tokenBAddress, approvalAmount } = this.state;
+		const { walletAddress, theme } = this.props
+		this.setState({[token === 'A' ? 'approvingTokenA' : 'approvingTokenB']: true, approving: true}, () => {
+			approveToken(
+				token === 'A' ? tokenAAddress : tokenBAddress,
+				this.props.signer,
+				approvalAmount,
+			).then((res) => {
+				if (res.success) {
+					// console.log(res.data)
+					if (res.data.hash) {
+						const Link = () => (
+							<a style={{color: '#DC2410', textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`}>View Transaction</a>
+						)
+						notification.info({
+							key: 'approvalProcessingNotification',
+							message: 'Approval is being processed. You can view the transaction here.',
+							btn: <Link />,
+							icon: (
+								<CircularProgress
+									size={25}
+									thickness={5}
+									style={{
+										color: theme === 'light' ? '#DE0102' : '#DEB501',
+										position: 'relative',
+										top: '6px'
+									}}
+								/>
+							),
+							duration: 0
+						})
+						try {
+							let intervalId = setInterval(async () => {
+								try {
+									let reciept = await PROVIDER.getTransaction(res.data.hash)
+									// console.log('RECEIPT', reciept)
+									if (token === 'A') {
+										this.fetchApproval(walletAddress, tokenAAddress, 'A')
+									} else {
+										this.fetchApproval(walletAddress, tokenBAddress, 'B')
+									}
+									if(reciept) {
+										notification.close('approvalProcessingNotification')
+										const Link = () => (
+											<a style={{color: '#DC2410', textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`} onClick={() => notification.close('approvalSuccessNotification')}>View Transaction</a>
+										)
+										notification.success({
+											key: 'approvalSuccessNotification',
+											message: 'Approval successful. You can view the transaction here.',
+											btn: <Link />,
+											duration: 0
+										})
+										this.setState({
+											approving: false,
+											[token === 'A' ? 'approvingTokenA' : 'approvingTokenB']: false,
+											[token === 'A' ? 'tokenAApproved' : 'tokenBApproved']: true,
+											approvalModalVisible: false,
+											approvalAmount: ''
+										})
+										clearInterval(intervalId)
+									}
+								} catch(e) {
+									console.log(e.message)
+								}
+							}, 5000)
+						} catch(e) {
+							this.setState({[token === 'A' ? 'approvingTokenA' : 'approvingTokenB']: false, approving: false})
+							console.log(e)
+						}
+					}
+				}
+			}).catch((err) => {
+				this.setState({[token === 'A' ? 'approvingTokenA' : 'approvingTokenB']: false}, () => {
+					notification.error({
+						message: `Couldn't Approve ${token === 'A' ? tokenA : tokenB}`,
+						description: "Your transaction could not be processed. Please try again later",
+					})
+				})
+			})	
+		})
+	}
+
 	swap = () => {
 		const { tokenA, tokenB, tokenAAmount, tokenBAmount, tokenAAddress, tokenBAddress } = this.state
+		const { slippage } = this.context
 		const { walletAddress, signer, theme } = this.props
 		const deadline = moment().add(1, 'years').format('X')
-		const tokenAddresses = [tokenAAddress, tokenBAddress]
+		const amountOut = parseFloat(tokenBAmount) - (parseFloat(tokenBAmount) * (parseFloat(slippage)/100))
 		this.setState({swapping: true}, () => {
 			const swapData = {
-				amountOut: tokenBAmount,
 				amountIn: tokenAAmount,
-				tokenAddresses: tokenAddresses,
+				amountOut: amountOut.toString(),
+				tokenAddresses: [tokenAAddress, tokenBAddress],
 				walletAddress: walletAddress,
-				deadline: deadline,
+				deadline: parseFloat(deadline),
 				signer: signer
 			}
+			// const data = {
+			// 	amountOut: ethers.utils.parseUnits(amountOut.toString(), 18),
+            //     amountIn: ethers.utils.parseUnits(tokenAAmount, 18),
+            //     addresses: [tokenAAddress, tokenBAddress],
+            //     to: walletAddress,
+            //     deadline: parseFloat(deadline),
+			// }
+			// console.log(data)
+			// console.log(ethers.utils.formatUnits(data.amountIn, 18), ethers.utils.formatUnits(data.amountOut, 18))
 			swapTokens(swapData)
 				.then((res) => {
 					if (res.success) {
@@ -240,8 +426,9 @@ class Exchange extends Component {
 								}
 								localStorage.setItem('hashData', JSON.stringify(newHashArray))
 							}
+
 							const Link = () => (
-								<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`}>View Transaction</a>
+								<a style={{color: '#DC2410', textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`}>View Transaction</a>
 							)
 							notification.info({
 								key: 'swapProcessingNotification',
@@ -252,7 +439,7 @@ class Exchange extends Component {
 										size={25}
 										thickness={5}
 										style={{
-											color: theme === 'light' ? '#DE0102' : '#DEB501' ,
+											color: theme === 'light' ? '#DE0102' : '#DEB501',
 											position: 'relative',
 											top: '6px'
 										}}
@@ -268,7 +455,7 @@ class Exchange extends Component {
 										if(reciept) {
 											notification.close('swapProcessingNotification')
 											const Link = () => (
-												<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`} onClick={() => notification.close('swapSuccessNotification')}>View Transaction</a>
+												<a style={{color: '#DC2410', textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`} onClick={() => notification.close('swapSuccessNotification')}>View Transaction</a>
 											)
 											notification.success({
 												key: 'swapSuccessNotification',
@@ -308,7 +495,7 @@ class Exchange extends Component {
 					this.setState({swapping: false}, () => {
 						notification.error({
 							message: "Couldn't swap tokens",
-							description: err.message
+							description: "Your transaction could not be processed. Please try again later"
 						})
 					})
 				})
@@ -323,11 +510,27 @@ class Exchange extends Component {
 			allTokens = [...TOKENS, ...importedTokens.data]
 		}
 		const selectedToken = allTokens.filter((token) => token.symbol === tokenSymbol)[0]
+		this.fetchApproval(this.props.walletAddress, selectedToken.contractAddress, type)
 		this.fetchBalance(this.props.walletAddress, selectedToken.contractAddress, selectedToken.contractABI, type)
 	}
 
+	handleModalToggle = () => {
+        this.setState(state => {
+            return {
+                approvalModalVisible: !state.approvalModalVisible,
+            }
+        })
+    }
+
+	resetValues = () => {
+		this.setState({
+			approvalAmount: '',
+			approving: false,
+		})
+	}
+
     render() {
-        const { tokenA, tokenABalance, tokenB, tokenBBalance, tokenAIcon, tokenBIcon, tokenAAmount, tokenBAmount, liquidityInfo, swapping, loading, estimatingA, estimatingB } = this.state
+        const { tokenA, tokenABalance, tokenAAllowance, tokenB, tokenBBalance, tokenBAllowance, tokenAIcon, tokenBIcon, tokenAAmount, tokenBAmount, liquidityInfo, swapping, loading, estimatingA, estimatingB, approvingTokenA, approving, approvalModalVisible, approvalToken, approvalAmount, fetchingLiquidity, tokenASupply, tokenBSupply, impact } = this.state
         const { onModalToggle, walletConnected, walletAddress, signer, modalVisible, theme, onThemeToggle, ethBalance, vrapBalance } = this.props
         return (
             <>
@@ -349,16 +552,17 @@ class Exchange extends Component {
 							<a href="/exchange/liquidity" onClick={(e) => {e.preventDefault(); history.push('/exchange/liquidity')}}>Pool</a>
 						</div> */}
 						<Swap
-							theme={theme}
 							walletConnected={walletConnected}
 							walletAddress={walletAddress}
 							signer={signer}
 							tokenA={tokenA}
 							tokenAIcon={tokenAIcon}
 							tokenABalance={tokenABalance}
+							tokenAAllowance={tokenAAllowance}
 							tokenB={tokenB}
 							tokenBIcon={tokenBIcon}
 							tokenBBalance={tokenBBalance}
+							tokenBAllowance={tokenBAllowance}
 							onTokenAUpdate={this.updateTokenA}
 							onTokenBUpdate={this.updateTokenB}
 							tokenAAmount={tokenAAmount}
@@ -370,64 +574,200 @@ class Exchange extends Component {
 							onTokenSwap={this.swapTokensInternal}
 							onRefresh={this.handleRefresh}
 						/>
-						{!walletConnected ? (
-							<div className="exchange-button-container">
-								<button onClick={onModalToggle}>Connect wallet</button>
-							</div>
-						) : ((!tokenA || !tokenB) ? (
-								<div className="exchange-button-container">
-									<button disabled>Select a token</button>
-								</div>
-							) : (loading ? (
-									<div className="exchange-button-container">
-										<button disabled><CircularProgress size={12} thickness={5} style={{color: '#FFF' }} /></button>
-									</div>
-								) : 
-								liquidityInfo ? ( 
+						{walletConnected ? (
+							!fetchingLiquidity ? (
+								liquidityInfo ? (
 									parseFloat(liquidityInfo.total) > 0 ? (
-										(!tokenAAmount || !tokenBAmount) ? (
-											<div className="exchange-button-container">
-												<button disabled>Enter an amount</button>
+										<div className="flex-spaced-container" style={{alignItems: 'flex-start', marginTop: '1rem', color: theme === 'light' ? '#000' : '#FFF', fontSize: '12px'}}>
+											<div>Price</div>
+											<div style={{textAlign: 'right'}}>
+												<div style={{marginBottom: '4px'}}>1 {tokenA} = {(parseFloat(tokenBSupply)/parseFloat(tokenASupply)).toFixed(6)} {tokenB}</div>
+												<div style={{marginBottom: '4px'}}>1 {tokenB} = {(parseFloat(tokenASupply)/parseFloat(tokenBSupply)).toFixed(6)} {tokenA}</div>
 											</div>
-										) : ((parseFloat(tokenAAmount) === 0 || parseFloat(tokenBAmount) === 0) ? (
+										</div>
+									) : null
+								) : null
+							) : null
+						): null}
+						{(walletConnected && (tokenA && tokenB) && (tokenAAmount && tokenBAmount) && !fetchingLiquidity && impact) && (
+							<div className="flex-spaced-container" style={{marginTop: '1rem', fontSize: '12px', color: theme === 'light' ? '#000' : '#FFF'}}>
+								<div>Price Impact</div>
+								<div>{impact} %</div>
+							</div>
+						)}
+						{(this.context.slippage !== "0.5") && (
+							<div className="flex-spaced-container" style={{marginTop: '1rem', fontSize: '12px', color: theme === 'light' ? '#000' : '#FFF'}}>
+								<div>Slippage Tolerance{' '}
+								<Tooltip placement="right" title="Slippage tolerance must be greater than the price impact or else trade will not be executed.">
+									<AiOutlineQuestionCircle style={{position: 'relative', top: '2px', cursor: 'pointer'}} />
+								</Tooltip>
+								</div>
+								<div>{this.context.slippage} %</div>
+							</div>
+						)}
+						{!walletConnected ? (
+						<div className="exchange-button-container">
+							<button onClick={onModalToggle}>Connect wallet</button>
+						</div>
+					) : ((!tokenA || !tokenB) ? (
+							<div className="exchange-button-container">
+								<button disabled>Select a token</button>
+							</div>
+						) : ((loading || fetchingLiquidity) ? (
+								<div className="exchange-button-container">
+									<button disabled><CircularProgress size={12} thickness={5} style={{color: 'var(--primary)'}} /></button>
+								</div>
+							) : 
+							liquidityInfo ? ( 
+								parseFloat(liquidityInfo.total) > 0 ? (
+									(!tokenAAmount || !tokenBAmount) ? (
+										<div className="exchange-button-container">
+											<button disabled>Enter an amount</button>
+										</div>
+									) : (((parseFloat(tokenAAmount) <= parseFloat(tokenABalance)) && ((parseFloat(tokenBAmount) <= parseFloat(tokenBBalance)))) ? (
+										((parseFloat(tokenAAmount) <= parseFloat(tokenAAllowance))) ? (
+											(parseFloat(impact) <= parseFloat(this.context.slippage)) ? (
 												<div className="exchange-button-container">
-													<button disabled>Enter an amount</button>
+													<button onClick={this.swap} disabled={loading || swapping}>Swap {swapping && (
+														<CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />
+													)}</button>
 												</div>
-											) : (((parseFloat(tokenAAmount) <= parseFloat(tokenABalance)) && ((parseFloat(tokenBAmount) <= parseFloat(tokenBBalance)))) ? (
-													<div className="exchange-button-container">
-														<button onClick={this.swap} disabled={swapping}>
-															Swap {swapping && (
-																<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />
-															)}
-														</button>
-													</div>
-												) : (
-													<div className="exchange-button-container">
-														<button disabled>
-															{(parseFloat(tokenAAmount) > parseFloat(tokenABalance)) ? `Insufficient ${tokenA} balance` : `Insufficient ${tokenB} balance`}
-														</button>
-													</div>
-												)
+											) : (
+												<div className="exchange-button-container">
+													<button disabled>
+														High Price Impact
+													</button>
+													<div style={{textAlign: 'center', fontSize: '13px', color: '#FFF', margin: '8px auto 0'}}>Set slippage higher than {impact} %</div>
+												</div>
 											)
+										) : ((parseFloat(tokenAAmount) > parseFloat(tokenAAllowance)) ? (
+												<div className="exchange-button-container">
+													<button 
+														disabled={approvingTokenA || approving} style={{marginBottom: '0.25rem'}}
+														onClick={() => {
+															this.setState({approvalToken: 'A'}, () => this.handleModalToggle())
+														}}>
+														Approve {tokenA} {approvingTokenA && (<CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />)}
+													</button>
+													<button disabled>Swap</button>
+												</div>
+											) : (
+												<div className="exchange-button-container">
+													<button onClick={this.swap} disabled={loading || swapping}>Swap {swapping && (
+														<CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />
+													)}</button>
+												</div>
+											)	
 										)
 									) : (
 										<div className="exchange-button-container">
 											<button disabled>
-												Insufficient liquidity for this trade
+												{(parseFloat(tokenAAmount) > parseFloat(tokenABalance)) ? `Insufficient ${tokenA} balance` : `Insufficient ${tokenB} balance`}
 											</button>
 										</div>
+									)
 									)
 								) : (
 									<div className="exchange-button-container">
 										<button disabled>
-											Insufficient liquidity for this trade
+											{fetchingLiquidity ? <CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} /> : "Insufficient liquidity for this trade"}
 										</button>
 									</div>
 								)
+							) : (
+								<div className="exchange-button-container">
+									<button disabled>
+										{fetchingLiquidity ? <CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} /> : "Insufficient liquidity for this trade"}
+									</button>
+								</div>
 							)
-						)}
+						)
+					)}
 					</div>
 				</div>
+				<Dialog
+					open={approvalModalVisible}
+					onClose={() => {
+						this.handleModalToggle();
+						this.resetValues();
+					}}
+					onBackdropClick={() => {
+						this.handleModalToggle();
+						this.resetValues();
+					}}
+					BackdropProps={{
+						style: {
+							zIndex: 0
+						}
+					}}
+                    className="app-modal"
+				>
+					<div className="modal-header flex-spaced-container" style={{color: theme === 'light' ? '#000' : '#FFF'}}>
+                        <div>
+                            Approve {approvalToken === 'A' ? tokenA : tokenB}
+                        </div>
+                        <button className="close-modal-button" onClick={() => {this.handleModalToggle(); this.resetValues()}}>
+                            <RiCloseFill />
+                        </button>
+                    </div>
+					<div className="modal-content">
+						<div className="form-control">
+							<div className="flex-spaced-container">
+								<div />
+								<div>balance: <span style={{fontFamily: 'PT Sans Caption'}}>{approvalToken === 'A' ? parseFloat(tokenABalance).toFixed(6) : parseFloat(tokenBBalance).toFixed(6)}</span> <span style={{textTransform: 'none'}}>{approvalToken === 'A' ? tokenA : tokenB}</span></div>
+							</div>
+							<div className="input-container without-max">
+								<input
+									style={{width: '100%', paddingRight: '1rem'}}
+									placeholder="0.0"
+									value={approvalAmount}
+									onChange={(e) => {
+										if (!approving) {
+											if(e.target.value.match(/^(\d+)?([.]?\d{0,9})?$/)) {
+												this.setState({approvalAmount: e.target.value})
+											}
+										}
+									}}
+								/>
+								<div>
+									<button disabled={approvalToken === 'A' ? !tokenABalance : !tokenBBalance} className="max-button" onClick={() => this.setState({approvalAmount: approvalToken === 'A' ? tokenABalance : tokenBBalance})}>max</button>
+									<button className="asset-select-button" style={{cursor: 'default'}}>
+										<img src={approvalToken === 'A' ? tokenAIcon : tokenBIcon} alt="token-logo" />
+										<span>{approvalToken === 'A' ? tokenA : tokenB}</span>
+									</button>
+								</div>
+							</div>
+						</div>
+						<div className="staking-modal-footer">
+							<button className="staking-modal-button" onClick={() => {this.handleModalToggle(); this.resetValues()}}>Cancel</button>
+							<button
+								className="staking-modal-button-primary"
+								disabled={
+									(parseFloat(approvalAmount) === 0 || !approvalAmount || approving) || (
+										approvalToken === 'A' ? parseFloat(approvalAmount) > parseFloat(tokenABalance) : parseFloat(approvalAmount) > parseFloat(tokenBBalance)
+									)
+								}
+								onClick={() => this.approve(approvalToken)}
+							>
+								{!approving ? (
+									approvalAmount ? (
+										parseFloat(approvalAmount) > 0 ? (
+											approvalToken === 'A' ? (
+												parseFloat(approvalAmount) <= parseFloat(tokenABalance) ? ( 
+													'Approve' 
+												) : `Insufficient balance`
+											) : (
+												parseFloat(approvalAmount) <= parseFloat(tokenBBalance) ? ( 
+													'Approve' 
+												) : `Insufficient balance`
+											)
+										) : 'Invalid Amount' 
+									) : 'Enter Amount'
+								) : 'Approving'}
+							</button>
+						</div>
+					</div>
+				</Dialog>
             </>
         )
     }

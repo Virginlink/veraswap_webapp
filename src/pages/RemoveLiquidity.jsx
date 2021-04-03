@@ -327,7 +327,7 @@ class RemoveLiquidity extends Component {
 				.catch((err) => {
 					this.setState({removingLP: false}, () => {
 						notification.error({
-							message: "Couldn't add liquidity",
+							message: "Couldn't remove liquidity",
 							description: err.message
 						})
 					})
@@ -383,7 +383,7 @@ class RemoveLiquidity extends Component {
 								</div>
 							) : ((parseFloat(lpAllowance) === 0 || (parseFloat(liquidity) > parseFloat(lpAllowance)) ? (
 									<div className="remove-liquidity-actions">
-										<button disabled={approvingLP} onClick={this.approve}>Approve {approvingLP && (
+										<button disabled={percent === 0 || approvingLP} onClick={this.approve}>Approve {approvingLP && (
 											<CircularProgress size={14} thickness={5} style={{color: theme === 'light' ? '#DE0102' : '#DEB501' , position: 'relative', top: '1px'}} />
 										)}</button>
 										<button disabled>Remove</button>

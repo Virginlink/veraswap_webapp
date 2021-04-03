@@ -26,6 +26,7 @@ import Exchange from './pages/Exchange';
 import Liquidity from './pages/Liquidity';
 import ImportLiquidity from './pages/ImportLiquidity';
 import RemoveLiquidity from './pages/RemoveLiquidity';
+import AppContext, { AppProvider } from './state/AppContext';
 const {ethers} = require('ethers');
 
 const Transition = React.forwardRef(function Transition(props, ref) {

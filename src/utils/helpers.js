@@ -264,13 +264,13 @@ export const estimateSwapAmount = ({amount, balanceA, balanceB}) => {
     })
 }
 
-export const swapTokens = ({amountIn, amountOut, tokenAddresses, walletAddress, amounts, deadline, signer}) => {
+export const swapTokens = ({amountIn, amountOut, tokenAddresses, walletAddress, deadline, signer}) => {
     return new Promise(async (resolve, reject) => {
         try {
             const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer)
-            const result = await contract.swapTokensForExactTokens(
-                ethers.utils.parseUnits(amountOut, 18),
+            const result = await contract.swapExactTokensForTokens(
                 ethers.utils.parseUnits(amountIn, 18),
+                ethers.utils.parseUnits(amountOut, 18),
                 tokenAddresses,
                 walletAddress,
                 deadline
