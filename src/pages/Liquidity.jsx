@@ -146,7 +146,6 @@ class Liquidity extends Component {
 						this.setState({loading: false, lpAddress: '', liquidityInfo: null})
 					} else {
 						const liquidityInfo = await getLPInfo(lpAddress, this.props.walletAddress, tokenAAddress, tokenBAddress)
-						console.log(liquidityInfo)
 						this.setState({
 							lpAddress: lpAddress,
 							liquidityInfo: liquidityInfo.data,
@@ -157,7 +156,7 @@ class Liquidity extends Component {
 					}
 				})
 			} catch(err) {
-				this.setState({loading: false}, () => {
+				this.setState({loading: false, lpAddress: '', liquidityInfo: null}, () => {
 					console.log(err.message)
 				})
 			}
