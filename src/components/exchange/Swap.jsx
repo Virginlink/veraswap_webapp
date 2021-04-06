@@ -123,7 +123,7 @@ export default class Swap extends Component {
                         </div>
                     </div>
                 </div>
-                {((tokenABalance && tokenBBalance) && !fetchingLiquidity) && (
+                {(walletConnected && (tokenABalance && tokenBBalance) && !fetchingLiquidity) && (
                     <div className="percent-buttons">
                         <button disabled={!tokenABalance || fetchingLiquidity} onClick={() => onPercentChange(25)}>25%</button>
                         <button disabled={!tokenABalance || fetchingLiquidity} onClick={() => onPercentChange(50)}>50%</button>
