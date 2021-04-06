@@ -32,7 +32,7 @@ class RemoveLP extends Component {
     }
 
     render() {
-        const { tokenA, tokenB, tokenAIcon, tokenBIcon, onPercentChange, percent, history, tokenASupply, tokenBSupply, tokensInPool, theme } = this.props
+        const { tokenA, tokenB, tokenAIcon, tokenBIcon, onPercentChange, percent, history, tokenASupply, tokenBSupply, tokensInPool } = this.props
         return (  
             <>
                 <div className="pool-form">

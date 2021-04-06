@@ -334,7 +334,7 @@ class Exchange extends Component {
 			if (type === 'A') {
 				this.setState({estimatingA: true}, () => {
 					const estimateData = {
-						amount: type === 'A' ? tokenAAmount : tokenBAmount,
+						amount: tokenAAmount.toString(),
 						addresses: [tokenAAddress, tokenBAddress],
 						token: tokenA,
 					}
@@ -342,6 +342,7 @@ class Exchange extends Component {
 						.then((res) => {
 							if (res.success) {
 								let amount = this.state.tokenAAmount
+								// console.log(tokenAAmount, res.amount)
 								this.setState({
 									tokenBAmount: amount ? parseFloat(res.amount).toFixed(6) : '',
 									estimatingA: false,
@@ -364,7 +365,7 @@ class Exchange extends Component {
 			} else if (type === 'B') {
 				this.setState({estimatingB: true}, () => {
 					const estimateData = {
-						amount: type === 'A' ? tokenAAmount : tokenBAmount,
+						amount: tokenBAmount.toString(),
 						addresses: [tokenAAddress, tokenBAddress],
 						token: tokenB,
 					}
@@ -652,9 +653,19 @@ class Exchange extends Component {
 		})
 	}
 
+	handlePercentChange = (value) => {
+        const { tokenABalance } = this.state
+        this.setState({
+            percent: value,
+        }, () => {
+           const amount = (parseFloat(tokenABalance) * (this.state.percent/100))
+           this.setState({tokenAAmount: parseFloat(amount.toFixed(6))}, () => this.estimate('A'))
+        })
+    }
+
     render() {
         const { tokenA, tokenABalance, tokenAAllowance, tokenB, tokenBBalance, tokenBAllowance, tokenAIcon, tokenBIcon, tokenAAmount, tokenBAmount, liquidityInfo, swapping, loading, estimatingA, estimatingB, approvingTokenA, approving, approvalModalVisible, approvalToken, approvalAmount, fetchingLiquidity, impact, tokenAPrice, tokenBPrice, fetchingPrices, inverted, invalidPair } = this.state
-        const { onModalToggle, walletConnected, walletAddress, signer, modalVisible, theme, onThemeToggle, ethBalance, vrapBalance } = this.props
+        const { onModalToggle, walletConnected, walletAddress, signer, modalVisible, theme, onThemeToggle, ethBalance, vrapBalance, history } = this.props
         return (
             <>
               	<Navbar
@@ -670,10 +681,10 @@ class Exchange extends Component {
             	/>
 				<div className="container">
 					<div className="exchange-card">			
-						{/* <div className="tabs">
-							<a href="/exchange" onClick={(e) => e.preventDefault()} className="tab-active">Swap</a>
-							<a href="/exchange/liquidity" onClick={(e) => {e.preventDefault(); history.push('/exchange/liquidity')}}>Pool</a>
-						</div> */}
+						<div className="tabs">
+							<a href="/swap" onClick={(e) => e.preventDefault()} className="tab-active">Swap</a>
+							<a href="/pool" onClick={(e) => {e.preventDefault(); history.push('/pool')}}>Pool</a>
+						</div>
 						<Swap
 							invalidPair={invalidPair}
 							fetchingLiquidity={fetchingLiquidity}
@@ -698,18 +709,18 @@ class Exchange extends Component {
 							onMax={this.handleMax}
 							onTokenSwap={this.swapTokensInternal}
 							onRefresh={this.handleRefresh}
+							onPercentChange={this.handlePercentChange}
 						/>
 						{walletConnected ? (
 							!fetchingPrices ? (
 								!invalidPair ? (
 									(tokenAPrice && tokenBPrice) ? (
-										<div className="flex-spaced-container" style={{alignItems: 'center', marginTop: '1rem', fontSize: '13px', color: theme === 'light' ? '#000' : '#FFF', fontFamily: 'PT Sans Caption', padding: '0 0.8rem'}}>
-											<div>Price</div>
-											<div style={{textAlign: 'right', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', color: theme === 'light' ? '#000' : '#FFF'}}>
+										<div style={{display: 'flex', justifyContent: 'center', marginTop: '1rem', fontSize: '13px', color: theme === 'light' ? '#000' : '#FFF', fontFamily: 'PT Sans Caption', padding: '0 0.8rem'}}>
+											<div style={{display: 'flex', alignItems: 'center', color: theme === 'light' ? '#000' : '#FFF'}}>
 												{!inverted ? (
-													<div>1 {tokenA} = {parseFloat(tokenAPrice).toFixed(6)} {tokenB}</div>
+													<div>1 {tokenA} ~ {parseFloat(tokenAPrice).toFixed(6)} {tokenB}</div>
 												) : (
-													<div>1 {tokenB} = {parseFloat(tokenBPrice).toFixed(6)} {tokenA}</div>
+													<div>1 {tokenB} ~ {parseFloat(tokenBPrice).toFixed(6)} {tokenA}</div>
 												)}
 												<button className="invert-button" onClick={this.toggleInversion}>
 													<GrPowerCycle size={15} />
@@ -779,7 +790,7 @@ class Exchange extends Component {
 													<button disabled>
 														High Price Impact
 													</button>
-													<div style={{textAlign: 'center', fontSize: '13px', color: '#FFF', margin: '8px auto 0'}}>Set slippage higher than {impact} %</div>
+													<div style={{textAlign: 'center', fontSize: '13px', color: theme === 'light' ? '#000' : '#FFF', margin: '8px auto 0'}}>Set slippage higher than {impact} %</div>
 												</div>
 											)
 										) : ((parseFloat(tokenAAmount) > parseFloat(tokenAAllowance)) ? (

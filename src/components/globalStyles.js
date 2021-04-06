@@ -1235,6 +1235,26 @@ export const GlobalStyles = createGlobalStyle`
         z-index : 1;
     }
 
+    .tabs {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 1rem;
+    }
+    
+    .tabs a {
+      font-family: "PT Sans Caption", sans-serif;
+      font-size: 15px;
+      color: ${({theme}) => theme.formControlText};
+      opacity: 0.5;
+      transition: all 0.3s ease;
+    }
+    
+    .tabs a:hover,
+    .tabs a:focus,
+    .tab-active {
+      opacity: 1 !important;
+    }
+
     .exchange-card {
         position: relative;
         max-width: 400px;
@@ -1254,10 +1274,37 @@ export const GlobalStyles = createGlobalStyle`
         color: ${({theme}) => theme.formControlText} !important;
       }
 
+      .swap-form .form-control {
+        background-color: ${({theme}) => theme.swapFormControlBackgroundColor};
+        border: 1px solid ${({theme}) => theme.swapFormControlBackgroundColor};
+      }
+
+      .swap-form .input-container input {
+        font-size: 22px;
+      }
+
+      .swap-form .input-container input + div {
+        opacity: 0.7;
+        font-size: 12px !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 8px;
+      }
+
+      .swap-form .input-container {
+        align-items: flex-start;
+      }
+      
       .form-control > .flex-spaced-container > div:nth-child(2) {
         color: ${({theme}) => theme.formControlText} !important;
         font-family : "PT Sans Caption" !important;
         font-size : 12px !important;
+      }
+      
+      .swap-form .form-control .flex-spaced-container > div {
+        opacity: 0.7;
+        text-transform: capitalize;
       }
       
       .input-container {
@@ -1314,6 +1361,31 @@ export const GlobalStyles = createGlobalStyle`
         color: ${({theme}) => theme.formControlText};
         font-family: "PT Sans Caption";
         font-size: 12px;
+      }
+
+      .swap-form .asset-select-button {
+        background-color: transparent;
+        font-size: 15px;
+      }
+
+      .swap-form .asset-select-button span {
+        position: relative;
+        top: -0.6px;
+      }
+
+      .swap-form .asset-select-button img {
+        width: 24px;
+        height: 24px;
+        margin-right: 8px;
+      }
+
+      .swap-form .asset-select-button svg {
+        margin-left: 1.5rem;
+        font-size: 15px;
+      }
+
+      .swap-form .asset-select-button[data-empty=true] svg {
+        margin-left: 8px;
       }
 
       .asset-select-button[data-empty=true] {
@@ -1376,6 +1448,31 @@ export const GlobalStyles = createGlobalStyle`
       }
       
       .invert-button:focus, .invert-button:hover {
+        border-color: ${({theme}) => theme.primary};
+      }
+
+      .swap-form .action {
+        position: relative;
+        height: 1px;
+        background-color: ${({theme}) => theme.swapDividerColor};
+        border-radius: 0;
+        width: 100%;
+        margin: 0;
+        font-size: 26px;
+      }
+
+      .swap-form .action svg {
+        position: absolute;
+        background-color: ${({theme}) => theme.swapDividerColor};
+        border: 1px solid transparent;
+        height: 32px;
+        width: 32px;
+        padding: 4px;
+        border-radius: 50%;
+        right: 2rem;
+      }
+
+      .swap-form .action svg:hover {
         border-color: ${({theme}) => theme.primary};
       }
       
@@ -1487,6 +1584,7 @@ export const GlobalStyles = createGlobalStyle`
       }
       
       .search-currency-input {
+        font-family: "PT Sans Caption", sans-serif;
         border-radius: 15px;
         color: ${({theme}) => theme.formControlText};
         border: 1px solid ${({theme}) => theme.formControlBorderColor};
@@ -1499,6 +1597,7 @@ export const GlobalStyles = createGlobalStyle`
       }
 
       .search-currency-input + div {
+        font-family: "PT Sans Caption", sans-serif;
         color: ${({theme}) => theme.primary} !important;
       }
       
@@ -1565,6 +1664,7 @@ export const GlobalStyles = createGlobalStyle`
       }
       
       .currency-row {
+        font-family: "PT Sans Caption", sans-serif;
         box-sizing: border-box;
         margin: 0px;
         min-width: 0px;
@@ -1909,6 +2009,10 @@ export const GlobalStyles = createGlobalStyle`
       
         .without-max input {
           width: 70%;
+        }
+
+        .invert-button svg {
+          transform: scale(1.8);
         }
       }      
 

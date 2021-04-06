@@ -548,6 +548,12 @@ class Liquidity extends Component {
             	/>
                 <div className="container">
 					<div className="exchange-card">
+						{liquiditySectionVisible && (
+							<div className="tabs">
+								<a href="/swap" onClick={(e) => {e.preventDefault(); history.push('/swap')}}>Swap</a>
+								<a href="/pool" onClick={(e) => e.preventDefault()} className="tab-active">Pool</a>
+							</div>
+						)}
 						<Pool
 							theme={theme}
 							liquiditySectionVisible={liquiditySectionVisible}

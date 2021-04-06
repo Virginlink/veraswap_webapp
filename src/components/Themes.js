@@ -86,6 +86,7 @@ export const lightTheme = {
     shadedTextColor: 'rgb(86, 90, 105)',
     exchangeCardBackgroundColor: '#FFF',
     formControlBackgroundColor: '#f8f8f8',
+    swapFormControlBackgroundColor: '#f8f8f8',
     formControlBorderColor: 'transparent',
     formControlText: '#000',
     assetSelectBackgroundColor: '#FFF',
@@ -93,6 +94,7 @@ export const lightTheme = {
     exchangeButtonBackgroundColor: 'rgb(222 1 2 / 40%)',
     poolCardBackgroundColor: '#FFF',
     rowHoverBackgroundColor: 'rgb(0 0 0 / 5%)',
+    swapDividerColor: 'rgb(237,238,242)',
 }
 
 export const darkTheme = {
@@ -183,6 +185,7 @@ export const darkTheme = {
     shadedTextColor: 'rgb(195, 197, 203)',
     exchangeCardBackgroundColor: 'rgb(33,36,41)',
     formControlBackgroundColor: 'rgb(33,36,41)',
+    swapFormControlBackgroundColor: 'rgb(64,68,79)',
     formControlBorderColor: 'rgb(64,68,79)',
     formControlText: '#FFF',
     assetSelectBackgroundColor: 'rgb(33,36,41)',
@@ -190,4 +193,5 @@ export const darkTheme = {
     exchangeButtonBackgroundColor: 'rgb(222 181 1 / 40%)',
     poolCardBackgroundColor: 'rgb(64,68,79)',
     rowHoverBackgroundColor: 'rgb(64,68,79)',
+    swapDividerColor: 'rgb(33,36,41)',
 }
