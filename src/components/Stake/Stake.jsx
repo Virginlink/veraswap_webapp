@@ -58,7 +58,7 @@ class Stake extends Component {
                 <div className="grid" style={{width: '100%', maxWidth: '640px'}}>
                     <div className = "header-lp">
                         <p className="heading" style={{marginTop: '1.5rem'}}>Participating pools</p>
-                        <p className="total-liquidity" style={{marginTop: '1.75rem',paddingTop:'.25rem'}}>Total Liquidity : {formatter.format(totalStakedValue + totalStakedValue/2)}</p>
+                        <p className="total-liquidity" style={{marginTop: '1.75rem',paddingTop:'.25rem'}}>Total Liquidity : {formatter.format(totalStakedValue + totalStakedValue)}</p>
                     </div>
                     <div style={{display: 'grid', gridTemplateColumns: '1fr', gap: '15px 10px', width: '100%', justifySelf: 'center', paddingBottom: '3rem'}}>
                         {
