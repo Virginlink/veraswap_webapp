@@ -38,6 +38,7 @@ class LPCard extends Component {
 					const liquidityInfo = await getLPInfo(lpAddress, walletAddress, tokenAAddress, tokenBAddress)
 					this.setState({
 						liquidityInfo: liquidityInfo.data,
+                        loading: false,
 					})
 				})
 			} catch(err) {

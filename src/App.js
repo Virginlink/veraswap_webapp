@@ -20,13 +20,11 @@ import {TOKEN} from './utils/tokens';
 import './App.css';
 import './components/Navbar.css';
 import './components/Sale/Sale.css';
-import { useWallet } from 'use-wallet'
 import { notification } from 'antd';
 import Exchange from './pages/Exchange';
 import Liquidity from './pages/Liquidity';
 import ImportLiquidity from './pages/ImportLiquidity';
 import RemoveLiquidity from './pages/RemoveLiquidity';
-import AppContext, { AppProvider } from './state/AppContext';
 const {ethers} = require('ethers');
 
 const Transition = React.forwardRef(function Transition(props, ref) {

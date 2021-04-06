@@ -143,9 +143,10 @@ class Liquidity extends Component {
 				this.setState({loading: true}, async () => {
 					const lpAddress = await getLPAddress(tokenAAddress, tokenBAddress)
 					if (lpAddress === "0x0000000000000000000000000000000000000000") {
-						this.setState({loading: false})
+						this.setState({loading: false, lpAddress: '', liquidityInfo: null})
 					} else {
 						const liquidityInfo = await getLPInfo(lpAddress, this.props.walletAddress, tokenAAddress, tokenBAddress)
+						console.log(liquidityInfo)
 						this.setState({
 							lpAddress: lpAddress,
 							liquidityInfo: liquidityInfo.data,
@@ -432,7 +433,7 @@ class Liquidity extends Component {
 											this.setState({
 												supplying: false,
 												tokenAAmount: '',
-												tokenBAmount: ''
+												tokenBAmount: '',
 											}, () => {
 												const importedTokens = fetchImportedTokens()
 												let allTokens = [...TOKENS]
