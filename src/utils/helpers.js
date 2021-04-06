@@ -221,7 +221,29 @@ export const removeLiquidity = ({liquidity, walletAddress, addressA, addressB, d
     })
 }
 
-export const estimateOutAmounts = ({ amount, addresses }) => {
+export const estimateInAmounts = ({ amount, addresses, token }) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, PROVIDER)
+            const result = await contract.getAmountsIn(
+                ethers.utils.parseUnits(amount, 18),
+                addresses
+            )
+            resolve({
+                success: true,
+                amount: ethers.utils.formatUnits(result[0], 18),
+            })
+        } catch (err) {
+            reject({
+                error: true,
+                token: token,
+                message: err.message
+            })
+        }
+    })
+}
+
+export const estimateOutAmounts = ({ amount, addresses, token }) => {
     return new Promise(async (resolve, reject) => {
         try {
             const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, PROVIDER)
@@ -231,11 +253,12 @@ export const estimateOutAmounts = ({ amount, addresses }) => {
             )
             resolve({
                 success: true,
-                data: result,
+                amount: ethers.utils.formatUnits(result[1], 18),
             })
         } catch (err) {
             reject({
                 error: true,
+                token: token,
                 message: err.message
             })
         }
@@ -374,4 +397,19 @@ export const getPoolName = (address) => {
             })
         }
     })
+}
+
+export const storeValue = (key, value) => {
+    const encryptedValue = CryptoJS.AES.encrypt(value, 'DvqPNNRhQZq').toString()
+    localStorage.setItem(key, encryptedValue)
+}
+
+export const getValue = (key) => {
+    const value = localStorage.getItem(key)
+    if(value) {
+        const decryptedByteArray = CryptoJS.AES.decrypt(value, 'DvqPNNRhQZq')
+        const decryptedValue = decryptedByteArray.toString(CryptoJS.enc.Utf8)
+        return decryptedValue
+    }
+    return false
 }

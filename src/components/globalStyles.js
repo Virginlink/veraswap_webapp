@@ -1340,6 +1340,44 @@ export const GlobalStyles = createGlobalStyle`
       .asset-select-button:hover {
         opacity: 0.65;
       }
+
+      .max-button:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+
+      .details-section:not(:empty) {
+        margin-top: 1rem;
+        display: grid;
+        grid-auto-rows: auto;
+        row-gap: 0.75rem;
+        font-family: "PT Sans Caption", sans-serif;
+        background-color: ${({theme}) => theme.navbarButtonBackgroundColor};
+        color: ${({theme}) => theme.formControlText};
+        border-radius: 10px;
+        padding: 10px;
+      }
+      
+      .invert-button {
+        position: relative;
+        top: -1px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid transparent;
+        color: ${({theme}) => theme.navbarButtonIconColor} !important;
+        border-radius: 50%;
+        height: 23px;
+        width: 23px;
+        cursor: pointer;
+        box-shadow: none;
+        margin-left: 5px;
+        outline: none;
+      }
+      
+      .invert-button:focus, .invert-button:hover {
+        border-color: ${({theme}) => theme.primary};
+      }
       
       .action {
         width: 26px;

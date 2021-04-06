@@ -19,7 +19,8 @@ class Navbar extends Component {
             moonModalVisible: false,
             connectModalVisible: false,
             settingsVisible: false,
-            slippage: '0.5',
+            localSlippage: '',
+            slippage: '',
             deadline: '',
             expertModeOn: false,
             expertModeConfirmationModalVisible: false,
@@ -75,7 +76,7 @@ class Navbar extends Component {
     handleSlippageChange = e => {
         const { updateSlippage } = this.context
         if (e.target.value.match(/^(\d+)?([.]?\d{0,9})?$/)) {
-            this.setState({slippage: e.target.value}, () => updateSlippage(e.target.value))
+            this.setState({slippage: e.target.value, localSlippage: e.target.value}, () => updateSlippage(e.target.value))
         }
     }
 
@@ -108,7 +109,7 @@ class Navbar extends Component {
 
     handleMenuClose = () => {
         const { updateDeadline, updateSlippage } = this.context;
-        const { localDeadline, slippage } = this.state;
+        const { localDeadline, slippage, localSlippage } = this.state;
         this.setState({settingsVisible: false}, () => {
             if (localDeadline) {
                 setTimeout(
@@ -122,11 +123,19 @@ class Navbar extends Component {
             if (parseFloat(slippage) < 0.1) {
                 updateSlippage("0.5")
             }
+            if (localSlippage) {
+                setTimeout(
+                    () => {
+                        this.setState({localSlippage: ''})
+                    },
+                    500
+                )
+            }
         })
     }
 
     render() {
-        const {moonModalVisible, settingsVisible, slippage, deadline, expertModeOn, expertModeConfirmationModalVisible, theme, moreLinksVisible, walletConnected, loggedIn, claimModalVisible, walletAddress, addressValid, moonBalance, addressError} = this.state;
+        const {moonModalVisible, settingsVisible, slippage, deadline, expertModeOn, expertModeConfirmationModalVisible, theme, moreLinksVisible, walletConnected, loggedIn, claimModalVisible, walletAddress, addressValid, moonBalance, addressError, localSlippage} = this.state;
         return (
             <div className="navbar-container">
                 <div className="navbar">
@@ -226,7 +235,7 @@ class Navbar extends Component {
                                                             <button className={`tolerance-button ${slippage === '1' && 'tolerance-active'}`} onClick={() => this.setState({slippage: '1'}, () => this.context.updateSlippage("1"))}>1%</button>
                                                             <button tabIndex="-1" className="tolerance-input-button">
                                                                 <div className="tolerance-input-container">
-                                                                    <input className="tolerance-input" onChange={this.handleSlippageChange} placeholder={slippage} value={slippage} />
+                                                                    <input className="tolerance-input" onChange={this.handleSlippageChange} placeholder={slippage} value={localSlippage} />
                                                                     <span style={{position: 'relative', top: '1px'}}>%</span>
                                                                 </div>
                                                             </button>

@@ -30,7 +30,7 @@ export default class Swap extends Component {
     }
 
     render() {
-        const { tokenA, tokenABalance, tokenB, tokenBBalance, walletConnected, walletAddress, onTokenAUpdate, onTokenBUpdate, tokenAIcon, tokenBIcon, tokenAAmount, tokenBAmount, onAmountChange, onMax, onTokenSwap, onRefresh, estimatingA, estimatingB, theme } = this.props
+        const { tokenA, tokenB, tokenABalance, tokenBBalance, walletConnected, walletAddress, onTokenAUpdate, onTokenBUpdate, tokenAIcon, tokenBIcon, tokenAAmount, tokenBAmount, onAmountChange, onMax, onTokenSwap, onRefresh, estimatingA, estimatingB, fetchingLiquidity, invalidPair, theme } = this.props
         const { tokenAModalVisible, tokenBModalVisible } = this.state
         return (
             <div>
@@ -47,7 +47,7 @@ export default class Swap extends Component {
                             value={tokenAAmount}
                             inputMode="numeric"
                             onChange={(e) => {
-                                if (e.target.value.match(/^(\d+)?([.]?\d{0,9})?$/)) {
+                                if (!fetchingLiquidity && !invalidPair && e.target.value.match(/^(\d+)?([.]?\d{0,9})?$/)) {
                                     onAmountChange(e.target.value, 'A')
                                 }
                             }}
@@ -57,7 +57,7 @@ export default class Swap extends Component {
                         />
                         <div>
                             {(tokenA && parseFloat(tokenABalance) > 0) && (
-                                <button className="max-button" onClick={() => onMax('A')}>max</button>
+                                <button className="max-button" disabled={invalidPair} onClick={() => onMax('A')}>max</button>
                             )}
                             <button
                                 className="asset-select-button"
@@ -91,7 +91,7 @@ export default class Swap extends Component {
                             value={tokenBAmount}
                             inputMode="numeric"
                             onChange={(e) => {
-                                if (e.target.value.match(/^(\d+)?([.]?\d{0,9})?$/)) {
+                                if (!fetchingLiquidity && !invalidPair && e.target.value.match(/^(\d+)?([.]?\d{0,9})?$/)) {
                                     onAmountChange(e.target.value, 'B')
                                 }
                             }}
@@ -101,7 +101,7 @@ export default class Swap extends Component {
                         />
                         <div>
                             {(tokenB && parseFloat(tokenBBalance) > 0) && (
-                                <button className="max-button" onClick={() => onMax('B')}>max</button>
+                                <button className="max-button" disabled={invalidPair} onClick={() => onMax('B')}>max</button>
                             )}
                             <button 
                                 className="asset-select-button"

@@ -9,6 +9,7 @@ import { CircularProgress, Dialog } from '@material-ui/core'
 import { notification } from 'antd'
 import { RiCloseFill } from 'react-icons/ri'
 import { ethers } from 'ethers'
+import { GrPowerCycle } from 'react-icons/gr'
 
 const PROVIDER = new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-2-s1.binance.org:8545/')
 
@@ -26,6 +27,7 @@ class Liquidity extends Component {
 			tokenAAllowance: '',
 			tokenAApproved: false,
 			approvingTokenA: false,
+			tokenASupply: '',
 			tokenB: '',
 			tokenBIcon: '',
 			tokenBAddress: '',
@@ -34,6 +36,7 @@ class Liquidity extends Component {
 			tokenBAllowance: '',
 			tokenBApproved: false,
 			approvingTokenB: false,
+			tokenBSupply: '',
 			lpAddress: '',
 			liquidityInfo: null,
 			supplying: false,
@@ -42,6 +45,7 @@ class Liquidity extends Component {
 			approvalToken: '',
 			approvalAmount: '',
 			approving: false,
+			inverted: false,
         }
     }
 
@@ -145,6 +149,8 @@ class Liquidity extends Component {
 						this.setState({
 							lpAddress: lpAddress,
 							liquidityInfo: liquidityInfo.data,
+							tokenASupply: liquidityInfo.data.A,
+							tokenBSupply: liquidityInfo.data.B,
 							loading: false,
 						})
 					}
@@ -206,13 +212,36 @@ class Liquidity extends Component {
 			tokenAAddress: tokenBAddress,
 			tokenAAmount: tokenBAmount,
 			tokenBAmount: tokenAAmount,
-		})
+		}, () => this.fetchLiquidity())
 	}
 
 	updateAmount = (value, type) => {
+		const { liquidityInfo, tokenASupply, tokenBSupply } = this.state
         this.setState({
             [type === 'A' ? 'tokenAAmount' : 'tokenBAmount']: value,
-        })
+        }, () => {
+			if (liquidityInfo) {
+				if (parseFloat(liquidityInfo.total) > 0) {
+					const tokenAPrice = parseFloat(tokenBSupply)/parseFloat(tokenASupply)
+					const tokenBPrice = parseFloat(tokenASupply)/parseFloat(tokenBSupply)
+					if (type === 'A') {
+						const amount = parseFloat(this.state.tokenAAmount) * tokenAPrice
+						if (this.state.tokenAAmount) {
+							this.setState({tokenBAmount: amount.toFixed(6)})
+						} else {
+							this.setState({tokenBAmount: ''})
+						}
+					} else if (type === 'B') {
+						const amount = parseFloat(this.state.tokenBAmount) * tokenBPrice
+						if (this.state.tokenBAmount) {
+							this.setState({tokenAAmount: amount.toFixed(6)})
+						} else {
+							this.setState({tokenAAmount: ''})
+						}
+					}
+				}
+			}
+		})
 	}
 
 	handleMax = (token) => {
@@ -364,6 +393,7 @@ class Liquidity extends Component {
 										let reciept = await PROVIDER.getTransaction(res.data.hash)
 										// console.log('RECEIPT', reciept)
 										if(reciept) {
+											this.fetchLiquidity()
 											const createdPool = {
 												tokenA: tokenA,
 												tokenAIcon: tokenAIcon,
@@ -490,8 +520,18 @@ class Liquidity extends Component {
 		})
 	}
 
+	toggleInversion = () => {
+		this.setState(state => {
+			return {
+				inverted: !state.inverted
+			}
+		})
+	}
+
+	getPoolSharePercent = (userTokens, totalTokens) => parseFloat((parseFloat(userTokens) / parseFloat(totalTokens)) * 100).toFixed(2)
+
     render() {
-        const { liquiditySectionVisible, tokenA, tokenABalance, tokenB, tokenBBalance, tokenAIcon, tokenBIcon, tokenAAmount, tokenBAmount, pools, approvingTokenA, approvingTokenB, supplying, tokenAAllowance, tokenBAllowance, loading, approvalModalVisible, approvalToken, approvalAmount, approving } = this.state
+        const { liquiditySectionVisible, tokenA, tokenABalance, tokenB, tokenBBalance, tokenAIcon, tokenBIcon, tokenAAmount, tokenBAmount, pools, approvingTokenA, approvingTokenB, supplying, tokenAAllowance, tokenBAllowance, loading, approvalModalVisible, approvalToken, approvalAmount, approving, liquidityInfo, inverted, tokenASupply, tokenBSupply } = this.state
         const { onModalToggle, walletConnected, walletAddress, signer, history, modalVisible, theme, onThemeToggle, ethBalance, vrapBalance } = this.props
         return (
             <>
@@ -531,6 +571,39 @@ class Liquidity extends Component {
 							onAddLiquidity={this.addLiquidity}
 							onRefresh={this.handleRefresh}
 						/>
+						{(walletConnected && !liquiditySectionVisible && (tokenA && tokenB) && !loading && liquidityInfo) && (
+							parseFloat(liquidityInfo.total) > 0 ? (
+								<>
+									<div className="flex-spaced-container" style={{alignItems: 'center', marginTop: '1rem', color: theme === 'light' ? '#000' : '#FFF', fontSize: '13px'}}>
+										<div>Price</div>
+										<div style={{textAlign: 'right', display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
+											{!inverted ? (
+												<div>1 {tokenA} = {(parseFloat(tokenBSupply)/parseFloat(tokenASupply)).toFixed(6)} {tokenB}</div>
+											) : (
+												<div>1 {tokenB} = {(parseFloat(tokenASupply)/parseFloat(tokenBSupply)).toFixed(6)} {tokenA}</div>
+											)}
+											<button className="invert-button" onClick={this.toggleInversion}>
+												<GrPowerCycle size={15} />
+											</button>
+										</div>
+									</div>
+									<div className="details-section">
+										<div className="flex-spaced-container" style={{alignItems: 'flex-start', color: theme === 'light' ? '#000' : '#FFF', fontSize: '13px'}}>
+											<div>Your total pooled tokens</div>
+											<div style={{textAlign: 'right'}}>
+												{parseFloat(liquidityInfo.total).toFixed(6)}
+											</div>
+										</div>
+										<div className="flex-spaced-container" style={{alignItems: 'flex-start', color: theme === 'light' ? '#000' : '#FFF', fontSize: '13px'}}>
+											<div>Your pool share</div>
+											<div style={{textAlign: 'right'}}>
+												{this.getPoolSharePercent(liquidityInfo.total, liquidityInfo.totalSupply)} %
+											</div>
+										</div>
+									</div>
+								</>
+							) : null
+						)}
 						<span style={{display: 'none'}}>{this.state.lpAddress}</span>
 						{liquiditySectionVisible ? (
 							<div className="exchange-button-container">
