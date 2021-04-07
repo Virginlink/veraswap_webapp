@@ -1993,6 +1993,53 @@ export const GlobalStyles = createGlobalStyle`
           background-color: transparent;
           color: ${({theme}) => theme.formControlText};
       }
+
+      .new-pool-details h1 {
+        font-family: "PT Sans Caption", sans-serif;
+        color: ${({theme}) => theme.formControlText} !important;
+        margin: 0;
+      }
+
+      .new-pool-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid ${({theme}) => theme.navbarButtonBackgroundColor};
+        background-color: ${({theme}) => theme.newPoolBlockBackgroundColor};
+        border-radius: 15px;
+        padding: 1rem;
+      }
+
+      .new-pool-logos {
+        display: flex;
+        align-items: center;
+        margin-left: 5px;
+      }
+
+      .new-pool-logos img {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+      }
+
+      .new-pool-logos img:nth-child(1) {
+        margin-right: 2px;
+      }
+
+      .details-grid {
+        font-family: "PT Sans Caption", sans-serif;
+        color: ${({theme}) => theme.formControlText};
+        display: grid;
+        grid-auto-rows: auto;
+        row-gap: 0.75rem;
+        margin: 1.75rem 0 1.25rem;
+      }
+
+      .details-grid > div {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
       
       @-moz-document url-prefix() {
         .input-container input {

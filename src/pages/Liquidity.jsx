@@ -46,6 +46,7 @@ class Liquidity extends Component {
 			approvalAmount: '',
 			approving: false,
 			inverted: false,
+			createLiquidityModalVisible: false
         }
     }
 
@@ -354,7 +355,7 @@ class Liquidity extends Component {
 				this.setState({[token === 'A' ? 'approvingTokenA' : 'approvingTokenB']: false}, () => {
 					notification.error({
 						message: `Couldn't Approve ${token === 'A' ? tokenA : tokenB}`,
-						description: err.message,
+						description: "Your transaction could not be processed. Please try again later.",
 					})
 				})
 			})	
@@ -362,7 +363,14 @@ class Liquidity extends Component {
 	}
 
 	supply = () => {
-		const { tokenA, tokenB, tokenAIcon, tokenBIcon, tokenAAddress, tokenBAddress, tokenAAmount, tokenBAmount, lpAddress } = this.state
+		const { tokenA, tokenB, tokenAIcon, tokenBIcon, tokenAAddress, tokenBAddress, tokenAAmount, tokenBAmount, lpAddress, liquidityInfo } = this.state
+		if (!liquidityInfo) {
+			this.setState({createLiquidityModalVisible: true})
+			return
+		} else if (!parseFloat(liquidityInfo.total) > 0) {
+			this.setState({createLiquidityModalVisible: true})
+			return
+		}
 		const { walletAddress, signer, theme } = this.props
 		const deadline = moment().add(1, 'years').format('X')
 		const data = {
@@ -374,7 +382,7 @@ class Liquidity extends Component {
 			deadline: parseFloat(deadline),
 			signer: signer,
 		}
-		this.setState({supplying: true}, () => {
+		this.setState({supplying: true, createLiquidityModalVisible: false}, () => {
 			addLiquidity(data)
 				.then((res) => {
 					if (res.success) {
@@ -473,7 +481,7 @@ class Liquidity extends Component {
 					this.setState({supplying: false}, () => {
 						notification.error({
 							message: "Couldn't add liquidity",
-							description: err.message
+							description: "Your transaction could not be processed. Please try again later."
 						})
 					})
 				})
@@ -542,8 +550,16 @@ class Liquidity extends Component {
 
 	getPoolSharePercent = (userTokens, totalTokens) => parseFloat((parseFloat(userTokens) / parseFloat(totalTokens)) * 100).toFixed(2)
 
+	handleCreateModalToggle = () => {
+		this.setState(state => {
+            return {
+                createLiquidityModalVisible: !state.createLiquidityModalVisible,
+            }
+        })
+	}
+
     render() {
-        const { liquiditySectionVisible, tokenA, tokenABalance, tokenB, tokenBBalance, tokenAIcon, tokenBIcon, tokenAAmount, tokenBAmount, pools, approvingTokenA, approvingTokenB, supplying, tokenAAllowance, tokenBAllowance, loading, approvalModalVisible, approvalToken, approvalAmount, approving, liquidityInfo, inverted, tokenASupply, tokenBSupply } = this.state
+        const { liquiditySectionVisible, tokenA, tokenABalance, tokenB, tokenBBalance, tokenAIcon, tokenBIcon, tokenAAmount, tokenBAmount, pools, approvingTokenA, approvingTokenB, supplying, tokenAAllowance, tokenBAllowance, loading, approvalModalVisible, approvalToken, approvalAmount, approving, liquidityInfo, inverted, tokenASupply, tokenBSupply, createLiquidityModalVisible } = this.state
         const { onModalToggle, walletConnected, walletAddress, signer, history, modalVisible, theme, onThemeToggle, ethBalance, vrapBalance } = this.props
         return (
             <>
@@ -667,7 +683,7 @@ class Liquidity extends Component {
 													) : (parseFloat(tokenBAmount) > parseFloat(tokenBAllowance)) ? (
 														<div className="exchange-button-container">
 																<button disabled={approvingTokenB || approvingTokenA} style={{marginBottom: '0.25rem'}} onClick={() => {
-																	this.setState({approvalToken: 'B'}, () => this.handleModalToggle())
+																	this.setState({approvalToken: 'B', approvalAmount: tokenBAmount}, () => this.handleModalToggle())
 																}}>
 																Approve {tokenB} {approvingTokenB && (<CircularProgress size={12} thickness={5} style={{color: theme === '#FFF' , position: 'relative', top: '1px'}} />)}
 															</button>
@@ -774,6 +790,67 @@ class Liquidity extends Component {
 										) : 'Invalid Amount' 
 									) : 'Enter Amount'
 								) : 'Approving'}
+							</button>
+						</div>
+					</div>
+				</Dialog>
+				<Dialog
+					open={createLiquidityModalVisible}
+					onClose={this.handleCreateModalToggle}
+					onBackdropClick={this.handleCreateModalToggle}
+					BackdropProps={{
+						style: {
+							zIndex: 0
+						}
+					}}
+                    className="app-modal"
+				>
+					<div className="modal-header flex-spaced-container" style={{color: theme === 'light' ? '#000' : '#FFF'}}>
+                        <div>
+                            You are creating a pool
+                        </div>
+                        <button className="close-modal-button" onClick={this.handleCreateModalToggle}>
+                            <RiCloseFill />
+                        </button>
+                    </div>
+					<div className="modal-content">
+						<div className="new-pool-details">
+							<div className="new-pool-title">
+								<h1>{tokenA}/{tokenB}</h1>
+								<div className="new-pool-logos">
+									<img src={tokenAIcon} alt="token-1-logo" />
+									<img src={tokenBIcon} alt="token-2-logo" />
+								</div>
+							</div>
+							<div className="details-grid">
+								<div>
+									<div>{tokenA} deposited</div>
+									<div>{tokenAAmount}</div>
+								</div>
+								<div>
+									<div>{tokenB} deposited</div>
+									<div>{tokenBAmount}</div>
+								</div>
+								<div>
+									<div>Rates</div>
+									<div>
+										1 {tokenA} = {parseFloat(tokenBAmount)/parseFloat(tokenAAmount).toFixed(4)} {tokenB}<br/>
+										1 {tokenB} = {parseFloat(tokenAAmount)/parseFloat(tokenBAmount).toFixed(4)} {tokenA}
+									</div>
+								</div>
+								<div>
+									<div>Share of Pool</div>
+									<div>100%</div>
+								</div>
+							</div>
+						</div>
+						<div className="staking-modal-footer">
+							<button
+								className="staking-modal-button-primary"
+								onClick={this.supply}
+								style={{width: '100%'}}
+							>
+								Create Pool & Supply
 							</button>
 						</div>
 					</div>

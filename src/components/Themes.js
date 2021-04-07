@@ -95,6 +95,7 @@ export const lightTheme = {
     poolCardBackgroundColor: '#FFF',
     rowHoverBackgroundColor: 'rgb(0 0 0 / 5%)',
     swapDividerColor: 'rgb(237,238,242)',
+    newPoolBlockBackgroundColor: '#FFF',
 }
 
 export const darkTheme = {
@@ -194,4 +195,5 @@ export const darkTheme = {
     poolCardBackgroundColor: 'rgb(64,68,79)',
     rowHoverBackgroundColor: 'rgb(64,68,79)',
     swapDividerColor: 'rgb(33,36,41)',
+    newPoolBlockBackgroundColor: 'rgb(33,36,41)',
 }
