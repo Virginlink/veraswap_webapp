@@ -36,7 +36,6 @@ class LPCard extends Component {
 			try {
 				this.setState({loading: true}, async () => {
 					const liquidityInfo = await getLPInfo(lpAddress, walletAddress, tokenAAddress, tokenBAddress)
-                    console.log(liquidityInfo)
 					this.setState({
 						liquidityInfo: liquidityInfo.data,
                         loading: false,

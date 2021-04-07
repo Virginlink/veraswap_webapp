@@ -129,7 +129,7 @@ export default class Pool extends Component {
                         <div className="flex-spaced-container">
                             <div>input</div>
                             {(walletConnected && walletAddress && tokenBBalance) && (
-                                <div style={{fontSize: '10px'}}><MdRefresh style={{cursor: 'pointer', position: 'relative', top: '1px'}} onClick={() => onRefresh(tokenA, 'B')} /> balance: <span style={{fontFamily: 'PT Sans Caption', fontSize: '12px'}}>{parseFloat(tokenBBalance).toFixed(6)}</span></div>
+                                <div style={{fontSize: '10px'}}><MdRefresh style={{cursor: 'pointer', position: 'relative', top: '1px'}} onClick={() => onRefresh(tokenB, 'B')} /> balance: <span style={{fontFamily: 'PT Sans Caption', fontSize: '12px'}}>{parseFloat(tokenBBalance).toFixed(6)}</span></div>
                             )}
                         </div>
                         <div className="input-container without-max">
