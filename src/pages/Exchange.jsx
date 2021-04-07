@@ -798,7 +798,7 @@ class Exchange extends Component {
 													<button 
 														disabled={approvingTokenA || approving} style={{marginBottom: '0.25rem'}}
 														onClick={() => {
-															this.setState({approvalToken: 'A'}, () => this.handleModalToggle())
+															this.setState({approvalToken: 'A', approvalAmount: tokenAAmount}, () => this.handleModalToggle())
 														}}>
 														Approve {tokenA} {approvingTokenA && (<CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />)}
 													</button>

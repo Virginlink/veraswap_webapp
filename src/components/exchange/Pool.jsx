@@ -32,7 +32,7 @@ export default class Pool extends Component {
     }
 
     render() {
-        const { liquiditySectionVisible, onSectionToggle, tokenA, tokenABalance, tokenB, tokenBBalance, walletConnected, walletAddress, onTokenAUpdate, onTokenBUpdate, tokenAIcon, tokenBIcon, tokenAAmount, tokenBAmount, onAmountChange, pools, onMax, onAddLiquidity, onRefresh, theme } = this.props
+        const { liquiditySectionVisible, onSectionToggle, tokenA, tokenABalance, tokenB, tokenBBalance, walletConnected, walletAddress, onTokenAUpdate, onTokenBUpdate, tokenAIcon, tokenBIcon, tokenAAmount, tokenBAmount, onAmountChange, pools, onMax, onAddLiquidity, onRefresh, theme, fetchingLiquidity } = this.props
         const { tokenAModalVisible, tokenBModalVisible } = this.state
         return (
             liquiditySectionVisible ? 
@@ -97,7 +97,7 @@ export default class Pool extends Component {
                                 value={tokenAAmount}
                                 inputMode="numeric"
                                 onChange={(e) => {
-                                    if (e.target.value.match(/^(\d+)?([.]?\d{0,9})?$/)) {
+                                    if (!fetchingLiquidity && e.target.value.match(/^(\d+)?([.]?\d{0,9})?$/)) {
                                         onAmountChange(e.target.value, 'A')
                                     }
                                 }}
@@ -137,7 +137,7 @@ export default class Pool extends Component {
                                 placeholder="0.0"
                                 value={tokenBAmount}
                                 onChange={(e) => {
-                                    if (e.target.value.match(/^(\d+)?([.]?\d{0,9})?$/)) {
+                                    if (!fetchingLiquidity && e.target.value.match(/^(\d+)?([.]?\d{0,9})?$/)) {
                                         onAmountChange(e.target.value, 'B')
                                     }
                                 }}

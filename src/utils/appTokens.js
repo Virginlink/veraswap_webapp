@@ -1,4 +1,4 @@
-import { TBLK_ABI, TBLK_ADDRESS, DONUT_ABI, DONUT_ADDRESS } from "./contracts";
+import { TBLK_ABI, TBLK_ADDRESS, DONUT_ABI, DONUT_ADDRESS, WBNB_ADDRESS, WBNB_ABI, BUSD_ADDRESS, BUSD_ABI } from "./contracts";
 import Empty from '../assets/icons/Empty.png';
 
 export const TOKENS = [
@@ -7,7 +7,6 @@ export const TOKENS = [
         symbol: 'tDonut',
         contractAddress: DONUT_ADDRESS,
         contractABI: DONUT_ABI,
-        totalSupply: "1000000",
         icon: Empty,
     },
     {
@@ -15,7 +14,20 @@ export const TOKENS = [
         symbol: 'tBLK',
         contractAddress: TBLK_ADDRESS,
         contractABI: TBLK_ABI,
-        totalSupply: "1000000",
         icon: Empty,
-    }
+    },
+    {
+        name: 'Wrapped BNB',
+        symbol: 'WBNB',
+        contractAddress: WBNB_ADDRESS,
+        contractABI: WBNB_ABI,
+        icon: Empty,
+    },
+    {
+        name: 'BUSD',
+        symbol: 'BUSD',
+        contractAddress: BUSD_ADDRESS,
+        contractABI: BUSD_ABI,
+        icon: Empty,
+    },
 ]

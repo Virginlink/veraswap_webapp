@@ -152,6 +152,18 @@ class Liquidity extends Component {
 							tokenASupply: liquidityInfo.data.A,
 							tokenBSupply: liquidityInfo.data.B,
 							loading: false,
+						}, () => {
+							if (parseFloat(liquidityInfo.data.total) > 0) {
+								const tokenAPrice = parseFloat(this.state.tokenBSupply)/parseFloat(this.state.tokenASupply)
+								const tokenBPrice = parseFloat(this.state.tokenASupply)/parseFloat(this.state.tokenBSupply)
+								if (this.state.tokenAAmount) {
+									const amount = parseFloat(this.state.tokenAAmount) * tokenAPrice
+									this.setState({tokenBAmount: amount.toFixed(6)})
+								} else if (this.state.tokenBAmount) {
+									const amount = parseFloat(this.state.tokenBAmount) * tokenBPrice
+									this.setState({tokenAAmount: amount.toFixed(6)})
+								}
+							}
 						})
 					}
 				})
@@ -555,6 +567,7 @@ class Liquidity extends Component {
 							</div>
 						)}
 						<Pool
+							fetchingLiquidity={loading}
 							theme={theme}
 							liquiditySectionVisible={liquiditySectionVisible}
                             pools={pools}
