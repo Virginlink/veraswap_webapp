@@ -363,7 +363,7 @@ class Liquidity extends Component {
 	}
 
 	supply = () => {
-		const { tokenA, tokenB, tokenAIcon, tokenBIcon, tokenAAddress, tokenBAddress, tokenAAmount, tokenBAmount, lpAddress, liquidityInfo } = this.state
+		const { liquidityInfo } = this.state
 		if (!liquidityInfo) {
 			this.setState({createLiquidityModalVisible: true})
 			return
@@ -371,6 +371,11 @@ class Liquidity extends Component {
 			this.setState({createLiquidityModalVisible: true})
 			return
 		}
+		this.supplyPool()
+	}
+
+	supplyPool = () => {
+		const { tokenA, tokenB, tokenAIcon, tokenBIcon, tokenAAddress, tokenBAddress, tokenAAmount, tokenBAmount, lpAddress } = this.state
 		const { walletAddress, signer, theme } = this.props
 		const deadline = moment().add(1, 'years').format('X')
 		const data = {
@@ -847,7 +852,7 @@ class Liquidity extends Component {
 						<div className="staking-modal-footer">
 							<button
 								className="staking-modal-button-primary"
-								onClick={this.supply}
+								onClick={this.supplyPool}
 								style={{width: '100%'}}
 							>
 								Create Pool & Supply
