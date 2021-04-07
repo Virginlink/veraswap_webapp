@@ -207,7 +207,7 @@ class Exchange extends Component {
 					})
 				} catch (err) {
 					this.setState({fetchingPrices: false}, () => {
-						if (err.message === `call revert exception (method="getAmountsIn(uint256,address[])", errorSignature="Error(string)", errorArgs=["ds-math-sub-underflow"], reason="ds-math-sub-underflow", code=CALL_EXCEPTION, version=abi/5.0.13)`) {
+						if (err.message.includes("ds-math-sub-underflow")) {
 							this.setState({
 								invalidPair: true,
 								tokenAAmount: '',
@@ -352,7 +352,7 @@ class Exchange extends Component {
 						})
 						.catch((err) => {
 							this.setState({estimatingA: false}, () => {
-								if (err.message === `call revert exception (method="getAmountsIn(uint256,address[])", errorSignature="Error(string)", errorArgs=["ds-math-sub-underflow"], reason="ds-math-sub-underflow", code=CALL_EXCEPTION, version=abi/5.0.13)`) {
+								if (err.message.includes("ds-math-sub-underflow")) {
 									this.setState({
 										invalidPair: true,
 										tokenAAmount: '',
@@ -382,7 +382,7 @@ class Exchange extends Component {
 						})
 						.catch((err) => {
 							this.setState({estimatingB: false}, () => {
-								if (err.message === `call revert exception (method="getAmountsIn(uint256,address[])", errorSignature="Error(string)", errorArgs=["ds-math-sub-underflow"], reason="ds-math-sub-underflow", code=CALL_EXCEPTION, version=abi/5.0.13)`) {
+								if (err.message.includes("ds-math-sub-underflow")) {
 									this.setState({
 										invalidPair: true,
 										tokenAAmount: '',
@@ -773,52 +773,60 @@ class Exchange extends Component {
 							) : 
 							liquidityInfo ? ( 
 								parseFloat(liquidityInfo.total) > 0 ? (
-									(!tokenAAmount || !tokenBAmount) ? (
-										<div className="exchange-button-container">
-											<button disabled>Enter an amount</button>
-										</div>
-									) : (((parseFloat(tokenAAmount) <= parseFloat(tokenABalance)) && ((parseFloat(tokenBAmount) <= parseFloat(tokenBBalance)))) ? (
-										((parseFloat(tokenAAmount) <= parseFloat(tokenAAllowance))) ? (
-											(parseFloat(impact) <= parseFloat(this.context.slippage)) ? (
-												<div className="exchange-button-container">
-													<button onClick={this.swap} disabled={loading || swapping}>Swap {swapping && (
-														<CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />
-													)}</button>
-												</div>
-											) : (
-												<div className="exchange-button-container">
-													<button disabled>
-														High Price Impact
-													</button>
-													<div style={{textAlign: 'center', fontSize: '13px', color: theme === 'light' ? '#000' : '#FFF', margin: '8px auto 0'}}>Set slippage higher than {impact} %</div>
-												</div>
+									!invalidPair ? (
+										(!tokenAAmount || !tokenBAmount) ? (
+											<div className="exchange-button-container">
+												<button disabled>Enter an amount</button>
+											</div>
+										) : (((parseFloat(tokenAAmount) <= parseFloat(tokenABalance)) && ((parseFloat(tokenBAmount) <= parseFloat(tokenBBalance)))) ? (
+											((parseFloat(tokenAAmount) <= parseFloat(tokenAAllowance))) ? (
+												(parseFloat(impact) <= parseFloat(this.context.slippage)) ? (
+													<div className="exchange-button-container">
+														<button onClick={this.swap} disabled={loading || swapping}>Swap {swapping && (
+															<CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />
+														)}</button>
+													</div>
+												) : (
+													<div className="exchange-button-container">
+														<button disabled>
+															High Price Impact
+														</button>
+														<div style={{textAlign: 'center', fontSize: '13px', color: theme === 'light' ? '#000' : '#FFF', margin: '8px auto 0'}}>Set slippage higher than {impact} %</div>
+													</div>
+												)
+											) : ((parseFloat(tokenAAmount) > parseFloat(tokenAAllowance)) ? (
+													<div className="exchange-button-container">
+														<button 
+															disabled={approvingTokenA || approving} style={{marginBottom: '0.25rem'}}
+															onClick={() => {
+																this.setState({approvalToken: 'A', approvalAmount: tokenAAmount}, () => this.handleModalToggle())
+															}}>
+															Approve {tokenA} {approvingTokenA && (<CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />)}
+														</button>
+														<button disabled>Swap</button>
+													</div>
+												) : (
+													<div className="exchange-button-container">
+														<button onClick={this.swap} disabled={loading || swapping}>Swap {swapping && (
+															<CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />
+														)}</button>
+													</div>
+												)	
 											)
-										) : ((parseFloat(tokenAAmount) > parseFloat(tokenAAllowance)) ? (
-												<div className="exchange-button-container">
-													<button 
-														disabled={approvingTokenA || approving} style={{marginBottom: '0.25rem'}}
-														onClick={() => {
-															this.setState({approvalToken: 'A', approvalAmount: tokenAAmount}, () => this.handleModalToggle())
-														}}>
-														Approve {tokenA} {approvingTokenA && (<CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />)}
-													</button>
-													<button disabled>Swap</button>
-												</div>
-											) : (
-												<div className="exchange-button-container">
-													<button onClick={this.swap} disabled={loading || swapping}>Swap {swapping && (
-														<CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />
-													)}</button>
-												</div>
-											)	
+										) : (
+											<div className="exchange-button-container">
+												<button disabled>
+													{(parseFloat(tokenAAmount) > parseFloat(tokenABalance)) ? `Insufficient ${tokenA} balance` : `Insufficient ${tokenB} balance`}
+												</button>
+											</div>
+										)
 										)
 									) : (
 										<div className="exchange-button-container">
 											<button disabled>
-												{(parseFloat(tokenAAmount) > parseFloat(tokenABalance)) ? `Insufficient ${tokenA} balance` : `Insufficient ${tokenB} balance`}
+												Invalid Pair
 											</button>
 										</div>
-									)
 									)
 								) : (
 									<div className="exchange-button-container">
