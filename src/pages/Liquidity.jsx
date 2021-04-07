@@ -89,6 +89,23 @@ class Liquidity extends Component {
 				this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, 'B')
 				this.fetchApproval(walletAddress, selectedToken[0].contractAddress, 'B')
 			}
+			if (tokenA && tokenB) {
+				this.fetchLiquidity()
+			}
+		} else if ((walletAddress !== prevProps.walletAddress) && !walletAddress) {
+			this.setState({
+				tokenAAmount: '',
+				tokenABalance: '',
+				tokenAAllowance: '',
+				tokenBAmount: '',
+				tokenBBalance: '',
+				tokenBAllowance: '',
+				liquidityInfo: null,
+				lpAddress: '',
+				tokenASupply: '',
+				tokenBSupply: '',
+				inverted: false,
+			})
 		}
 	}
 
@@ -177,7 +194,7 @@ class Liquidity extends Component {
     }
 
 	updateTokenA = (token) => {
-		const { walletAddress } = this.props;
+		const { walletAddress, walletConnected } = this.props;
 		const { tokenB } = this.state;
 		if (token.symbol !== tokenB) {
 			this.setState({
@@ -185,9 +202,11 @@ class Liquidity extends Component {
 				tokenAIcon: token.icon,
 				tokenAAddress: token.contractAddress,
 			}, () => {
-				this.fetchBalance(walletAddress, token.contractAddress, token.contractABI, 'A')
-				this.fetchApproval(walletAddress, token.contractAddress, 'A')
-				this.fetchLiquidity()
+				if (walletConnected) {
+					this.fetchBalance(walletAddress, token.contractAddress, token.contractABI, 'A')
+					this.fetchApproval(walletAddress, token.contractAddress, 'A')
+					this.fetchLiquidity()
+				}
 			})
 		} else {
 			this.swapTokens()
@@ -195,7 +214,7 @@ class Liquidity extends Component {
 	}
 
 	updateTokenB = (token) => {
-		const { walletAddress } = this.props;
+		const { walletAddress, walletConnected } = this.props;
 		const { tokenA } = this.state;
 		if (token.symbol !== tokenA) {
 			this.setState({
@@ -203,9 +222,11 @@ class Liquidity extends Component {
 				tokenBIcon: token.icon,
 				tokenBAddress: token.contractAddress,
 			}, () => {
-				this.fetchBalance(walletAddress, token.contractAddress, token.contractABI, 'B')
-				this.fetchApproval(walletAddress, token.contractAddress, 'B')
-				this.fetchLiquidity()
+				if (walletConnected) {
+					this.fetchBalance(walletAddress, token.contractAddress, token.contractABI, 'B')
+					this.fetchApproval(walletAddress, token.contractAddress, 'B')
+					this.fetchLiquidity()
+				}
 			})
 		} else {
 			this.swapTokens()
@@ -214,6 +235,7 @@ class Liquidity extends Component {
 
 	swapTokens = () => {
 		const { tokenA, tokenAIcon, tokenABalance, tokenB, tokenBIcon, tokenBBalance, tokenAAmount, tokenBAmount, tokenAAddress, tokenBAddress } = this.state;
+		const { walletConnected } = this.props
 		this.setState({
 			tokenB: tokenA,
 			tokenBIcon: tokenAIcon,
@@ -225,36 +247,48 @@ class Liquidity extends Component {
 			tokenAAddress: tokenBAddress,
 			tokenAAmount: tokenBAmount,
 			tokenBAmount: tokenAAmount,
-		}, () => this.fetchLiquidity())
+		}, () => {
+			if (walletConnected) {
+				this.fetchLiquidity()
+			}
+		})
 	}
 
 	updateAmount = (value, type) => {
-		const { liquidityInfo, tokenASupply, tokenBSupply } = this.state
+		const { liquidityInfo } = this.state
+		const { walletConnected } = this.props
         this.setState({
             [type === 'A' ? 'tokenAAmount' : 'tokenBAmount']: value,
         }, () => {
-			if (liquidityInfo) {
-				if (parseFloat(liquidityInfo.total) > 0) {
-					const tokenAPrice = parseFloat(tokenBSupply)/parseFloat(tokenASupply)
-					const tokenBPrice = parseFloat(tokenASupply)/parseFloat(tokenBSupply)
-					if (type === 'A') {
-						const amount = parseFloat(this.state.tokenAAmount) * tokenAPrice
-						if (this.state.tokenAAmount) {
-							this.setState({tokenBAmount: amount.toFixed(6)})
-						} else {
-							this.setState({tokenBAmount: ''})
-						}
-					} else if (type === 'B') {
-						const amount = parseFloat(this.state.tokenBAmount) * tokenBPrice
-						if (this.state.tokenBAmount) {
-							this.setState({tokenAAmount: amount.toFixed(6)})
-						} else {
-							this.setState({tokenAAmount: ''})
-						}
+			if (walletConnected) {
+				if (liquidityInfo) {
+					if (parseFloat(liquidityInfo.total) > 0) {
+						this.estimate(type)
 					}
 				}
 			}
 		})
+	}
+
+	estimate = (type) => {
+		const { tokenASupply, tokenBSupply, tokenAAmount, tokenBAmount } = this.state
+		const tokenAPrice = parseFloat(tokenBSupply)/parseFloat(tokenASupply)
+		const tokenBPrice = parseFloat(tokenASupply)/parseFloat(tokenBSupply)
+		if (type === 'A') {
+			const amount = parseFloat(tokenAAmount) * tokenAPrice
+			if (tokenAAmount) {
+				this.setState({tokenBAmount: amount.toFixed(6)})
+			} else {
+				this.setState({tokenBAmount: ''})
+			}
+		} else if (type === 'B') {
+			const amount = parseFloat(tokenBAmount) * tokenBPrice
+			if (tokenBAmount) {
+				this.setState({tokenAAmount: amount.toFixed(6)})
+			} else {
+				this.setState({tokenAAmount: ''})
+			}
+		}
 	}
 
 	handleMax = (token) => {

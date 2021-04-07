@@ -103,7 +103,7 @@ export default class Pool extends Component {
                                 }}
                             />
                             <div>
-                                {(tokenA && parseFloat(tokenABalance) > 0) && (
+                                {(walletConnected && tokenA && parseFloat(tokenABalance) > 0) && (
                                     <button className="max-button" onClick={() => onMax('A')}>max</button>
                                 )}
                                 <button
@@ -143,7 +143,7 @@ export default class Pool extends Component {
                                 }}
                             />
                             <div>
-                                {(tokenB && parseFloat(tokenBBalance) > 0) && (
+                                {(walletConnected && tokenB && parseFloat(tokenBBalance) > 0) && (
                                     <button className="max-button" onClick={() => onMax('B')}>max</button>
                                 )}
                                 <button
