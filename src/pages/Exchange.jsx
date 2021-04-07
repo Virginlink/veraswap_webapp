@@ -207,7 +207,7 @@ class Exchange extends Component {
 					})
 				} catch (err) {
 					this.setState({fetchingPrices: false}, () => {
-						if (err.message.includes("ds-math-sub-underflow")) {
+						if (err.message.includes("underflow")) {
 							this.setState({
 								invalidPair: true,
 								tokenAAmount: '',
@@ -352,7 +352,7 @@ class Exchange extends Component {
 						})
 						.catch((err) => {
 							this.setState({estimatingA: false}, () => {
-								if (err.message.includes("ds-math-sub-underflow")) {
+								if (err.message.includes("underflow")) {
 									this.setState({
 										invalidPair: true,
 										tokenAAmount: '',
@@ -382,7 +382,7 @@ class Exchange extends Component {
 						})
 						.catch((err) => {
 							this.setState({estimatingB: false}, () => {
-								if (err.message.includes("ds-math-sub-underflow")) {
+								if (err.message.includes("underflow")) {
 									this.setState({
 										invalidPair: true,
 										tokenAAmount: '',
