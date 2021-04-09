@@ -1345,7 +1345,8 @@ export const GlobalStyles = createGlobalStyle`
         box-shadow: none;
         text-transform: uppercase;
         margin-right: 5px;
-        font-weight : 600;
+        font-size: 12px;
+        font-weight: 600;
       }
       
       .asset-select-button {

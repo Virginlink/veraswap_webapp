@@ -438,9 +438,7 @@ class Exchange extends Component {
 		const { tokenABalance, tokenBBalance } = this.state;
 		this.setState({
 			[token === 'A' ? 'tokenAAmount' : 'tokenBAmount']: token === 'A' ? tokenABalance : tokenBBalance
-		}, () => {
-			this.estimate(token)	
-		})
+		}, () => this.estimate(token))
 	}
 
 	toggleInversion = () => {
@@ -643,7 +641,7 @@ class Exchange extends Component {
 						}
 					}
 				})
-				.catch((err) => {
+				.catch((_) => {
 					this.setState({swapping: false}, () => {
 						notification.error({
 							message: "Couldn't swap tokens",
