@@ -7,13 +7,12 @@ import { CircularProgress, Dialog } from '@material-ui/core'
 import { notification, Tooltip } from 'antd'
 import moment from 'moment'
 import Navbar from '../components/Navbar'
-import { ethers } from 'ethers'
 import { RiCloseFill } from 'react-icons/ri'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import { GrPowerCycle } from 'react-icons/gr'
 import AppContext from '../state/AppContext'
+import { PROVIDER } from '../utils/contracts'
 
-const PROVIDER = new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-2-s1.binance.org:8545/')
 var timerA = null
 var timerB = null
 class Exchange extends Component {

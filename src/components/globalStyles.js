@@ -1378,6 +1378,7 @@ export const GlobalStyles = createGlobalStyle`
         width: 24px;
         height: 24px;
         margin-right: 8px;
+        border-radius: 50%;
       }
 
       .swap-form .asset-select-button svg {
@@ -1397,6 +1398,7 @@ export const GlobalStyles = createGlobalStyle`
         width: 14px;
         height: 14px;
         margin-right: 8px;
+        border-radius: 50%;
       }
       
       .asset-select-button span {

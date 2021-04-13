@@ -8,10 +8,8 @@ import { TOKENS } from '../utils/appTokens'
 import { CircularProgress, Dialog } from '@material-ui/core'
 import { notification } from 'antd'
 import { RiCloseFill } from 'react-icons/ri'
-import { ethers } from 'ethers'
 import { GrPowerCycle } from 'react-icons/gr'
-
-const PROVIDER = new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-2-s1.binance.org:8545/')
+import { PROVIDER } from '../utils/contracts'
 
 class Liquidity extends Component {
     constructor(props) {

@@ -3,7 +3,7 @@ import Empty from '../assets/icons/Empty.png';
 import VRAP from '../assets/images/logo.png';
 import LIT from '../assets/images/lit.webp';
 
-export const TOKENS = [
+export const TESTNET_TOKENS = [
     {
         name: 'Test DonutSwap Token',
         symbol: 'tDonut',
@@ -34,7 +34,7 @@ export const TOKENS = [
     },
 ]
 
-export const MAINNET_TOKENS = [
+export const TOKENS = [
     {   
         name : "VeraSwap",
         symbol : "VRAP",

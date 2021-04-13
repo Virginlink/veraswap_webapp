@@ -1,9 +1,7 @@
 import { ethers } from "ethers"
 import CryptoJS from 'crypto-js'
 import Empty from '../assets/icons/Empty.png'
-import { FACTORY_ABI, FACTORY_ADDRESS, ROUTER_ABI, ROUTER_ADDRESS, DONUT_ABI } from "./contracts"
-
-const PROVIDER = new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-2-s1.binance.org:8545/')
+import { FACTORY_ABI, FACTORY_ADDRESS, ROUTER_ABI, ROUTER_ADDRESS, TOKEN_ABI, PROVIDER } from "./contracts"
 
 const factoryContract = new ethers.Contract(FACTORY_ADDRESS, FACTORY_ABI, PROVIDER)
 
@@ -30,7 +28,7 @@ export const getTokenBalance = (walletAddress, contractAddress, contractABI) => 
 export const getTokenSupply = (contractAddress) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const contract = new ethers.Contract(contractAddress, DONUT_ABI, PROVIDER)
+            const contract = new ethers.Contract(contractAddress, TOKEN_ABI, PROVIDER)
             let totalSupply = await contract.totalSupply()
             totalSupply = ethers.utils.formatUnits(totalSupply, 18)
             resolve({
@@ -49,7 +47,7 @@ export const getTokenSupply = (contractAddress) => {
 export const getTokenApproval = (walletAddress, contractAddress) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const contract = new ethers.Contract(contractAddress, DONUT_ABI, PROVIDER)
+            const contract = new ethers.Contract(contractAddress, TOKEN_ABI, PROVIDER)
             let allowance = await contract.allowance(walletAddress, ROUTER_ADDRESS)
             allowance = ethers.utils.formatUnits(allowance, 18)
             resolve(allowance)
@@ -112,9 +110,9 @@ export const getLPAddress = (addressA, addressB) => {
 export const getLPInfo = (pairAddress, walletAddress, tokenAAddress, tokenBAddress) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const contract = new ethers.Contract(pairAddress, DONUT_ABI, PROVIDER)
-            const tokenAContract = new ethers.Contract(tokenAAddress, DONUT_ABI, PROVIDER)
-            const tokenBContract = new ethers.Contract(tokenBAddress, DONUT_ABI, PROVIDER)
+            const contract = new ethers.Contract(pairAddress, TOKEN_ABI, PROVIDER)
+            const tokenAContract = new ethers.Contract(tokenAAddress, TOKEN_ABI, PROVIDER)
+            const tokenBContract = new ethers.Contract(tokenBAddress, TOKEN_ABI, PROVIDER)
             let totalSupply = await contract.totalSupply()
             totalSupply = ethers.utils.formatUnits(totalSupply, 18)
             let totalPooledTokens = await contract.balanceOf(walletAddress)
@@ -151,7 +149,7 @@ export const getLPInfo = (pairAddress, walletAddress, tokenAAddress, tokenBAddre
 export const approveToken = (contractAddress, signer, amount) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const contract = new ethers.Contract(contractAddress, DONUT_ABI, signer)
+            const contract = new ethers.Contract(contractAddress, TOKEN_ABI, signer)
             const result = await contract.approve(ROUTER_ADDRESS, ethers.utils.parseUnits(amount, 18))
             resolve({
                 success: true,
@@ -353,7 +351,7 @@ export const fetchImportedTokens = () => {
 export const searchToken = (address) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const contract = new ethers.Contract(address, DONUT_ABI, PROVIDER)
+            const contract = new ethers.Contract(address, TOKEN_ABI, PROVIDER)
             const symbol = await contract.symbol()
             const name = await contract.name()
             const totalSupply = await contract.totalSupply()
@@ -363,9 +361,9 @@ export const searchToken = (address) => {
                     name: name,
                     symbol: symbol,
                     contractAddress: address,
-                    icon: Empty,
+                    icon: `https://github.com/trustwallet/assets/blob/master/blockchains/smartchain/assets/${address}/logo.png?raw=true`,
                     totalSupply: totalSupply.toString(),
-                    contractABI: DONUT_ABI,
+                    contractABI: TOKEN_ABI,
                 }
             })
         } catch (err) {
@@ -380,7 +378,7 @@ export const searchToken = (address) => {
 export const getPoolName = (address) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const contract = new ethers.Contract(address, DONUT_ABI, PROVIDER)
+            const contract = new ethers.Contract(address, TOKEN_ABI, PROVIDER)
             const symbol = await contract.symbol()
             const name = await contract.name()
             resolve({

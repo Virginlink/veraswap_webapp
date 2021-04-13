@@ -7,10 +7,7 @@ import { getLPInfo, getTokenApproval, approveToken, fetchPoolData, storePoolData
 import { CircularProgress } from '@material-ui/core'
 import { notification } from 'antd'
 import RemoveLP from '../components/exchange/RemoveLP'
-import { ethers } from 'ethers'
-
-const PROVIDER = new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-2-s1.binance.org:8545/')
-
+import { PROVIDER } from '../utils/contracts'
 class RemoveLiquidity extends Component {
     constructor(props) {
         super(props)
