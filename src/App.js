@@ -22,8 +22,11 @@ import {TOKEN} from './utils/tokens';
 import './App.css';
 import './components/Navbar.css';
 import './components/Sale/Sale.css';
-import { useWallet } from 'use-wallet'
 import { notification } from 'antd';
+import Exchange from './pages/Exchange';
+import Liquidity from './pages/Liquidity';
+import ImportLiquidity from './pages/ImportLiquidity';
+import RemoveLiquidity from './pages/RemoveLiquidity';
 const {ethers} = require('ethers');
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -34,7 +37,7 @@ class App extends Component {
 	constructor() {
 		super();
 		this.state={
-			theme: 'light',
+			theme: 'dark',
 			connectWalletModalVisible: false,
 			showWalletConnection: false,
 			selectedWallet: 'metamask',
@@ -596,6 +599,78 @@ class App extends Component {
 								onResetStakeStatus={this.resetStakeStatus}
 							/>
 						)} 
+					/>
+					<Route
+						exact
+						path="/swap"
+						render={(props) => (
+							<Exchange
+								{...props}
+								theme={theme}
+								onThemeToggle={this.toggleTheme}
+								walletConnected={walletConnected}
+								walletAddress={this.state.walletAddress}
+								onModalToggle={this.toggleWalletConnectModal}
+								modalVisible={connectWalletModalVisible}
+								signer={this.state.signer}
+								ethBalance = {this.state.ethBalance}
+								vrapBalance = {this.state.vrapBalance}
+							/>
+						)}
+					/>
+					<Route
+						exact
+						path="/pool"
+						render={(props) => (
+							<Liquidity
+								{...props}
+								theme={theme}
+								onThemeToggle={this.toggleTheme}
+								walletConnected={walletConnected}
+								walletAddress={this.state.walletAddress}
+								onModalToggle={this.toggleWalletConnectModal}
+								modalVisible={connectWalletModalVisible}
+								signer={this.state.signer}
+								ethBalance = {this.state.ethBalance}
+								vrapBalance = {this.state.vrapBalance}
+							/>
+						)}
+					/>
+					<Route
+						exact
+						path="/pool/remove"
+						render={(props) => (
+							<RemoveLiquidity
+								{...props}
+								theme={theme}
+								onThemeToggle={this.toggleTheme}
+								walletConnected={walletConnected}
+								walletAddress={this.state.walletAddress}
+								onModalToggle={this.toggleWalletConnectModal}
+								modalVisible={connectWalletModalVisible}
+								signer={this.state.signer}
+								ethBalance = {this.state.ethBalance}
+								vrapBalance = {this.state.vrapBalance}
+							/>
+						)}
+					/>
+					<Route
+						exact
+						path="/find"
+						render={(props) => (
+							<ImportLiquidity
+								{...props}
+								theme={theme}
+								onThemeToggle={this.toggleTheme}
+								walletConnected={walletConnected}
+								walletAddress={this.state.walletAddress}
+								onModalToggle={this.toggleWalletConnectModal}
+								modalVisible={connectWalletModalVisible}
+								signer={this.state.signer}
+								ethBalance = {this.state.ethBalance}
+								vrapBalance = {this.state.vrapBalance}
+							/>
+						)}
 					/>
 					<Redirect path="/" to="/stake" />
 				</Switch>

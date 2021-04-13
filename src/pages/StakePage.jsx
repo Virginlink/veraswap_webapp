@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import Navbar from '../components/Navbar'
 import Stake from '../components/Stake/Stake'
-import {withRouter} from 'react-router-dom';
 
 export default class StakePage extends Component {
 

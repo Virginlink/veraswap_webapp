@@ -96,7 +96,7 @@
     box-sizing: border-box;
     margin: 0px;
     min-width: 0px;
-    font-family: 'Inter var', 'sans-serif';
+    font-family: 'PT Sans Caption', 'sans-serif';
     font-weight: 600;
     color: #FFF;
 }
@@ -120,7 +120,7 @@
     min-width: 0px;
     font-weight: 500;
     color: white;
-    font-family: 'Inter var', 'sans-serif';
+    font-family: 'PT Sans Caption', 'sans-serif';
     font-size: 14px;
     line-height: 1.1rem;
 }

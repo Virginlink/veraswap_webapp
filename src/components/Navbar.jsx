@@ -3,11 +3,14 @@ import { Tooltip } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { ClickAwayListener, Dialog, Fade } from '@material-ui/core';
 import Logo from '../assets/images/logo.png';
+import AppContext from '../state/AppContext';
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Fade timeout={{enter: 1000, exit: 2000}} ref={ref} {...props} />;
 });
 
 class Navbar extends Component {
+    static contextType = AppContext;
+
     constructor() {
         super()
         this.state={
@@ -16,7 +19,8 @@ class Navbar extends Component {
             moonModalVisible: false,
             connectModalVisible: false,
             settingsVisible: false,
-            tolerance: '0.5',
+            localSlippage: '',
+            slippage: '',
             deadline: '',
             expertModeOn: false,
             expertModeConfirmationModalVisible: false,
@@ -35,6 +39,25 @@ class Navbar extends Component {
             this.setState({expertModeOn: true})
         }
         this.setState({theme: this.props.theme})
+        const { deadline, slippage } = this.context;
+        this.setState({
+            deadline: deadline,
+            slippage: slippage
+        })
+    }
+
+    componentDidUpdate() {
+        const { deadline, slippage } = this.context;
+        if (deadline !== this.state.deadline) {
+            this.setState({
+                deadline: deadline
+            })
+        }
+        if (slippage !== this.state.slippage) {
+            this.setState({
+                slippage: slippage
+            })
+        }
     }
     
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -50,15 +73,15 @@ class Navbar extends Component {
         return null
     }
 
-    handleToleranceChange = e => {
-        if (!e.target.value.match(/[^0-9.]/g)) {
-            console.log(e.target.value)
-            this.setState({tolerance: e.target.value})
+    handleSlippageChange = e => {
+        const { updateSlippage } = this.context
+        if (e.target.value.match(/^(\d+)?([.]?\d{0,9})?$/)) {
+            this.setState({slippage: e.target.value, localSlippage: e.target.value}, () => updateSlippage(e.target.value))
         }
     }
 
     handleDeadlineChange = e => {
-        if (!e.target.value.match(/[^0-9]/g)) {
+        if (e.target.value.match(/^[0-9]*$/)) {
             this.setState({deadline: e.target.value})
         }
     }
@@ -84,8 +107,35 @@ class Navbar extends Component {
         }
     }
 
+    handleMenuClose = () => {
+        const { updateDeadline, updateSlippage } = this.context;
+        const { localDeadline, slippage, localSlippage } = this.state;
+        this.setState({settingsVisible: false}, () => {
+            if (localDeadline) {
+                setTimeout(
+                    () => {
+                        updateDeadline(localDeadline)
+                        this.setState({localDeadline: ''})
+                    },
+                    500
+                )
+            }
+            if (parseFloat(slippage) < 0.1) {
+                updateSlippage("0.5")
+            }
+            if (localSlippage) {
+                setTimeout(
+                    () => {
+                        this.setState({localSlippage: ''})
+                    },
+                    500
+                )
+            }
+        })
+    }
+
     render() {
-        const {moonModalVisible, settingsVisible, tolerance, deadline, expertModeOn, expertModeConfirmationModalVisible, theme, moreLinksVisible, walletConnected, loggedIn, claimModalVisible, walletAddress, addressValid, moonBalance, addressError} = this.state;
+        const {moonModalVisible, settingsVisible, slippage, deadline, expertModeOn, expertModeConfirmationModalVisible, theme, moreLinksVisible, walletConnected, loggedIn, claimModalVisible, walletAddress, addressValid, moonBalance, addressError, localSlippage} = this.state;
         return (
             <div className="navbar-container">
                 <div className="navbar">
@@ -98,8 +148,8 @@ class Navbar extends Component {
                         <div className="navbar-pages-container">
                             <a className={`${this.props.active === 'sale' && 'active-page'}`} onClick={() => this.props.history.push('/sale')}>Sale</a>
                             <a className={`${this.props.active === 'stake' && 'active-page'}`} onClick={() => this.props.history.push('/stake')}>Stake</a>
-                            <a id="swap-nav-link">Swap</a>
-                            <a id="pool-nav-link">Pool</a>
+                            <a className={`${this.props.active === 'swap' && 'active-page'}`} onClick={() => this.props.history.push('/swap')} id="swap-nav-link">Swap</a>
+                            <a className={`${this.props.active === 'pool' && 'active-page'}`} onClick={() => this.props.history.push('/pool')} id="pool-nav-link">Pool</a>
                         </div>
                     </div>
                     <div className="navbar-actions-main-container">
@@ -157,7 +207,7 @@ class Navbar extends Component {
                                     }
                                 </button>
                                 {settingsVisible && (
-                                    <ClickAwayListener onClickAway={() => this.setState({settingsVisible: false})}>
+                                    <ClickAwayListener onClickAway={this.handleMenuClose}>
                                         <span className="settings-menu">
                                             <div className="grid" style={{padding: '1rem'}}>
                                                 <div className="settings-title">Transaction Settings</div>
@@ -180,18 +230,18 @@ class Navbar extends Component {
                                                             </span>
                                                         </div>
                                                         <div className="settings-button-group">
-                                                            <button className={`tolerance-button ${tolerance === '0.1' && 'tolerance-active'}`} onClick={() => this.setState({tolerance: '0.1'})}>0.1%</button>
-                                                            <button className={`tolerance-button ${tolerance === '0.5' && 'tolerance-active'}`} onClick={() => this.setState({tolerance: '0.5'})}>0.5%</button>
-                                                            <button className={`tolerance-button ${tolerance === '1' && 'tolerance-active'}`} onClick={() => this.setState({tolerance: '1'})}>1%</button>
+                                                            <button className={`tolerance-button ${slippage === '0.1' && 'tolerance-active'}`} onClick={() => this.setState({slippage: '0.1'}, () => this.context.updateSlippage("0.1"))}>0.1%</button>
+                                                            <button className={`tolerance-button ${slippage === '0.5' && 'tolerance-active'}`} onClick={() => this.setState({slippage: '0.5'}, () => this.context.updateSlippage("0.5"))}>0.5%</button>
+                                                            <button className={`tolerance-button ${slippage === '1' && 'tolerance-active'}`} onClick={() => this.setState({slippage: '1'}, () => this.context.updateSlippage("1"))}>1%</button>
                                                             <button tabIndex="-1" className="tolerance-input-button">
                                                                 <div className="tolerance-input-container">
-                                                                    <input className="tolerance-input" onChange={this.handleToleranceChange} value={`${tolerance || '0.00'}`} />
+                                                                    <input className="tolerance-input" onChange={this.handleSlippageChange} placeholder={slippage} value={localSlippage} />
                                                                     <span style={{position: 'relative', top: '1px'}}>%</span>
                                                                 </div>
                                                             </button>
                                                         </div>
                                                         {
-                                                            tolerance === '0.1' &&
+                                                            slippage === '0.1' &&
                                                             
                                                             <div style={{fontSize: '14px', paddingTop: '7px', color: 'rgb(243, 132, 30)'}}>
                                                                 Your transaction may fail
