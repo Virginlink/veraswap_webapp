@@ -21,7 +21,7 @@ class AppProvider extends Component {
     }
 
 	updateSlippage = (newSlippage) => {
-		this.setState({slippage: parseFloat(newSlippage) > 0 ? newSlippage : "0.5"}, () => {
+		this.setState({slippage: parseFloat(newSlippage) > 0 ? newSlippage : "20"}, () => {
 			storeValue('ST', this.state.slippage)
 		})
 	}
