@@ -2096,17 +2096,17 @@ export const GlobalStyles = createGlobalStyle`
 
     @media only screen and (max-width: 500px) {
         .navbar-actions-main-container {
-            flex-direction: row;
+            flex-direction: column;
             align-items: flex-end;
-            height: 60px;
+            height: 125px;
         }
 
         .settings-menu {
-            top: -26rem;
+            top: -26.25rem;
         }
     
         .links-container {
-            top: -19.25rem;
+            top: -16.25rem;
         }
     }
 
@@ -2118,5 +2118,23 @@ export const GlobalStyles = createGlobalStyle`
         }
     }
     
+    @media only screen and (max-width: 400px) {
+      .navbar-actions-main-container {
+        height: 180px;
+      }
+      
+      .navbar-actions-1 {
+          flex-direction: column-reverse;
+          align-items: flex-end;
+      }
+
+      .settings-menu {
+          top: -30rem;
+      }
+
+      .links-container {
+          top: -20rem;
+      }
+    }
     
 `
