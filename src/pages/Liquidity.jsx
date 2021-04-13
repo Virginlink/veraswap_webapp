@@ -206,7 +206,7 @@ class Liquidity extends Component {
     }
 
 	storeNewPool = (newPool, hash) => {
-		console.log('NEW POOL', newPool)
+		// console.log('NEW POOL', newPool)
 		let pools = fetchPoolData()
 		if (pools) {
 			const poolExists = pools.data.filter((pool) => (pool.tokenA === newPool.tokenA) && (pool.tokenB) === newPool.tokenB).length > 0

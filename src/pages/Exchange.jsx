@@ -804,7 +804,7 @@ class Exchange extends Component {
 											<div className="exchange-button-container">
 												<button disabled>Enter an amount</button>
 											</div>
-										) : (((parseFloat(tokenAAmount) <= parseFloat(tokenABalance)) && ((parseFloat(tokenBAmount) <= parseFloat(tokenBBalance)))) ? (
+										) : (((parseFloat(tokenAAmount) <= parseFloat(tokenABalance))) ? (
 											((parseFloat(tokenAAmount) <= parseFloat(tokenAAllowance))) ? (
 												(parseFloat(impact) <= parseFloat(this.context.slippage)) ? (
 													<div className="exchange-button-container">
@@ -842,7 +842,7 @@ class Exchange extends Component {
 										) : (
 											<div className="exchange-button-container">
 												<button disabled>
-													{(parseFloat(tokenAAmount) > parseFloat(tokenABalance)) ? `Insufficient ${tokenA} balance` : `Insufficient ${tokenB} balance`}
+													Insufficient {tokenA} balance
 												</button>
 											</div>
 										)
