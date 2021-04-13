@@ -154,8 +154,8 @@ class Liquidity extends Component {
 			})
 	}
 
-    fetchLiquidity = () => {
-		const { tokenAAddress, tokenBAddress } = this.state
+    fetchLiquidity = (createPool = false, hash) => {
+		const { tokenA, tokenB, tokenAIcon, tokenBIcon, tokenAAddress, tokenBAddress } = this.state
         if (tokenAAddress && tokenBAddress) {
 			try {
 				this.setState({loading: true}, async () => {
@@ -181,6 +181,18 @@ class Liquidity extends Component {
 									const amount = parseFloat(this.state.tokenBAmount) * tokenBPrice
 									this.setState({tokenAAmount: amount.toFixed(6)})
 								}
+								if (createPool) {
+									const createdPool = {
+										tokenA: tokenA,
+										tokenAIcon: tokenAIcon,
+										tokenAAddress: tokenAAddress,
+										tokenB: tokenB,
+										tokenBIcon: tokenBIcon,
+										tokenBAddress: tokenBAddress,
+										lpAddress: lpAddress,
+									}
+									this.storeNewPool(createdPool, hash)
+								}
 							}
 						})
 					}
@@ -192,6 +204,57 @@ class Liquidity extends Component {
 			}
 		}
     }
+
+	storeNewPool = (newPool, hash) => {
+		console.log('NEW POOL', newPool)
+		let pools = fetchPoolData()
+		if (pools) {
+			const poolExists = pools.data.filter((pool) => (pool.tokenA === newPool.tokenA) && (pool.tokenB) === newPool.tokenB).length > 0
+			if (!poolExists) {
+				pools.data.push(newPool)
+				storePoolData(pools)
+				this.setState({pools: pools.data}, () => this.handleCreatePoolSuccess(hash))
+			} else {
+				this.handleCreatePoolSuccess(hash)
+			}
+		} else {
+			const newPools = {
+				data: [newPool]
+			}
+			storePoolData(newPools)
+			this.setState({pools: newPools.data}, () => this.handleCreatePoolSuccess(hash))
+		}
+	}
+
+	handleCreatePoolSuccess = (hash) => {
+		const { walletAddress } = this.props;
+		const { tokenAAddress, tokenBAddress } = this.state;
+		notification.close('supplyProcessingNotification')
+		const Link = () => (
+			<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${hash}`} onClick={() => notification.close('supplySuccessNotification')}>View Transaction</a>
+		)
+		notification.success({
+			key: 'supplySuccessNotification',
+			message: 'Liquidity added successfully. You can view the transaction here.',
+			btn: <Link />,
+			duration: 0
+		})
+		this.setState({
+			supplying: false,
+			tokenAAmount: '',
+			tokenBAmount: '',
+		}, () => {
+			const importedTokens = fetchImportedTokens()
+			let allTokens = [...TOKENS]
+			if (importedTokens) {
+				allTokens = [...TOKENS, ...importedTokens.data]
+			}
+			const A = allTokens.filter((token) => token.symbol === this.state.tokenA)[0]
+			const B = allTokens.filter((token) => token.symbol === this.state.tokenB)[0]
+			this.fetchBalance(walletAddress, tokenAAddress, A.contractABI, 'A')
+			this.fetchBalance(walletAddress, tokenBAddress, B.contractABI, 'B')
+		})
+	}
 
 	updateTokenA = (token) => {
 		const { walletAddress, walletConnected } = this.props;
@@ -452,57 +515,21 @@ class Liquidity extends Component {
 										let reciept = await PROVIDER.getTransaction(res.data.hash)
 										// console.log('RECEIPT', reciept)
 										if(reciept) {
-											this.fetchLiquidity()
-											const createdPool = {
-												tokenA: tokenA,
-												tokenAIcon: tokenAIcon,
-												tokenAAddress: tokenAAddress,
-												tokenB: tokenB,
-												tokenBIcon: tokenBIcon,
-												tokenBAddress: tokenBAddress,
-												lpAddress: lpAddress,
-											}
-											//console.log(createdPool)
-											let pools = fetchPoolData()
-											if (pools) {
-												const poolExists = pools.data.filter((pool) => (pool.tokenA === createdPool.tokenA) && (pool.tokenB) === createdPool.tokenB).length > 0
-												if (!poolExists) {
-													pools.data.push(createdPool)
-													storePoolData(pools)
-													this.setState({pools: pools.data})
+											if (lpAddress) {
+												const createdPool = {
+													tokenA: tokenA,
+													tokenAIcon: tokenAIcon,
+													tokenAAddress: tokenAAddress,
+													tokenB: tokenB,
+													tokenBIcon: tokenBIcon,
+													tokenBAddress: tokenBAddress,
+													lpAddress: lpAddress,
 												}
+												this.storeNewPool(createdPool, res.data.hash)
+												this.fetchLiquidity()
 											} else {
-												const newPool = {
-													data: [createdPool]
-												}
-												storePoolData(newPool)
-												this.setState({pools: newPool.data})
+												this.fetchLiquidity(true, res.data.hash)
 											}
-											notification.close('supplyProcessingNotification')
-											const Link = () => (
-												<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`} onClick={() => notification.close('supplySuccessNotification')}>View Transaction</a>
-											)
-											notification.success({
-												key: 'supplySuccessNotification',
-												message: 'Liquidity added successfully. You can view the transaction here.',
-												btn: <Link />,
-												duration: 0
-											})
-											this.setState({
-												supplying: false,
-												tokenAAmount: '',
-												tokenBAmount: '',
-											}, () => {
-												const importedTokens = fetchImportedTokens()
-												let allTokens = [...TOKENS]
-												if (importedTokens) {
-													allTokens = [...TOKENS, ...importedTokens.data]
-												}
-												const A = allTokens.filter((token) => token.symbol === this.state.tokenA)[0]
-												const B = allTokens.filter((token) => token.symbol === this.state.tokenB)[0]
-												this.fetchBalance(walletAddress, tokenAAddress, A.contractABI, 'A')
-												this.fetchBalance(walletAddress, tokenBAddress, B.contractABI, 'B')
-											})
 											clearInterval(intervalId)
 										}
 									} catch(e) {
