@@ -36,7 +36,6 @@ export default class CurrencySelectModal extends Component {
                     .then((res) => {
                         this.setState({searching: false}, () => {
                             if (res.success) {
-                                console.log(res.data)
                                 this.setState({searchedToken: res.data})
                             }
                         })

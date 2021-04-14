@@ -17,9 +17,11 @@ class RemoveLiquidity extends Component {
             fetchingApproval: false,
 			tokenA: '',
 			tokenAIcon: Empty,
+			tokenADecimals: '',
             totalBTokens: '',
 			tokenB: '',
 			tokenBIcon: '',
+			tokenBDecimals: '',
 			lpAddress: '',
             lpAllowance: '',
             approvingLP: false,
@@ -41,10 +43,12 @@ class RemoveLiquidity extends Component {
                 this.setState({
                     tokenA: tokenA.symbol,
                     tokenAIcon: tokenA.icon,
+					tokenADecimals: tokenA.decimals,
                     tokenAAddress: tokenA.address,
                     totalATokens: tokenA.supply,
                     tokenB: tokenB.symbol,
                     tokenBIcon: tokenB.icon,
+					tokenBDecimals: tokenB.decimals,
                     tokenBAddress: tokenB.address,
                     totalBTokens: tokenB.supply,
                     lpAddress: lpAddress,
@@ -100,7 +104,7 @@ class RemoveLiquidity extends Component {
 
 	fetchApproval = (walletAddress, contractAddress) => {
         this.setState({fetchingApproval: true}, () => {
-            getTokenApproval(walletAddress, contractAddress)
+            getTokenApproval(walletAddress, contractAddress, 18)
 			.then((allowance) => {
                 this.setState({fetchingApproval: false}, () => {
                     this.setState({
@@ -164,6 +168,7 @@ class RemoveLiquidity extends Component {
 				lpAddress,
 				this.props.signer,
 				liquidity,
+				18
 			).then((res) => {
 				if (res.success) {
 					// console.log(res.data)
@@ -233,7 +238,7 @@ class RemoveLiquidity extends Component {
 	}
 
 	removeLP = () => {
-		const { tokenAAddress, tokenBAddress, tokensInPool, percent, lpAddress } = this.state
+		const { tokenAAddress, tokenBAddress, tokensInPool, percent, lpAddress, tokenADecimals, tokenBDecimals } = this.state
 		const { walletAddress, signer, history, theme } = this.props
 		const deadline = moment().add(1, 'years').format('X')
         const liquidity = (parseFloat(tokensInPool) * (percent/100)).toString()
@@ -244,6 +249,8 @@ class RemoveLiquidity extends Component {
             liquidity: liquidity,
 			deadline: parseFloat(deadline),
 			signer: signer,
+			decimalsA: tokenADecimals,
+			decimalsB: tokenBDecimals,
 		}
 		this.setState({removingLP: true}, () => {
 			removeLiquidity(data)

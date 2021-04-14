@@ -19,6 +19,7 @@ class Liquidity extends Component {
             liquiditySectionVisible: true,
 			tokenA: TOKENS[0].symbol,
 			tokenAIcon: TOKENS[0].icon,
+			tokenADecimals: TOKENS[0].decimals,
 			tokenAAddress: TOKENS[0].contractAddress,
 			tokenABalance: '',
 			tokenAAmount: '',
@@ -28,6 +29,7 @@ class Liquidity extends Component {
 			tokenASupply: '',
 			tokenB: '',
 			tokenBIcon: '',
+			tokenBDecimals: '',
 			tokenBAddress: '',
 			tokenBBalance: '',
 			tokenBAmount: '',
@@ -57,8 +59,8 @@ class Liquidity extends Component {
 				allTokens = [...TOKENS, ...importedTokens.data]
 			}
             const selectedToken = allTokens.filter((token) => token.symbol === this.state.tokenA)
-			this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, 'A')
-			this.fetchApproval(walletAddress, selectedToken[0].contractAddress, 'A')
+			this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, selectedToken[0].decimals, 'A')
+			this.fetchApproval(walletAddress, selectedToken[0].contractAddress, selectedToken[0].decimals, 'A')
 			const pools = fetchPoolData()
 			if (pools) {
 				this.setState({pools: pools.data})
@@ -80,12 +82,12 @@ class Liquidity extends Component {
 				allTokens = [...TOKENS, ...importedTokens.data]
 			}
 			const selectedToken = allTokens.filter((token) => token.symbol === tokenA)
-			this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, 'A')
-			this.fetchApproval(walletAddress, selectedToken[0].contractAddress, 'A')
+			this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, selectedToken[0].decimals, 'A')
+			this.fetchApproval(walletAddress, selectedToken[0].contractAddress, selectedToken[0].decimals, 'A')
 			if (tokenB) {
 				const selectedToken = allTokens.filter((token) => token.symbol === tokenB)
-				this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, 'B')
-				this.fetchApproval(walletAddress, selectedToken[0].contractAddress, 'B')
+				this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, selectedToken[0].decimals, 'B')
+				this.fetchApproval(walletAddress, selectedToken[0].contractAddress, selectedToken[0].decimals, 'B')
 			}
 			if (tokenA && tokenB) {
 				this.fetchLiquidity()
@@ -122,8 +124,8 @@ class Liquidity extends Component {
         })
     }
 
-	fetchBalance = (walletAddress, contractAddress, contractABI, token) => {
-		getTokenBalance(walletAddress, contractAddress, contractABI)
+	fetchBalance = (walletAddress, contractAddress, contractABI, decimals, token) => {
+		getTokenBalance(walletAddress, contractAddress, contractABI, decimals)
             .then((res) => {
                 if (res.success) {
                     this.setState({
@@ -136,8 +138,8 @@ class Liquidity extends Component {
             })
 	}
 
-	fetchApproval = (walletAddress, contractAddress, token) => {
-		getTokenApproval(walletAddress, contractAddress)
+	fetchApproval = (walletAddress, contractAddress, decimals, token) => {
+		getTokenApproval(walletAddress, contractAddress, decimals)
 			.then((allowance) => {
 				if (parseFloat(allowance) > 0) {
 					this.setState({
@@ -153,7 +155,7 @@ class Liquidity extends Component {
 	}
 
     fetchLiquidity = (createPool = false, hash) => {
-		const { tokenA, tokenB, tokenAIcon, tokenBIcon, tokenAAddress, tokenBAddress } = this.state
+		const { tokenA, tokenB, tokenAIcon, tokenBIcon, tokenAAddress, tokenBAddress, tokenADecimals, tokenBDecimals } = this.state
         if (tokenAAddress && tokenBAddress) {
 			try {
 				this.setState({loading: true}, async () => {
@@ -183,9 +185,11 @@ class Liquidity extends Component {
 									const createdPool = {
 										tokenA: tokenA,
 										tokenAIcon: tokenAIcon,
+										tokenADecimals: tokenADecimals,
 										tokenAAddress: tokenAAddress,
 										tokenB: tokenB,
 										tokenBIcon: tokenBIcon,
+										tokenBDecimals: tokenBDecimals,
 										tokenBAddress: tokenBAddress,
 										lpAddress: lpAddress,
 									}
@@ -249,8 +253,8 @@ class Liquidity extends Component {
 			}
 			const A = allTokens.filter((token) => token.symbol === this.state.tokenA)[0]
 			const B = allTokens.filter((token) => token.symbol === this.state.tokenB)[0]
-			this.fetchBalance(walletAddress, tokenAAddress, A.contractABI, 'A')
-			this.fetchBalance(walletAddress, tokenBAddress, B.contractABI, 'B')
+			this.fetchBalance(walletAddress, tokenAAddress, A.contractABI, A.decimals, 'A')
+			this.fetchBalance(walletAddress, tokenBAddress, B.contractABI, B.decimals, 'B')
 		})
 	}
 
@@ -261,11 +265,12 @@ class Liquidity extends Component {
 			this.setState({
 				tokenA: token.symbol,
 				tokenAIcon: token.icon,
+				tokenADecimals: token.decimals,
 				tokenAAddress: token.contractAddress,
 			}, () => {
 				if (walletConnected) {
-					this.fetchBalance(walletAddress, token.contractAddress, token.contractABI, 'A')
-					this.fetchApproval(walletAddress, token.contractAddress, 'A')
+					this.fetchBalance(walletAddress, token.contractAddress, token.contractABI, token.decimals, 'A')
+					this.fetchApproval(walletAddress, token.contractAddress, token.decimals, 'A')
 					this.fetchLiquidity()
 				}
 			})
@@ -281,11 +286,12 @@ class Liquidity extends Component {
 			this.setState({
 				tokenB: token.symbol,
 				tokenBIcon: token.icon,
+				tokenBDecimals: token.decimals,
 				tokenBAddress: token.contractAddress,
 			}, () => {
 				if (walletConnected) {
-					this.fetchBalance(walletAddress, token.contractAddress, token.contractABI, 'B')
-					this.fetchApproval(walletAddress, token.contractAddress, 'B')
+					this.fetchBalance(walletAddress, token.contractAddress, token.contractABI, token.decimals, 'B')
+					this.fetchApproval(walletAddress, token.contractAddress, token.decimals, 'B')
 					this.fetchLiquidity()
 				}
 			})
@@ -295,15 +301,17 @@ class Liquidity extends Component {
 	}
 
 	swapTokens = () => {
-		const { tokenA, tokenAIcon, tokenABalance, tokenB, tokenBIcon, tokenBBalance, tokenAAmount, tokenBAmount, tokenAAddress, tokenBAddress } = this.state;
+		const { tokenA, tokenAIcon, tokenABalance, tokenB, tokenBIcon, tokenBBalance, tokenAAmount, tokenBAmount, tokenAAddress, tokenBAddress, tokenADecimals, tokenBDecimals } = this.state;
 		const { walletConnected } = this.props
 		this.setState({
 			tokenB: tokenA,
 			tokenBIcon: tokenAIcon,
+			tokenBDecimals: tokenADecimals,
 			tokenBBalance: tokenABalance,
 			tokenBAddress: tokenAAddress,
 			tokenA: tokenB,
 			tokenAIcon: tokenBIcon,
+			tokenADecimals: tokenBDecimals,
 			tokenABalance: tokenBBalance,
 			tokenAAddress: tokenBAddress,
 			tokenAAmount: tokenBAmount,
@@ -360,13 +368,14 @@ class Liquidity extends Component {
 	}
 
 	approve = (token) => {
-		const { tokenA, tokenB, tokenAAddress, tokenBAddress, approvalAmount } = this.state;
+		const { tokenA, tokenB, tokenAAddress, tokenBAddress, approvalAmount, tokenADecimals, tokenBDecimals } = this.state;
 		const { walletAddress, theme } = this.props
 		this.setState({[token === 'A' ? 'approvingTokenA' : 'approvingTokenB']: true, approving: true}, () => {
 			approveToken(
 				token === 'A' ? tokenAAddress : tokenBAddress,
 				this.props.signer,
 				approvalAmount,
+				token === 'A' ? tokenADecimals : tokenBDecimals,
 			).then((res) => {
 				if (res.success) {
 					// console.log(res.data)
@@ -413,9 +422,9 @@ class Liquidity extends Component {
 									let reciept = await PROVIDER.getTransaction(res.data.hash)
 									if(reciept) {
 										if (token === 'A') {
-											this.fetchApproval(walletAddress, tokenAAddress, 'A')
+											this.fetchApproval(walletAddress, tokenAAddress, tokenADecimals, 'A')
 										} else {
-											this.fetchApproval(walletAddress, tokenBAddress, 'B')
+											this.fetchApproval(walletAddress, tokenBAddress, tokenBDecimals, 'B')
 										}
 										notification.close('approvalProcessingNotification')
 										const Link = () => (
@@ -470,7 +479,7 @@ class Liquidity extends Component {
 	}
 
 	supplyPool = () => {
-		const { tokenA, tokenB, tokenAIcon, tokenBIcon, tokenAAddress, tokenBAddress, tokenAAmount, tokenBAmount, lpAddress } = this.state
+		const { tokenA, tokenB, tokenAIcon, tokenBIcon, tokenAAddress, tokenBAddress, tokenAAmount, tokenBAmount, lpAddress, tokenADecimals, tokenBDecimals } = this.state
 		const { walletAddress, signer, theme } = this.props
 		const deadline = moment().add(1, 'years').format('X')
 		const data = {
@@ -481,6 +490,8 @@ class Liquidity extends Component {
 			amountB: tokenBAmount,
 			deadline: parseFloat(deadline),
 			signer: signer,
+			decimalsA: tokenADecimals,
+			decimalsB: tokenBDecimals,
 		}
 		this.setState({supplying: true, createLiquidityModalVisible: false}, () => {
 			addLiquidity(data)
@@ -517,9 +528,11 @@ class Liquidity extends Component {
 												const createdPool = {
 													tokenA: tokenA,
 													tokenAIcon: tokenAIcon,
+													tokenADecimals: tokenADecimals,
 													tokenAAddress: tokenAAddress,
 													tokenB: tokenB,
 													tokenBIcon: tokenBIcon,
+													tokenBDecimals: tokenBDecimals,
 													tokenBAddress: tokenBAddress,
 													lpAddress: lpAddress,
 												}
@@ -558,9 +571,11 @@ class Liquidity extends Component {
 		this.setState({
 			tokenA: tokenA.symbol,
 			tokenAIcon: tokenA.icon,
+			tokenADecimals: tokenA.decimals,
 			tokenAAddress: tokenA.address,
 			tokenB: tokenB.symbol,
 			tokenBIcon: tokenB.icon,
+			tokenBDecimals: tokenB.decimals,
 			tokenBAddress: tokenB.address,
 			liquiditySectionVisible: false
 		}, () => {
@@ -571,10 +586,10 @@ class Liquidity extends Component {
 			}
 			const tokenA = allTokens.filter((token) => token.symbol === this.state.tokenA)[0]
 			const tokenB = allTokens.filter((token) => token.symbol === this.state.tokenB)[0]
-			this.fetchBalance(walletAddress, tokenA.contractAddress, tokenA.contractABI, 'A')
-			this.fetchBalance(walletAddress, tokenB.contractAddress, tokenB.contractABI, 'B')
-			this.fetchApproval(walletAddress, tokenA.contractAddress, 'A')
-			this.fetchApproval(walletAddress, tokenB.contractAddress, 'B')
+			this.fetchBalance(walletAddress, tokenA.contractAddress, tokenA.contractABI, tokenA.decimals, 'A')
+			this.fetchBalance(walletAddress, tokenB.contractAddress, tokenB.contractABI, tokenB.decimals, 'B')
+			this.fetchApproval(walletAddress, tokenA.contractAddress, tokenA.decimals, 'A')
+			this.fetchApproval(walletAddress, tokenB.contractAddress, tokenB.decimals, 'B')
 			this.fetchLiquidity()
 		})
 	}
@@ -586,7 +601,7 @@ class Liquidity extends Component {
 			allTokens = [...TOKENS, ...importedTokens.data]
 		}
 		const selectedToken = allTokens.filter((token) => token.symbol === tokenSymbol)[0]
-		this.fetchBalance(this.props.walletAddress, selectedToken.contractAddress, selectedToken.contractABI, type)
+		this.fetchBalance(this.props.walletAddress, selectedToken.contractAddress, selectedToken.contractABI, selectedToken.decimals, type)
 	}
 
 	handleModalToggle = () => {
@@ -623,7 +638,7 @@ class Liquidity extends Component {
 	}
 
     render() {
-        const { liquiditySectionVisible, tokenA, tokenABalance, tokenB, tokenBBalance, tokenAIcon, tokenBIcon, tokenAAmount, tokenBAmount, pools, approvingTokenA, approvingTokenB, supplying, tokenAAllowance, tokenBAllowance, loading, approvalModalVisible, approvalToken, approvalAmount, approving, liquidityInfo, inverted, tokenASupply, tokenBSupply, createLiquidityModalVisible } = this.state
+        const { liquiditySectionVisible, tokenA, tokenABalance, tokenB, tokenBBalance, tokenAIcon, tokenBIcon, tokenAAmount, tokenBAmount, pools, approvingTokenA, approvingTokenB, supplying, tokenAAllowance, tokenBAllowance, loading, approvalModalVisible, approvalToken, approvalAmount, approving, liquidityInfo, inverted, tokenASupply, tokenBSupply, createLiquidityModalVisible, tokenADecimals, tokenBDecimals } = this.state
         const { onModalToggle, walletConnected, walletAddress, signer, history, modalVisible, theme, onThemeToggle, ethBalance, vrapBalance } = this.props
         return (
             <>
@@ -657,9 +672,11 @@ class Liquidity extends Component {
 							signer={signer}
 							tokenA={tokenA}
 							tokenAIcon={tokenAIcon}
+							tokenADecimals={tokenADecimals}
 							tokenABalance={tokenABalance}
 							tokenB={tokenB}
 							tokenBIcon={tokenBIcon}
+							tokenBDecimals={tokenBDecimals}
 							tokenBBalance={tokenBBalance}
 							onTokenAUpdate={this.updateTokenA}
 							onTokenBUpdate={this.updateTokenB}

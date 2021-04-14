@@ -17,8 +17,8 @@ export default class TokenRow extends Component {
     }
 
     fetchBalance = () => {
-		const { walletAddress, token: { contractAddress, contractABI } } = this.props
-        getTokenBalance(walletAddress, contractAddress, contractABI)
+		const { walletAddress, token: { contractAddress, contractABI, decimals } } = this.props
+        getTokenBalance(walletAddress, contractAddress, contractABI, decimals)
             .then((res) => {
                 if (res.success) {
                     this.setState({

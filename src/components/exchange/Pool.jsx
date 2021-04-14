@@ -62,6 +62,8 @@ export default class Pool extends Component {
                                             tokenBIcon={pool.tokenBIcon}
                                             tokenAAddress={pool.tokenAAddress}
                                             tokenBAddress={pool.tokenBAddress}
+                                            tokenADecimals={pool.tokenADecimals}
+                                            tokenBDecimals={pool.tokenBDecimals}
                                             lpAddress={pool.lpAddress}
                                             onAddLiquidity={onAddLiquidity}
                                         />

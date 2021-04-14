@@ -2101,12 +2101,8 @@ export const GlobalStyles = createGlobalStyle`
             height: 125px;
         }
 
-        .settings-menu {
-            top: -26.25rem;
-        }
-    
-        .links-container {
-            top: -16.25rem;
+        .container {
+          padding: 100px 0 150px;
         }
     }
 

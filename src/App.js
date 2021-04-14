@@ -275,7 +275,8 @@ class App extends Component {
 				await window.ethereum.enable();
 				const address = await provider.listAccounts();
 				let network = await provider.getNetwork()
-				if(network.chainId !== 56){
+				const chainId = process.env.NODE_ENV === 'development' ? 97 : 56
+				if(network.chainId !== chainId){
 					notification['error']({
 						message : 'Wrong Network Detected. Please connect to Binance Smart Chain'
 					})
@@ -284,8 +285,10 @@ class App extends Component {
 				else{
 				let signer = await provider.getSigner();
 				this.fetchEthBalance(address[0])
-				this.fetchVrapBalance(address[0])
-				this.fetchTetherBalance(address[0])
+				if (process.env.NODE_ENV === 'production') {
+					this.fetchVrapBalance(address[0])
+					this.fetchTetherBalance(address[0])
+				}
 				this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'metamask',signer : signer})
 			}}
 			else{
