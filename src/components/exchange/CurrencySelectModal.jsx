@@ -36,6 +36,7 @@ export default class CurrencySelectModal extends Component {
                     .then((res) => {
                         this.setState({searching: false}, () => {
                             if (res.success) {
+                                console.log(res.data)
                                 this.setState({searchedToken: res.data})
                             }
                         })
@@ -53,10 +54,10 @@ export default class CurrencySelectModal extends Component {
     }
 
     importToken = (newToken) => {
-        let importedTokens = fetchImportedTokens()
-        const tokenExists = importedTokens.data.filter((token) => token.contractAddress === newToken.contractAddress).length > 0
         const tokenExistsinOG = TOKENS.filter((token) => token.contractAddress === newToken.contractAddress).length > 0
+        let importedTokens = fetchImportedTokens()
         if (importedTokens) {
+            const tokenExists = importedTokens.data.filter((token) => token.contractAddress === newToken.contractAddress).length > 0
             if (tokenExists || tokenExistsinOG) {
                 notification.info({
                     message: 'Token is already on your list'

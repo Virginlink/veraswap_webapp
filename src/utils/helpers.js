@@ -1,6 +1,5 @@
 import { ethers } from "ethers"
 import CryptoJS from 'crypto-js'
-import Empty from '../assets/icons/Empty.png'
 import { FACTORY_ABI, FACTORY_ADDRESS, ROUTER_ABI, ROUTER_ADDRESS, TOKEN_ABI, PROVIDER } from "./contracts"
 
 const factoryContract = new ethers.Contract(FACTORY_ADDRESS, FACTORY_ABI, PROVIDER)
@@ -354,7 +353,7 @@ export const searchToken = (address) => {
             const contract = new ethers.Contract(address, TOKEN_ABI, PROVIDER)
             const symbol = await contract.symbol()
             const name = await contract.name()
-            const totalSupply = await contract.totalSupply()
+            const decimals = await contract.decimals()
             resolve({
                 success: true,
                 data: {
@@ -362,7 +361,7 @@ export const searchToken = (address) => {
                     symbol: symbol,
                     contractAddress: address,
                     icon: `https://github.com/trustwallet/assets/blob/master/blockchains/smartchain/assets/${address}/logo.png?raw=true`,
-                    totalSupply: totalSupply.toString(),
+                    decimals: decimals,
                     contractABI: TOKEN_ABI,
                 }
             })
