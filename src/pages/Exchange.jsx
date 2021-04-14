@@ -128,7 +128,6 @@ class Exchange extends Component {
 	fetchBalance = (walletAddress, contractAddress, contractABI, decimals, token) => {
 		getTokenBalance(walletAddress, contractAddress, contractABI, decimals)
             .then((res) => {
-				console.log('Balance', res)
                 if (res.success) {
                     this.setState({
                         [token === 'A' ? 'tokenABalance' : 'tokenBBalance']: res.balance

@@ -1468,11 +1468,11 @@ export const GlobalStyles = createGlobalStyle`
         position: absolute;
         background-color: ${({theme}) => theme.swapDividerColor};
         border: 1px solid transparent;
-        height: 32px;
-        width: 32px;
+        height: 25px;
+        width: 25px;
         padding: 4px;
         border-radius: 50%;
-        right: 2rem;
+        margin: auto;
       }
 
       .swap-form .action svg:hover {
@@ -1520,14 +1520,15 @@ export const GlobalStyles = createGlobalStyle`
       .exchange-button-container button {
         cursor: pointer;
         width: 100%;
-        height: 45px;
+        height: 41px;
         border: none;
         border-radius: 10px;
         background-color: ${({theme}) => theme.primary};
         color: #FFF;
-        margin-top:1rem;
+        margin-top: 1rem;
         font-weight : 600;
         outline : none;
+        font-size: 14px;
       }
       
       .exchange-button-container button:disabled, .remove-liquidity-actions button:disabled {
@@ -2097,8 +2098,17 @@ export const GlobalStyles = createGlobalStyle`
     @media only screen and (max-width: 500px) {
         .navbar-actions-main-container {
             flex-direction: column;
-            align-items: flex-end;
+            align-items: center;
             height: 125px;
+        }
+
+        .settings-menu {
+          left: -7rem;
+        }
+
+        .links-container {
+          top: -12.25rem;
+          left: -5rem;
         }
 
         .container {
@@ -2113,24 +2123,4 @@ export const GlobalStyles = createGlobalStyle`
             overflow: scroll !important;
         }
     }
-    
-    @media only screen and (max-width: 400px) {
-      .navbar-actions-main-container {
-        height: 180px;
-      }
-      
-      .navbar-actions-1 {
-          flex-direction: column-reverse;
-          align-items: flex-end;
-      }
-
-      .settings-menu {
-          top: -30rem;
-      }
-
-      .links-container {
-          top: -20rem;
-      }
-    }
-    
 `

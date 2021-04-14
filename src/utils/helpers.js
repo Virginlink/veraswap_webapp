@@ -27,6 +27,25 @@ export const getTokenBalance = (walletAddress, contractAddress, contractABI, dec
     })
 }
 
+export const getBNBBalance = (walletAddress) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let balance = await PROVIDER.getBalance(walletAddress)
+            balance = ethers.utils.formatUnits(balance, 18)
+            resolve({
+                success: true,
+                balance: balance
+            })
+        } catch (err) {
+            console.log(err)
+            reject({
+                error: true,
+                message: err.message,
+            })
+        }
+    })
+}
+
 export const getTokenSupply = (contractAddress) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -196,6 +215,33 @@ export const addLiquidity = ({walletAddress, addressA, addressB, amountA, amount
         }
     })
 }
+
+export const addLiquidityWithBNB = ({walletAddress, address, amountA, amountAMin, BNBAmount, BNBAmountMin, deadline, signer, decimals, decimalsBNB}) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer)
+            const result = await contract.addLiquidityETH(
+                address, // Token Address
+                ethers.utils.parseUnits(amountA, decimals), // Token Amount
+                ethers.utils.parseUnits(amountAMin, decimals), // Token Amount Minimum
+                ethers.utils.parseUnits(BNBAmountMin, decimalsBNB), // BNB Amount Minimum
+                walletAddress, // To address
+                deadline // Transaction deadline
+            )
+            resolve({
+                success: true,
+                data: result
+            })
+        } catch (err) {
+            console.log(err)
+            reject({
+                error: true,
+                message: err.message
+            })
+        }
+    })
+}
+
 
 export const removeLiquidity = ({liquidity, walletAddress, addressA, addressB, deadline, signer, decimalsA, decimalsB}) => {
     return new Promise(async (resolve, reject) => {

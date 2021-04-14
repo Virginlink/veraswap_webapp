@@ -1,9 +1,18 @@
 import { TBLK_ABI, TBLK_ADDRESS, DONUT_ABI, DONUT_ADDRESS, WBNB_ADDRESS, WBNB_ABI, BUSD_ADDRESS, BUSD_ABI } from "./contracts";
 import Empty from '../assets/icons/Empty.png';
+import BNB from '../assets/images/bnb.png';
 import VRAP from '../assets/images/logo.png';
 import LIT from '../assets/images/lit.webp';
 
 const TESTNET_TOKENS = [
+    // {
+    //     name: 'Binance Coin',
+    //     symbol: 'BNB',
+    //     contractAddress: WBNB_ADDRESS,
+    //     contractABI: WBNB_ABI,
+    //     icon: BNB,
+    //     decimals: 18,
+    // },
     {
         name: 'Test DonutSwap Token',
         symbol: 'tDonut',

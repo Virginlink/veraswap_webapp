@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { CircularProgress } from '@material-ui/core'
-import { getTokenBalance } from '../../utils/helpers'
+import { getBNBBalance, getTokenBalance } from '../../utils/helpers'
 
 export default class TokenRow extends Component {
     constructor() {
@@ -12,7 +12,11 @@ export default class TokenRow extends Component {
 
     componentDidMount() {
         if (this.props.walletConnected && this.props.walletAddress && !this.props.importToken ) {
-            this.fetchBalance()
+            if (this.props.token.symbol !== 'BNB') {
+                this.fetchBalance()
+            } else {
+                this.fetchBNBBalance()
+            }
         }
     }
 
@@ -27,6 +31,20 @@ export default class TokenRow extends Component {
                 }
             })
             .catch((err) => {
+                console.log('Unable to fetch balance', err.message)
+            })
+	}
+
+    fetchBNBBalance = async (token) => {
+		getBNBBalance(this.props.walletAddress)
+			.then((res) => {
+				if (res.success) {
+                    this.setState({
+                        balance: parseFloat(res.balance).toFixed(6)
+                    })
+                }
+			})
+			.catch((err) => {
                 console.log('Unable to fetch balance', err.message)
             })
 	}
