@@ -12,6 +12,44 @@ export const GlobalStyles = createGlobalStyle`
         ${({theme}) => theme.bodyBackground === 'radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 122, 0.1) 0%, rgba(255, 255, 255, 0) 100%)' ? 'background: radial-gradient(50% 50% at 50% 50%, rgba(223, 0, 4, 0.18) 0%, rgba(255, 255, 255, 0) 100%);' : ''}
     }
 
+    .loading-container {
+      background-color: ${({theme}) => theme.bodyBackgroundColor};
+      ${({theme}) => theme.bodyBackground === 'radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 122, 0.1) 0%, rgba(255, 255, 255, 0) 100%)' ? 'background: radial-gradient(50% 50% at 50% 50%, rgba(223, 0, 4, 0.18) 0%, rgba(255, 255, 255, 0) 100%);' : ''}
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      color: ${({theme}) => theme.formControlText};
+      font-family: 'PT Sans Caption', sans-serif;
+    }
+
+    .loading-container > div {
+      position: relative;
+    }
+
+    .loading-container img + div {
+      position: absolute;
+      left: -1rem;
+      top: -1.25rem;
+    }
+
+    .loading-container img {
+      width: 67px;
+      height: auto;
+    }
+
+    .loading-container svg {
+      color: ${({theme}) => theme.primary};
+    }
+
+    .loading-container p {
+      margin-top: 1rem;
+      font-size: 16px;
+    }
+
     .navbar-pages-container a {
         display: flex;
         flex-flow: row nowrap;
@@ -577,7 +615,7 @@ export const GlobalStyles = createGlobalStyle`
         box-shadow: rgba(0, 0, 0, 0.01) 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 8px, rgba(0, 0, 0, 0.04) 0px 16px 24px, rgba(0, 0, 0, 0.01) 0px 24px 32px !important;
         padding: 0.9rem !important;
         font-family: 'PT Sans Caption';
-        font-size: 16px;
+        font-size: 14px;
         border-radius: 12px !important;
         line-height: 1.6rem;
     }
@@ -1279,6 +1317,7 @@ export const GlobalStyles = createGlobalStyle`
         justify-content: center;
         flex-direction: column;
         z-index : 1;
+        overflow: hidden;
     }
 
     .tabs {
@@ -1290,8 +1329,9 @@ export const GlobalStyles = createGlobalStyle`
     .tabs a {
       font-family: "PT Sans Caption", sans-serif;
       font-size: 15px;
-      color: ${({theme}) => theme.formControlText};
-      opacity: 0.5;
+      // color: ${({theme}) => theme.formControlText};
+      color: #FFF;
+      opacity: 0.7;
       transition: all 0.3s ease;
     }
     
@@ -1306,15 +1346,22 @@ export const GlobalStyles = createGlobalStyle`
         max-width: 400px;
         width: 100%;
         border-radius: 20px;
-        background-color: ${({theme}) => theme.exchangeCardBackgroundColor};
+        // background-color: ${({theme}) => theme.exchangeCardBackgroundColor};
+        background: ${({theme}) => theme.exchangeCardBackground};
         padding: 20px 18px;
       }
+    
+    .exchange-card .noise {
+      border-radius: 20px;
+    }
       
       .form-control {
         padding: 12px 13px;
-        background-color: ${({theme}) => theme.formControlBackgroundColor};
+        // background-color: ${({theme}) => theme.formControlBackgroundColor};
         border-radius: 10px;
-        border: 1px solid ${({theme}) => theme.exchangeCardBackgroundColor};
+        // border: 1px solid ${({theme}) => theme.exchangeCardBackgroundColor};
+        background-color: ${({theme}) => theme.swapFormControlBackgroundColor};
+        border: 1px solid ${({theme}) => theme.swapFormControlBackgroundColor};
         font-size: 12px;
         text-transform: uppercase;
         color: ${({theme}) => theme.formControlText} !important;
@@ -1367,7 +1414,7 @@ export const GlobalStyles = createGlobalStyle`
         box-shadow: none;
         font-family: "PT Sans Caption";
         font-size: 19px;
-        padding: 0;
+        padding: 0 0.5rem 0 0;
       }
       
       .input-container input::placeholder {
@@ -1382,53 +1429,52 @@ export const GlobalStyles = createGlobalStyle`
       
       .max-button {
         cursor: pointer;
-        width: 46px;
-        height: 22px;
+        height: 30px;
         border: none;
-        border-radius: 7px;
+        border-radius: 10px;
         background-color: ${({theme}) => theme.primary};
         color: #fff;
         box-shadow: none;
         text-transform: uppercase;
         margin-right: 5px;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 600;
+        padding: 0 10px;
       }
       
       .asset-select-button {
         display: flex;
         align-items: center;
         cursor: pointer;
-        height: 25px;
+        height: 32px;
         border: none;
-        border-radius: 7px;
+        border-radius: 10px;
         background-color: ${({theme}) => theme.assetSelectBackgroundColor};
         box-shadow: none;
-        padding: 0 5px;
+        padding: 0 9px;
         color: ${({theme}) => theme.formControlText};
         font-family: "PT Sans Caption";
-        font-size: 12px;
+        font-size: 14px;
       }
 
       .swap-form .asset-select-button {
-        background-color: transparent;
-        font-size: 15px;
+        background-color: ${({theme}) => theme.assetSelectBackgroundColor};;
+        font-size: 14px;
       }
 
       .swap-form .asset-select-button span {
         position: relative;
-        top: -0.6px;
       }
 
       .swap-form .asset-select-button img {
-        width: 24px;
-        height: 24px;
+        width: 20px;
+        height: 20px;
         margin-right: 8px;
         border-radius: 50%;
       }
 
       .swap-form .asset-select-button svg {
-        margin-left: 1.5rem;
+        margin-left: 0.5rem;
         font-size: 15px;
       }
 
@@ -1441,15 +1487,14 @@ export const GlobalStyles = createGlobalStyle`
       }
       
       .asset-select-button img {
-        width: 14px;
-        height: 14px;
+        width: 20px;
+        height: 20px;
         margin-right: 8px;
         border-radius: 50%;
       }
       
       .asset-select-button span {
         position: relative;
-        top: 1px;
       }
       
       .asset-select-button svg {
@@ -1473,7 +1518,7 @@ export const GlobalStyles = createGlobalStyle`
         grid-auto-rows: auto;
         row-gap: 0.75rem;
         font-family: "PT Sans Caption", sans-serif;
-        background-color: ${({theme}) => theme.navbarButtonBackgroundColor};
+        background-color: ${({theme}) => theme.swapFormControlBackgroundColor};
         color: ${({theme}) => theme.formControlText};
         border-radius: 10px;
         padding: 10px;
@@ -1514,11 +1559,11 @@ export const GlobalStyles = createGlobalStyle`
         position: absolute;
         background-color: ${({theme}) => theme.swapDividerColor};
         border: 1px solid transparent;
-        height: 32px;
-        width: 32px;
+        height: 25px;
+        width: 25px;
         padding: 4px;
         border-radius: 50%;
-        right: 2rem;
+        margin: auto;
       }
 
       .swap-form .action svg:hover {
@@ -1528,9 +1573,9 @@ export const GlobalStyles = createGlobalStyle`
       .action {
         width: 26px;
         height: 26px;
-        background-color: ${({theme}) => theme.formControlBackgroundColor};
+        background-color: ${({theme}) => theme.swapFormControlBackgroundColor};
         color: ${({theme}) => theme.actionIconColor};
-        margin: 1.5rem auto;
+        margin: 0.75rem auto;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1557,7 +1602,8 @@ export const GlobalStyles = createGlobalStyle`
       }
       
       .exchange-button-container p {
-        color: ${({theme}) => theme.formControlText};
+        // color: ${({theme}) => theme.formControlText};
+        color: #FFF;
         text-align: center;
         margin: 0.45rem 0;
         font-size: 13px;
@@ -1566,19 +1612,20 @@ export const GlobalStyles = createGlobalStyle`
       .exchange-button-container button {
         cursor: pointer;
         width: 100%;
-        height: 45px;
+        height: 41px;
         border: none;
         border-radius: 10px;
         background-color: ${({theme}) => theme.primary};
         color: #FFF;
-        margin-top:1rem;
+        margin-top: 1rem;
         font-weight : 600;
         outline : none;
+        font-size: 14px;
       }
       
       .exchange-button-container button:disabled, .remove-liquidity-actions button:disabled {
         cursor: not-allowed;
-        opacity: 0.35;
+        opacity: 0.5;
       }
       
       .add-liquidity-button {
@@ -1624,7 +1671,8 @@ export const GlobalStyles = createGlobalStyle`
       }
       
       .pool-form .flex-spaced-container {
-        color: ${({theme}) => theme.formControlText};
+        // color: ${({theme}) => theme.formControlText};
+        color: #FFF;
       }
       
       .pool-form .flex-spaced-container span {
@@ -1870,7 +1918,8 @@ export const GlobalStyles = createGlobalStyle`
         cursor: pointer;
         margin: 0.25rem;
         overflow: hidden;
-        color: ${({theme}) => theme.pageLinkTextPrimary};
+        // color: ${({theme}) => theme.pageLinkTextPrimary};
+        color: #FFF;
         width: 20%;
         outline: none;
       }
@@ -1882,7 +1931,7 @@ export const GlobalStyles = createGlobalStyle`
       .pool-amount-row > div:nth-child(1) {
         color: ${({theme}) => theme.formControlText};
         font-family: 'PT Sans Caption';
-        font-size: 1rem;
+        font-size: 0.9rem;
       }
       
       .pool-amount-row > div:nth-child(2) {
@@ -2124,7 +2173,7 @@ export const GlobalStyles = createGlobalStyle`
             bottom: 0px;
             left: 0px;
             width: 100%;
-            z-index: 99;
+            z-index: 111;
             height: 72px;
             border-radius: 12px 12px 0px 0px;
             background-color: ${({theme}) => theme.navbarBottomBackgroundColor} !important;
@@ -2142,17 +2191,22 @@ export const GlobalStyles = createGlobalStyle`
 
     @media only screen and (max-width: 500px) {
         .navbar-actions-main-container {
-            flex-direction: row;
-            align-items: flex-end;
-            height: 60px;
+            flex-direction: column;
+            align-items: center;
+            height: 125px;
         }
 
         .settings-menu {
-            top: -26rem;
+          left: -7rem;
         }
-    
+
         .links-container {
-            top: -19.25rem;
+          top: -12.25rem;
+          left: -5rem;
+        }
+
+        .container {
+          padding: 100px 0 150px;
         }
     }
 
@@ -2175,6 +2229,4 @@ export const GlobalStyles = createGlobalStyle`
             font-weight : 500;
         }
     }
-    
-    
 `

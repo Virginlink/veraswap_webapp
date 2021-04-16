@@ -7,11 +7,11 @@ import { CircularProgress, Dialog } from '@material-ui/core'
 import { notification, Tooltip } from 'antd'
 import moment from 'moment'
 import Navbar from '../components/Navbar'
-import { PROVIDER } from '../utils/contracts'
 import { RiCloseFill } from 'react-icons/ri'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import { GrPowerCycle } from 'react-icons/gr'
 import AppContext from '../state/AppContext'
+import { PROVIDER } from '../utils/contracts'
 
 var timerA = null
 var timerB = null
@@ -28,6 +28,7 @@ class Exchange extends Component {
 			tokenA: TOKENS[0].symbol,
 			tokenAAddress: TOKENS[0].contractAddress,
 			tokenAIcon: TOKENS[0].icon,
+			tokenADecimals: TOKENS[0].decimals,
 			tokenABalance: '',
 			tokenAAmount: '',
 			tokenAAllowance: '',
@@ -37,6 +38,7 @@ class Exchange extends Component {
 			tokenB: '',
 			tokenBAddress: '',
 			tokenBIcon: '',
+			tokenBDecimals: '',
 			tokenBBalance: '',
 			tokenBAmount: '',
 			tokenBAllowance: '',
@@ -68,8 +70,8 @@ class Exchange extends Component {
 				allTokens = [...TOKENS, ...importedTokens.data]
 			}
             const selectedToken = allTokens.filter((token) => token.symbol === this.state.tokenA)
-			this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, 'A')
-			this.fetchApproval(walletAddress, selectedToken[0].contractAddress, 'A')
+			this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, selectedToken[0].decimals, 'A')
+			this.fetchApproval(walletAddress, selectedToken[0].contractAddress, selectedToken[0].decimals, 'A')
 		}
 	}
 
@@ -83,12 +85,12 @@ class Exchange extends Component {
 				allTokens = [...TOKENS, ...importedTokens.data]
 			}
 			const selectedToken = allTokens.filter((token) => token.symbol === this.state.tokenA)
-			this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, 'A')
-			this.fetchApproval(walletAddress, selectedToken[0].contractAddress, 'A')
+			this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, selectedToken[0].decimals, 'A')
+			this.fetchApproval(walletAddress, selectedToken[0].contractAddress, selectedToken[0].decimals, 'A')
 			if (tokenB) {
 				const selectedToken = allTokens.filter((token) => token.symbol === tokenB)
-				this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, 'B')
-				this.fetchApproval(walletAddress, selectedToken[0].contractAddress, 'B')
+				this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, selectedToken[0].decimals, 'B')
+				this.fetchApproval(walletAddress, selectedToken[0].contractAddress, selectedToken[0].decimals, 'B')
 			}
 			if (tokenA && tokenB) {
 				this.fetchPrices()
@@ -123,8 +125,8 @@ class Exchange extends Component {
         })
     }
 
-	fetchBalance = (walletAddress, contractAddress, contractABI, token) => {
-		getTokenBalance(walletAddress, contractAddress, contractABI)
+	fetchBalance = (walletAddress, contractAddress, contractABI, decimals, token) => {
+		getTokenBalance(walletAddress, contractAddress, contractABI, decimals)
             .then((res) => {
                 if (res.success) {
                     this.setState({
@@ -137,9 +139,9 @@ class Exchange extends Component {
             })
 	}
 
-	fetchApproval = (walletAddress, contractAddress, token) => {
+	fetchApproval = (walletAddress, contractAddress, decimals, token) => {
 		this.setState({loading: true}, () => {
-			getTokenApproval(walletAddress, contractAddress)
+			getTokenApproval(walletAddress, contractAddress, decimals)
 				.then((allowance) => {
 					this.setState({loading: false}, () => {
 						// console.log(token, allowance)
@@ -200,19 +202,21 @@ class Exchange extends Component {
     }
 
 	fetchPrices = () => {
-		const { tokenAAddress, tokenBAddress, tokenA, tokenB } = this.state;
+		const { tokenAAddress, tokenBAddress, tokenA, tokenB, tokenADecimals, tokenBDecimals } = this.state;
 		if (tokenAAddress && tokenBAddress) {
 			this.setState({fetchingPrices: true}, async () => {
 				try {
 					const estimateAData = {
 						amount: "1",
 						addresses: [tokenAAddress, tokenBAddress],
-						token: tokenA
+						token: tokenA,
+						decimals: tokenADecimals,
 					}
 					const estimateBData = {
 						amount: "1",
 						addresses: [tokenAAddress, tokenBAddress],
-						token: tokenB
+						token: tokenB,
+						decimals: tokenBDecimals,
 					}
 					const tokenAPriceResult = await estimateOutAmounts(estimateAData)
 					const tokenBPriceResult = await estimateInAmounts(estimateBData)
@@ -244,13 +248,14 @@ class Exchange extends Component {
 			this.setState({
 				tokenA: token.symbol,
 				tokenAIcon: token.icon,
+				tokenADecimals: token.decimals,
 				tokenAAddress: token.contractAddress,
 			}, () => {
 				if (walletConnected) {
 					this.fetchPrices()
 					this.fetchLiquidity()
-					this.fetchBalance(walletAddress, token.contractAddress, token.contractABI, 'A')
-					this.fetchApproval(walletAddress, token.contractAddress, 'A')
+					this.fetchBalance(walletAddress, token.contractAddress, token.contractABI, token.decimals, 'A')
+					this.fetchApproval(walletAddress, token.contractAddress, token.decimals, 'A')
 					if (tokenAAmount) {
 						this.estimate('A')
 					}
@@ -268,13 +273,14 @@ class Exchange extends Component {
 			this.setState({
 				tokenB: token.symbol,
 				tokenBIcon: token.icon,
+				tokenBDecimals: token.decimals,
 				tokenBAddress: token.contractAddress,
 			}, () => {
 				if (walletConnected) {
 					this.fetchPrices()
 					this.fetchLiquidity()
-					this.fetchBalance(walletAddress, token.contractAddress, token.contractABI, 'B')
-					this.fetchApproval(walletAddress, token.contractAddress, 'B')
+					this.fetchBalance(walletAddress, token.contractAddress, token.contractABI, token.decimals, 'B')
+					this.fetchApproval(walletAddress, token.contractAddress, token.decimals, 'B')
 					if (tokenAAmount) {
 						this.estimate('A')
 					}
@@ -286,16 +292,18 @@ class Exchange extends Component {
 	}
 
 	swapTokensInternal = () => {
-		const { tokenA, tokenAIcon, tokenB, tokenBIcon, tokenBBalance, tokenAAddress, tokenBAddress } = this.state;
+		const { tokenA, tokenAIcon, tokenB, tokenBIcon, tokenBBalance, tokenAAddress, tokenBAddress, tokenADecimals, tokenBDecimals } = this.state;
 		const { walletConnected } = this.props
 		this.setState({
 			tokenB: tokenA,
 			tokenBAddress: tokenAAddress,
 			tokenBIcon: tokenAIcon,
+			tokenBDecimals: tokenADecimals,
 			tokenBBalance: '',
 			tokenA: tokenB,
 			tokenAAddress: tokenBAddress,
 			tokenAIcon: tokenBIcon,
+			tokenADecimals: tokenBDecimals,
 			tokenABalance: tokenBBalance,
 			tokenAAmount: '',
 			tokenBAmount: '',
@@ -311,13 +319,13 @@ class Exchange extends Component {
 				}
 				if (this.state.tokenA) {
 					const selectedToken = allTokens.filter((token) => token.symbol === this.state.tokenA)
-					this.fetchBalance(this.props.walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, 'A')
-					this.fetchApproval(this.props.walletAddress, selectedToken[0].contractAddress, 'A')
+					this.fetchBalance(this.props.walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, selectedToken[0].decimals, 'A')
+					this.fetchApproval(this.props.walletAddress, selectedToken[0].contractAddress, selectedToken[0].decimals, 'A')
 				}
 				if (this.state.tokenB) {
 					const selectedToken = allTokens.filter((token) => token.symbol === this.state.tokenB)
-					this.fetchBalance(this.props.walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, 'B')
-					this.fetchApproval(this.props.walletAddress, selectedToken[0].contractAddress, 'B')
+					this.fetchBalance(this.props.walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, selectedToken[0].decimals, 'B')
+					this.fetchApproval(this.props.walletAddress, selectedToken[0].contractAddress, selectedToken[0].decimals, 'B')
 				}
 			}
 		})
@@ -351,8 +359,8 @@ class Exchange extends Component {
 	}
 
 	estimate = (type) => {
-		const { tokenAAmount, tokenBAmount, tokenABalance, tokenBBalance, tokenAAddress, tokenBAddress, tokenA, tokenB } = this.state;
-		if (tokenABalance && tokenBBalance) {
+		const { tokenAAmount, tokenBAmount, tokenABalance, tokenBBalance, tokenAAddress, tokenBAddress, tokenA, tokenB, liquidityInfo, tokenADecimals, tokenBDecimals } = this.state;
+		if (tokenABalance && tokenBBalance && (liquidityInfo && parseFloat(liquidityInfo.total) > 0)) {
 			// const estimateData = {
 			// 	amount: type === 'A' ? tokenAAmount : tokenBAmount,
 			// 	balanceA: type === 'A' ? tokenABalance : tokenBBalance,
@@ -364,6 +372,7 @@ class Exchange extends Component {
 						amount: tokenAAmount.toString(),
 						addresses: [tokenAAddress, tokenBAddress],
 						token: tokenA,
+						decimals: tokenADecimals,
 					}
 					estimateOutAmounts(estimateData)
 						.then((res) => {
@@ -395,6 +404,7 @@ class Exchange extends Component {
 						amount: tokenBAmount.toString(),
 						addresses: [tokenAAddress, tokenBAddress],
 						token: tokenB,
+						decimals: tokenBDecimals,
 					}
 					estimateInAmounts(estimateData)
 						.then((res) => {
@@ -449,13 +459,14 @@ class Exchange extends Component {
 	}
 
 	approve = (token) => {
-		const { tokenA, tokenB, tokenAAddress, tokenBAddress, approvalAmount } = this.state;
+		const { tokenA, tokenB, tokenAAddress, tokenBAddress, approvalAmount, tokenADecimals, tokenBDecimals } = this.state;
 		const { walletAddress, theme } = this.props
 		this.setState({[token === 'A' ? 'approvingTokenA' : 'approvingTokenB']: true, approving: true}, () => {
 			approveToken(
 				token === 'A' ? tokenAAddress : tokenBAddress,
 				this.props.signer,
 				approvalAmount,
+				token === 'A' ? tokenADecimals : tokenBDecimals,
 			).then((res) => {
 				if (res.success) {
 					// console.log(res.data)
@@ -486,9 +497,9 @@ class Exchange extends Component {
 									let reciept = await PROVIDER.getTransaction(res.data.hash)
 									// console.log('RECEIPT', reciept)
 									if (token === 'A') {
-										this.fetchApproval(walletAddress, tokenAAddress, 'A')
+										this.fetchApproval(walletAddress, tokenAAddress, tokenADecimals, 'A')
 									} else {
-										this.fetchApproval(walletAddress, tokenBAddress, 'B')
+										this.fetchApproval(walletAddress, tokenBAddress, tokenBDecimals, 'B')
 									}
 									if(reciept) {
 										notification.close('approvalProcessingNotification')
@@ -532,7 +543,7 @@ class Exchange extends Component {
 	}
 
 	swap = () => {
-		const { tokenA, tokenB, tokenAAmount, tokenBAmount, tokenAAddress, tokenBAddress } = this.state
+		const { tokenA, tokenB, tokenAAmount, tokenBAmount, tokenAAddress, tokenBAddress, tokenADecimals, tokenBDecimals } = this.state
 		const { slippage } = this.context
 		const { walletAddress, signer, theme } = this.props
 		const deadline = moment().add(1, 'years').format('X')
@@ -544,7 +555,9 @@ class Exchange extends Component {
 				tokenAddresses: [tokenAAddress, tokenBAddress],
 				walletAddress: walletAddress,
 				deadline: parseFloat(deadline),
-				signer: signer
+				signer: signer,
+				amountInDecimals: tokenADecimals,
+				amountOutDecimals: tokenBDecimals,
 			}
 			// const data = {
 			// 	amountOut: ethers.utils.parseUnits(amountOut.toString(), 18),
@@ -624,8 +637,8 @@ class Exchange extends Component {
 												}
 												const A = allTokens.filter((token) => token.symbol === this.state.tokenA)[0]
 												const B = allTokens.filter((token) => token.symbol === this.state.tokenB)[0]
-												this.fetchBalance(walletAddress, tokenAAddress, A.contractABI, 'A')
-												this.fetchBalance(walletAddress, tokenBAddress, B.contractABI, 'B')
+												this.fetchBalance(walletAddress, tokenAAddress, A.contractABI, A.decimals, 'A')
+												this.fetchBalance(walletAddress, tokenBAddress, B.contractABI, B.decimals, 'B')
 											})
 											clearInterval(intervalId)
 										}
@@ -659,8 +672,8 @@ class Exchange extends Component {
 			allTokens = [...TOKENS, ...importedTokens.data]
 		}
 		const selectedToken = allTokens.filter((token) => token.symbol === tokenSymbol)[0]
-		this.fetchApproval(this.props.walletAddress, selectedToken.contractAddress, type)
-		this.fetchBalance(this.props.walletAddress, selectedToken.contractAddress, selectedToken.contractABI, type)
+		this.fetchApproval(this.props.walletAddress, selectedToken.contractAddress, selectedToken.decimals, type)
+		this.fetchBalance(this.props.walletAddress, selectedToken.contractAddress, selectedToken.contractABI, selectedToken.decimals, type)
 	}
 
 	handleModalToggle = () => {
@@ -691,6 +704,7 @@ class Exchange extends Component {
     render() {
         const { tokenA, tokenABalance, tokenAAllowance, tokenB, tokenBBalance, tokenBAllowance, tokenAIcon, tokenBIcon, tokenAAmount, tokenBAmount, liquidityInfo, swapping, loading, estimatingA, estimatingB, approvingTokenA, approving, approvalModalVisible, approvalToken, approvalAmount, fetchingLiquidity, impact, tokenAPrice, tokenBPrice, fetchingPrices, inverted, invalidPair } = this.state
         const { onModalToggle, walletConnected, walletAddress, signer, modalVisible, theme, onThemeToggle, ethBalance, vrapBalance, history } = this.props
+		const minimumReceived = (parseFloat(tokenBAmount) - (parseFloat(tokenBAmount) * (parseFloat(this.context.slippage)/100)))
         return (
             <>
               	<Navbar
@@ -705,170 +719,183 @@ class Exchange extends Component {
 					vrapBalance = {vrapBalance}
             	/>
 				<div className="container">
-					<div className="exchange-card">			
-						<div className="tabs">
-							<a href="/swap" onClick={(e) => e.preventDefault()} className="tab-active">Swap</a>
-							<a href="/pool" onClick={(e) => {e.preventDefault(); history.push('/pool')}}>Pool</a>
-						</div>
-						<Swap
-							invalidPair={invalidPair}
-							fetchingLiquidity={fetchingLiquidity}
-							walletConnected={walletConnected}
-							walletAddress={walletAddress}
-							signer={signer}
-							tokenA={tokenA}
-							tokenAIcon={tokenAIcon}
-							tokenABalance={tokenABalance}
-							tokenAAllowance={tokenAAllowance}
-							tokenB={tokenB}
-							tokenBIcon={tokenBIcon}
-							tokenBBalance={tokenBBalance}
-							tokenBAllowance={tokenBAllowance}
-							onTokenAUpdate={this.updateTokenA}
-							onTokenBUpdate={this.updateTokenB}
-							tokenAAmount={tokenAAmount}
-							tokenBAmount={tokenBAmount}
-							onAmountChange={this.updateAmount}
-							estimatingA={estimatingA}
-							estimatingB={estimatingB}
-							onMax={this.handleMax}
-							onTokenSwap={this.swapTokensInternal}
-							onRefresh={this.handleRefresh}
-							onPercentChange={this.handlePercentChange}
-						/>
-						{walletConnected ? (
-							!fetchingPrices ? (
-								!invalidPair ? (
-									(tokenAPrice && tokenBPrice) ? (
-										<div style={{display: 'flex', justifyContent: 'center', marginTop: '1rem', fontSize: '13px', color: theme === 'light' ? '#000' : '#FFF', fontFamily: 'PT Sans Caption', padding: '0 0.8rem'}}>
-											<div style={{display: 'flex', alignItems: 'center', color: theme === 'light' ? '#000' : '#FFF'}}>
-												{!inverted ? (
-													<div>1 {tokenA} ~ {parseFloat(tokenAPrice).toFixed(6)} {tokenB}</div>
-												) : (
-													<div>1 {tokenB} ~ {parseFloat(tokenBPrice).toFixed(6)} {tokenA}</div>
-												)}
-												<button className="invert-button" onClick={this.toggleInversion}>
-													<GrPowerCycle size={15} />
-												</button>
+					<div className="exchange-card">
+						<span className="sale-rotation"></span>
+                        <span className="noise"></span>
+						<div style={{zIndex: 1, position: 'relative'}}>	
+							<div className="tabs">
+								<a href="/swap" onClick={(e) => e.preventDefault()} className="tab-active">Swap</a>
+								<a href="/pool" onClick={(e) => {e.preventDefault(); history.push('/pool')}}>Pool</a>
+							</div>
+							<Swap
+								invalidPair={invalidPair}
+								fetchingLiquidity={fetchingLiquidity}
+								walletConnected={walletConnected}
+								walletAddress={walletAddress}
+								signer={signer}
+								tokenA={tokenA}
+								tokenAIcon={tokenAIcon}
+								tokenABalance={tokenABalance}
+								tokenAAllowance={tokenAAllowance}
+								tokenB={tokenB}
+								tokenBIcon={tokenBIcon}
+								tokenBBalance={tokenBBalance}
+								tokenBAllowance={tokenBAllowance}
+								onTokenAUpdate={this.updateTokenA}
+								onTokenBUpdate={this.updateTokenB}
+								tokenAAmount={tokenAAmount}
+								tokenBAmount={tokenBAmount}
+								onAmountChange={this.updateAmount}
+								estimatingA={estimatingA}
+								estimatingB={estimatingB}
+								onMax={this.handleMax}
+								onTokenSwap={this.swapTokensInternal}
+								onRefresh={this.handleRefresh}
+								onPercentChange={this.handlePercentChange}
+							/>
+							{walletConnected ? (
+								!fetchingPrices ? (
+									!invalidPair ? (
+										(tokenAPrice && tokenBPrice) ? (
+											<div style={{display: 'flex', justifyContent: 'center', marginTop: '1rem', fontSize: '13px', color: theme === 'light' ? '#000' : '#FFF', fontFamily: 'PT Sans Caption', padding: '0 0.8rem'}}>
+												<div style={{display: 'flex', alignItems: 'center', color: '#FFF'}}>
+													{!inverted ? (
+														<div>1 {tokenA} ~ {parseFloat(tokenAPrice).toFixed(6)} {tokenB}</div>
+													) : (
+														<div>1 {tokenB} ~ {parseFloat(tokenBPrice).toFixed(6)} {tokenA}</div>
+													)}
+													<button className="invert-button" onClick={this.toggleInversion}>
+														<GrPowerCycle size={15} />
+													</button>
+												</div>
 											</div>
-										</div>
+										) : null
 									) : null
 								) : null
-							) : null
-						): null}
-						<div className="details-section">
-							{(walletConnected && (tokenA && tokenB) && (tokenAAmount && tokenBAmount) && !fetchingPrices && !invalidPair) && (
-								<div className="flex-spaced-container" style={{fontSize: '13px'}}>
-									<div>Minimum received{' '}
-									<Tooltip placement="right" title="Your transaction will revert if there is a large, unfavourable price movement before it is confirmed.">
-										<AiOutlineQuestionCircle style={{position: 'relative', top: '2px', cursor: 'pointer'}} />
-									</Tooltip></div>
-									<div>{(parseFloat(tokenBAmount) - (parseFloat(tokenBAmount) * (parseFloat(this.context.slippage)/100))).toFixed(6)} {tokenB}</div>
-								</div>
-							)}
-							{(walletConnected && (tokenA && tokenB) && (tokenAAmount && tokenBAmount) && !fetchingPrices && !fetchingLiquidity && liquidityInfo && impact && !invalidPair) && (
-								<div className="flex-spaced-container" style={{fontSize: '13px'}}>
-									<div>Price Impact</div>
-									<div>{impact} %</div>
-								</div>
-							)}
-							{(this.context.slippage !== "0.5") && (
-								<div className="flex-spaced-container" style={{fontSize: '13px'}}>
-									<div>Slippage Tolerance{' '}
-									<Tooltip placement="right" title="Slippage tolerance must be greater than the price impact or else trade will not be executed.">
-										<AiOutlineQuestionCircle style={{position: 'relative', top: '2px', cursor: 'pointer'}} />
-									</Tooltip>
+							): null}
+							<div className="details-section">
+								{(walletConnected && (tokenA && tokenB) && (tokenAAmount && tokenBAmount) && !fetchingPrices && !invalidPair && minimumReceived > 0) && (
+									<div className="flex-spaced-container" style={{fontSize: '13px'}}>
+										<div>Minimum received{' '}
+										<Tooltip placement="right" title="Your transaction will revert if there is a large, unfavourable price movement before it is confirmed.">
+											<AiOutlineQuestionCircle style={{position: 'relative', top: '2px', cursor: 'pointer'}} />
+										</Tooltip></div>
+										<div>{(parseFloat(tokenBAmount) - (parseFloat(tokenBAmount) * (parseFloat(this.context.slippage)/100))).toFixed(6)} {tokenB}</div>
 									</div>
-									<div>{this.context.slippage} %</div>
-								</div>
-							)}
-						</div>
-						{!walletConnected ? (
-						<div className="exchange-button-container">
-							<button onClick={onModalToggle}>Connect wallet</button>
-						</div>
-					) : ((!tokenA || !tokenB) ? (
-							<div className="exchange-button-container">
-								<button disabled>Select a token</button>
+								)}
+								{(walletConnected && (tokenA && tokenB) && (tokenAAmount && tokenBAmount) && !fetchingPrices && !fetchingLiquidity && liquidityInfo && impact && !invalidPair) && (
+									<div className="flex-spaced-container" style={{fontSize: '13px'}}>
+										<div>Price Impact</div>
+										<div>{impact} %</div>
+									</div>
+								)}
+								{(this.context.slippage !== "0.5") && (
+									<div className="flex-spaced-container" style={{fontSize: '13px'}}>
+										<div>Slippage Tolerance{' '}
+										<Tooltip placement="right" title="Slippage tolerance must be greater than the price impact or else trade will not be executed.">
+											<AiOutlineQuestionCircle style={{position: 'relative', top: '2px', cursor: 'pointer'}} />
+										</Tooltip>
+										</div>
+										<div>{this.context.slippage} %</div>
+									</div>
+								)}
 							</div>
-						) : ((loading || fetchingLiquidity) ? (
+							{!walletConnected ? (
 								<div className="exchange-button-container">
-									<button disabled><CircularProgress size={12} thickness={5} style={{color: 'var(--primary)'}} /></button>
+									<button onClick={onModalToggle}>Connect wallet</button>
 								</div>
-							) : 
-							liquidityInfo ? ( 
-								parseFloat(liquidityInfo.total) > 0 ? (
-									!invalidPair ? (
-										(!tokenAAmount || !tokenBAmount) ? (
-											<div className="exchange-button-container">
-												<button disabled>Enter an amount</button>
-											</div>
-										) : (((parseFloat(tokenAAmount) <= parseFloat(tokenABalance))) ? (
-											((parseFloat(tokenAAmount) <= parseFloat(tokenAAllowance))) ? (
-												(parseFloat(impact) <= parseFloat(this.context.slippage)) ? (
+							) : ((!tokenA || !tokenB) ? (
+									<div className="exchange-button-container">
+										<button disabled>Select a token</button>
+									</div>
+								) : ((loading || fetchingLiquidity) ? (
+										<div className="exchange-button-container">
+											<button disabled><CircularProgress size={12} thickness={5} style={{color: 'var(--primary)'}} /></button>
+										</div>
+									) : 
+									liquidityInfo ? ( 
+										parseFloat(liquidityInfo.total) > 0 ? (
+											!invalidPair ? (
+												(!tokenAAmount || !tokenBAmount) ? (
 													<div className="exchange-button-container">
-														<button onClick={this.swap} disabled={loading || swapping}>Swap {swapping && (
-															<CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />
-														)}</button>
+														<button disabled>Enter an amount</button>
 													</div>
+												) : (((parseFloat(tokenAAmount) <= parseFloat(tokenABalance))) ? (
+													((parseFloat(tokenAAmount) <= parseFloat(tokenAAllowance))) ? (
+														(parseFloat(impact) <= parseFloat(this.context.slippage)) ? (
+															minimumReceived > 0 ? (
+																<div className="exchange-button-container">
+																	<button onClick={this.swap} disabled={loading || swapping}>Swap {swapping && (
+																		<CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />
+																	)}</button>
+																</div>
+															) : (
+																<div className="exchange-button-container">
+																	<button disabled>
+																		Slippage too high
+																	</button>
+																	<div style={{textAlign: 'center', fontSize: '13px', color: '#FFF', margin: '8px auto 0'}}>Reduce slippage tolerance</div>
+																</div>
+															)
+														) : (
+															<div className="exchange-button-container">
+																<button disabled>
+																	High Price Impact
+																</button>
+																<div style={{textAlign: 'center', fontSize: '13px', color: '#FFF', margin: '8px auto 0'}}>Set slippage higher than {impact} %</div>
+															</div>
+														)
+													) : ((parseFloat(tokenAAmount) > parseFloat(tokenAAllowance)) ? (
+															<div className="exchange-button-container">
+																<button 
+																	disabled={approvingTokenA || approving} style={{marginBottom: '0.25rem'}}
+																	onClick={() => {
+																		this.setState({approvalToken: 'A', approvalAmount: tokenAAmount}, () => this.handleModalToggle())
+																	}}>
+																	Approve {tokenA} {approvingTokenA && (<CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />)}
+																</button>
+																<button disabled>Swap</button>
+															</div>
+														) : (
+															<div className="exchange-button-container">
+																<button onClick={this.swap} disabled={loading || swapping}>Swap {swapping && (
+																	<CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />
+																)}</button>
+															</div>
+														)	
+													)
 												) : (
 													<div className="exchange-button-container">
 														<button disabled>
-															High Price Impact
+															Insufficient {tokenA} balance
 														</button>
-														<div style={{textAlign: 'center', fontSize: '13px', color: theme === 'light' ? '#000' : '#FFF', margin: '8px auto 0'}}>Set slippage higher than {impact} %</div>
 													</div>
 												)
-											) : ((parseFloat(tokenAAmount) > parseFloat(tokenAAllowance)) ? (
-													<div className="exchange-button-container">
-														<button 
-															disabled={approvingTokenA || approving} style={{marginBottom: '0.25rem'}}
-															onClick={() => {
-																this.setState({approvalToken: 'A', approvalAmount: tokenAAmount}, () => this.handleModalToggle())
-															}}>
-															Approve {tokenA} {approvingTokenA && (<CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />)}
-														</button>
-														<button disabled>Swap</button>
-													</div>
-												) : (
-													<div className="exchange-button-container">
-														<button onClick={this.swap} disabled={loading || swapping}>Swap {swapping && (
-															<CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />
-														)}</button>
-													</div>
-												)	
+												)
+											) : (
+												<div className="exchange-button-container">
+													<button disabled>
+														Invalid Pair
+													</button>
+												</div>
 											)
 										) : (
 											<div className="exchange-button-container">
 												<button disabled>
-													Insufficient {tokenA} balance
+													{fetchingLiquidity ? <CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} /> : "Insufficient liquidity for this trade"}
 												</button>
 											</div>
-										)
 										)
 									) : (
 										<div className="exchange-button-container">
 											<button disabled>
-												Invalid Pair
+												{fetchingLiquidity ? <CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} /> : "Insufficient liquidity for this trade"}
 											</button>
 										</div>
 									)
-								) : (
-									<div className="exchange-button-container">
-										<button disabled>
-											{fetchingLiquidity ? <CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} /> : "Insufficient liquidity for this trade"}
-										</button>
-									</div>
 								)
-							) : (
-								<div className="exchange-button-container">
-									<button disabled>
-										{fetchingLiquidity ? <CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} /> : "Insufficient liquidity for this trade"}
-									</button>
-								</div>
-							)
-						)
-					)}
+							)}
+						</div>
 					</div>
 				</div>
 				<Dialog

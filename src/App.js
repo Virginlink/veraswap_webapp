@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Dialog, Fade } from '@material-ui/core';
+import { CircularProgress, Dialog, Fade } from '@material-ui/core';
+import Logo from './assets/images/logo.png';
 import Metamask from './assets/images/metamask.png';
 import WalletConnect from './assets/images/walletConnect.svg';
 import CoinbaseWallet from './assets/images/coinbaseWallet.svg';
@@ -57,7 +58,8 @@ class App extends Component {
 			ethBuying : false,
 			sapproved : false,
 			sapproving : false,
-			claiming : false
+			claiming : false,
+			rendered: false,
 		}
 		this.fetchBalance = this.fetchBalance.bind(this);
 		this.buyWithEther = this.buyWithEther.bind(this);
@@ -77,6 +79,12 @@ class App extends Component {
 				this.setState({theme: 'dark'})
 			}
         }
+		setTimeout(
+			() => {
+				this.setState({rendered: true})
+			},
+			3000
+		)
 	}
 
 	toggleTheme = () => {
@@ -279,7 +287,8 @@ class App extends Component {
 				await window.ethereum.enable();
 				const address = await provider.listAccounts();
 				let network = await provider.getNetwork()
-				if(network.chainId !== 56){
+				const chainId = process.env.NODE_ENV === 'development' ? 97 : 56
+				if(network.chainId !== chainId){
 					notification['error']({
 						message : 'Wrong Network Detected. Please connect to Binance Smart Chain'
 					})
@@ -288,8 +297,10 @@ class App extends Component {
 				else{
 				let signer = await provider.getSigner();
 				this.fetchEthBalance(address[0])
-				this.fetchVrapBalance(address[0])
-				this.fetchTetherBalance(address[0])
+				if (process.env.NODE_ENV === 'production') {
+					this.fetchVrapBalance(address[0])
+					this.fetchTetherBalance(address[0])
+				}
 				this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'metamask',signer : signer})
 			}}
 			else{
@@ -472,208 +483,193 @@ class App extends Component {
 	}
 
 	render() {
-		const {connectWalletModalVisible, selectedWallet, showWalletConnection, connectionError, walletConnected, copied, walletConnectionActive, activeWallet, theme} = this.state
+		const {connectWalletModalVisible, selectedWallet, showWalletConnection, connectionError, walletConnected, copied, walletConnectionActive, activeWallet, theme, rendered} = this.state
 		return (
 			<>
 				<ThemeProvider theme={this.state.theme === 'light' ? lightTheme : darkTheme}>
 				<GlobalStyles/>
-				<Switch>
-					<Route 
-						exact 
-						path="/totalsupply" 
-						render = {(props)=> (
-						<TotalSupply 
-							{...props}
-							modalVisible={connectWalletModalVisible}
-							onModalToggle={this.toggleWalletConnectModal}
-							theme={theme}
-							onThemeToggle={this.toggleTheme}
-							walletConnected={walletConnected}
-							walletAddress = {this.state.walletAddress}
-							ethBalance = {this.state.ethBalance}
-							vrapBalance = {this.state.vrapBalance}
-							/>
-						)} 
+				{/* <Navbar
+					modalVisible={connectWalletModalVisible}
+					onModalToggle={this.toggleWalletConnectModal}
+					theme={theme}
+					onThemeToggle={this.toggleTheme}
+					walletConnected={walletConnected}
+					walletAddress = {this.state.walletAddress}
+					ethBalance = {this.state.ethBalance}
+					vrapBalance = {this.state.vrapBalance}
+				/> */}
+				{rendered ? (
+					<Switch>
+						{/* <Route 
+							path="/sale" 
+							render={(props) => (
+								<SalePage 
+									{...props}
+									modalVisible={connectWalletModalVisible}
+									onModalToggle={this.toggleWalletConnectModal}
+									theme={theme}
+									onThemeToggle={this.toggleTheme}
+									walletConnected={walletConnected}
+									walletAddress = {this.state.walletAddress}
+									ethBalance = {this.state.ethBalance}
+									vrapBalance = {this.state.vrapBalance}
+									onModalOpenRequest={this.toggleWalletConnectModal} 
+									usdtBalance = {this.state.usdtBalance}
+									address = {this.state.address}
+									fetchBalance={this.fetchBalance}
+									buyWithEther = {this.buyWithEther}
+									approved = {this.state.approved}
+									approving = {this.state.approving}
+									approveTether={this.approveTether}
+									buyWithTether = {this.buyWithTether}
+									onResetBuyStatus={this.resetBuyStatus}
+									ethBuying={this.state.ethBuying}
+								/>
+							)} 
 						/>
-					<Route 
-						exact 
-						path="/circulatingsupply" 
-						render = {(props)=> (
-						<CirculatingSupply 
-							{...props}
-							modalVisible={connectWalletModalVisible}
-							onModalToggle={this.toggleWalletConnectModal}
-							theme={theme}
-							onThemeToggle={this.toggleTheme}
-							walletConnected={walletConnected}
-							walletAddress = {this.state.walletAddress}
-							ethBalance = {this.state.ethBalance}
-							vrapBalance = {this.state.vrapBalance}
-							/>
-						)} 
+						<Route 
+							exact
+							path="/stake" 
+							render={(props) => (
+								<StakePage
+									{...props}
+									modalVisible={connectWalletModalVisible}
+									onModalToggle={this.toggleWalletConnectModal}
+									theme={theme}
+									onThemeToggle={this.toggleTheme}
+									walletConnected={walletConnected}
+									walletAddress = {this.state.walletAddress}
+									ethBalance = {this.state.ethBalance}
+									vrapBalance = {this.state.vrapBalance}
+									onModalOpenRequest={this.toggleWalletConnectModal} 
+									usdtBalance = {this.state.usdtBalance}
+									address = {this.state.address}
+									fetchBalance={this.fetchBalance}
+									buyWithEther = {this.buyWithEther}
+									approved = {this.state.approved}
+									approving = {this.state.approving}
+									approveTether={this.approveTether}
+									buyWithTether = {this.buyWithTether}
+								/>
+							)} 
 						/>
-					<Route 
-						path="/sale" 
-						render={(props) => (
-							<SalePage 
-								{...props}
-								modalVisible={connectWalletModalVisible}
-								onModalToggle={this.toggleWalletConnectModal}
-								theme={theme}
-								onThemeToggle={this.toggleTheme}
-								walletConnected={walletConnected}
-								walletAddress = {this.state.walletAddress}
-								ethBalance = {this.state.ethBalance}
-								vrapBalance = {this.state.vrapBalance}
-								onModalOpenRequest={this.toggleWalletConnectModal} 
-								usdtBalance = {this.state.usdtBalance}
-								address = {this.state.address}
-								fetchBalance={this.fetchBalance}
-								buyWithEther = {this.buyWithEther}
-								approved = {this.state.approved}
-								approving = {this.state.approving}
-								approveTether={this.approveTether}
-								buyWithTether = {this.buyWithTether}
-								onResetBuyStatus={this.resetBuyStatus}
-								ethBuying={this.state.ethBuying}
-							/>
-						)} 
-					/>
-					<Route 
-						exact
-						path="/stake" 
-						render={(props) => (
-							<StakePage
-								{...props}
-								modalVisible={connectWalletModalVisible}
-								onModalToggle={this.toggleWalletConnectModal}
-								theme={theme}
-								onThemeToggle={this.toggleTheme}
-								walletConnected={walletConnected}
-								walletAddress = {this.state.walletAddress}
-								ethBalance = {this.state.ethBalance}
-								vrapBalance = {this.state.vrapBalance}
-								onModalOpenRequest={this.toggleWalletConnectModal} 
-								usdtBalance = {this.state.usdtBalance}
-								address = {this.state.address}
-								fetchBalance={this.fetchBalance}
-								buyWithEther = {this.buyWithEther}
-								approved = {this.state.approved}
-								approving = {this.state.approving}
-								approveTether={this.approveTether}
-								buyWithTether = {this.buyWithTether}
-							/>
-						)} 
-					/>
-					<Route
-						exact
-						path="/stake/:address/:version" 
-						render={(props) => (
-							<StakeDeposit
-								{...props}
-								modalVisible={connectWalletModalVisible}
-								onModalToggle={this.toggleWalletConnectModal}
-								theme={theme}
-								claiming = {this.state.claiming}
-								onThemeToggle={this.toggleTheme}
-								walletConnected={walletConnected}
-								walletAddress = {this.state.walletAddress}
-								ethBalance = {this.state.ethBalance}
-								vrapBalance = {this.state.vrapBalance}
-								onModalOpenRequest={this.toggleWalletConnectModal} 
-								usdtBalance = {this.state.usdtBalance}
-								address = {this.state.address}
-								fetchBalance={this.fetchBalance}
-								buyWithEther = {this.buyWithEther}
-								approved = {this.state.approved}
-								approving = {this.state.approving}
-								approveTether={this.approveTether}
-								buyWithTether = {this.buyWithTether}
-								sapproved = {this.state.sapproved}
-								sapproving = {this.state.sapproving}
-								staking={this.state.staking}
-								approveStaking = {this.approveStaking}
-								stakeToken = {this.stakeToken}
-								claim={this.claim}
-								stakeSuccess={this.state.stakeSuccess}
-								onResetStakeStatus={this.resetStakeStatus}
-							/>
-						)} 
-					/>
-					<Route
-						exact
-						path="/swap"
-						render={(props) => (
-							<Exchange
-								{...props}
-								theme={theme}
-								onThemeToggle={this.toggleTheme}
-								walletConnected={walletConnected}
-								walletAddress={this.state.walletAddress}
-								onModalToggle={this.toggleWalletConnectModal}
-								modalVisible={connectWalletModalVisible}
-								signer={this.state.signer}
-								ethBalance = {this.state.ethBalance}
-								vrapBalance = {this.state.vrapBalance}
-							/>
-						)}
-					/>
-					<Route
-						exact
-						path="/pool"
-						render={(props) => (
-							<Liquidity
-								{...props}
-								theme={theme}
-								onThemeToggle={this.toggleTheme}
-								walletConnected={walletConnected}
-								walletAddress={this.state.walletAddress}
-								onModalToggle={this.toggleWalletConnectModal}
-								modalVisible={connectWalletModalVisible}
-								signer={this.state.signer}
-								ethBalance = {this.state.ethBalance}
-								vrapBalance = {this.state.vrapBalance}
-							/>
-						)}
-					/>
-					<Route
-						exact
-						path="/pool/remove"
-						render={(props) => (
-							<RemoveLiquidity
-								{...props}
-								theme={theme}
-								onThemeToggle={this.toggleTheme}
-								walletConnected={walletConnected}
-								walletAddress={this.state.walletAddress}
-								onModalToggle={this.toggleWalletConnectModal}
-								modalVisible={connectWalletModalVisible}
-								signer={this.state.signer}
-								ethBalance = {this.state.ethBalance}
-								vrapBalance = {this.state.vrapBalance}
-							/>
-						)}
-					/>
-					<Route
-						exact
-						path="/find"
-						render={(props) => (
-							<ImportLiquidity
-								{...props}
-								theme={theme}
-								onThemeToggle={this.toggleTheme}
-								walletConnected={walletConnected}
-								walletAddress={this.state.walletAddress}
-								onModalToggle={this.toggleWalletConnectModal}
-								modalVisible={connectWalletModalVisible}
-								signer={this.state.signer}
-								ethBalance = {this.state.ethBalance}
-								vrapBalance = {this.state.vrapBalance}
-							/>
-						)}
-					/>
-					<Redirect path="/" to="/stake" />
-				</Switch>
+						<Route
+							exact
+							path="/stake/:address/:version" 
+							render={(props) => (
+								<StakeDeposit
+									{...props}
+									modalVisible={connectWalletModalVisible}
+									onModalToggle={this.toggleWalletConnectModal}
+									theme={theme}
+									claiming = {this.state.claiming}
+									onThemeToggle={this.toggleTheme}
+									walletConnected={walletConnected}
+									walletAddress = {this.state.walletAddress}
+									ethBalance = {this.state.ethBalance}
+									vrapBalance = {this.state.vrapBalance}
+									onModalOpenRequest={this.toggleWalletConnectModal} 
+									usdtBalance = {this.state.usdtBalance}
+									address = {this.state.address}
+									fetchBalance={this.fetchBalance}
+									buyWithEther = {this.buyWithEther}
+									approved = {this.state.approved}
+									approving = {this.state.approving}
+									approveTether={this.approveTether}
+									buyWithTether = {this.buyWithTether}
+									sapproved = {this.state.sapproved}
+									sapproving = {this.state.sapproving}
+									staking={this.state.staking}
+									approveStaking = {this.approveStaking}
+									stakeToken = {this.stakeToken}
+									claim={this.claim}
+									stakeSuccess={this.state.stakeSuccess}
+									onResetStakeStatus={this.resetStakeStatus}
+								/>
+							)} 
+						/> */}
+						<Route
+							exact
+							path="/swap"
+							render={(props) => (
+								<Exchange
+									{...props}
+									theme={theme}
+									onThemeToggle={this.toggleTheme}
+									walletConnected={walletConnected}
+									walletAddress={this.state.walletAddress}
+									onModalToggle={this.toggleWalletConnectModal}
+									modalVisible={connectWalletModalVisible}
+									signer={this.state.signer}
+									ethBalance = {this.state.ethBalance}
+									vrapBalance = {this.state.vrapBalance}
+								/>
+							)}
+						/>
+						<Route
+							exact
+							path="/pool"
+							render={(props) => (
+								<Liquidity
+									{...props}
+									theme={theme}
+									onThemeToggle={this.toggleTheme}
+									walletConnected={walletConnected}
+									walletAddress={this.state.walletAddress}
+									onModalToggle={this.toggleWalletConnectModal}
+									modalVisible={connectWalletModalVisible}
+									signer={this.state.signer}
+									ethBalance = {this.state.ethBalance}
+									vrapBalance = {this.state.vrapBalance}
+								/>
+							)}
+						/>
+						<Route
+							exact
+							path="/pool/remove"
+							render={(props) => (
+								<RemoveLiquidity
+									{...props}
+									theme={theme}
+									onThemeToggle={this.toggleTheme}
+									walletConnected={walletConnected}
+									walletAddress={this.state.walletAddress}
+									onModalToggle={this.toggleWalletConnectModal}
+									modalVisible={connectWalletModalVisible}
+									signer={this.state.signer}
+									ethBalance = {this.state.ethBalance}
+									vrapBalance = {this.state.vrapBalance}
+								/>
+							)}
+						/>
+						<Route
+							exact
+							path="/find"
+							render={(props) => (
+								<ImportLiquidity
+									{...props}
+									theme={theme}
+									onThemeToggle={this.toggleTheme}
+									walletConnected={walletConnected}
+									walletAddress={this.state.walletAddress}
+									onModalToggle={this.toggleWalletConnectModal}
+									modalVisible={connectWalletModalVisible}
+									signer={this.state.signer}
+									ethBalance = {this.state.ethBalance}
+									vrapBalance = {this.state.vrapBalance}
+								/>
+							)}
+						/>
+						<Redirect path="/" to="/swap" />
+					</Switch>
+				) : (
+					<div className="loading-container">
+						<div>
+							<img src={Logo} alt="logo" />
+							<CircularProgress size={100} thickness={1.5} />
+						</div>
+					</div>
+				)}
 				<Dialog
 					open={connectWalletModalVisible}
 					TransitionComponent={Transition}

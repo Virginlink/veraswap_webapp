@@ -51,7 +51,7 @@ class LPCard extends Component {
     }
 
     render() {
-        const { tokenA, tokenB, tokenAIcon, tokenBIcon, tokenAAddress, tokenBAddress, lpAddress, onAddLiquidity, history, walletAddress, importLP, onImport, theme } = this.props
+        const { tokenA, tokenB, tokenAIcon, tokenBIcon, tokenAAddress, tokenBAddress, lpAddress, onAddLiquidity, history, walletAddress, importLP, onImport, theme, tokenADecimals, tokenBDecimals } = this.props
         const { detailsVisible, liquidityInfo } = this.state
         return (
             <div className="lp-card">
@@ -75,7 +75,7 @@ class LPCard extends Component {
                     :
                     
                     <>
-                        <div className="flex-spaced-container" style={{alignItems: 'flex-start'}}>
+                        <div className="flex-spaced-container" style={{alignItems: 'flex-start', color: theme === 'dark' ? '#FFF' : '#000'}}>
                             <div>Your total pool tokens:</div>
                             <div>{parseFloat(liquidityInfo.total).toFixed(8)}</div>
                         </div>
@@ -87,7 +87,7 @@ class LPCard extends Component {
                             <div>Pooled {tokenB}:</div>
                             <div>0.00007965 <img src={tokenBIcon} alt="token-1" /></div>
                         </div> */}
-                        <div className="flex-spaced-container" style={{alignItems: 'flex-start'}}>
+                        <div className="flex-spaced-container" style={{alignItems: 'flex-start', color: theme === 'dark' ? '#FFF' : '#000'}}>
                             <div>Your pool share:</div>
                             <div>{this.getPoolSharePercent(liquidityInfo.total, liquidityInfo.totalSupply)} %</div>
                         </div>
@@ -105,11 +105,13 @@ class LPCard extends Component {
                                             symbol: tokenA,
                                             icon: tokenAIcon,
                                             address: tokenAAddress,
+                                            decimals: tokenADecimals,
                                         },
                                         tokenB: {
                                             symbol: tokenB,
                                             icon: tokenBIcon,
                                             address: tokenBAddress,
+                                            decimals: tokenBDecimals,
                                         },
                                         lpAddress: lpAddress, 
                                     }
@@ -124,12 +126,14 @@ class LPCard extends Component {
                                             icon: tokenAIcon,
                                             address: tokenAAddress,
                                             supply: liquidityInfo.A,
+                                            decimals: tokenADecimals,
                                         },
                                         tokenB: {
                                             symbol: tokenB,
                                             icon: tokenBIcon,
                                             address: tokenBAddress,
-                                            supply: liquidityInfo.B
+                                            supply: liquidityInfo.B,
+                                            decimals: tokenBDecimals,
                                         },
                                         lpAddress: lpAddress,
                                         walletAddress: walletAddress,

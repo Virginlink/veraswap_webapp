@@ -96,6 +96,7 @@ export const lightTheme = {
     rowHoverBackgroundColor: 'rgb(0 0 0 / 5%)',
     swapDividerColor: 'rgb(237,238,242)',
     newPoolBlockBackgroundColor: '#FFF',
+    exchangeCardBackground: 'radial-gradient(76.02% 75.41% at 1.84% 0%, #f22121 0%, #22162C 100%)',
 }
 
 export const darkTheme = {
@@ -196,4 +197,5 @@ export const darkTheme = {
     rowHoverBackgroundColor: 'rgb(64,68,79)',
     swapDividerColor: 'rgb(33,36,41)',
     newPoolBlockBackgroundColor: 'rgb(33,36,41)',
+    exchangeCardBackground: 'radial-gradient(91.85% 100% at 1.84% 0%, rgb(187, 141, 0) 0%, rgb(108, 114, 132) 100%)',
 }
