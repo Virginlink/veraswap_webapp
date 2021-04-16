@@ -49,11 +49,7 @@ export const getBNBBalance = (walletAddress) => {
 export const getTokenSupply = (contractAddress) => {
     return new Promise(async (resolve, reject) => {
         try {
-<<<<<<< HEAD
-            const contract = new ethers.Contract(contractAddress, TOKEN_ABI, PROVIDER)
-=======
             const contract = new ethers.Contract(contractAddress, ABI, PROVIDER)
->>>>>>> c99818a986a9099407ec3f5ef9ccf3f7ae57f4a8
             let totalSupply = await contract.totalSupply()
             totalSupply = ethers.utils.formatUnits(totalSupply, 18)
             resolve({

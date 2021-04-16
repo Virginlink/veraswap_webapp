@@ -56,7 +56,6 @@ export default class CurrencySelectModal extends Component {
         const tokenExistsinOG = TOKENS.filter((token) => token.contractAddress === newToken.contractAddress).length > 0
         let importedTokens = fetchImportedTokens()
         const tokenExists = importedTokens.data.filter((token) => token.contractAddress === newToken.contractAddress).length > 0
-        const tokenExistsinOG = TOKENS.filter((token) => token.contractAddress === newToken.contractAddress).length > 0
         if (importedTokens) {
             const tokenExists = importedTokens.data.filter((token) => token.contractAddress === newToken.contractAddress).length > 0
             if (tokenExists || tokenExistsinOG) {
