@@ -357,6 +357,7 @@ class RemoveLiquidity extends Component {
                 <div className="container">
 					<div className="exchange-card">
 						<RemoveLP
+							theme={theme}
 							walletConnected={walletConnected}
 							walletAddress={walletAddress}
 							signer={signer}

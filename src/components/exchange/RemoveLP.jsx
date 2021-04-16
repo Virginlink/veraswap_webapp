@@ -32,7 +32,7 @@ class RemoveLP extends Component {
     }
 
     render() {
-        const { tokenA, tokenB, tokenAIcon, tokenBIcon, onPercentChange, percent, history, tokenASupply, tokenBSupply, tokensInPool } = this.props
+        const { tokenA, tokenB, tokenAIcon, tokenBIcon, onPercentChange, percent, history, tokenASupply, tokenBSupply, tokensInPool, theme } = this.props
         return (  
             <>
                 <div className="pool-form">
@@ -44,7 +44,7 @@ class RemoveLP extends Component {
                         </Tooltip>
                     </div>
                     <div className="form-control">
-                        <div>amount</div>
+                        <div style={{fontFamily: 'PT Sans Caption', textTransform: 'none', fontSize: '14px'}}>Amount</div>
                         <div className="text-large">{percent} %</div>
                         <Slider
                             value={percent}
@@ -55,10 +55,10 @@ class RemoveLP extends Component {
                             className="percent-slider"
                         />        
                         <div className="percent-buttons">
-                            <button onClick={() => onPercentChange(25)}>25%</button>
-                            <button onClick={() => onPercentChange(50)}>50%</button>
-                            <button onClick={() => onPercentChange(75)}>75%</button>
-                            <button onClick={() => onPercentChange(100)}>Max</button>
+                            <button style={{color: theme === 'light' ? '#000' : '#FFF'}} onClick={() => onPercentChange(25)}>25%</button>
+                            <button style={{color: theme === 'light' ? '#000' : '#FFF'}} onClick={() => onPercentChange(50)}>50%</button>
+                            <button style={{color: theme === 'light' ? '#000' : '#FFF'}} onClick={() => onPercentChange(75)}>75%</button>
+                            <button style={{color: theme === 'light' ? '#000' : '#FFF'}} onClick={() => onPercentChange(100)}>Max</button>
                         </div>
                     </div>
                     <div className="action">
@@ -71,7 +71,7 @@ class RemoveLP extends Component {
                                 <div>
                                     <img src={tokenAIcon} alt="token-1" style={{marginRight: '1px'}} />
                                     <img src={tokenBIcon} alt="token-2" />
-                                    <span>{tokenA}/{tokenB}</span>
+                                    <span style={{color: theme === 'dark' ? '#FFF' : '#000'}}>{tokenA}/{tokenB}</span>
                                 </div>
                             </div>
                             <div className="flex-spaced-container pool-amount-row" style={{alignItems: 'flex-start'}}>
@@ -84,7 +84,7 @@ class RemoveLP extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="flex-spaced-container" style={{alignItems: 'flex-start', marginTop: '1rem'}}>
+                    <div className="flex-spaced-container" style={{alignItems: 'flex-start', marginTop: '1rem', fontFamily: 'PT Sans Caption'}}>
                         <div>Price:</div>
                         <div style={{textAlign: 'right'}}>
                             <div style={{marginBottom: '4px'}}>1 {tokenA} = {(parseFloat(tokenBSupply)/parseFloat(tokenASupply)).toFixed(6)} {tokenB}</div>

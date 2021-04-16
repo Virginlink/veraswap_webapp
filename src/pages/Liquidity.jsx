@@ -640,139 +640,143 @@ class Liquidity extends Component {
             	/>
                 <div className="container">
 					<div className="exchange-card">
-						{liquiditySectionVisible && (
-							<div className="tabs">
-								<a href="/swap" onClick={(e) => {e.preventDefault(); history.push('/swap')}}>Swap</a>
-								<a href="/pool" onClick={(e) => e.preventDefault()} className="tab-active">Pool</a>
-							</div>
-						)}
-						<Pool
-							fetchingLiquidity={loading}
-							theme={theme}
-							liquiditySectionVisible={liquiditySectionVisible}
-                            pools={pools}
-							onSectionToggle={this.toggleLiquiditySectionVisibility}
-							walletConnected={walletConnected}
-							walletAddress={walletAddress}
-							signer={signer}
-							tokenA={tokenA}
-							tokenAIcon={tokenAIcon}
-							tokenABalance={tokenABalance}
-							tokenB={tokenB}
-							tokenBIcon={tokenBIcon}
-							tokenBBalance={tokenBBalance}
-							onTokenAUpdate={this.updateTokenA}
-							onTokenBUpdate={this.updateTokenB}
-							tokenAAmount={tokenAAmount}
-							tokenBAmount={tokenBAmount}
-							onAmountChange={this.updateAmount}
-							onMax={this.handleMax}
-							onAddLiquidity={this.addLiquidity}
-							onRefresh={this.handleRefresh}
-						/>
-						{(walletConnected && !liquiditySectionVisible && (tokenA && tokenB) && !loading && liquidityInfo) && (
-							parseFloat(liquidityInfo.total) > 0 ? (
-								<>
-									<div className="flex-spaced-container" style={{alignItems: 'center', marginTop: '1rem', color: theme === 'light' ? '#000' : '#FFF', fontSize: '13px'}}>
-										<div>Price</div>
-										<div style={{textAlign: 'right', display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
-											{!inverted ? (
-												<div>1 {tokenA} = {(parseFloat(tokenBSupply)/parseFloat(tokenASupply)).toFixed(6)} {tokenB}</div>
-											) : (
-												<div>1 {tokenB} = {(parseFloat(tokenASupply)/parseFloat(tokenBSupply)).toFixed(6)} {tokenA}</div>
-											)}
-											<button className="invert-button" onClick={this.toggleInversion}>
-												<GrPowerCycle size={15} />
-											</button>
-										</div>
-									</div>
-									<div className="details-section">
-										<div className="flex-spaced-container" style={{alignItems: 'flex-start', color: theme === 'light' ? '#000' : '#FFF', fontSize: '13px'}}>
-											<div>Your total pooled tokens</div>
-											<div style={{textAlign: 'right'}}>
-												{parseFloat(liquidityInfo.total).toFixed(6)}
-											</div>
-										</div>
-										<div className="flex-spaced-container" style={{alignItems: 'flex-start', color: theme === 'light' ? '#000' : '#FFF', fontSize: '13px'}}>
-											<div>Your pool share</div>
-											<div style={{textAlign: 'right'}}>
-												{this.getPoolSharePercent(liquidityInfo.total, liquidityInfo.totalSupply)} %
-											</div>
-										</div>
-									</div>
-								</>
-							) : null
-						)}
-						<span style={{display: 'none'}}>{this.state.lpAddress}</span>
-						{liquiditySectionVisible ? (
-							<div className="exchange-button-container">
-								<p>Don't see a pool you joined? <a href="/find" onClick={(e) => {e.preventDefault(); history.push('/find')}}>Import it.</a></p>
-							</div>
-						) : (!walletConnected ? (
-								<div className="exchange-button-container">
-									<button onClick={onModalToggle}>Connect wallet</button>
+						<span className="sale-rotation"></span>
+                        <span className="noise"></span>
+						<div style={{zIndex: 1, position: 'relative'}}>
+							{liquiditySectionVisible && (
+								<div className="tabs">
+									<a href="/swap" onClick={(e) => {e.preventDefault(); history.push('/swap')}}>Swap</a>
+									<a href="/pool" onClick={(e) => e.preventDefault()} className="tab-active">Pool</a>
 								</div>
-							) : ((!tokenA || !tokenB) ? (
+							)}
+							<Pool
+								fetchingLiquidity={loading}
+								theme={theme}
+								liquiditySectionVisible={liquiditySectionVisible}
+								pools={pools}
+								onSectionToggle={this.toggleLiquiditySectionVisibility}
+								walletConnected={walletConnected}
+								walletAddress={walletAddress}
+								signer={signer}
+								tokenA={tokenA}
+								tokenAIcon={tokenAIcon}
+								tokenABalance={tokenABalance}
+								tokenB={tokenB}
+								tokenBIcon={tokenBIcon}
+								tokenBBalance={tokenBBalance}
+								onTokenAUpdate={this.updateTokenA}
+								onTokenBUpdate={this.updateTokenB}
+								tokenAAmount={tokenAAmount}
+								tokenBAmount={tokenBAmount}
+								onAmountChange={this.updateAmount}
+								onMax={this.handleMax}
+								onAddLiquidity={this.addLiquidity}
+								onRefresh={this.handleRefresh}
+							/>
+							{(walletConnected && !liquiditySectionVisible && (tokenA && tokenB) && !loading && liquidityInfo) && (
+								parseFloat(liquidityInfo.total) > 0 ? (
+									<>
+										<div className="flex-spaced-container" style={{alignItems: 'center', marginTop: '1rem', color: '#FFF', fontSize: '13px', fontFamily: 'PT Sans Caption'}}>
+											<div>Price</div>
+											<div style={{textAlign: 'right', display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
+												{!inverted ? (
+													<div>1 {tokenA} = {(parseFloat(tokenBSupply)/parseFloat(tokenASupply)).toFixed(6)} {tokenB}</div>
+												) : (
+													<div>1 {tokenB} = {(parseFloat(tokenASupply)/parseFloat(tokenBSupply)).toFixed(6)} {tokenA}</div>
+												)}
+												<button className="invert-button" onClick={this.toggleInversion}>
+													<GrPowerCycle size={15} />
+												</button>
+											</div>
+										</div>
+										<div className="details-section">
+											<div className="flex-spaced-container" style={{alignItems: 'flex-start', color: theme === 'light' ? '#000' : '#FFF', fontSize: '13px'}}>
+												<div>Your total pooled tokens</div>
+												<div style={{textAlign: 'right'}}>
+													{parseFloat(liquidityInfo.total).toFixed(6)}
+												</div>
+											</div>
+											<div className="flex-spaced-container" style={{alignItems: 'flex-start', color: theme === 'light' ? '#000' : '#FFF', fontSize: '13px'}}>
+												<div>Your pool share</div>
+												<div style={{textAlign: 'right'}}>
+													{this.getPoolSharePercent(liquidityInfo.total, liquidityInfo.totalSupply)} %
+												</div>
+											</div>
+										</div>
+									</>
+								) : null
+							)}
+							<span style={{display: 'none'}}>{this.state.lpAddress}</span>
+							{liquiditySectionVisible ? (
+								<div className="exchange-button-container">
+									<p>Don't see a pool you joined? <a href="/find" onClick={(e) => {e.preventDefault(); history.push('/find')}}>Import it.</a></p>
+								</div>
+							) : (!walletConnected ? (
 									<div className="exchange-button-container">
-										<button disabled>Invalid pair</button>
+										<button onClick={onModalToggle}>Connect wallet</button>
 									</div>
-								) : ((loading || (!tokenAAllowance && !tokenBAllowance)) ? (
+								) : ((!tokenA || !tokenB) ? (
 										<div className="exchange-button-container">
-											<button disabled><CircularProgress size={12} thickness={5} style={{color: theme === '#FFF' }} /></button>
+											<button disabled>Invalid pair</button>
 										</div>
-									) : (!tokenAAmount || !tokenBAmount) ? (
-										<div className="exchange-button-container">
-											<button disabled>Enter an amount</button>
-										</div>
-									) : ((parseFloat(tokenAAmount) === 0 || parseFloat(tokenBAmount) === 0) ? (
+									) : ((loading || (!tokenAAllowance && !tokenBAllowance)) ? (
+											<div className="exchange-button-container">
+												<button disabled><CircularProgress size={12} thickness={5} style={{color: '#FFF' }} /></button>
+											</div>
+										) : (!tokenAAmount || !tokenBAmount) ? (
 											<div className="exchange-button-container">
 												<button disabled>Enter an amount</button>
 											</div>
-										) : (((parseFloat(tokenAAmount) <= parseFloat(tokenABalance)) && ((parseFloat(tokenBAmount) <= parseFloat(tokenBBalance)))) ? (
-												((parseFloat(tokenAAmount) <= parseFloat(tokenAAllowance) && parseFloat(tokenBAmount) <= parseFloat(tokenBAllowance))) ? (
-													<div className="exchange-button-container">
-														<button onClick={this.supply} disabled={loading || supplying}>Supply {supplying && (
-															<CircularProgress size={12} thickness={5} style={{color: theme === '#FFF' , position: 'relative', top: '1px'}} />
-														)}</button>
-													</div>
-												) : ((parseFloat(tokenAAmount) > parseFloat(tokenAAllowance)) ? (
-														<div className="exchange-button-container">
-																<button disabled={approvingTokenA || approvingTokenB} style={{marginBottom: '0.25rem'}} onClick={() => {
-																	this.setState({approvalToken: 'A', approvalAmount: tokenAAmount}, () => this.handleModalToggle())
-																}}>
-																	Approve {tokenA} {approvingTokenA && (<CircularProgress size={12} thickness={5} style={{color: theme === '#FFF' , position: 'relative', top: '1px'}} />)}
-																</button>
-															<button disabled>Supply</button>
-														</div>
-													) : (parseFloat(tokenBAmount) > parseFloat(tokenBAllowance)) ? (
-														<div className="exchange-button-container">
-																<button disabled={approvingTokenB || approvingTokenA} style={{marginBottom: '0.25rem'}} onClick={() => {
-																	this.setState({approvalToken: 'B', approvalAmount: tokenBAmount}, () => this.handleModalToggle())
-																}}>
-																Approve {tokenB} {approvingTokenB && (<CircularProgress size={12} thickness={5} style={{color: theme === '#FFF' , position: 'relative', top: '1px'}} />)}
-															</button>
-															<button disabled>Supply</button>
-														</div>
-													) : (
+										) : ((parseFloat(tokenAAmount) === 0 || parseFloat(tokenBAmount) === 0) ? (
+												<div className="exchange-button-container">
+													<button disabled>Enter an amount</button>
+												</div>
+											) : (((parseFloat(tokenAAmount) <= parseFloat(tokenABalance)) && ((parseFloat(tokenBAmount) <= parseFloat(tokenBBalance)))) ? (
+													((parseFloat(tokenAAmount) <= parseFloat(tokenAAllowance) && parseFloat(tokenBAmount) <= parseFloat(tokenBAllowance))) ? (
 														<div className="exchange-button-container">
 															<button onClick={this.supply} disabled={loading || supplying}>Supply {supplying && (
-																<CircularProgress size={12} thickness={5} style={{color: theme === '#FFF' , position: 'relative', top: '1px'}} />
+																<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />
 															)}</button>
 														</div>
-													)	
+													) : ((parseFloat(tokenAAmount) > parseFloat(tokenAAllowance)) ? (
+															<div className="exchange-button-container">
+																	<button disabled={approvingTokenA || approvingTokenB} style={{marginBottom: '0.25rem'}} onClick={() => {
+																		this.setState({approvalToken: 'A', approvalAmount: tokenAAmount}, () => this.handleModalToggle())
+																	}}>
+																		Approve {tokenA} {approvingTokenA && (<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />)}
+																	</button>
+																<button disabled>Supply</button>
+															</div>
+														) : (parseFloat(tokenBAmount) > parseFloat(tokenBAllowance)) ? (
+															<div className="exchange-button-container">
+																	<button disabled={approvingTokenB || approvingTokenA} style={{marginBottom: '0.25rem'}} onClick={() => {
+																		this.setState({approvalToken: 'B', approvalAmount: tokenBAmount}, () => this.handleModalToggle())
+																	}}>
+																	Approve {tokenB} {approvingTokenB && (<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />)}
+																</button>
+																<button disabled>Supply</button>
+															</div>
+														) : (
+															<div className="exchange-button-container">
+																<button onClick={this.supply} disabled={loading || supplying}>Supply {supplying && (
+																	<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />
+																)}</button>
+															</div>
+														)	
+													)
+												) : (
+													<div className="exchange-button-container">
+														<button disabled>
+															{(parseFloat(tokenAAmount) > parseFloat(tokenABalance)) ? `Insufficient ${tokenA} balance` : `Insufficient ${tokenB} balance`}
+														</button>
+													</div>
 												)
-											) : (
-												<div className="exchange-button-container">
-													<button disabled>
-														{(parseFloat(tokenAAmount) > parseFloat(tokenABalance)) ? `Insufficient ${tokenA} balance` : `Insufficient ${tokenB} balance`}
-													</button>
-												</div>
 											)
 										)
 									)
 								)
-							)
-						)}
+							)}
+						</div>
 					</div>
 				</div>
 				<Dialog
