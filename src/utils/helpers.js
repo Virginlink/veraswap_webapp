@@ -229,7 +229,7 @@ export const addLiquidityWithBNB = ({walletAddress, address, amount, amountMin, 
                 walletAddress, // To address
                 deadline, // Transaction deadline
                 {
-                    value: BNBAmount.toString(),
+                    value: parseFloat(BNBAmount),
                 }
             )
             resolve({
@@ -401,7 +401,7 @@ export const swapBNBForTokens = ({amountIn, amountOutMin, tokenAddresses, wallet
                 walletAddress,
                 deadline,
                 {
-                    value: amountIn.toString(), // BNB Amount
+                    value: parseFloat(amountIn), // BNB Amount
                 },
             )
             resolve({
