@@ -262,7 +262,7 @@ class Liquidity extends Component {
 		const { tokenAAddress, tokenBAddress } = this.state;
 		notification.close('supplyProcessingNotification')
 		const Link = () => (
-			<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${hash}`} onClick={() => notification.close('supplySuccessNotification')}>View Transaction</a>
+			<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://${process.env.NODE_ENV === 'development' ? 'testnet.bscscan.com' : 'bscscan.com'}/tx/${hash}`} onClick={() => notification.close('supplySuccessNotification')}>View Transaction</a>
 		)
 		notification.success({
 			key: 'supplySuccessNotification',
@@ -442,7 +442,7 @@ class Liquidity extends Component {
 							localStorage.setItem('hashData', JSON.stringify(newHashArray))
 						}
 						const Link = () => (
-							<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`}>View Transaction</a>
+							<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://${process.env.NODE_ENV === 'development' ? 'testnet.bscscan.com' : 'bscscan.com'}/tx/${res.data.hash}`}>View Transaction</a>
 						)
 						notification.info({
 							key: 'approvalProcessingNotification',
@@ -477,7 +477,7 @@ class Liquidity extends Component {
 										}
 										notification.close('approvalProcessingNotification')
 										const Link = () => (
-											<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`} onClick={() => notification.close('approvalSuccessNotification')}>View Transaction</a>
+											<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://${process.env.NODE_ENV === 'development' ? 'testnet.bscscan.com' : 'bscscan.com'}/tx/${res.data.hash}`} onClick={() => notification.close('approvalSuccessNotification')}>View Transaction</a>
 										)
 										notification.success({
 											key: 'approvalSuccessNotification',
@@ -553,7 +553,7 @@ class Liquidity extends Component {
 					if (res.success) {
 						if (res.data.hash) {
 							const Link = () => (
-								<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`}>View Transaction</a>
+								<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://${process.env.NODE_ENV === 'development' ? 'testnet.bscscan.com' : 'bscscan.com'}/tx/${res.data.hash}`}>View Transaction</a>
 							)
 							notification.info({
 								key: 'supplyProcessingNotification',
@@ -656,7 +656,7 @@ class Liquidity extends Component {
 					if (res.success) {
 						if (res.data.hash) {
 							const Link = () => (
-								<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`}>View Transaction</a>
+								<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://${process.env.NODE_ENV === 'development' ? 'testnet.bscscan.com' : 'bscscan.com'}/tx/${res.data.hash}`}>View Transaction</a>
 							)
 							notification.info({
 								key: 'supplyProcessingNotification',

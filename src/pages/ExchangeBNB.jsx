@@ -156,7 +156,7 @@ class Exchange extends Component {
 	fetchBNBBalance = (token) => {
 		getBNBBalance(this.props.walletAddress)
 			.then((res) => {
-                console.log(res)
+                // console.log(res)
 				if (res.success) {
                     this.setState({
                         [token === 'A' ? 'tokenABalance' : 'tokenBBalance']: res.balance
