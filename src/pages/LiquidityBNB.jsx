@@ -650,7 +650,6 @@ class Liquidity extends Component {
 			decimals: tokenA === 'BNB' ? tokenBDecimals : tokenADecimals,
 			decimalsBNB: tokenA === 'BNB' ? tokenADecimals : tokenBDecimals,
 		}
-		console.log(data)
 		this.setState({supplying: true, createLiquidityModalVisible: false}, () => {
 			addLiquidityWithBNB(data)
 				.then((res) => {
@@ -918,14 +917,15 @@ class Liquidity extends Component {
 												<div className="exchange-button-container">
 													<button disabled>Enter an amount</button>
 												</div>
-											) : (((parseFloat(tokenAAmount) <= parseFloat(tokenABalance)) && ((parseFloat(tokenBAmount) <= parseFloat(tokenBBalance)))) ? (
-													((tokenA !== 'BNB' && (parseFloat(tokenAAmount) <= parseFloat(tokenAAllowance)) && (tokenB !== 'BNB' && parseFloat(tokenBAmount) <= parseFloat(tokenBAllowance)))) ? (
+											) : (((parseFloat(tokenAAmount) <= parseFloat(tokenABalance)) && ((parseFloat(tokenBAmount) <= parseFloat(tokenBBalance)))) ? (tokenA !== 'BNB' && tokenB !== 'BNB') ? 
+												(
+													((parseFloat(tokenAAmount) <= parseFloat(tokenAAllowance)) && (parseFloat(tokenBAmount) <= parseFloat(tokenBAllowance))) ? (
 														<div className="exchange-button-container">
 															<button onClick={this.supply} disabled={loading || supplying}>Supply {supplying && (
 																<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />
 															)}</button>
 														</div>
-													) : ((tokenA !== 'BNB' && (parseFloat(tokenAAmount) > parseFloat(tokenAAllowance))) ? (
+													) : ((parseFloat(tokenAAmount) > parseFloat(tokenAAllowance)) ? (
 															<div className="exchange-button-container">
 																	<button disabled={approvingTokenA || approvingTokenB} style={{marginBottom: '0.25rem'}} onClick={() => {
 																		this.setState({approvalToken: 'A', approvalAmount: tokenAAmount}, () => this.handleModalToggle())
@@ -934,9 +934,9 @@ class Liquidity extends Component {
 																	</button>
 																<button disabled>Supply</button>
 															</div>
-														) : ((tokenB !== 'BNB' && parseFloat(tokenBAmount) > parseFloat(tokenBAllowance))) ? (
+														) : (parseFloat(tokenBAmount) > parseFloat(tokenBAllowance)) ? (
 															<div className="exchange-button-container">
-																	<button disabled={approvingTokenB || approvingTokenA} style={{marginBottom: '0.25rem'}} onClick={() => {
+																<button disabled={approvingTokenB || approvingTokenA} style={{marginBottom: '0.25rem'}} onClick={() => {
 																		this.setState({approvalToken: 'B', approvalAmount: tokenBAmount}, () => this.handleModalToggle())
 																	}}>
 																	Approve {tokenB} {approvingTokenB && (<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />)}
@@ -950,6 +950,33 @@ class Liquidity extends Component {
 																)}</button>
 															</div>
 														)	
+													)
+												) : (
+													((tokenA === 'BNB' && parseFloat(tokenBAmount) <= parseFloat(tokenBAllowance)) || (tokenB === 'BNB' && parseFloat(tokenAAmount) <= parseFloat(tokenAAllowance))) ? (
+														<div className="exchange-button-container">
+															<button onClick={this.supply} disabled={loading || supplying}>Supply {supplying && (
+																<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />
+															)}</button>
+														</div>
+													) : (tokenA === 'BNB' ? (
+															<div className="exchange-button-container">
+																<button disabled={approvingTokenB || approvingTokenA} style={{marginBottom: '0.25rem'}} onClick={() => {
+																	this.setState({approvalToken: 'B', approvalAmount: tokenBAmount}, () => this.handleModalToggle())
+																}}>
+																	Approve {tokenB} {approvingTokenB && (<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />)}
+																</button>
+																<button disabled>Supply</button>
+															</div>
+														) : (
+															<div className="exchange-button-container">
+																<button disabled={approvingTokenA || approvingTokenB} style={{marginBottom: '0.25rem'}} onClick={() => {
+																	this.setState({approvalToken: 'A', approvalAmount: tokenAAmount}, () => this.handleModalToggle())
+																}}>
+																	Approve {tokenA} {approvingTokenA && (<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />)}
+																</button>
+																<button disabled>Supply</button>
+															</div>
+														)
 													)
 												) : (
 													<div className="exchange-button-container">

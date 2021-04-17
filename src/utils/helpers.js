@@ -227,11 +227,11 @@ export const addLiquidityWithBNB = ({walletAddress, address, amount, amountMin, 
                 ethers.utils.parseUnits(amountMin, decimals), // Token Amount Minimum
                 ethers.utils.parseUnits(BNBAmountMin, decimalsBNB), // BNB Amount Minimum
                 walletAddress, // To address
-                deadline // Transaction deadline
-            ).send({
-                from: walletAddress,
-                value: ethers.utils.parseUnits(BNBAmount, decimalsBNB)
-            })
+                deadline, // Transaction deadline
+                {
+                    value: ethers.utils.parseUnits(BNBAmount, decimalsBNB),
+                }
+            )
             resolve({
                 success: true,
                 data: result
@@ -257,6 +257,32 @@ export const removeLiquidity = ({liquidity, walletAddress, addressA, addressB, d
                 ethers.utils.parseUnits(liquidity, 18), // Liquidity
                 ethers.utils.parseUnits("0", decimalsA), // Token A Minimum Amount
                 ethers.utils.parseUnits("0", decimalsB), // Token B Minimum Amount
+                walletAddress, // To address
+                deadline // Transaction deadline
+            )
+            resolve({
+                success: true,
+                data: result
+            })
+        } catch (err) {
+            console.log(err)
+            reject({
+                error: true,
+                message: err.message
+            })
+        }
+    })
+}
+
+export const removeLiquidityWithBNB = ({liquidity, walletAddress, address, deadline, signer, decimals, decimalsBNB}) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer)
+            const result = await contract.removeLiquidityETH(
+                address, // Token A Address
+                ethers.utils.parseUnits(liquidity, 18), // Liquidity
+                ethers.utils.parseUnits("0", decimals), // Token Minimum Amount
+                ethers.utils.parseUnits("0", decimalsBNB), // BNB Minimum Amount
                 walletAddress, // To address
                 deadline // Transaction deadline
             )
@@ -350,6 +376,58 @@ export const swapTokens = ({amountIn, amountOut, tokenAddresses, walletAddress, 
                 tokenAddresses,
                 walletAddress,
                 deadline
+            )
+            resolve({
+                success: true,
+                data: result
+            })
+        } catch (err) {
+            console.log(err)
+            reject({
+                error: true,
+                message: err.message
+            })
+        }
+    })
+}
+
+export const swapBNBForTokens = ({amountIn, amountOutMin, tokenAddresses, walletAddress, deadline, signer, decimalsBNB, decimals}) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer)
+            const result = await contract.swapExactETHForTokens(
+                ethers.utils.parseUnits(amountOutMin, decimals), // Token Amount Minimum
+                tokenAddresses, // Path
+                walletAddress,
+                deadline,
+                {
+                    value: ethers.utils.parseUnits(amountIn, decimalsBNB), // BNB Amount
+                },
+            )
+            resolve({
+                success: true,
+                data: result
+            })
+        } catch (err) {
+            console.log(err)
+            reject({
+                error: true,
+                message: err.message
+            })
+        }
+    })
+}
+
+export const swapTokensForBNB = ({amountIn, amountOutMin, tokenAddresses, walletAddress, deadline, signer, decimalsBNB, decimals}) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer)
+            const result = await contract.swapExactTokensForETH(
+                ethers.utils.parseUnits(amountIn, decimals), // Token Amount
+                ethers.utils.parseUnits(amountOutMin, decimalsBNB), // BNB Amount Minimum
+                tokenAddresses, // Path
+                walletAddress,
+                deadline,
             )
             resolve({
                 success: true,

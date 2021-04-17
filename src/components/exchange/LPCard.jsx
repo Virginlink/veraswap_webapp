@@ -75,7 +75,7 @@ class LPCard extends Component {
                     :
                     
                     <>
-                        <div className="flex-spaced-container" style={{alignItems: 'flex-start', color: theme === 'dark' ? '#FFF' : '#000'}}>
+                        <div className="flex-spaced-container" style={{alignItems: 'flex-start'}}>
                             <div>Your total pool tokens:</div>
                             <div>{parseFloat(liquidityInfo.total).toFixed(8)}</div>
                         </div>
@@ -87,7 +87,7 @@ class LPCard extends Component {
                             <div>Pooled {tokenB}:</div>
                             <div>0.00007965 <img src={tokenBIcon} alt="token-1" /></div>
                         </div> */}
-                        <div className="flex-spaced-container" style={{alignItems: 'flex-start', color: theme === 'dark' ? '#FFF' : '#000'}}>
+                        <div className="flex-spaced-container" style={{alignItems: 'flex-start'}}>
                             <div>Your pool share:</div>
                             <div>{this.getPoolSharePercent(liquidityInfo.total, liquidityInfo.totalSupply)} %</div>
                         </div>

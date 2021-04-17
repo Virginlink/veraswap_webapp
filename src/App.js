@@ -26,6 +26,9 @@ import Exchange from './pages/Exchange';
 import Liquidity from './pages/Liquidity';
 import ImportLiquidity from './pages/ImportLiquidity';
 import RemoveLiquidity from './pages/RemoveLiquidity';
+import LiquidityBNB from './pages/LiquidityBNB';
+import ExchangeBNB from './pages/ExchangeBNB';
+import RemoveLiquidityBNB from './pages/RemoveLiquidityBNB';
 const {ethers} = require('ethers');
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -312,7 +315,7 @@ class App extends Component {
 		try{
 			const web3Provider = new WalletConnectProvider({
                 rpc : {
-					56 : 'https://bsc-dataseed.binance.org/',
+					56: 'https://bsc-dataseed.binance.org/',
 				},
 				qrcode : true,
 				chainId : 56
@@ -333,8 +336,10 @@ class App extends Component {
 			}
 			else{
 			this.fetchEthBalance(address[0])
-			this.fetchVrapBalance(address[0])
-			this.fetchTetherBalance(address[0])
+			if (process.env.NODE_ENV === 'production') {
+				this.fetchVrapBalance(address[0])
+				this.fetchTetherBalance(address[0])
+			}
 			this.setState({walletConnected : true, walletAddress : address[0],connectWalletModalVisible : false, activeWallet : 'walletConnect',signer : signer})
 		}}
 		catch(e){
@@ -588,7 +593,7 @@ class App extends Component {
 							exact
 							path="/swap"
 							render={(props) => (
-								<Exchange
+								<ExchangeBNB
 									{...props}
 									theme={theme}
 									onThemeToggle={this.toggleTheme}
@@ -606,7 +611,7 @@ class App extends Component {
 							exact
 							path="/pool"
 							render={(props) => (
-								<Liquidity
+								<LiquidityBNB
 									{...props}
 									theme={theme}
 									onThemeToggle={this.toggleTheme}
@@ -624,7 +629,7 @@ class App extends Component {
 							exact
 							path="/pool/remove"
 							render={(props) => (
-								<RemoveLiquidity
+								<RemoveLiquidityBNB
 									{...props}
 									theme={theme}
 									onThemeToggle={this.toggleTheme}
@@ -770,7 +775,14 @@ class App extends Component {
 														}
 													</div>
 													<div>
-														<button className="change-wallet-button" onClick={() => {localStorage.clear();this.setState({showWalletConnection: false, walletConnected : false, activeWallet : ''})}}>
+														<button
+															className="change-wallet-button"
+															onClick={async () => {
+																if (activeWallet === 'walletConnect') {
+																	localStorage.removeItem('walletconnect')
+																}
+																this.setState({showWalletConnection: false, walletConnected : false, activeWallet : ''})}
+															}>
 															Change
 														</button>
 													</div>
@@ -804,7 +816,7 @@ class App extends Component {
 																<span style={{marginLeft: '4px', fontSize: '13px'}}>Copied</span>
 															</button>
 														}
-														<a target="_blank" rel="noopener noreferrer" href={`https://bscscan.com/address/${this.state.walletAddress}`} className="wallet-address-link">
+														<a target="_blank" rel="noopener noreferrer" href={`https://${process.env.NODE_ENV === 'development' ? 'testnet.bscscan.com' : 'bscscan.com'}/address/${this.state.walletAddress}`} className="wallet-address-link">
 															<svg style={{marginRight: '3px', position: 'relative', top: '3px'}} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
 															<span style={{fontSize: '13px'}}>View on Explorer</span>
 														</a>
