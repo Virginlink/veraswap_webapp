@@ -88,13 +88,15 @@ class Exchange extends Component {
 			if (importedTokens) {
 				allTokens = [...TOKENS, ...importedTokens.data]
 			}
-			const selectedToken = allTokens.filter((token) => token.symbol === this.state.tokenA)
-			if (selectedToken[0].symbol === 'BNB') {
-				this.fetchBNBBalance('A')
-			} else {
-				this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, selectedToken[0].decimals, 'A')
-				this.fetchApproval(walletAddress, selectedToken[0].contractAddress, selectedToken[0].decimals, 'A')
-			}
+            if (tokenA) {
+                const selectedToken = allTokens.filter((token) => token.symbol === this.state.tokenA)
+                if (selectedToken[0].symbol === 'BNB') {
+                    this.fetchBNBBalance('A')
+                } else {
+                    this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, selectedToken[0].decimals, 'A')
+                    this.fetchApproval(walletAddress, selectedToken[0].contractAddress, selectedToken[0].decimals, 'A')
+                }
+            }
 			if (tokenB) {
 				const selectedToken = allTokens.filter((token) => token.symbol === tokenB)
 				if (selectedToken[0].symbol === 'BNB') {
@@ -154,6 +156,7 @@ class Exchange extends Component {
 	fetchBNBBalance = (token) => {
 		getBNBBalance(this.props.walletAddress)
 			.then((res) => {
+                console.log(res)
 				if (res.success) {
                     this.setState({
                         [token === 'A' ? 'tokenABalance' : 'tokenBBalance']: res.balance
@@ -307,7 +310,7 @@ class Exchange extends Component {
 				if (walletConnected) {
 					this.fetchPrices()
 					this.fetchLiquidity()
-					if (token.symbol === 'B') {
+					if (token.symbol === 'BNB') {
 						this.fetchBNBBalance('B')
 					} else {
 						this.fetchBalance(walletAddress, token.contractAddress, token.contractABI, token.decimals, 'B')
@@ -324,7 +327,7 @@ class Exchange extends Component {
 	}
 
 	swapTokensInternal = () => {
-		const { tokenA, tokenAIcon, tokenB, tokenBIcon, tokenBBalance, tokenAAddress, tokenBAddress, tokenADecimals, tokenBDecimals } = this.state;
+		const { tokenA, tokenAIcon, tokenB, tokenBIcon, tokenAAddress, tokenBAddress, tokenADecimals, tokenBDecimals } = this.state;
 		const { walletConnected } = this.props
 		this.setState({
 			tokenB: tokenA,
@@ -336,40 +339,48 @@ class Exchange extends Component {
 			tokenAAddress: tokenBAddress,
 			tokenAIcon: tokenBIcon,
 			tokenADecimals: tokenBDecimals,
-			tokenABalance: tokenBBalance,
+			tokenABalance: '',
 			tokenAAmount: '',
 			tokenBAmount: '',
 			tokenAAllowance: '',
+            tokenBAllowance: '',
 		}, () => {
 			if (walletConnected) {
+				this.fetchBalances()
 				this.fetchLiquidity()
 				this.fetchPrices()
-				const importedTokens = fetchImportedTokens()
-				let allTokens = [...TOKENS]
-				if (importedTokens) {
-					allTokens = [...TOKENS, ...importedTokens.data]
-				}
-				if (this.state.tokenA) {
-					const selectedToken = allTokens.filter((token) => token.symbol === this.state.tokenA)
-					if (selectedToken[0].symbol === 'BNB') {
-						this.fetchBNBBalance('A')
-					} else {
-						this.fetchBalance(this.props.walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, selectedToken[0].decimals, 'A')
-						this.fetchApproval(this.props.walletAddress, selectedToken[0].contractAddress, selectedToken[0].decimals, 'A')
-					}
-				}
-				if (this.state.tokenB) {
-					const selectedToken = allTokens.filter((token) => token.symbol === this.state.tokenB)
-					if (selectedToken[0].symbol === 'B') {
-						this.fetchBNBBalance('B')
-					} else {
-						this.fetchBalance(this.props.walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, selectedToken[0].decimals, 'B')
-						this.fetchApproval(this.props.walletAddress, selectedToken[0].contractAddress, selectedToken[0].decimals, 'B')
-					}
-				}
 			}
 		})
 	}
+
+    fetchBalances = () => {
+        const { tokenA, tokenB } = this.state;
+        const importedTokens = fetchImportedTokens()
+		let allTokens = [...TOKENS]
+		if (importedTokens) {
+			allTokens = [...TOKENS, ...importedTokens.data]
+		}
+		if (tokenA) {
+            const selectedToken = allTokens.filter((token) => token.symbol === tokenA)
+            console.log('A', selectedToken[0].symbol === 'BNB')
+			if (selectedToken[0].symbol === 'BNB') {
+			    this.fetchBNBBalance('A')
+			} else {
+				this.fetchBalance(this.props.walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, selectedToken[0].decimals, 'A')
+				this.fetchApproval(this.props.walletAddress, selectedToken[0].contractAddress, selectedToken[0].decimals, 'A')
+			}
+		}
+		if (tokenB) {
+			const selectedToken = allTokens.filter((token) => token.symbol === tokenB)
+            console.log('B', selectedToken[0].symbol === 'BNB')
+			if (selectedToken[0].symbol === 'BNB') {
+				this.fetchBNBBalance('B')
+			} else {
+				this.fetchBalance(this.props.walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, selectedToken[0].decimals, 'B')
+				this.fetchApproval(this.props.walletAddress, selectedToken[0].contractAddress, selectedToken[0].decimals, 'B')
+			}
+		}
+    }
 
 	updateAmount = (value, type) => {
 		const { walletConnected } = this.props
