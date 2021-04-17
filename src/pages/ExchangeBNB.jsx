@@ -107,7 +107,6 @@ class Exchange extends Component {
 				}
 			}
 			if (tokenA && tokenB) {
-				this.fetchPrices()
 				this.fetchLiquidity()
 			}
 		} else if ((walletAddress !== prevProps.walletAddress) && !walletAddress) {
@@ -230,40 +229,54 @@ class Exchange extends Component {
 		}
     }
 
-	fetchPrices = () => {
-		const { tokenAAddress, tokenBAddress, tokenA, tokenB, tokenADecimals, tokenBDecimals } = this.state;
+	// fetchPrices = () => {
+	// 	const { tokenAAddress, tokenBAddress, tokenA, tokenB, tokenADecimals, tokenBDecimals } = this.state;
+	// 	if (tokenAAddress && tokenBAddress) {
+	// 		this.setState({fetchingPrices: true}, async () => {
+	// 			try {
+	// 				const estimateAData = {
+	// 					amount: "1",
+	// 					addresses: [tokenAAddress, tokenBAddress],
+	// 					token: tokenA,
+	// 					decimals: tokenADecimals,
+	// 				}
+	// 				const estimateBData = {
+	// 					amount: "1",
+	// 					addresses: [tokenAAddress, tokenBAddress],
+	// 					token: tokenB,
+	// 					decimals: tokenBDecimals,
+	// 				}
+	// 				const tokenAPriceResult = await estimateOutAmounts(estimateAData)
+	// 				const tokenBPriceResult = await estimateInAmounts(estimateBData)
+	// 				this.setState({
+	// 					fetchingPrices: false,
+	// 					tokenAPrice: tokenAPriceResult.amount,
+	// 					tokenBPrice: tokenBPriceResult.amount,
+	// 					invalidPair: false,
+	// 				})
+	// 			} catch (err) {
+	// 				this.setState({fetchingPrices: false}, () => {
+	// 					this.setState({
+	// 						invalidPair: true,
+	// 						tokenAAmount: '',
+	// 						tokenBAmount: '',
+	// 					})
+	// 				})
+	// 			}
+	// 		})
+	// 	}
+	// }
+
+    fetchPrices = () => {
+		const { tokenAAmount, tokenBAmount, tokenAAddress, tokenBAddress } = this.state;
 		if (tokenAAddress && tokenBAddress) {
-			this.setState({fetchingPrices: true}, async () => {
-				try {
-					const estimateAData = {
-						amount: "1",
-						addresses: [tokenAAddress, tokenBAddress],
-						token: tokenA,
-						decimals: tokenADecimals,
-					}
-					const estimateBData = {
-						amount: "1",
-						addresses: [tokenAAddress, tokenBAddress],
-						token: tokenB,
-						decimals: tokenBDecimals,
-					}
-					const tokenAPriceResult = await estimateOutAmounts(estimateAData)
-					const tokenBPriceResult = await estimateInAmounts(estimateBData)
-					this.setState({
-						fetchingPrices: false,
-						tokenAPrice: tokenAPriceResult.amount,
-						tokenBPrice: tokenBPriceResult.amount,
-						invalidPair: false,
-					})
-				} catch (err) {
-					this.setState({fetchingPrices: false}, () => {
-						this.setState({
-							invalidPair: true,
-							tokenAAmount: '',
-							tokenBAmount: '',
-						})
-					})
-				}
+			const tokenAPrice = parseFloat(tokenBAmount) / parseFloat(tokenAAmount)
+            const tokenBPrice = parseFloat(tokenAAmount) / parseFloat(tokenBAmount)
+			this.setState({
+				fetchingPrices: false,
+				tokenAPrice: tokenAPrice,
+				tokenBPrice: tokenBPrice,
+				invalidPair: false,
 			})
 		}
 	}
@@ -279,7 +292,6 @@ class Exchange extends Component {
 				tokenAAddress: token.contractAddress,
 			}, () => {
 				if (walletConnected) {
-					this.fetchPrices()
 					this.fetchLiquidity()
 					if (token.symbol === 'BNB') {
 						this.fetchBNBBalance('A')
@@ -308,7 +320,6 @@ class Exchange extends Component {
 				tokenBAddress: token.contractAddress,
 			}, () => {
 				if (walletConnected) {
-					this.fetchPrices()
 					this.fetchLiquidity()
 					if (token.symbol === 'BNB') {
 						this.fetchBNBBalance('B')
@@ -344,11 +355,12 @@ class Exchange extends Component {
 			tokenBAmount: '',
 			tokenAAllowance: '',
             tokenBAllowance: '',
+            tokenAPrice: '',
+            tokenBPrice: ''
 		}, () => {
 			if (walletConnected) {
 				this.fetchBalances()
 				this.fetchLiquidity()
-				this.fetchPrices()
 			}
 		})
 	}
@@ -362,7 +374,6 @@ class Exchange extends Component {
 		}
 		if (tokenA) {
             const selectedToken = allTokens.filter((token) => token.symbol === tokenA)
-            console.log('A', selectedToken[0].symbol === 'BNB')
 			if (selectedToken[0].symbol === 'BNB') {
 			    this.fetchBNBBalance('A')
 			} else {
@@ -372,7 +383,6 @@ class Exchange extends Component {
 		}
 		if (tokenB) {
 			const selectedToken = allTokens.filter((token) => token.symbol === tokenB)
-            console.log('B', selectedToken[0].symbol === 'BNB')
 			if (selectedToken[0].symbol === 'BNB') {
 				this.fetchBNBBalance('B')
 			} else {
@@ -434,7 +444,10 @@ class Exchange extends Component {
 									tokenBAmount: amount ? parseFloat(res.amount).toFixed(6) : '',
 									estimatingA: false,
 									invalidPair: false
-								}, () => this.calculatePriceImpact())
+								}, () => {
+                                    this.calculatePriceImpact()
+                                    this.fetchPrices()
+                                })
 							}
 						})
 						.catch((err) => {
@@ -463,7 +476,10 @@ class Exchange extends Component {
 									tokenAAmount: amount ? parseFloat(res.amount).toFixed(6) : '',
 									estimatingB: false,
 									invalidPair: false,
-								}, () => this.calculatePriceImpact())
+								}, () => {
+                                    this.calculatePriceImpact()
+                                    this.fetchPrices()
+                                })
 							}
 						})
 						.catch((err) => {
@@ -1206,7 +1222,7 @@ class Exchange extends Component {
 											) : (
 												<div className="exchange-button-container">
 													<button disabled>
-														Invalid Pair
+														Insufficient liquidity for this trade
 													</button>
 												</div>
 											)

@@ -1,4 +1,3 @@
-import { ethers } from 'ethers'
 import React, { Component } from 'react'
 import { PROVIDER } from '../../utils/contracts'
 export default class Transaction extends Component {
