@@ -200,7 +200,7 @@ class Liquidity extends Component {
 							tokenBSupply: liquidityInfo.data.B,
 							loading: false,
 						}, () => {
-							if (parseFloat(liquidityInfo.data.total) > 0) {
+							if (liquidityInfo.data.hasLiquidity) {
 								const tokenAPrice = parseFloat(this.state.tokenBSupply)/parseFloat(this.state.tokenASupply)
 								const tokenBPrice = parseFloat(this.state.tokenASupply)/parseFloat(this.state.tokenBSupply)
 								if (this.state.tokenAAmount) {
