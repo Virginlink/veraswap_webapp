@@ -200,7 +200,7 @@ class Liquidity extends Component {
 							tokenBSupply: liquidityInfo.data.B,
 							loading: false,
 						}, () => {
-							if (liquidityInfo.data.hasLiquidity) {
+							if (parseFloat(liquidityInfo.data.total) > 0) {
 								const tokenAPrice = parseFloat(this.state.tokenBSupply)/parseFloat(this.state.tokenASupply)
 								const tokenBPrice = parseFloat(this.state.tokenASupply)/parseFloat(this.state.tokenBSupply)
 								if (this.state.tokenAAmount) {
@@ -520,7 +520,7 @@ class Liquidity extends Component {
 		if (!liquidityInfo) {
 			this.setState({createLiquidityModalVisible: true})
 			return
-		} else if (!parseFloat(liquidityInfo.total) > 0) {
+		} else if (!liquidityInfo.hasLiquidity) {
 			this.setState({createLiquidityModalVisible: true})
 			return
 		}
