@@ -151,7 +151,7 @@ class Exchange extends Component {
             })
 	}
 
-	fetchBNBBalance = async (token) => {
+	fetchBNBBalance = (token) => {
 		getBNBBalance(this.props.walletAddress)
 			.then((res) => {
 				if (res.success) {

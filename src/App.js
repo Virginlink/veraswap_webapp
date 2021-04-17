@@ -593,7 +593,7 @@ class App extends Component {
 							exact
 							path="/swap"
 							render={(props) => (
-								<ExchangeBNB
+								<Exchange
 									{...props}
 									theme={theme}
 									onThemeToggle={this.toggleTheme}
@@ -611,7 +611,7 @@ class App extends Component {
 							exact
 							path="/pool"
 							render={(props) => (
-								<LiquidityBNB
+								<Liquidity
 									{...props}
 									theme={theme}
 									onThemeToggle={this.toggleTheme}
@@ -629,7 +629,7 @@ class App extends Component {
 							exact
 							path="/pool/remove"
 							render={(props) => (
-								<RemoveLiquidityBNB
+								<RemoveLiquidity
 									{...props}
 									theme={theme}
 									onThemeToggle={this.toggleTheme}
