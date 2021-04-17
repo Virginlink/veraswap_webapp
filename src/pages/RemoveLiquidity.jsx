@@ -174,7 +174,7 @@ class RemoveLiquidity extends Component {
 					// console.log(res.data)
 					if (res.data.hash) {
 						const Link = () => (
-							<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`}>View Transaction</a>
+							<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://${process.env.NODE_ENV === 'development' ? 'testnet.bscscan.com' : 'bscscan.com'}/tx/${res.data.hash}`}>View Transaction</a>
 						)
 						notification.info({
 							key: 'approvalProcessingNotification',
@@ -202,7 +202,7 @@ class RemoveLiquidity extends Component {
 									if(reciept) {
 										notification.close('approvalProcessingNotification')
 										const Link = () => (
-											<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`} onClick={() => notification.close('approvalSuccessNotification')}>View Transaction</a>
+											<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://${process.env.NODE_ENV === 'development' ? 'testnet.bscscan.com' : 'bscscan.com'}/tx/${res.data.hash}`} onClick={() => notification.close('approvalSuccessNotification')}>View Transaction</a>
 										)
 										notification.success({
 											key: 'approvalSuccessNotification',
@@ -258,7 +258,7 @@ class RemoveLiquidity extends Component {
 					if (res.success) {
 						if (res.data.hash) {
 							const Link = () => (
-								<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`}>View Transaction</a>
+								<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://${process.env.NODE_ENV === 'development' ? 'testnet.bscscan.com' : 'bscscan.com'}/tx/${res.data.hash}`}>View Transaction</a>
 							)
 							notification.info({
 								key: 'removalProcessingNotification',
@@ -296,7 +296,7 @@ class RemoveLiquidity extends Component {
 										if(reciept) {
 											notification.close('removalProcessingNotification')
 											const Link = () => (
-												<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`} onClick={() => notification.close('removalSuccessNotification')}>View Transaction</a>
+												<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://${process.env.NODE_ENV === 'development' ? 'testnet.bscscan.com' : 'bscscan.com'}/tx/${res.data.hash}`} onClick={() => notification.close('removalSuccessNotification')}>View Transaction</a>
 											)
 											notification.success({
 												key: 'removalSuccessNotification',

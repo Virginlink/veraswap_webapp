@@ -152,6 +152,7 @@ export const getLPInfo = (pairAddress, walletAddress, tokenAAddress, tokenBAddre
             resolve({
                 success: true,
                 data: {
+                    hasLiquidity: parseFloat(tokenAShare) > 0 && parseFloat(tokenBShare) > 0,
                     total: totalPooledTokens,
                     totalSupply: totalSupply,
                     A: tokenAShare,
@@ -216,18 +217,21 @@ export const addLiquidity = ({walletAddress, addressA, addressB, amountA, amount
     })
 }
 
-export const addLiquidityWithBNB = ({walletAddress, address, amountA, amountAMin, BNBAmount, BNBAmountMin, deadline, signer, decimals, decimalsBNB}) => {
+export const addLiquidityWithBNB = ({walletAddress, address, amount, amountMin, BNBAmount, BNBAmountMin, deadline, signer, decimals, decimalsBNB}) => {
     return new Promise(async (resolve, reject) => {
         try {
             const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer)
             const result = await contract.addLiquidityETH(
                 address, // Token Address
-                ethers.utils.parseUnits(amountA, decimals), // Token Amount
-                ethers.utils.parseUnits(amountAMin, decimals), // Token Amount Minimum
+                ethers.utils.parseUnits(amount, decimals), // Token Amount
+                ethers.utils.parseUnits(amountMin, decimals), // Token Amount Minimum
                 ethers.utils.parseUnits(BNBAmountMin, decimalsBNB), // BNB Amount Minimum
                 walletAddress, // To address
                 deadline // Transaction deadline
-            )
+            ).send({
+                from: walletAddress,
+                value: ethers.utils.parseUnits(BNBAmount, decimalsBNB)
+            })
             resolve({
                 success: true,
                 data: result

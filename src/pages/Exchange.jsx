@@ -360,7 +360,7 @@ class Exchange extends Component {
 
 	estimate = (type) => {
 		const { tokenAAmount, tokenBAmount, tokenABalance, tokenBBalance, tokenAAddress, tokenBAddress, tokenA, tokenB, liquidityInfo, tokenADecimals, tokenBDecimals } = this.state;
-		if (tokenABalance && tokenBBalance && (liquidityInfo && parseFloat(liquidityInfo.total) > 0)) {
+		if (tokenABalance && tokenBBalance && (liquidityInfo && liquidityInfo.hasLiquidity > 0)) {
 			// const estimateData = {
 			// 	amount: type === 'A' ? tokenAAmount : tokenBAmount,
 			// 	balanceA: type === 'A' ? tokenABalance : tokenBBalance,
@@ -472,7 +472,7 @@ class Exchange extends Component {
 					// console.log(res.data)
 					if (res.data.hash) {
 						const Link = () => (
-							<a style={{color: '#DC2410', textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`}>View Transaction</a>
+							<a style={{color: '#DC2410', textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://${process.env.NODE_ENV === 'development' ? 'testnet.bscscan.com' : 'bscscan.com'}/tx/${res.data.hash}`}>View Transaction</a>
 						)
 						notification.info({
 							key: 'approvalProcessingNotification',
@@ -504,7 +504,7 @@ class Exchange extends Component {
 									if(reciept) {
 										notification.close('approvalProcessingNotification')
 										const Link = () => (
-											<a style={{color: '#DC2410', textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`} onClick={() => notification.close('approvalSuccessNotification')}>View Transaction</a>
+											<a style={{color: '#DC2410', textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://${process.env.NODE_ENV === 'development' ?   'testnet.bscscan.com' : 'bscscan.com'}/tx/${res.data.hash}`} onClick={() => notification.close('approvalSuccessNotification')}>View Transaction</a>
 										)
 										notification.success({
 											key: 'approvalSuccessNotification',
@@ -590,7 +590,7 @@ class Exchange extends Component {
 							}
 
 							const Link = () => (
-								<a style={{color: '#DC2410', textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`}>View Transaction</a>
+								<a style={{color: '#DC2410', textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://${process.env.NODE_ENV === 'development' ? 'testnet.bscscan.com' : 'bscscan.com'}/tx/${res.data.hash}`}>View Transaction</a>
 							)
 							notification.info({
 								key: 'swapProcessingNotification',
@@ -617,7 +617,7 @@ class Exchange extends Component {
 										if(reciept) {
 											notification.close('swapProcessingNotification')
 											const Link = () => (
-												<a style={{color: '#DC2410', textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`} onClick={() => notification.close('swapSuccessNotification')}>View Transaction</a>
+												<a style={{color: '#DC2410', textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://${process.env.NODE_ENV === 'development' ? 'testnet.bscscan.com' : 'bscscan.com'}/tx/${res.data.hash}`} onClick={() => notification.close('swapSuccessNotification')}>View Transaction</a>
 											)
 											notification.success({
 												key: 'swapSuccessNotification',
@@ -809,19 +809,18 @@ class Exchange extends Component {
 										<button disabled>Select a token</button>
 									</div>
 								) : ((loading || fetchingLiquidity) ? (
-										<div className="exchange-button-container">
-											<button disabled><CircularProgress size={12} thickness={5} style={{color: 'var(--primary)'}} /></button>
-										</div>
-									) : 
-									liquidityInfo ? ( 
-										parseFloat(liquidityInfo.total) > 0 ? (
+									<div className="exchange-button-container">
+										<button disabled><CircularProgress size={12} thickness={5} style={{color: 'var(--primary)'}} /></button>
+									</div>
+								) : (liquidityInfo ? (
+										liquidityInfo.hasLiquidity ? (
 											!invalidPair ? (
 												(!tokenAAmount || !tokenBAmount) ? (
 													<div className="exchange-button-container">
 														<button disabled>Enter an amount</button>
 													</div>
-												) : (((parseFloat(tokenAAmount) <= parseFloat(tokenABalance))) ? (
-													((parseFloat(tokenAAmount) <= parseFloat(tokenAAllowance))) ? (
+												) : ((parseFloat(tokenAAmount) <= parseFloat(tokenABalance)) ? (
+													(parseFloat(tokenAAmount) <= parseFloat(tokenAAllowance)) ? (
 														(parseFloat(impact) <= parseFloat(this.context.slippage)) ? (
 															minimumReceived > 0 ? (
 																<div className="exchange-button-container">
@@ -870,8 +869,7 @@ class Exchange extends Component {
 															Insufficient {tokenA} balance
 														</button>
 													</div>
-												)
-												)
+												))
 											) : (
 												<div className="exchange-button-container">
 													<button disabled>
@@ -892,7 +890,7 @@ class Exchange extends Component {
 												{fetchingLiquidity ? <CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} /> : "Insufficient liquidity for this trade"}
 											</button>
 										</div>
-									)
+									))
 								)
 							)}
 						</div>
