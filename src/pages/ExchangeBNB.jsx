@@ -496,7 +496,29 @@ class Exchange extends Component {
 		}
 	}
 
-	calculatePriceImpact = () => {
+	// calculatePriceImpact = () => {
+	// 	const { tokenASupply, tokenBSupply, tokenAAmount, tokenBAmount, tokenA, tokenB } = this.state;
+    //     console.log(`${tokenA} supply`, tokenASupply)
+    //     console.log(`${tokenB} supply`, tokenBSupply)
+    //     const constantProduct = parseFloat(tokenASupply) * parseFloat(tokenBSupply)
+    //     const marketPrice = parseFloat(tokenASupply) / parseFloat(tokenBSupply)
+    //     console.log(`1 ${tokenB} = ${marketPrice} ${tokenA}`)
+    //     const newTokenASupply = parseFloat(tokenASupply) + parseFloat(tokenAAmount)
+    //     const newTokenBSupply = constantProduct/newTokenASupply
+    //     // const tokenBReceived = parseFloat(tokenBSupply) - parseFloat(newTokenBSupply)
+    //     const newPrice = newTokenASupply/newTokenBSupply
+    //     const priceDifference = newPrice - marketPrice
+    //     const impact = (priceDifference/marketPrice) * 100
+    //     console.log('IMPACT', impact)
+	// 	// const numerator = (parseFloat(tokenASupply) * parseFloat(tokenBAmount)) + (parseFloat(tokenBSupply) * parseFloat(tokenAAmount))
+	// 	// const denominator = parseFloat(tokenBSupply) * (parseFloat(tokenBSupply) + parseFloat(tokenBAmount))
+	// 	// const impact = (numerator/denominator) * 100
+	// 	// this.setState({
+	// 	// 	impact: impact.toFixed(2)
+	// 	// })
+	// }
+
+    calculatePriceImpact = () => {
 		const { tokenASupply, tokenBSupply, tokenAAmount, tokenBAmount } = this.state;
 		const numerator = (parseFloat(tokenASupply) * parseFloat(tokenBAmount)) + (parseFloat(tokenBSupply) * parseFloat(tokenAAmount))
 		const denominator = parseFloat(tokenBSupply) * (parseFloat(tokenBSupply) + parseFloat(tokenBAmount))
