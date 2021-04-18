@@ -431,6 +431,9 @@ class Exchange extends Component {
 				} else {
 					this.setState({
 						[type === 'A' ? 'tokenBAmount' : 'tokenAAmount']: '',
+                        invalidPair: false,
+                        tokenAPrice: '',
+                        tokenBPrice: '',
 					})
 				}
 			}
