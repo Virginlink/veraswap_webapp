@@ -12,6 +12,7 @@ import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import { GrPowerCycle } from 'react-icons/gr'
 import AppContext from '../state/AppContext'
 import { PROVIDER, WBNB_ADDRESS } from '../utils/contracts'
+import { IoArrowDownSharp } from 'react-icons/io5'
 
 var timerA = null
 var timerB = null
@@ -58,6 +59,7 @@ class Exchange extends Component {
 			impact: '',
 			inverted: false,
 			invalidPair: false,
+            confirmationModalVisible: false,
         }
     }
 
@@ -669,6 +671,18 @@ class Exchange extends Component {
 		})
 	}
 
+    confirmSwap = () => {
+        const { impact } = this.state
+        if (parseFloat(impact) > 10) {
+            const promptValue = prompt(`This swap has a price impact of atleast ${parseInt(impact, 10)}%. Please type the word "confirm" to continue with this swap.`)
+            if (promptValue && promptValue === 'confirm') {
+                this.setState({confirmationModalVisible: false}, () => this.swap())
+            }
+        } else {
+            this.setState({confirmationModalVisible: false}, () => this.swap())
+        }
+    }
+
 	swap = () => {
 		const { tokenA, tokenB } = this.state;
 		if (tokenA === 'BNB') {
@@ -1090,7 +1104,7 @@ class Exchange extends Component {
     }
 
     render() {
-        const { tokenA, tokenABalance, tokenAAllowance, tokenB, tokenBBalance, tokenBAllowance, tokenAIcon, tokenBIcon, tokenAAmount, tokenBAmount, liquidityInfo, swapping, loading, estimatingA, estimatingB, approvingTokenA, approving, approvalModalVisible, approvalToken, approvalAmount, fetchingLiquidity, impact, tokenAPrice, tokenBPrice, fetchingPrices, inverted, invalidPair } = this.state
+        const { tokenA, tokenABalance, tokenAAllowance, tokenB, tokenBBalance, tokenBAllowance, tokenAIcon, tokenBIcon, tokenAAmount, tokenBAmount, liquidityInfo, swapping, loading, estimatingA, estimatingB, approvingTokenA, approving, approvalModalVisible, approvalToken, approvalAmount, fetchingLiquidity, impact, tokenAPrice, tokenBPrice, fetchingPrices, inverted, invalidPair, confirmationModalVisible } = this.state
         const { onModalToggle, walletConnected, walletAddress, signer, modalVisible, theme, onThemeToggle, ethBalance, vrapBalance, history } = this.props
 		const minimumReceived = (parseFloat(tokenBAmount) - (parseFloat(tokenBAmount) * (parseFloat(this.context.slippage)/100)))
         return (
@@ -1174,7 +1188,7 @@ class Exchange extends Component {
 								{(walletConnected && (tokenA && tokenB) && (tokenAAmount && tokenBAmount) && !fetchingPrices && !fetchingLiquidity && liquidityInfo && impact && !invalidPair) && (
 									<div className="flex-spaced-container" style={{fontSize: '13px'}}>
 										<div>Price Impact</div>
-										<div>{impact} %</div>
+										<div data-high-impact={parseFloat(impact) > 10}>{parseFloat(impact) < 0.01 ? "< 0.01" : impact} %</div>
 									</div>
 								)}
 								{(this.context.slippage !== "0.5") && (
@@ -1212,9 +1226,22 @@ class Exchange extends Component {
 														(parseFloat(impact) <= parseFloat(this.context.slippage)) ? (
 															minimumReceived > 0 ? (
 																<div className="exchange-button-container">
-																	<button onClick={this.swap} disabled={loading || swapping}>Swap {swapping && (
-																		<CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />
-																	)}</button>
+																	<button
+                                                                        style={parseFloat(impact) > 10 ? {
+                                                                            backgroundColor: '#fd761f',
+                                                                            borderColor: '#fd761f'
+                                                                        } : {}}
+                                                                        onClick={() => {
+                                                                            if (!estimatingA && !estimatingB) {
+                                                                                this.setState({confirmationModalVisible: true})
+                                                                            }
+                                                                        }}
+                                                                        disabled={loading || swapping}
+                                                                    >
+                                                                        Swap{parseFloat(impact) > 10 && " anyway"} {swapping && (
+                                                                            <CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />
+                                                                        )}
+                                                                    </button>
 																</div>
 															) : (
 																<div className="exchange-button-container">
@@ -1247,18 +1274,44 @@ class Exchange extends Component {
 															</div>
 														) : (
 															<div className="exchange-button-container">
-																<button onClick={this.swap} disabled={loading || swapping}>Swap {swapping && (
-																	<CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />
-																)}</button>
+																<button
+                                                                    style={parseFloat(impact) > 10 ? {
+                                                                        backgroundColor: '#fd761f',
+                                                                        borderColor: '#fd761f'
+                                                                    } : {}}
+                                                                    onClick={() => {
+                                                                        if (!estimatingA && !estimatingB) {
+                                                                            this.setState({confirmationModalVisible: true})
+                                                                        }
+                                                                    }}
+                                                                    disabled={loading || swapping}
+                                                                >
+                                                                    Swap{parseFloat(impact) > 10 && " anyway"} {swapping && (
+                                                                        <CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />
+                                                                    )}
+                                                                </button>
 															</div>
 														)	
 													)
 												) : ((parseFloat(impact) <= parseFloat(this.context.slippage)) ? (
 													minimumReceived > 0 ? (
 														<div className="exchange-button-container">
-															<button onClick={this.swap} disabled={loading || swapping}>Swap {swapping && (
-																<CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />
-															)}</button>
+															<button
+                                                                style={parseFloat(impact) > 10 ? {
+                                                                    backgroundColor: '#fd761f',
+                                                                    borderColor: '#fd761f'
+                                                                } : {}}
+                                                                onClick={() => {
+                                                                    if (!estimatingA && !estimatingB) {
+                                                                        this.setState({confirmationModalVisible: true})
+                                                                    }
+                                                                }}
+                                                                disabled={loading || swapping}
+                                                            >
+                                                                Swap{parseFloat(impact) > 10 && " anyway"} {swapping && (
+																    <CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />
+															    )}
+                                                            </button>
 														</div>
 													) : (
 														<div className="exchange-button-container">
@@ -1387,6 +1440,102 @@ class Exchange extends Component {
 										) : 'Invalid Amount' 
 									) : 'Enter Amount'
 								) : 'Approving'}
+							</button>
+						</div>
+					</div>
+				</Dialog>
+                <Dialog
+					open={confirmationModalVisible}
+					onClose={() => {
+						this.setState({confirmationModalVisible: false})
+					}}
+					onBackdropClick={() => {
+						this.setState({confirmationModalVisible: false})
+					}}
+					BackdropProps={{
+						style: {
+							zIndex: 0
+						}
+					}}
+                    className="app-modal"
+				>
+					<div className="modal-header flex-spaced-container" style={{color: theme === 'light' ? '#000' : '#FFF'}}>
+                        <div>
+                            Confirm Swap
+                        </div>
+                        <button className="close-modal-button" onClick={() => {this.setState({confirmationModalVisible: false})}}>
+                            <RiCloseFill />
+                        </button>
+                    </div>
+					<div className="modal-content" style={{padding: '0rem 0 1rem'}}>
+                        <div className="swap-confirmation-header">
+                            <div className="swap-confirmation-token-row">
+                                <div>
+                                    <img src={tokenAIcon} alt={tokenA} />
+                                    {tokenAAmount}
+                                </div>
+                                <div>
+                                    {tokenA}
+                                </div>
+                            </div>
+                            <IoArrowDownSharp />
+                            <div className="swap-confirmation-token-row">
+                                <div data-high-impact={parseFloat(impact) > 10}>
+                                    <img src={tokenBIcon} alt={tokenB} />
+                                    {tokenBAmount}
+                                </div>
+                                <div>
+                                    {tokenB}
+                                </div>
+                            </div>
+                            <p>Output is estimated. You will receive atleast <strong>{minimumReceived.toFixed(6)} {tokenB}</strong> or transaction will revert.</p>
+                        </div>
+                        <div className="swap-confirmation-details">
+                            <div>
+                                <div>Price</div>
+                                <div>
+									<div style={{display: 'flex', alignItems: 'center'}}>
+										{!inverted ? (
+											<div>{parseFloat(tokenAPrice).toFixed(4)} {tokenB}/{tokenA}</div>
+										) : (
+											<div>{parseFloat(tokenBPrice).toFixed(4)} {tokenA}/{tokenB}</div>
+										)}
+										<button className="invert-button" onClick={this.toggleInversion}>
+											<GrPowerCycle size={15} />
+										</button>
+									</div>
+								</div>
+                            </div>
+                            <div>
+                                <div>
+                                    Minimum received{' '}
+                                    <Tooltip placement="right" title="Your transaction will revert if there is a large, unfavourable price movement before it is confirmed.">
+										<AiOutlineQuestionCircle style={{position: 'relative', top: '2px', cursor: 'pointer'}} />
+									</Tooltip>
+                                </div>
+                                <div>
+                                    {minimumReceived.toFixed(4)} {tokenB}
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    Price Impact{' '}
+                                    <Tooltip placement="right" title="The difference between the market price and your price due to trade size.">
+										<AiOutlineQuestionCircle style={{position: 'relative', top: '2px', cursor: 'pointer'}} />
+									</Tooltip>
+                                </div>
+                                <div data-high-impact={parseFloat(impact) > 10}>
+                                    {impact}%
+                                </div>
+                            </div>
+                        </div>
+						<div className="staking-modal-footer" style={{padding: '0 1rem 0'}}>
+							<button
+                                style={{width: '100%', backgroundColor: parseFloat(impact) > 10 && '#fd761f', borderColor: parseFloat(impact) > 10 && '#fd761f'}}
+								className="staking-modal-button-primary"
+								onClick={this.confirmSwap}
+							>
+                                {parseFloat(impact) > 10 ? "Swap Anyway" : "Confirm Swap"}
 							</button>
 						</div>
 					</div>

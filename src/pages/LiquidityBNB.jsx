@@ -222,7 +222,7 @@ class Liquidity extends Component {
 							tokenBSupply: liquidityInfo.data.B,
 							loading: false,
 						}, () => {
-							if (parseFloat(liquidityInfo.data.total) > 0) {
+							if (liquidityInfo.hasLiquidity) {
 								const tokenAPrice = parseFloat(this.state.tokenBSupply)/parseFloat(this.state.tokenASupply)
 								const tokenBPrice = parseFloat(this.state.tokenASupply)/parseFloat(this.state.tokenBSupply)
 								if (this.state.tokenAAmount) {
@@ -398,7 +398,7 @@ class Liquidity extends Component {
         }, () => {
 			if (walletConnected) {
 				if (liquidityInfo) {
-					if (parseFloat(liquidityInfo.total) > 0) {
+					if (liquidityInfo.hasLiquidity) {
 						this.estimate(type)
 					}
 				}
@@ -648,7 +648,7 @@ class Liquidity extends Component {
 		const BNBAmount = tokenA === 'BNB' ? tokenAAmount : tokenBAmount
 		let amountMin, BNBAmountMin;
 		if (liquidityInfo) {
-			if (parseFloat(liquidityInfo.total) > 0) {
+			if (liquidityInfo.hasLiquidity) {
 				amountMin = parseFloat(amount) - (parseFloat(amount) * (parseFloat(this.context.slippage)/100))
 				BNBAmountMin = parseFloat(BNBAmount) - (parseFloat(BNBAmount) * (parseFloat(this.context.slippage)/100))
 			} else {
@@ -880,22 +880,22 @@ class Liquidity extends Component {
 								onAddLiquidity={this.addLiquidity}
 								onRefresh={this.handleRefresh}
 							/>
-							{(walletConnected && !liquiditySectionVisible && (tokenA && tokenB) && !loading && liquidityInfo) && (
-								parseFloat(liquidityInfo.total) > 0 ? (
-									<>
-										<div className="flex-spaced-container" style={{alignItems: 'center', marginTop: '1rem', color: '#FFF', fontSize: '13px', fontFamily: 'PT Sans Caption'}}>
-											<div>Price</div>
-											<div style={{textAlign: 'right', display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
-												{!inverted ? (
-													<div>1 {tokenA} = {(parseFloat(tokenBSupply)/parseFloat(tokenASupply)).toFixed(6)} {tokenB}</div>
-												) : (
-													<div>1 {tokenB} = {(parseFloat(tokenASupply)/parseFloat(tokenBSupply)).toFixed(6)} {tokenA}</div>
-												)}
-												<button className="invert-button" onClick={this.toggleInversion}>
-													<GrPowerCycle size={15} />
-												</button>
-											</div>
+							{(walletConnected && !liquiditySectionVisible && (tokenA && tokenB) && !loading && liquidityInfo && liquidityInfo.hasLiquidity) && (
+								<>
+									<div className="flex-spaced-container" style={{alignItems: 'center', marginTop: '1rem', color: '#FFF', fontSize: '13px', fontFamily: 'PT Sans Caption'}}>
+										<div>Price</div>
+										<div style={{textAlign: 'right', display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
+											{!inverted ? (
+												<div>1 {tokenA} = {(parseFloat(tokenBSupply)/parseFloat(tokenASupply)).toFixed(6)} {tokenB}</div>
+											) : (
+												<div>1 {tokenB} = {(parseFloat(tokenASupply)/parseFloat(tokenBSupply)).toFixed(6)} {tokenA}</div>
+											)}
+											<button className="invert-button" onClick={this.toggleInversion}>
+												<GrPowerCycle size={15} />
+											</button>
 										</div>
+									</div>
+									{parseFloat(liquidityInfo.total) > 0 && (
 										<div className="details-section">
 											<div className="flex-spaced-container" style={{alignItems: 'flex-start', color: theme === 'light' ? '#000' : '#FFF', fontSize: '13px'}}>
 												<div>Your total pooled tokens</div>
@@ -910,8 +910,8 @@ class Liquidity extends Component {
 												</div>
 											</div>
 										</div>
-									</>
-								) : null
+									)}
+								</> 
 							)}
 							<span style={{display: 'none'}}>{this.state.lpAddress}</span>
 							{liquiditySectionVisible ? (

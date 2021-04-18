@@ -123,6 +123,7 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     .modal-header {
+        font-family: 'PT Sans Caption', sans-serif;
         display: flex;
         flex-flow: row nowrap;
         padding: 1rem;
@@ -167,8 +168,75 @@ export const GlobalStyles = createGlobalStyle`
         width: 100% !important;
     }
 
+    .swap-confirmation-header {
+      padding: 1rem 1.25rem 1rem 1rem;
+      background-color: ${({theme}) => theme.modalHeaderBackgroundColor};
+      max-width: 400px;
+      font-family: 'PT Sans Caption', sans-serif;
+    }
+
+    .swap-confirmation-token-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: ${({theme}) => theme.formControlText};
+      font-size: 1.5rem;
+    }
+
+    .swap-confirmation-header svg {
+      position: relative;
+      left: 0.5rem;
+      color: ${({theme}) => theme.formControlText};
+      margin: 0.75rem 0;
+      filter: contrast(0.7);
+      font-size: 16px;
+    }
+
+    .swap-confirmation-token-row img {
+      width: 35px;
+      height: auto;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+    }
+
+    .swap-confirmation-header p {
+      font-style: italic;
+      font-size: 12px;
+      color: ${({theme}) => theme.formControlText};
+      margin: 2rem 0 0;
+      filter: contrast(0.7);
+    }
+
+    .swap-confirmation-details {
+      display: grid;
+      grid-auto-rows: auto;
+      row-gap: 0.35rem;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .swap-confirmation-details > div {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'PT Sans Caption', sans-serif;
+      font-size: 14px;
+    }
+
+    .swap-confirmation-details > div > div:nth-child(1) {
+      color: ${({theme}) => theme.formControlText};
+      filter: contrast(0.7);
+    }
+    
+    .swap-confirmation-details > div > div:nth-child(2) {
+      color: ${({theme}) => theme.formControlText};
+    }
+
     .active-wallet-button {
-        background-color: ${({theme}) => theme.activeWalletButtonBackgroundColor} !important;
+      background-color: ${({theme}) => theme.activeWalletButtonBackgroundColor} !important;
+    }
+
+    [data-high-impact=true] {
+      color: #fd761f !important;
     }
 
     .modal-content-button-disabled {
