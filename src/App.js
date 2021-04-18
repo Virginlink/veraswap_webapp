@@ -286,7 +286,8 @@ class App extends Component {
 				await window.ethereum.enable();
 				const address = await provider.listAccounts();
 				let network = await provider.getNetwork()
-				const chainId = process.env.NODE_ENV === 'development' ? 97 : 56
+				// const chainId = process.env.NODE_ENV === 'development' ? 97 : 56
+				const chainId = 56
 				if(network.chainId !== chainId){
 					notification['error']({
 						message : 'Wrong Network Detected. Please connect to Binance Smart Chain'

@@ -1180,7 +1180,9 @@ class Exchange extends Component {
 																	}}>
 																	Approve {tokenA} {approvingTokenA && (<CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />)}
 																</button>
-																<button disabled>Swap</button>
+																<button disabled>
+                                                                    {(!liquidityInfo || !liquidityInfo.hasLiquidity || invalidPair) ? "Insufficient liquidity for this trade" : "Swap"}
+                                                                </button>
 															</div>
 														) : (
 															<div className="exchange-button-container">

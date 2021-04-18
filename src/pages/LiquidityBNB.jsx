@@ -546,7 +546,6 @@ class Liquidity extends Component {
 			decimalsA: tokenADecimals,
 			decimalsB: tokenBDecimals,
 		}
-		console.log('Normal liquidity data', data)
 		this.setState({supplying: true, createLiquidityModalVisible: false}, () => {
 			addLiquidity(data)
 				.then((res) => {

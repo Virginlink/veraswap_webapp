@@ -3,7 +3,9 @@ import CryptoJS from 'crypto-js'
 import Empty from '../assets/icons/Empty.png'
 import { FACTORY_ABI, FACTORY_ADDRESS, ROUTER_ABI, ROUTER_ADDRESS, TOKEN_ABI, DONUT_ABI, PROVIDER } from "./contracts"
 
-const ABI = process.env.NODE_ENV === 'development' ? DONUT_ABI : TOKEN_ABI
+// const ABI = process.env.NODE_ENV === 'development' ? DONUT_ABI : TOKEN_ABI
+
+const ABI = TOKEN_ABI
 
 const factoryContract = new ethers.Contract(FACTORY_ADDRESS, FACTORY_ABI, PROVIDER)
 

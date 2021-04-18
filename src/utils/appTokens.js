@@ -146,4 +146,5 @@ const MAINNET_TOKENS = [
     },
 ]
 
-export const TOKENS = process.env.NODE_ENV === 'development' ? TESTNET_TOKENS : MAINNET_TOKENS
+// export const TOKENS = process.env.NODE_ENV === 'development' ? TESTNET_TOKENS : MAINNET_TOKENS
+export const TOKENS = MAINNET_TOKENS
