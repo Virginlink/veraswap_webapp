@@ -1097,12 +1097,22 @@ class Exchange extends Component {
 	}
 
 	handlePercentChange = (value) => {
-        const { tokenABalance } = this.state
+        const { tokenABalance, tokenASupply } = this.state
         this.setState({
             percent: value,
         }, () => {
-           const amount = (parseFloat(tokenABalance) * (this.state.percent/100))
-           this.setState({tokenAAmount: parseFloat(amount.toFixed(6))}, () => this.estimate('A'))
+            const amount = (parseFloat(tokenABalance) * (this.state.percent/100))
+            this.setState({tokenAAmount: parseFloat(amount.toFixed(6))}, () => {
+                if (amount >= parseFloat(tokenASupply)) {
+                    this.setState({
+                        invalidPair: true,
+                        tokenAPrice: '',
+                        tokenBPrice: ''
+                    })
+                } else {
+                    this.estimate('A')
+                }
+            })
         })
     }
 
