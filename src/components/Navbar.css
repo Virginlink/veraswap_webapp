@@ -101,10 +101,11 @@
     height: 36px;
     font-weight: 500;
     background: radial-gradient(174.47% 188.91% at 1.84% 0%, #DE0102 0%, #22162C 100%), rgb(237, 238, 242);
+    opacity: 1;
 }
 
 .moon-button-container:hover .moon-button {
-    opacity: 80%;
+    opacity: 0.8;
 }
 
 .noise {
