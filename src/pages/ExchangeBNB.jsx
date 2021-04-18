@@ -711,7 +711,7 @@ class Exchange extends Component {
 				decimalsBNB: 18,
 				decimals: tokenBDecimals,
 			}
-            console.log('SWAP DATA', swapData)
+            // console.log('SWAP DATA', swapData)
 			swapBNBForTokens(swapData)
 				.then((res) => {
 					if (res.success) {
