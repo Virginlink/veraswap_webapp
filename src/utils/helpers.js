@@ -231,7 +231,7 @@ export const addLiquidityWithBNB = ({walletAddress, address, amount, amountMin, 
                 walletAddress, // To address
                 deadline, // Transaction deadline
                 {
-                    value: ethers.utils.parseEther(BNBAmount),
+                    value: ethers.utils.parseUnits(BNBAmount.toString(), 18),
                 }
             )
             resolve({
@@ -403,7 +403,7 @@ export const swapBNBForTokens = ({amountIn, amountOutMin, tokenAddresses, wallet
                 walletAddress,
                 deadline,
                 {
-                    value: ethers.utils.parseEther(amountIn), // BNB Amount
+                    value: ethers.utils.parseUnits(amountIn.toString(), decimalsBNB), // BNB Amount
                 },
             )
             resolve({
