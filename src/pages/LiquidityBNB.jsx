@@ -70,7 +70,18 @@ class Liquidity extends Component {
 			}
 			const pools = fetchPoolData()
 			if (pools) {
-				this.setState({pools: pools.data})
+				const invalidPoolIndex = pools.data.findIndex((pool) => !pool.lpAddress)
+				if (invalidPoolIndex === -1) {
+					this.setState({pools: pools.data})
+				} else {
+					let newPools = [...pools.data]
+					newPools.splice(invalidPoolIndex, 1)
+					const newPoolData = {
+						data: [...newPools]
+					}
+					storePoolData(newPoolData)
+					this.setState({pools: newPools})
+				}
 			}
 		}
 	}
@@ -81,7 +92,18 @@ class Liquidity extends Component {
 		if ((walletAddress !== prevProps.walletAddress) && walletAddress) {
 			const pools = fetchPoolData()
 			if (pools) {
-				this.setState({pools: pools.data})
+				const invalidPoolIndex = pools.data.findIndex((pool) => !pool.lpAddress)
+				if (invalidPoolIndex === -1) {
+					this.setState({pools: pools.data})
+				} else {
+					let newPools = [...pools.data]
+					newPools.splice(invalidPoolIndex, 1)
+					const newPoolData = {
+						data: [...newPools]
+					}
+					storePoolData(newPoolData)
+					this.setState({pools: newPools})
+				}
 			}
 			const importedTokens = fetchImportedTokens()
 			let allTokens = [...TOKENS]

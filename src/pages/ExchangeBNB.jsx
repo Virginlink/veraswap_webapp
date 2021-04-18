@@ -204,6 +204,7 @@ class Exchange extends Component {
 									liquidityInfo: null,
 								})
 							} else {
+                                // console.log('LP Address', lpAddress)
 								getLPInfo(lpAddress, this.props.walletAddress, tokenAAddress, tokenBAddress)
 									.then((liquidityInfo) => {
 										this.setState({
@@ -394,6 +395,7 @@ class Exchange extends Component {
 
 	updateAmount = (value, type) => {
 		const { walletConnected } = this.props
+        const { tokenASupply, tokenBSupply } = this.state
         this.setState({
             [type === 'A' ? 'tokenAAmount' : 'tokenBAmount']: value,
         }, () => {
@@ -406,10 +408,24 @@ class Exchange extends Component {
 				}
 				clearTimeout(timer)
 				if (value && parseFloat(value) > 0) {
-					timer = setTimeout(
-						() => this.estimate(type),
-						700
-					)
+                    if (parseFloat(this.state.tokenAAmount) >= parseFloat(tokenASupply)) {
+                        this.setState({
+                            invalidPair: true,
+                            tokenAPrice: '',
+                            tokenBPrice: ''
+                        })
+                    } else if (parseFloat(this.state.tokenBAmount) >= parseFloat(tokenBSupply)) {
+                        this.setState({
+                            invalidPair: true,
+                            tokenAPrice: '',
+                            tokenBPrice: '',
+                        })
+                    } else {
+                        timer = setTimeout(
+                            () => this.estimate(type),
+                            700
+                        )
+                    }
 				} else {
 					this.setState({
 						[type === 'A' ? 'tokenBAmount' : 'tokenAAmount']: '',
@@ -420,7 +436,7 @@ class Exchange extends Component {
 	}
 
 	estimate = (type) => {
-		const { tokenAAmount, tokenBAmount, tokenABalance, tokenBBalance, tokenAAddress, tokenBAddress, tokenA, tokenB, liquidityInfo, tokenADecimals, tokenBDecimals } = this.state;
+		const { tokenAAmount, tokenBAmount, tokenABalance, tokenBBalance, tokenAAddress, tokenBAddress, tokenA, tokenB, liquidityInfo, tokenADecimals, tokenBDecimals, tokenBSupply, tokenASupply } = this.state;
 		if (tokenABalance && tokenBBalance && (liquidityInfo && liquidityInfo.hasLiquidity > 0)) {
 			// const estimateData = {
 			// 	amount: type === 'A' ? tokenAAmount : tokenBAmount,
@@ -440,14 +456,24 @@ class Exchange extends Component {
 							if (res.success) {
 								let amount = this.state.tokenAAmount
 								// console.log(tokenAAmount, res.amount)
-								this.setState({
-									tokenBAmount: amount ? parseFloat(res.amount).toFixed(6) : '',
-									estimatingA: false,
-									invalidPair: false
-								}, () => {
-                                    this.calculatePriceImpact()
-                                    this.fetchPrices()
-                                })
+                                if (parseFloat(res.amount) >= parseFloat(tokenBSupply) || parseFloat(amount) >= parseFloat(tokenASupply)) {
+                                    this.setState({
+                                        tokenBAmount: amount ? parseFloat(res.amount).toFixed(6) : '',
+                                        estimatingA: false,
+                                        invalidPair: true,
+                                        tokenAPrice: '',
+                                        tokenBPrice: ''
+                                    })
+                                } else {
+                                    this.setState({
+                                        tokenBAmount: amount ? parseFloat(res.amount).toFixed(6) : '',
+                                        estimatingA: false,
+                                        invalidPair: false
+                                    }, () => {
+                                        this.calculatePriceImpact()
+                                        this.fetchPrices()
+                                    })
+                                }
 							}
 						})
 						.catch((err) => {
@@ -472,14 +498,24 @@ class Exchange extends Component {
 						.then((res) => {
 							if (res.success) {
 								let amount = this.state.tokenBAmount
-								this.setState({
-									tokenAAmount: amount ? parseFloat(res.amount).toFixed(6) : '',
-									estimatingB: false,
-									invalidPair: false,
-								}, () => {
-                                    this.calculatePriceImpact()
-                                    this.fetchPrices()
-                                })
+                                if (parseFloat(res.amount) >= parseFloat(tokenASupply) || parseFloat(amount) >= parseFloat(tokenBSupply)) {
+                                    this.setState({
+                                        tokenAAmount: amount ? parseFloat(res.amount).toFixed(6) : '',
+                                        estimatingB: false,
+                                        invalidPair: true,
+                                        tokenAPrice: '',
+                                        tokenBPrice: ''
+                                    })
+                                } else {
+                                    this.setState({
+                                        tokenAAmount: amount ? parseFloat(res.amount).toFixed(6) : '',
+                                        estimatingB: false,
+                                        invalidPair: false,
+                                    }, () => {
+                                        this.calculatePriceImpact()
+                                        this.fetchPrices()
+                                    })
+                                }
 							}
 						})
 						.catch((err) => {
@@ -496,37 +532,39 @@ class Exchange extends Component {
 		}
 	}
 
-	// calculatePriceImpact = () => {
-	// 	const { tokenASupply, tokenBSupply, tokenAAmount, tokenBAmount, tokenA, tokenB } = this.state;
-    //     console.log(`${tokenA} supply`, tokenASupply)
-    //     console.log(`${tokenB} supply`, tokenBSupply)
-    //     const constantProduct = parseFloat(tokenASupply) * parseFloat(tokenBSupply)
-    //     const marketPrice = parseFloat(tokenASupply) / parseFloat(tokenBSupply)
-    //     console.log(`1 ${tokenB} = ${marketPrice} ${tokenA}`)
-    //     const newTokenASupply = parseFloat(tokenASupply) + parseFloat(tokenAAmount)
-    //     const newTokenBSupply = constantProduct/newTokenASupply
-    //     // const tokenBReceived = parseFloat(tokenBSupply) - parseFloat(newTokenBSupply)
-    //     const newPrice = newTokenASupply/newTokenBSupply
-    //     const priceDifference = newPrice - marketPrice
-    //     const impact = (priceDifference/marketPrice) * 100
-    //     console.log('IMPACT', impact)
-	// 	// const numerator = (parseFloat(tokenASupply) * parseFloat(tokenBAmount)) + (parseFloat(tokenBSupply) * parseFloat(tokenAAmount))
-	// 	// const denominator = parseFloat(tokenBSupply) * (parseFloat(tokenBSupply) + parseFloat(tokenBAmount))
-	// 	// const impact = (numerator/denominator) * 100
-	// 	// this.setState({
-	// 	// 	impact: impact.toFixed(2)
-	// 	// })
-	// }
-
-    calculatePriceImpact = () => {
-		const { tokenASupply, tokenBSupply, tokenAAmount, tokenBAmount } = this.state;
-		const numerator = (parseFloat(tokenASupply) * parseFloat(tokenBAmount)) + (parseFloat(tokenBSupply) * parseFloat(tokenAAmount))
-		const denominator = parseFloat(tokenBSupply) * (parseFloat(tokenBSupply) + parseFloat(tokenBAmount))
-		const impact = (numerator/denominator) * 100
-		this.setState({
-			impact: impact.toFixed(2)
-		})
+	calculatePriceImpact = () => {
+		const { tokenASupply, tokenBSupply, tokenAAmount, tokenBAmount, tokenA, tokenB } = this.state;
+        console.log(`Swapping ${tokenAAmount} ${tokenA} for ${tokenBAmount} ${tokenB} `)
+        console.log(`${tokenA} supply`, tokenASupply)
+        console.log(`${tokenB} supply`, tokenBSupply)
+        const constantProduct = parseFloat(tokenASupply) * parseFloat(tokenBSupply)
+        const marketPrice = parseFloat(tokenASupply) / parseFloat(tokenBSupply)
+        console.log(`Price before swap (Market price): 1 ${tokenB} = ${marketPrice} ${tokenA}`)
+        const newTokenASupply = parseFloat(tokenASupply) + parseFloat(tokenAAmount)
+        console.log(`${tokenA} supply after swap`, newTokenASupply)
+        const newTokenBSupply = constantProduct/newTokenASupply
+        console.log(`${tokenB} supply after swap`, newTokenBSupply)
+        const tokenBReceived = parseFloat(tokenBSupply) - parseFloat(newTokenBSupply)
+        console.log(`${tokenB} received for swapping ${tokenAAmount} ${tokenA}`, tokenBReceived)
+        const newPrice = parseFloat(tokenAAmount) / tokenBReceived
+        console.log(`Price after swap: 1 ${tokenB} = ${newPrice} ${tokenA}`)
+        const priceDifference = newPrice - marketPrice
+        const impact = (priceDifference/marketPrice) * 100
+        console.log('IMPACT', impact)
+        this.setState({
+            impact: impact.toFixed(2)
+        })
 	}
+
+    // calculatePriceImpact = () => {
+	// 	const { tokenASupply, tokenBSupply, tokenAAmount, tokenBAmount } = this.state;
+	// 	const numerator = (parseFloat(tokenASupply) * parseFloat(tokenBAmount)) + (parseFloat(tokenBSupply) * parseFloat(tokenAAmount))
+	// 	const denominator = parseFloat(tokenBSupply) * (parseFloat(tokenBSupply) + parseFloat(tokenBAmount))
+	// 	const impact = (numerator/denominator) * 100
+	// 	this.setState({
+	// 		impact: impact.toFixed(2)
+	// 	})
+	// }
 
 	handleMax = (token) => {
 		const { tokenABalance, tokenBBalance } = this.state;
@@ -654,11 +692,12 @@ class Exchange extends Component {
 				amountOutMin: amountOut.toString(),
 				tokenAddresses: [WBNB_ADDRESS, tokenBAddress],
 				walletAddress: walletAddress,
-				deadline: deadline,
+				deadline: parseFloat(deadline),
 				signer: signer,
 				decimalsBNB: 18,
 				decimals: tokenBDecimals,
 			}
+            console.log('SWAP DATA', swapData)
 			swapBNBForTokens(swapData)
 				.then((res) => {
 					if (res.success) {
@@ -1203,7 +1242,7 @@ class Exchange extends Component {
 																	Approve {tokenA} {approvingTokenA && (<CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />)}
 																</button>
 																<button disabled>
-                                                                    {(!liquidityInfo || !liquidityInfo.hasLiquidity || invalidPair) ? "Insufficient liquidity for this trade" : "Swap"}
+                                                                    {!invalidPair && (liquidityInfo && liquidityInfo.hasLiquidity) ? "Swap" : "Insufiicient liquidity for this trade"}
                                                                 </button>
 															</div>
 														) : (
