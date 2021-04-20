@@ -250,7 +250,12 @@ class RemoveLiquidity extends Component {
 		const { tokenA, tokenAAddress, tokenBAddress, tokensInPool, percent, lpAddress, tokenADecimals, tokenBDecimals } = this.state
 		const { walletAddress, signer, history, theme } = this.props
 		const deadline = moment().add(1, 'years').format('X')
-        const liquidity = (parseFloat(tokensInPool) * (percent/100)).toString()
+		let liquidity;
+		if (percent === 100) {
+			liquidity = tokensInPool.toString()
+		} else {
+			liquidity = (parseFloat(tokensInPool) * (percent/100)).toString()
+		}
 		const data = {
 			walletAddress: walletAddress,
 			address: tokenA === 'BNB' ? tokenBAddress : tokenAAddress,
@@ -351,7 +356,12 @@ class RemoveLiquidity extends Component {
 		const { tokenAAddress, tokenBAddress, tokensInPool, percent, lpAddress, tokenADecimals, tokenBDecimals } = this.state
 		const { walletAddress, signer, history, theme } = this.props
 		const deadline = moment().add(1, 'years').format('X')
-        const liquidity = (parseFloat(tokensInPool) * (percent/100)).toString()
+        let liquidity;
+		if (percent === 100) {
+			liquidity = tokensInPool.toString()
+		} else {
+			liquidity = (parseFloat(tokensInPool) * (percent/100)).toString()
+		}
 		const data = {
 			walletAddress: walletAddress,
 			addressA: tokenAAddress,
