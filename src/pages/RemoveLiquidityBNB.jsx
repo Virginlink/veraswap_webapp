@@ -106,6 +106,7 @@ class RemoveLiquidity extends Component {
         this.setState({fetchingApproval: true}, () => {
             getTokenApproval(walletAddress, contractAddress, 18)
 			.then((allowance) => {
+				console.log('Allowance', allowance)
                 this.setState({fetchingApproval: false}, () => {
                     this.setState({
                         lpAllowance: allowance,
@@ -154,15 +155,25 @@ class RemoveLiquidity extends Component {
         this.setState({
             percent: value,
         }, () => {
-           const liquidity = (parseFloat(tokensInPool) * (this.state.percent/100))
-           this.setState({liquidity})
+			let liquidity;
+			if (value === 100) {
+				liquidity = tokensInPool
+			} else {
+				liquidity = (parseFloat(tokensInPool) * (value/100))
+			}
+           	this.setState({liquidity})
         })
     }
 
 	approve = () => {
 		const { lpAddress, tokensInPool, percent } = this.state;
 		const { walletAddress, theme } = this.props
-        const liquidity = (parseFloat(tokensInPool) * (percent/100)).toString()
+		let liquidity;
+		if (percent === 100) {
+			liquidity = tokensInPool.toString()
+		} else {
+			liquidity = (parseFloat(tokensInPool) * (percent/100)).toString()
+		}
 		this.setState({approvingLP: true}, () => {
 			approveToken(
 				lpAddress,
@@ -256,6 +267,7 @@ class RemoveLiquidity extends Component {
 		} else {
 			liquidity = (parseFloat(tokensInPool) * (percent/100)).toString()
 		}
+		console.log(liquidity)
 		const data = {
 			walletAddress: walletAddress,
 			address: tokenA === 'BNB' ? tokenBAddress : tokenAAddress,
