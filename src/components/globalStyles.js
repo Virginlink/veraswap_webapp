@@ -2239,4 +2239,60 @@ export const GlobalStyles = createGlobalStyle`
             overflow: scroll !important;
         }
     }
+
+    .navbar-burger svg {
+      stroke-width: 0;
+    }
+
+    .sidebar .ant-drawer-close {
+      margin-top: -0.25rem;
+      color: ${({theme}) => theme.formControlText};
+    }
+
+    .sidebar .ant-drawer-content {
+      background-color: ${({theme}) => theme.bodyBackgroundColor};
+    }
+
+    .sidebar .ant-drawer-body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar ul {
+      line-height: 3.5rem;
+      list-style-type: none;
+      padding: 0;
+      margin: 2rem 0 0 1rem;
+    }
+
+    .sidebar ul li a {
+      outline: none;
+      cursor: pointer;
+      text-decoration: none;
+      color: ${({theme}) => theme.pageLinkText};
+      font-size: 1rem;
+      width: fit-content;
+      font-weight: 500;
+    }
+
+    .sidebar ul li a.active-page {
+      font-weight: bold;
+      color: ${({theme}) => theme.pageLinkTextPrimary};
+    }
+
+    @media only screen and (min-width: 501px) {
+      .navbar-burger, .sidebar {
+        display: none;
+      }
+    }
+
+    @media only screen and (max-width: 500px) {
+      .navbar-pages-container {
+        display: none;
+      }
+
+      .navbar-pages-main-container {
+        justify-content: space-between;
+      }
+    }
 `

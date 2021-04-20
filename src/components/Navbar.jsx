@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
-import { Tooltip } from 'antd';
+import { Drawer, Tooltip } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { ClickAwayListener, Dialog, Fade } from '@material-ui/core';
 import Logo from '../assets/images/logo.png';
 import AppContext from '../state/AppContext';
+import { IoCloseSharp } from 'react-icons/io5';
+import { RiMenuFill } from 'react-icons/ri';
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Fade timeout={{enter: 1000, exit: 2000}} ref={ref} {...props} />;
 });
@@ -30,6 +32,7 @@ class Navbar extends Component {
             walletAddress: '',
             addressValid: false,
             addressError: false,
+            sidebarVisible: false,
         }
     }
 
@@ -134,8 +137,12 @@ class Navbar extends Component {
         })
     }
 
+    openSidebar = () => this.setState({sidebarVisible: true})
+
+    closeSidebar = () => this.setState({sidebarVisible: false})
+
     render() {
-        const {moonModalVisible, settingsVisible, slippage, deadline, expertModeOn, expertModeConfirmationModalVisible, theme, moreLinksVisible, walletConnected, loggedIn, claimModalVisible, walletAddress, addressValid, moonBalance, addressError, localSlippage} = this.state;
+        const {moonModalVisible, settingsVisible, slippage, deadline, expertModeOn, expertModeConfirmationModalVisible, theme, moreLinksVisible, walletConnected, loggedIn, claimModalVisible, walletAddress, addressValid, moonBalance, addressError, localSlippage, sidebarVisible} = this.state;
         return (
             <div className="navbar-container">
                 <div className="navbar">
@@ -148,9 +155,43 @@ class Navbar extends Component {
                         <div className="navbar-pages-container">
                             <a className={`${this.props.active === 'sale' && 'active-page'}`}>Sale</a>
                             <a className={`${this.props.active === 'stake' && 'active-page'}`}>Stake</a>
-                            <a className={`${this.props.active === 'swap' && 'active-page'}`} onClick={() => this.props.history.push('/swap')} id="swap-nav-link">Swap</a>
-                            <a className={`${this.props.active === 'pool' && 'active-page'}`} onClick={() => this.props.history.push('/pool')} id="pool-nav-link">Pool</a>
+                            <a className={`${this.props.active === 'swap' && 'active-page'}`} onClick={() => this.props.history.push('/swap')}>Swap</a>
+                            <a className={`${this.props.active === 'pool' && 'active-page'}`} onClick={() => this.props.history.push('/pool')}>Pool</a>
+                            <a className={`${this.props.active === 'nft' && 'active-page'}`}>NFT</a>
+                            <a className={`${this.props.active === 'ido' && 'active-page'}`}>IDO</a>
                         </div>
+                        <button className="navbar-action-button navbar-burger" onClick={this.openSidebar} style={{width: 'auto'}}>
+                            <RiMenuFill />
+                        </button>
+                        <Drawer
+                            visible={sidebarVisible}
+                            onClose={this.closeSidebar}
+                            closable
+                            maskClosable
+                            closeIcon={<IoCloseSharp size={25} />}
+                            className="sidebar"
+                        >
+                            <ul>
+                                <li>
+                                    <a className={`${this.props.active === 'sale' && 'active-page'}`}>Sale</a>
+                                </li>
+                                <li>
+                                    <a className={`${this.props.active === 'stake' && 'active-page'}`}>Stake</a>
+                                </li>
+                                <li>
+                                    <a className={`${this.props.active === 'swap' && 'active-page'}`} onClick={() => this.props.history.push('/swap')}>Swap</a>
+                                </li>
+                                <li>
+                                    <a className={`${this.props.active === 'pool' && 'active-page'}`} onClick={() => this.props.history.push('/pool')}>Pool</a>
+                                </li>
+                                <li>
+                                    <a className={`${this.props.active === 'nft' && 'active-page'}`}>NFT</a>
+                                </li>
+                                <li>
+                                    <a className={`${this.props.active === 'ido' && 'active-page'}`}>IDO</a>
+                                </li>
+                            </ul>
+                        </Drawer>
                     </div>
                     <div className="navbar-actions-main-container">
                         <div className="navbar-actions-1">
