@@ -106,7 +106,6 @@ class RemoveLiquidity extends Component {
         this.setState({fetchingApproval: true}, () => {
             getTokenApproval(walletAddress, contractAddress, 18)
 			.then((allowance) => {
-				console.log('Allowance', allowance)
                 this.setState({fetchingApproval: false}, () => {
                     this.setState({
                         lpAllowance: allowance,

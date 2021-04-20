@@ -2259,10 +2259,13 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     .sidebar ul {
-      line-height: 3.5rem;
       list-style-type: none;
       padding: 0;
       margin: 2rem 0 0 1rem;
+    }
+
+    .sidebar ul li {
+      padding: 12px 0;
     }
 
     .sidebar ul li a {
