@@ -2184,7 +2184,7 @@ export const GlobalStyles = createGlobalStyle`
         }
       }      
 
-    @media only screen and (max-width: 960px) {
+    @media only screen and (max-width: 1100px) {
         .navbar-actions-main-container {
             flex-direction: row;
             -webkit-box-pack: justify;
