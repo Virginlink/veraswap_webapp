@@ -1509,9 +1509,9 @@ class Exchange extends Component {
                                 <div>
 									<div style={{display: 'flex', alignItems: 'center'}}>
 										{!inverted ? (
-											<div>{parseFloat(tokenAPrice).toFixed(4)} {tokenB}/{tokenA}</div>
+											<div>{parseFloat(tokenAPrice).toFixed(4)} {tokenB} / {tokenA}</div>
 										) : (
-											<div>{parseFloat(tokenBPrice).toFixed(4)} {tokenA}/{tokenB}</div>
+											<div>{parseFloat(tokenBPrice).toFixed(4)} {tokenA} / {tokenB}</div>
 										)}
 										<button className="invert-button" onClick={this.toggleInversion}>
 											<GrPowerCycle size={15} />

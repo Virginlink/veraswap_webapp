@@ -1,11 +1,15 @@
 import React, { Component } from 'react'
-import { Drawer, Tooltip } from 'antd';
+import { Tooltip } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { ClickAwayListener, Dialog, Fade } from '@material-ui/core';
 import Logo from '../assets/images/logo.png';
 import AppContext from '../state/AppContext';
-import { IoCloseSharp } from 'react-icons/io5';
-import { RiMenuFill } from 'react-icons/ri';
+import { GiReceiveMoney } from 'react-icons/gi';
+import { RiMenuFill, RiRocketLine } from 'react-icons/ri';
+import { AiOutlineShop } from 'react-icons/ai';
+import { IoMdSwap } from 'react-icons/io';
+import { BiLoaderCircle } from 'react-icons/bi';
+import { FaCoins } from 'react-icons/fa';
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Fade timeout={{enter: 1000, exit: 2000}} ref={ref} {...props} />;
 });
@@ -158,12 +162,24 @@ class Navbar extends Component {
                             </div>
                         </a>
                         <div className="navbar-pages-container">
-                            <a className={`${this.props.active === 'sale' && 'active-page'}`}>Sale</a>
-                            <a className={`${this.props.active === 'stake' && 'active-page'}`}>Stake</a>
-                            <a className={`${this.props.active === 'swap' && 'active-page'}`} onClick={() => this.props.history.push('/swap')}>Swap</a>
-                            <a className={`${this.props.active === 'pool' && 'active-page'}`} onClick={() => this.props.history.push('/pool')}>Pool</a>
-                            <a className={`${this.props.active === 'nft' && 'active-page'}`}>NFT</a>
-                            <a className={`${this.props.active === 'ido' && 'active-page'}`}>IDO</a>
+                            <a className={`${this.props.active === 'sale' && 'active-page'}`}>
+                                <AiOutlineShop size={17} style={{marginRight: '8px'}} />Sale
+                            </a>
+                            <a className={`${this.props.active === 'stake' && 'active-page'}`}>
+                                <GiReceiveMoney size={16} />Stake
+                            </a>
+                            <a className={`${this.props.active === 'swap' && 'active-page'}`} onClick={() => this.props.history.push('/swap')}>
+                                <IoMdSwap size={17} style={{position: 'relative', top: '1px'}} />Swap
+                            </a>
+                            <a className={`${this.props.active === 'pool' && 'active-page'}`} onClick={() => this.props.history.push('/pool')}>
+                                <BiLoaderCircle size={17} style={{position: 'relative', top: '1px'}} />Pool
+                            </a>
+                            <a className={`${this.props.active === 'nft' && 'active-page'}`}>
+                                <FaCoins size={15} />NFT
+                            </a>
+                            <a className={`${this.props.active === 'ido' && 'active-page'}`}>
+                                <RiRocketLine size={17} style={{marginRight: '4px'}} />IDO
+                            </a>
                         </div>
                         <button className="navbar-action-button navbar-burger" onClick={this.toggleSidebar} style={{width: 'auto'}}>
                             <RiMenuFill />
@@ -572,22 +588,22 @@ class Navbar extends Component {
             <div className={`sidebar${sidebarVisible ? ' expanded' : ''}`}>
                 <ul>
                     <li>
-                        <a className={`${this.props.active === 'sale' && 'active-page'}`}>Sale</a>
+                        <a className={`${this.props.active === 'sale' && 'active-page'}`}>Sale</a> <AiOutlineShop size={17} style={{marginLeft: '8px'}} />
                     </li>
                     <li>
-                        <a className={`${this.props.active === 'stake' && 'active-page'}`}>Stake</a>
+                        <a className={`${this.props.active === 'stake' && 'active-page'}`}>Stake <GiReceiveMoney size={17} /></a>
                     </li>
                     <li>
-                        <a className={`${this.props.active === 'swap' && 'active-page'}`} onClick={() => this.props.history.push('/swap')}>Swap</a>
+                        <a className={`${this.props.active === 'swap' && 'active-page'}`} onClick={() => this.props.history.push('/swap')}>Swap <IoMdSwap size={17} style={{position: 'relative', top: '3px'}} /></a>
                     </li>
                     <li>
-                        <a className={`${this.props.active === 'pool' && 'active-page'}`} onClick={() => this.props.history.push('/pool')}>Pool</a>
+                        <a className={`${this.props.active === 'pool' && 'active-page'}`} onClick={() => this.props.history.push('/pool')}>Pool <BiLoaderCircle size={17} style={{position: 'relative', top: '3px'}} /></a>
                     </li>
                     <li>
-                        <a className={`${this.props.active === 'nft' && 'active-page'}`}>NFT</a>
+                        <a className={`${this.props.active === 'nft' && 'active-page'}`}>NFT <FaCoins size={15} style={{position: 'relative', top: '1px'}} /></a>
                     </li>
                     <li>
-                        <a className={`${this.props.active === 'ido' && 'active-page'}`}>IDO</a>
+                        <a className={`${this.props.active === 'ido' && 'active-page'}`}>IDO <RiRocketLine size={17} style={{position: 'relative', top: '2px'}} /></a>
                     </li>
                 </ul>
             </div>

@@ -53,6 +53,7 @@ export const GlobalStyles = createGlobalStyle`
     .navbar-pages-container a {
         display: flex;
         flex-flow: row nowrap;
+        align-items: center;
         border-radius: 3rem;
         outline: none;
         cursor: pointer;
@@ -60,7 +61,7 @@ export const GlobalStyles = createGlobalStyle`
         color: ${({theme}) => theme.pageLinkText};
         font-size: 1rem;
         width: fit-content;
-        margin: 0px 12px;
+        margin: 0px 14px;
         font-weight: 500;
     }
     
@@ -2280,6 +2281,19 @@ export const GlobalStyles = createGlobalStyle`
 
     .sidebar ul li {
       padding: 12px 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .navbar-pages-container svg {
+      color: ${({theme}) => theme.pageLinkText};
+      margin-right: 8px;
+    }
+
+    .sidebar ul li svg {
+      color: ${({theme}) => theme.pageLinkText};
+      margin-left: 4px;
     }
 
     .sidebar ul li a {
@@ -2292,18 +2306,18 @@ export const GlobalStyles = createGlobalStyle`
       font-weight: 500;
     }
 
-    .sidebar ul li a.active-page {
+    .sidebar ul li a.active-page, .sidebar ul li a.active-page svg, .navbar-pages-container a.active-page svg {
       font-weight: bold;
       color: ${({theme}) => theme.pageLinkTextPrimary};
     }
 
-    @media only screen and (min-width: 501px) {
+    @media only screen and (min-width: 621px) {
       .navbar-burger, .sidebar {
         display: none;
       }
     }
 
-    @media only screen and (max-width: 500px) {
+    @media only screen and (max-width: 620px) {
       .navbar-pages-container {
         display: none;
       }
