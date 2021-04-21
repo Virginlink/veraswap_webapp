@@ -2258,10 +2258,24 @@ export const GlobalStyles = createGlobalStyle`
       flex-direction: column;
     }
 
+    .sidebar {
+      display: flex;
+      justify-content: flex-end;
+      height: 0px;
+      display: block;
+      overflow: hidden;
+      transition: 0.25s all ease-in;
+    }
+
+    .expanded {
+      height: 280px;
+    }
+
     .sidebar ul {
       list-style-type: none;
       padding: 0;
-      margin: 2rem 0 0 1rem;
+      margin: 0.25rem 1.5rem 0 1rem;
+      text-align: right;
     }
 
     .sidebar ul li {
