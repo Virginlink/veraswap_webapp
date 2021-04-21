@@ -2190,7 +2190,7 @@ export const GlobalStyles = createGlobalStyle`
             -webkit-box-pack: justify;
             justify-content: space-between;
             justify-self: center;
-            max-width: 960px;
+            max-width: 1100px;
             padding: 1rem;
             position: fixed;
             bottom: 0px;
