@@ -2184,13 +2184,13 @@ export const GlobalStyles = createGlobalStyle`
         }
       }      
 
-    @media only screen and (max-width: 1100px) {
+    @media only screen and (max-width: 1280px) {
         .navbar-actions-main-container {
             flex-direction: row;
             -webkit-box-pack: justify;
             justify-content: space-between;
             justify-self: center;
-            max-width: 1100px;
+            max-width: 1280px;
             padding: 1rem;
             position: fixed;
             bottom: 0px;
@@ -2212,6 +2212,12 @@ export const GlobalStyles = createGlobalStyle`
         }
     }
 
+    @media only screen and (max-width: 800px) {
+      .container {
+        padding: 100px 0 150px;
+      }
+    }
+
     @media only screen and (max-width: 500px) {
         .navbar-actions-main-container {
             flex-direction: column;
@@ -2226,10 +2232,6 @@ export const GlobalStyles = createGlobalStyle`
         .links-container {
           top: -12.25rem;
           left: -5rem;
-        }
-
-        .container {
-          padding: 100px 0 150px;
         }
     }
 
@@ -2268,8 +2270,12 @@ export const GlobalStyles = createGlobalStyle`
       transition: 0.25s all ease-in;
     }
 
-    .expanded {
-      height: 280px;
+    .expanded[data-accordion-expanded=false] {
+      height: 330px;
+    }
+
+    .expanded[data-accordion-expanded=true] {
+      height: 445px;
     }
 
     .sidebar ul {
@@ -2311,13 +2317,13 @@ export const GlobalStyles = createGlobalStyle`
       color: ${({theme}) => theme.pageLinkTextPrimary};
     }
 
-    @media only screen and (min-width: 621px) {
+    @media only screen and (min-width: 821px) {
       .navbar-burger, .sidebar {
         display: none;
       }
     }
 
-    @media only screen and (max-width: 620px) {
+    @media only screen and (max-width: 820px) {
       .navbar-pages-container {
         display: none;
       }
@@ -2325,5 +2331,75 @@ export const GlobalStyles = createGlobalStyle`
       .navbar-pages-main-container {
         justify-content: space-between;
       }
+    }
+
+    .navbar-dropdown {
+      position: relative;
+      top: 0.5rem;
+    }
+
+    .navbar-dropdown a {
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      outline: none;
+      cursor: pointer;
+      text-decoration: none;
+      color: ${({theme}) => theme.pageLinkText};
+      width: fit-content;
+      font-weight: 500;
+    }
+
+    .navbar-dropdown a.active-page, .navbar-dropdown a.active-page svg {
+      font-weight: bold;
+      color: ${({theme}) => theme.pageLinkTextPrimary};
+    }
+
+    .navbar-dropdown svg {
+      margin-right: 8px;
+      color: ${({theme}) => theme.pageLinkText};
+    }
+
+    .navbar-dropdown li {
+      padding: 12px 15px;
+    }
+
+    .ant-dropdown-menu {
+      background-color: ${({theme}) => theme.navbarDropdownBackgroundColor};
+      border-radius: 10px;
+    }
+
+    .ant-dropdown-menu-item:hover {
+      background-color: ${({theme}) => theme.navbarDropdownBackgroundColoronHover};
+    }
+
+    .ant-dropdown-menu-item > a:hover, .ant-dropdown-menu-submenu-title > a:hover {
+      color: ${({theme}) => theme.pageLinkTextonHover};
+    }
+
+    .exchange-accordion {
+      display: grid;
+      grid-auto-rows: auto;
+      row-gap: 0.75rem;
+      height: 0px;
+      margin-top: -0.25rem;
+      overflow: hidden;
+      transition: 0.25s all ease-in;
+    }
+
+    .exchange-accordion-expanded {
+      display: grid;
+      grid-auto-rows: auto;
+      row-gap: 0.9rem;
+      margin-top: 1rem;
+      height: 100px;
+      overflow: hidden;
+      transition: 0.25s all ease-in;
+    }
+
+    .exchange-accordion svg, .exchange-accordion-expanded svg {
+      margin-right: 8px;
+      position: relative;
+      top: 2px !important;
     }
 `

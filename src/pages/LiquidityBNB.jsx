@@ -851,7 +851,7 @@ class Liquidity extends Component {
 							{liquiditySectionVisible && (
 								<div className="tabs">
 									<a href="/swap" onClick={(e) => {e.preventDefault(); history.push('/swap')}}>Swap</a>
-									<a href="/pool" onClick={(e) => e.preventDefault()} className="tab-active">Pool</a>
+									<a href="/pool" onClick={(e) => e.preventDefault()} className="tab-active">Liquidity</a>
 								</div>
 							)}
 							<Pool

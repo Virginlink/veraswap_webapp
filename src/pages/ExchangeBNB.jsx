@@ -1140,7 +1140,7 @@ class Exchange extends Component {
 						<div style={{zIndex: 1, position: 'relative'}}>	
 							<div className="tabs">
 								<a href="/swap" onClick={(e) => e.preventDefault()} className="tab-active">Swap</a>
-								<a href="/pool" onClick={(e) => {e.preventDefault(); history.push('/pool')}}>Pool</a>
+								<a href="/pool" onClick={(e) => {e.preventDefault(); history.push('/pool')}}>Liquidity</a>
 							</div>
 							<Swap
 								invalidPair={invalidPair}
