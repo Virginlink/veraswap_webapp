@@ -27,6 +27,8 @@ import Exchange from './pages/Exchange';
 import Liquidity from './pages/Liquidity';
 import ImportLiquidity from './pages/ImportLiquidity';
 import RemoveLiquidity from './pages/RemoveLiquidity';
+import Banner from './assets/images/banner.jpg';
+import { IoClose } from 'react-icons/io5';
 const {ethers} = require('ethers');
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -57,7 +59,8 @@ class App extends Component {
 			ethBuying : false,
 			sapproved : false,
 			sapproving : false,
-			claiming : false
+			claiming : false,
+			showBanner: false,
 		}
 		this.fetchBalance = this.fetchBalance.bind(this);
 		this.buyWithEther = this.buyWithEther.bind(this);
@@ -70,6 +73,7 @@ class App extends Component {
 
 	componentDidMount() {
 		const theme = localStorage.getItem('theme')
+		const bannerShown = localStorage.getItem('sb')
         if (theme) {
 			if (theme === 'light') {
 				this.setState({theme: 'light'})
@@ -77,6 +81,9 @@ class App extends Component {
 				this.setState({theme: 'dark'})
 			}
         }
+		if (!bannerShown || bannerShown === "false") {
+			this.setState({showBanner: true})
+		}
 	}
 
 	toggleTheme = () => {
@@ -471,8 +478,14 @@ class App extends Component {
 		})
 	}
 
+	closeBanner = () => {
+		this.setState({showBanner: false}, () => {
+			localStorage.setItem("sb", "true")
+		})
+	}
+
 	render() {
-		const {connectWalletModalVisible, selectedWallet, showWalletConnection, connectionError, walletConnected, copied, walletConnectionActive, activeWallet, theme} = this.state
+		const {connectWalletModalVisible, selectedWallet, showWalletConnection, connectionError, walletConnected, copied, walletConnectionActive, activeWallet, theme, showBanner} = this.state
 		return (
 			<>
 				<ThemeProvider theme={this.state.theme === 'light' ? lightTheme : darkTheme}>
@@ -954,6 +967,15 @@ class App extends Component {
 							</div>
 						</div>
 					</div>
+				</Dialog>
+				<Dialog
+					open={showBanner}
+					onClose={this.closeBanner}
+					disableScrollLock
+					disableBackdropClick
+				>
+					<IoClose onClick={this.closeBanner} style={{cursor: 'pointer', position: 'absolute', right: '8px', top: '8px'}} size={35} color="#FFF" />
+					<img src={Banner} alt="Veraswap Exchange Banner" />
 				</Dialog>
 				</ThemeProvider>
 			</>
