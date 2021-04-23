@@ -791,7 +791,14 @@ class App extends Component {
 														}
 													</div>
 													<div>
-														<button className="change-wallet-button" onClick={() => {localStorage.clear();this.setState({showWalletConnection: false, walletConnected : false, activeWallet : ''})}}>
+														<button
+															className="change-wallet-button"
+															onClick={() => {
+																if (activeWallet === 'walletConnect'){
+																	localStorage.removeItem('walletconnect')
+																}
+																this.setState({showWalletConnection: false, walletConnected : false, activeWallet : ''})
+															}}>
 															Change
 														</button>
 													</div>
