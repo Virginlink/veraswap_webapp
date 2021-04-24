@@ -613,7 +613,7 @@ class App extends Component {
 							/>
 						)} 
 					/>
-					<Route
+					{/* <Route
 						exact
 						path="/swap"
 						render={(props) => (
@@ -684,7 +684,7 @@ class App extends Component {
 								vrapBalance = {this.state.vrapBalance}
 							/>
 						)}
-					/>
+					/> */}
 					<Redirect path="/" to="/stake" />
 				</Switch>
 				<Dialog
