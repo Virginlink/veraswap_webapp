@@ -981,8 +981,8 @@ class App extends Component {
 					disableScrollLock
 					disableBackdropClick
 				>
-					<IoClose onClick={this.closeBanner} style={{cursor: 'pointer', position: 'absolute', right: '8px', top: '8px'}} size={35} color="#FFF" />
-					<img src={Banner} alt="Veraswap Exchange Banner" />
+					<IoClose onClick={this.closeBanner} style={{cursor: 'pointer', position: 'absolute', right: '8px', top: '8px'}} size={32} color="#FFF" />
+					<img src={Banner} alt="Veraswap Exchange Banner" style={{width: '100%', height: 'auto'}} />
 				</Dialog>
 				</ThemeProvider>
 			</>
