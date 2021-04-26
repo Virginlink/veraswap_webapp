@@ -613,7 +613,7 @@ class App extends Component {
 							/>
 						)} 
 					/>
-					{/* <Route
+					<Route
 						exact
 						path="/swap"
 						render={(props) => (
@@ -684,8 +684,8 @@ class App extends Component {
 								vrapBalance = {this.state.vrapBalance}
 							/>
 						)}
-					/> */}
-					<Redirect path="/" to="/stake" />
+					/>
+					<Redirect path="/" to="/swap" />
 				</Switch>
 				<Dialog
 					open={connectWalletModalVisible}
@@ -975,7 +975,7 @@ class App extends Component {
 						</div>
 					</div>
 				</Dialog>
-				<Dialog
+				{/* <Dialog
 					open={showBanner}
 					onClose={this.closeBanner}
 					disableScrollLock
@@ -983,7 +983,7 @@ class App extends Component {
 				>
 					<IoClose onClick={this.closeBanner} style={{cursor: 'pointer', position: 'absolute', right: '8px', top: '8px'}} size={32} color="#FFF" />
 					<img src={Banner} alt="Veraswap Exchange Banner" style={{width: '100%', height: 'auto'}} />
-				</Dialog>
+				</Dialog> */}
 				</ThemeProvider>
 			</>
 		)

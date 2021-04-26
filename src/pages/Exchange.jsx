@@ -34,9 +34,9 @@ class Exchange extends Component {
 			tokenAApproved: false,
 			approvingTokenA: false,
 			tokenAPrice: '',
-			tokenB: '',
-			tokenBAddress: '',
-			tokenBIcon: '',
+			tokenB: TOKENS[1].symbol,
+			tokenBAddress: TOKENS[1].contractAddress,
+			tokenBIcon: TOKENS[1].icon,
 			tokenBBalance: '',
 			tokenBAmount: '',
 			tokenBAllowance: '',
@@ -176,6 +176,7 @@ class Exchange extends Component {
 							} else {
 								getLPInfo(lpAddress, this.props.walletAddress, tokenAAddress, tokenBAddress)
 									.then((liquidityInfo) => {
+										console.log(liquidityInfo)
 										this.setState({
 											fetchingLiquidity: false,
 											liquidityInfo: liquidityInfo.data,
