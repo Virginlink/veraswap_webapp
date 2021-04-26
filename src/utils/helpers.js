@@ -1,14 +1,38 @@
 import { ethers } from "ethers"
 import CryptoJS from 'crypto-js'
-import { FACTORY_ABI, FACTORY_ADDRESS, ROUTER_ABI, ROUTER_ADDRESS, TOKEN_ABI, PROVIDER } from "./contracts"
+import Empty from '../assets/icons/Empty.png'
+import { FACTORY_ABI, FACTORY_ADDRESS, ROUTER_ABI, ROUTER_ADDRESS, TOKEN_ABI, DONUT_ABI, PROVIDER } from "./contracts"
+
+// const ABI = process.env.NODE_ENV === 'development' ? DONUT_ABI : TOKEN_ABI
+
+const ABI = TOKEN_ABI
 
 const factoryContract = new ethers.Contract(FACTORY_ADDRESS, FACTORY_ABI, PROVIDER)
 
-export const getTokenBalance = (walletAddress, contractAddress, contractABI) => {
+export const getTokenBalance = (walletAddress, contractAddress, contractABI, decimals) => {
     return new Promise(async (resolve, reject) => {
         try {
             const contract = new ethers.Contract(contractAddress, contractABI, PROVIDER)
             let balance = await contract.balanceOf(walletAddress)
+            balance = ethers.utils.formatUnits(balance, decimals)
+            resolve({
+                success: true,
+                balance: balance
+            })
+        } catch (err) {
+            console.log(err)
+            reject({
+                error: true,
+                message: err.message,
+            })
+        }
+    })
+}
+
+export const getBNBBalance = (walletAddress) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let balance = await PROVIDER.getBalance(walletAddress)
             balance = ethers.utils.formatUnits(balance, 18)
             resolve({
                 success: true,
@@ -27,7 +51,7 @@ export const getTokenBalance = (walletAddress, contractAddress, contractABI) => 
 export const getTokenSupply = (contractAddress) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const contract = new ethers.Contract(contractAddress, TOKEN_ABI, PROVIDER)
+            const contract = new ethers.Contract(contractAddress, ABI, PROVIDER)
             let totalSupply = await contract.totalSupply()
             totalSupply = ethers.utils.formatUnits(totalSupply, 18)
             resolve({
@@ -43,12 +67,12 @@ export const getTokenSupply = (contractAddress) => {
     })
 }
 
-export const getTokenApproval = (walletAddress, contractAddress) => {
+export const getTokenApproval = (walletAddress, contractAddress, decimals) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const contract = new ethers.Contract(contractAddress, TOKEN_ABI, PROVIDER)
+            const contract = new ethers.Contract(contractAddress, ABI, PROVIDER)
             let allowance = await contract.allowance(walletAddress, ROUTER_ADDRESS)
-            allowance = ethers.utils.formatUnits(allowance, 18)
+            allowance = ethers.utils.formatUnits(allowance, decimals)
             resolve(allowance)
         } catch (err) {
             console.log(err)
@@ -109,17 +133,20 @@ export const getLPAddress = (addressA, addressB) => {
 export const getLPInfo = (pairAddress, walletAddress, tokenAAddress, tokenBAddress) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const contract = new ethers.Contract(pairAddress, TOKEN_ABI, PROVIDER)
-            const tokenAContract = new ethers.Contract(tokenAAddress, TOKEN_ABI, PROVIDER)
-            const tokenBContract = new ethers.Contract(tokenBAddress, TOKEN_ABI, PROVIDER)
+            const contract = new ethers.Contract(pairAddress, ABI, PROVIDER)
+            const contractDecimals = await contract.decimals()
+            const tokenAContract = new ethers.Contract(tokenAAddress, ABI, PROVIDER)
+            const tokenAContractDecimals = await tokenAContract.decimals()
+            const tokenBContract = new ethers.Contract(tokenBAddress, ABI, PROVIDER)
+            const tokenBContractDecimals = await tokenBContract.decimals()
             let totalSupply = await contract.totalSupply()
-            totalSupply = ethers.utils.formatUnits(totalSupply, 18)
+            totalSupply = ethers.utils.formatUnits(totalSupply, contractDecimals)
             let totalPooledTokens = await contract.balanceOf(walletAddress)
-            totalPooledTokens = ethers.utils.formatUnits(totalPooledTokens, 18)
+            totalPooledTokens = ethers.utils.formatUnits(totalPooledTokens, contractDecimals)
             let tokenAShare = await tokenAContract.balanceOf(pairAddress)
-            tokenAShare = ethers.utils.formatUnits(tokenAShare, 18)
+            tokenAShare = ethers.utils.formatUnits(tokenAShare, tokenAContractDecimals)
             let tokenBShare = await tokenBContract.balanceOf(pairAddress)
-            tokenBShare = ethers.utils.formatUnits(tokenBShare, 18)
+            tokenBShare = ethers.utils.formatUnits(tokenBShare, tokenBContractDecimals)
             let tokenASupply = await tokenAContract.totalSupply()
             tokenASupply = tokenASupply.toString()
             let tokenBSupply = await tokenBContract.totalSupply()
@@ -127,6 +154,7 @@ export const getLPInfo = (pairAddress, walletAddress, tokenAAddress, tokenBAddre
             resolve({
                 success: true,
                 data: {
+                    hasLiquidity: parseFloat(tokenAShare) > 0 && parseFloat(tokenBShare) > 0,
                     total: totalPooledTokens,
                     totalSupply: totalSupply,
                     A: tokenAShare,
@@ -145,11 +173,11 @@ export const getLPInfo = (pairAddress, walletAddress, tokenAAddress, tokenBAddre
     })
 }
 
-export const approveToken = (contractAddress, signer, amount) => {
+export const approveToken = (contractAddress, signer, amount, decimals) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const contract = new ethers.Contract(contractAddress, TOKEN_ABI, signer)
-            const result = await contract.approve(ROUTER_ADDRESS, ethers.utils.parseUnits(amount, 18))
+            const contract = new ethers.Contract(contractAddress, ABI, signer)
+            const result = await contract.approve(ROUTER_ADDRESS, ethers.utils.parseUnits(amount.toString(), decimals))
             resolve({
                 success: true,
                 data: result
@@ -163,17 +191,17 @@ export const approveToken = (contractAddress, signer, amount) => {
     })
 }
 
-export const addLiquidity = ({walletAddress, addressA, addressB, amountA, amountB, deadline, signer}) => {
+export const addLiquidity = ({walletAddress, addressA, addressB, amountA, amountB, deadline, signer, decimalsA, decimalsB}) => {
     return new Promise(async (resolve, reject) => {
         try {
             const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer)
             const result = await contract.addLiquidity(
                 addressA, // Token A Address
                 addressB, // Token B Address
-                ethers.utils.parseUnits(amountA, 18), // Token A Amount
-                ethers.utils.parseUnits(amountB, 18), // Token B Amount
-                ethers.utils.parseUnits("0", 18), // Token A Minimum Amount
-                ethers.utils.parseUnits("0", 18), // Token B Minimum Amount
+                ethers.utils.parseUnits(amountA.toString(), decimalsA), // Token A Amount
+                ethers.utils.parseUnits(amountB.toString(), decimalsB), // Token B Amount
+                ethers.utils.parseUnits("0", decimalsA), // Token A Minimum Amount
+                ethers.utils.parseUnits("0", decimalsB), // Token B Minimum Amount
                 walletAddress, // To address
                 deadline // Transaction deadline
             )
@@ -191,16 +219,46 @@ export const addLiquidity = ({walletAddress, addressA, addressB, amountA, amount
     })
 }
 
-export const removeLiquidity = ({liquidity, walletAddress, addressA, addressB, deadline, signer}) => {
+export const addLiquidityWithBNB = ({walletAddress, address, amount, amountMin, BNBAmount, BNBAmountMin, deadline, signer, decimals, decimalsBNB}) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer)
+            const result = await contract.addLiquidityETH(
+                address, // Token Address
+                ethers.utils.parseUnits(amount.toString(), decimals), // Token Amount
+                ethers.utils.parseUnits(amountMin.toString(), decimals), // Token Amount Minimum
+                ethers.utils.parseUnits(BNBAmountMin.toString(), decimalsBNB), // BNB Amount Minimum
+                walletAddress, // To address
+                deadline, // Transaction deadline
+                {
+                    value: ethers.utils.parseUnits(BNBAmount.toString(), 18),
+                }
+            )
+            resolve({
+                success: true,
+                data: result
+            })
+        } catch (err) {
+            console.log(err)
+            reject({
+                error: true,
+                message: err.message
+            })
+        }
+    })
+}
+
+
+export const removeLiquidity = ({liquidity, walletAddress, addressA, addressB, deadline, signer, decimalsA, decimalsB}) => {
     return new Promise(async (resolve, reject) => {
         try {
             const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer)
             const result = await contract.removeLiquidity(
                 addressA, // Token A Address
                 addressB, // Token B Address
-                ethers.utils.parseUnits(liquidity, 18), // Liquidity
-                ethers.utils.parseUnits("0", 18), // Token A Minimum Amount
-                ethers.utils.parseUnits("0", 18), // Token B Minimum Amount
+                ethers.utils.parseUnits(liquidity.toString(), 18), // Liquidity
+                ethers.utils.parseUnits("0", decimalsA), // Token A Minimum Amount
+                ethers.utils.parseUnits("0", decimalsB), // Token B Minimum Amount
                 walletAddress, // To address
                 deadline // Transaction deadline
             )
@@ -218,12 +276,38 @@ export const removeLiquidity = ({liquidity, walletAddress, addressA, addressB, d
     })
 }
 
-export const estimateInAmounts = ({ amount, addresses, token }) => {
+export const removeLiquidityWithBNB = ({liquidity, walletAddress, address, deadline, signer, decimals, decimalsBNB}) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer)
+            const result = await contract.removeLiquidityETH(
+                address, // Token A Address
+                ethers.utils.parseUnits(liquidity.toString(), 18), // Liquidity
+                ethers.utils.parseUnits("0", decimals), // Token Minimum Amount
+                ethers.utils.parseUnits("0", decimalsBNB), // BNB Minimum Amount
+                walletAddress, // To address
+                deadline // Transaction deadline
+            )
+            resolve({
+                success: true,
+                data: result
+            })
+        } catch (err) {
+            console.log(err)
+            reject({
+                error: true,
+                message: err.message
+            })
+        }
+    })
+}
+
+export const estimateInAmounts = ({ amount, addresses, token, decimals }) => {
     return new Promise(async (resolve, reject) => {
         try {
             const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, PROVIDER)
             const result = await contract.getAmountsIn(
-                ethers.utils.parseUnits(amount, 18),
+                ethers.utils.parseUnits(amount, decimals),
                 addresses
             )
             resolve({
@@ -240,12 +324,12 @@ export const estimateInAmounts = ({ amount, addresses, token }) => {
     })
 }
 
-export const estimateOutAmounts = ({ amount, addresses, token }) => {
+export const estimateOutAmounts = ({ amount, addresses, token, decimals }) => {
     return new Promise(async (resolve, reject) => {
         try {
             const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, PROVIDER)
             const result = await contract.getAmountsOut(
-                ethers.utils.parseUnits(amount, 18),
+                ethers.utils.parseUnits(amount, decimals),
                 addresses
             )
             resolve({
@@ -284,16 +368,68 @@ export const estimateSwapAmount = ({amount, balanceA, balanceB}) => {
     })
 }
 
-export const swapTokens = ({amountIn, amountOut, tokenAddresses, walletAddress, deadline, signer}) => {
+export const swapTokens = ({amountIn, amountOut, tokenAddresses, walletAddress, deadline, signer, amountInDecimals, amountOutDecimals}) => {
     return new Promise(async (resolve, reject) => {
         try {
             const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer)
             const result = await contract.swapExactTokensForTokens(
-                ethers.utils.parseUnits(amountIn, 18),
-                ethers.utils.parseUnits(amountOut, 18),
+                ethers.utils.parseUnits(amountIn.toString(), amountInDecimals),
+                ethers.utils.parseUnits(amountOut.toString(), amountOutDecimals),
                 tokenAddresses,
                 walletAddress,
                 deadline
+            )
+            resolve({
+                success: true,
+                data: result
+            })
+        } catch (err) {
+            console.log(err)
+            reject({
+                error: true,
+                message: err.message
+            })
+        }
+    })
+}
+
+export const swapBNBForTokens = ({amountIn, amountOutMin, tokenAddresses, walletAddress, deadline, signer, decimalsBNB, decimals}) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer)
+            const result = await contract.swapExactETHForTokens(
+                ethers.utils.parseUnits(amountOutMin.toString(), decimals), // Token Amount Minimum
+                tokenAddresses, // Path
+                walletAddress,
+                deadline,
+                {
+                    value: ethers.utils.parseUnits(amountIn.toString(), decimalsBNB), // BNB Amount
+                },
+            )
+            resolve({
+                success: true,
+                data: result
+            })
+        } catch (err) {
+            console.log(err)
+            reject({
+                error: true,
+                message: err.message
+            })
+        }
+    })
+}
+
+export const swapTokensForBNB = ({amountIn, amountOutMin, tokenAddresses, walletAddress, deadline, signer, decimalsBNB, decimals}) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer)
+            const result = await contract.swapExactTokensForETH(
+                ethers.utils.parseUnits(amountIn.toString(), decimals), // Token Amount
+                ethers.utils.parseUnits(amountOutMin.toString(), decimalsBNB), // BNB Amount Minimum
+                tokenAddresses, // Path
+                walletAddress,
+                deadline,
             )
             resolve({
                 success: true,
@@ -350,19 +486,19 @@ export const fetchImportedTokens = () => {
 export const searchToken = (address) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const contract = new ethers.Contract(address, TOKEN_ABI, PROVIDER)
+            const contract = new ethers.Contract(address, ABI, PROVIDER)
             const symbol = await contract.symbol()
             const name = await contract.name()
-            const totalSupply = await contract.totalSupply()
+            const decimals = await contract.decimals()
             resolve({
                 success: true,
                 data: {
                     name: name,
                     symbol: symbol,
                     contractAddress: address,
-                    icon: `https://github.com/trustwallet/assets/blob/master/blockchains/smartchain/assets/${address}/logo.png?raw=true`,
-                    totalSupply: totalSupply.toString(),
-                    contractABI: TOKEN_ABI,
+                    icon: process.env.NODE_ENV === 'development' ? Empty : `https://github.com/trustwallet/assets/blob/master/blockchains/smartchain/assets/${address}/logo.png?raw=true`,
+                    decimals: decimals,
+                    contractABI: ABI,
                 }
             })
         } catch (err) {
@@ -377,7 +513,7 @@ export const searchToken = (address) => {
 export const getPoolName = (address) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const contract = new ethers.Contract(address, TOKEN_ABI, PROVIDER)
+            const contract = new ethers.Contract(address, ABI, PROVIDER)
             const symbol = await contract.symbol()
             const name = await contract.name()
             resolve({

@@ -12,9 +12,48 @@ export const GlobalStyles = createGlobalStyle`
         ${({theme}) => theme.bodyBackground === 'radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 122, 0.1) 0%, rgba(255, 255, 255, 0) 100%)' ? 'background: radial-gradient(50% 50% at 50% 50%, rgba(223, 0, 4, 0.18) 0%, rgba(255, 255, 255, 0) 100%);' : ''}
     }
 
+    .loading-container {
+      background-color: ${({theme}) => theme.bodyBackgroundColor};
+      ${({theme}) => theme.bodyBackground === 'radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 122, 0.1) 0%, rgba(255, 255, 255, 0) 100%)' ? 'background: radial-gradient(50% 50% at 50% 50%, rgba(223, 0, 4, 0.18) 0%, rgba(255, 255, 255, 0) 100%);' : ''}
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      color: ${({theme}) => theme.formControlText};
+      font-family: 'PT Sans Caption', sans-serif;
+    }
+
+    .loading-container > div {
+      position: relative;
+    }
+
+    .loading-container img + div {
+      position: absolute;
+      left: -1rem;
+      top: -1.25rem;
+    }
+
+    .loading-container img {
+      width: 67px;
+      height: auto;
+    }
+
+    .loading-container svg {
+      color: ${({theme}) => theme.primary};
+    }
+
+    .loading-container p {
+      margin-top: 1rem;
+      font-size: 16px;
+    }
+
     .navbar-pages-container a {
         display: flex;
         flex-flow: row nowrap;
+        align-items: center;
         border-radius: 3rem;
         outline: none;
         cursor: pointer;
@@ -22,7 +61,7 @@ export const GlobalStyles = createGlobalStyle`
         color: ${({theme}) => theme.pageLinkText};
         font-size: 1rem;
         width: fit-content;
-        margin: 0px 12px;
+        margin: 0px 14px;
         font-weight: 500;
     }
     
@@ -85,6 +124,7 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     .modal-header {
+        font-family: 'PT Sans Caption', sans-serif;
         display: flex;
         flex-flow: row nowrap;
         padding: 1rem;
@@ -129,8 +169,75 @@ export const GlobalStyles = createGlobalStyle`
         width: 100% !important;
     }
 
+    .swap-confirmation-header {
+      padding: 1rem 1.25rem 1rem 1rem;
+      background-color: ${({theme}) => theme.modalHeaderBackgroundColor};
+      max-width: 400px;
+      font-family: 'PT Sans Caption', sans-serif;
+    }
+
+    .swap-confirmation-token-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: ${({theme}) => theme.formControlText};
+      font-size: 1.5rem;
+    }
+
+    .swap-confirmation-header svg {
+      position: relative;
+      left: 0.5rem;
+      color: ${({theme}) => theme.formControlText};
+      margin: 0.75rem 0;
+      filter: contrast(0.7);
+      font-size: 16px;
+    }
+
+    .swap-confirmation-token-row img {
+      width: 35px;
+      height: auto;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+    }
+
+    .swap-confirmation-header p {
+      font-style: italic;
+      font-size: 12px;
+      color: ${({theme}) => theme.formControlText};
+      margin: 2rem 0 0;
+      filter: contrast(0.7);
+    }
+
+    .swap-confirmation-details {
+      display: grid;
+      grid-auto-rows: auto;
+      row-gap: 0.35rem;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .swap-confirmation-details > div {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'PT Sans Caption', sans-serif;
+      font-size: 14px;
+    }
+
+    .swap-confirmation-details > div > div:nth-child(1) {
+      color: ${({theme}) => theme.formControlText};
+      filter: contrast(0.7);
+    }
+    
+    .swap-confirmation-details > div > div:nth-child(2) {
+      color: ${({theme}) => theme.formControlText};
+    }
+
     .active-wallet-button {
-        background-color: ${({theme}) => theme.activeWalletButtonBackgroundColor} !important;
+      background-color: ${({theme}) => theme.activeWalletButtonBackgroundColor} !important;
+    }
+
+    [data-high-impact=true] {
+      color: #fd761f !important;
     }
 
     .modal-content-button-disabled {
@@ -577,7 +684,7 @@ export const GlobalStyles = createGlobalStyle`
         box-shadow: rgba(0, 0, 0, 0.01) 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 8px, rgba(0, 0, 0, 0.04) 0px 16px 24px, rgba(0, 0, 0, 0.01) 0px 24px 32px !important;
         padding: 0.9rem !important;
         font-family: 'PT Sans Caption';
-        font-size: 16px;
+        font-size: 14px;
         border-radius: 12px !important;
         line-height: 1.6rem;
     }
@@ -1279,6 +1386,7 @@ export const GlobalStyles = createGlobalStyle`
         justify-content: center;
         flex-direction: column;
         z-index : 1;
+        overflow: hidden;
     }
 
     .tabs {
@@ -1290,8 +1398,9 @@ export const GlobalStyles = createGlobalStyle`
     .tabs a {
       font-family: "PT Sans Caption", sans-serif;
       font-size: 15px;
-      color: ${({theme}) => theme.formControlText};
-      opacity: 0.5;
+      // color: ${({theme}) => theme.formControlText};
+      color: #FFF;
+      opacity: 0.7;
       transition: all 0.3s ease;
     }
     
@@ -1306,15 +1415,22 @@ export const GlobalStyles = createGlobalStyle`
         max-width: 400px;
         width: 100%;
         border-radius: 20px;
-        background-color: ${({theme}) => theme.exchangeCardBackgroundColor};
+        // background-color: ${({theme}) => theme.exchangeCardBackgroundColor};
+        background: ${({theme}) => theme.exchangeCardBackground};
         padding: 20px 18px;
       }
+    
+    .exchange-card .noise {
+      border-radius: 20px;
+    }
       
       .form-control {
         padding: 12px 13px;
-        background-color: ${({theme}) => theme.formControlBackgroundColor};
+        // background-color: ${({theme}) => theme.formControlBackgroundColor};
         border-radius: 10px;
-        border: 1px solid ${({theme}) => theme.exchangeCardBackgroundColor};
+        // border: 1px solid ${({theme}) => theme.exchangeCardBackgroundColor};
+        background-color: ${({theme}) => theme.swapFormControlBackgroundColor};
+        border: 1px solid ${({theme}) => theme.swapFormControlBackgroundColor};
         font-size: 12px;
         text-transform: uppercase;
         color: ${({theme}) => theme.formControlText} !important;
@@ -1367,7 +1483,7 @@ export const GlobalStyles = createGlobalStyle`
         box-shadow: none;
         font-family: "PT Sans Caption";
         font-size: 19px;
-        padding: 0;
+        padding: 0 0.5rem 0 0;
       }
       
       .input-container input::placeholder {
@@ -1382,53 +1498,52 @@ export const GlobalStyles = createGlobalStyle`
       
       .max-button {
         cursor: pointer;
-        width: 46px;
-        height: 22px;
+        height: 30px;
         border: none;
-        border-radius: 7px;
+        border-radius: 10px;
         background-color: ${({theme}) => theme.primary};
         color: #fff;
         box-shadow: none;
         text-transform: uppercase;
         margin-right: 5px;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 600;
+        padding: 0 10px;
       }
       
       .asset-select-button {
         display: flex;
         align-items: center;
         cursor: pointer;
-        height: 25px;
+        height: 32px;
         border: none;
-        border-radius: 7px;
+        border-radius: 10px;
         background-color: ${({theme}) => theme.assetSelectBackgroundColor};
         box-shadow: none;
-        padding: 0 5px;
+        padding: 0 9px;
         color: ${({theme}) => theme.formControlText};
         font-family: "PT Sans Caption";
-        font-size: 12px;
+        font-size: 14px;
       }
 
       .swap-form .asset-select-button {
-        background-color: transparent;
-        font-size: 15px;
+        background-color: ${({theme}) => theme.assetSelectBackgroundColor};;
+        font-size: 14px;
       }
 
       .swap-form .asset-select-button span {
         position: relative;
-        top: -0.6px;
       }
 
       .swap-form .asset-select-button img {
-        width: 24px;
-        height: 24px;
+        width: 20px;
+        height: 20px;
         margin-right: 8px;
         border-radius: 50%;
       }
 
       .swap-form .asset-select-button svg {
-        margin-left: 1.5rem;
+        margin-left: 0.5rem;
         font-size: 15px;
       }
 
@@ -1441,15 +1556,14 @@ export const GlobalStyles = createGlobalStyle`
       }
       
       .asset-select-button img {
-        width: 14px;
-        height: 14px;
+        width: 20px;
+        height: 20px;
         margin-right: 8px;
         border-radius: 50%;
       }
       
       .asset-select-button span {
         position: relative;
-        top: 1px;
       }
       
       .asset-select-button svg {
@@ -1473,7 +1587,7 @@ export const GlobalStyles = createGlobalStyle`
         grid-auto-rows: auto;
         row-gap: 0.75rem;
         font-family: "PT Sans Caption", sans-serif;
-        background-color: ${({theme}) => theme.navbarButtonBackgroundColor};
+        background-color: ${({theme}) => theme.swapFormControlBackgroundColor};
         color: ${({theme}) => theme.formControlText};
         border-radius: 10px;
         padding: 10px;
@@ -1514,11 +1628,11 @@ export const GlobalStyles = createGlobalStyle`
         position: absolute;
         background-color: ${({theme}) => theme.swapDividerColor};
         border: 1px solid transparent;
-        height: 32px;
-        width: 32px;
+        height: 25px;
+        width: 25px;
         padding: 4px;
         border-radius: 50%;
-        right: 2rem;
+        margin: auto;
       }
 
       .swap-form .action svg:hover {
@@ -1528,9 +1642,9 @@ export const GlobalStyles = createGlobalStyle`
       .action {
         width: 26px;
         height: 26px;
-        background-color: ${({theme}) => theme.formControlBackgroundColor};
+        background-color: ${({theme}) => theme.swapFormControlBackgroundColor};
         color: ${({theme}) => theme.actionIconColor};
-        margin: 1.5rem auto;
+        margin: 0.75rem auto;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1557,7 +1671,8 @@ export const GlobalStyles = createGlobalStyle`
       }
       
       .exchange-button-container p {
-        color: ${({theme}) => theme.formControlText};
+        // color: ${({theme}) => theme.formControlText};
+        color: #FFF;
         text-align: center;
         margin: 0.45rem 0;
         font-size: 13px;
@@ -1566,19 +1681,20 @@ export const GlobalStyles = createGlobalStyle`
       .exchange-button-container button {
         cursor: pointer;
         width: 100%;
-        height: 45px;
+        height: 41px;
         border: none;
         border-radius: 10px;
         background-color: ${({theme}) => theme.primary};
         color: #FFF;
-        margin-top:1rem;
+        margin-top: 1rem;
         font-weight : 600;
         outline : none;
+        font-size: 14px;
       }
       
       .exchange-button-container button:disabled, .remove-liquidity-actions button:disabled {
         cursor: not-allowed;
-        opacity: 0.35;
+        opacity: 0.5;
       }
       
       .add-liquidity-button {
@@ -1624,7 +1740,8 @@ export const GlobalStyles = createGlobalStyle`
       }
       
       .pool-form .flex-spaced-container {
-        color: ${({theme}) => theme.formControlText};
+        // color: ${({theme}) => theme.formControlText};
+        color: #FFF;
       }
       
       .pool-form .flex-spaced-container span {
@@ -1870,7 +1987,8 @@ export const GlobalStyles = createGlobalStyle`
         cursor: pointer;
         margin: 0.25rem;
         overflow: hidden;
-        color: ${({theme}) => theme.pageLinkTextPrimary};
+        // color: ${({theme}) => theme.pageLinkTextPrimary};
+        color: #FFF;
         width: 20%;
         outline: none;
       }
@@ -1882,7 +2000,7 @@ export const GlobalStyles = createGlobalStyle`
       .pool-amount-row > div:nth-child(1) {
         color: ${({theme}) => theme.formControlText};
         font-family: 'PT Sans Caption';
-        font-size: 1rem;
+        font-size: 0.9rem;
       }
       
       .pool-amount-row > div:nth-child(2) {
@@ -2112,19 +2230,19 @@ export const GlobalStyles = createGlobalStyle`
         }
       }      
 
-    @media only screen and (max-width: 960px) {
+    @media only screen and (max-width: 1280px) {
         .navbar-actions-main-container {
             flex-direction: row;
             -webkit-box-pack: justify;
             justify-content: space-between;
             justify-self: center;
-            max-width: 960px;
+            max-width: 1280px;
             padding: 1rem;
             position: fixed;
             bottom: 0px;
             left: 0px;
             width: 100%;
-            z-index: 99;
+            z-index: 111;
             height: 72px;
             border-radius: 12px 12px 0px 0px;
             background-color: ${({theme}) => theme.navbarBottomBackgroundColor} !important;
@@ -2140,19 +2258,26 @@ export const GlobalStyles = createGlobalStyle`
         }
     }
 
+    @media only screen and (max-width: 800px) {
+      .container {
+        padding: 100px 0 150px;
+      }
+    }
+
     @media only screen and (max-width: 500px) {
         .navbar-actions-main-container {
-            flex-direction: row;
-            align-items: flex-end;
-            height: 60px;
+            flex-direction: column;
+            align-items: center;
+            height: 125px;
         }
 
         .settings-menu {
-            top: -26rem;
+          left: -7rem;
         }
-    
+
         .links-container {
-            top: -19.25rem;
+          top: -12.25rem;
+          left: -5rem;
         }
     }
 
@@ -2175,6 +2300,164 @@ export const GlobalStyles = createGlobalStyle`
             font-weight : 500;
         }
     }
-    
-    
+
+    .navbar-burger svg {
+      stroke-width: 0;
+    }
+
+    .sidebar .ant-drawer-close {
+      margin-top: -0.25rem;
+      color: ${({theme}) => theme.formControlText};
+    }
+
+    .sidebar .ant-drawer-content {
+      background-color: ${({theme}) => theme.bodyBackgroundColor};
+    }
+
+    .sidebar .ant-drawer-body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar {
+      display: flex;
+      justify-content: flex-end;
+      height: 0px;
+      display: block;
+      overflow: hidden;
+      transition: 0.25s all ease-in;
+    }
+
+    .expanded[data-accordion-expanded=false] {
+      height: 330px;
+    }
+
+    .expanded[data-accordion-expanded=true] {
+      height: 445px;
+    }
+
+    .sidebar ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0.25rem 1.5rem 0 1rem;
+      text-align: right;
+    }
+
+    .sidebar ul li {
+      padding: 12px 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .navbar-pages-container svg {
+      color: ${({theme}) => theme.pageLinkText};
+      margin-right: 8px;
+    }
+
+    .sidebar ul li svg {
+      color: ${({theme}) => theme.pageLinkText};
+      margin-left: 4px;
+    }
+
+    .sidebar ul li a {
+      outline: none;
+      cursor: pointer;
+      text-decoration: none;
+      color: ${({theme}) => theme.pageLinkText};
+      font-size: 1rem;
+      width: fit-content;
+      font-weight: 500;
+    }
+
+    .sidebar ul li a.active-page, .sidebar ul li a.active-page svg, .navbar-pages-container a.active-page svg {
+      font-weight: bold;
+      color: ${({theme}) => theme.pageLinkTextPrimary};
+    }
+
+    @media only screen and (min-width: 821px) {
+      .navbar-burger, .sidebar {
+        display: none;
+      }
+    }
+
+    @media only screen and (max-width: 820px) {
+      .navbar-pages-container {
+        display: none;
+      }
+
+      .navbar-pages-main-container {
+        justify-content: space-between;
+      }
+    }
+
+    .navbar-dropdown {
+      position: relative;
+      top: 0.5rem;
+    }
+
+    .navbar-dropdown a {
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      outline: none;
+      cursor: pointer;
+      text-decoration: none;
+      color: ${({theme}) => theme.pageLinkText};
+      width: fit-content;
+      font-weight: 500;
+    }
+
+    .navbar-dropdown a.active-page, .navbar-dropdown a.active-page svg {
+      font-weight: bold;
+      color: ${({theme}) => theme.pageLinkTextPrimary};
+    }
+
+    .navbar-dropdown svg {
+      margin-right: 8px;
+      color: ${({theme}) => theme.pageLinkText};
+    }
+
+    .navbar-dropdown li {
+      padding: 12px 15px;
+    }
+
+    .ant-dropdown-menu {
+      background-color: ${({theme}) => theme.navbarDropdownBackgroundColor};
+      border-radius: 10px;
+    }
+
+    .ant-dropdown-menu-item:hover {
+      background-color: ${({theme}) => theme.navbarDropdownBackgroundColoronHover};
+    }
+
+    .ant-dropdown-menu-item > a:hover, .ant-dropdown-menu-submenu-title > a:hover {
+      color: ${({theme}) => theme.pageLinkTextonHover};
+    }
+
+    .exchange-accordion {
+      display: grid;
+      grid-auto-rows: auto;
+      row-gap: 0.75rem;
+      height: 0px;
+      margin-top: -0.25rem;
+      overflow: hidden;
+      transition: 0.25s all ease-in;
+    }
+
+    .exchange-accordion-expanded {
+      display: grid;
+      grid-auto-rows: auto;
+      row-gap: 0.9rem;
+      margin-top: 1rem;
+      height: 100px;
+      overflow: hidden;
+      transition: 0.25s all ease-in;
+    }
+
+    .exchange-accordion svg, .exchange-accordion-expanded svg {
+      margin-right: 8px;
+      position: relative;
+      top: 2px !important;
+    }
 `

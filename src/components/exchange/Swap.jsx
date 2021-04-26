@@ -45,7 +45,7 @@ export default class Swap extends Component {
                                 value={tokenAAmount}
                                 inputMode="numeric"
                                 onChange={(e) => {
-                                    if (!fetchingLiquidity && !invalidPair && e.target.value.match(/^(\d+)?([.]?\d{0,9})?$/)) {
+                                    if (!fetchingLiquidity && e.target.value.match(/^(\d+)?([.]?\d{0,9})?$/)) {
                                         onAmountChange(e.target.value, 'A')
                                     }
                                 }}
@@ -72,7 +72,7 @@ export default class Swap extends Component {
                             >
                                 {tokenAIcon && <img src={tokenAIcon} alt="token-logo" />}
                                 <span style={{textTransform: 'none'}}>{tokenA || 'Select'}</span>
-                                <IoChevronForwardSharp />
+                                {!tokenA && <IoChevronForwardSharp />}
                             </button>
                         </div>
                     </div>
@@ -91,7 +91,7 @@ export default class Swap extends Component {
                                 value={tokenBAmount}
                                 inputMode="numeric"
                                 onChange={(e) => {
-                                    if (!fetchingLiquidity && !invalidPair && e.target.value.match(/^(\d+)?([.]?\d{0,9})?$/)) {
+                                    if (!fetchingLiquidity && e.target.value.match(/^(\d+)?([.]?\d{0,9})?$/)) {
                                         onAmountChange(e.target.value, 'B')
                                     }
                                 }}
@@ -118,7 +118,7 @@ export default class Swap extends Component {
                             >
                                 {tokenBIcon && <img src={tokenBIcon} alt="token-logo" />}
                                 <span style={{textTransform: 'none'}}>{tokenB || 'Select'}</span>
-                                <IoChevronForwardSharp />
+                                {!tokenB && <IoChevronForwardSharp />}
                             </button>
                         </div>
                     </div>

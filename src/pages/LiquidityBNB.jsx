@@ -3,15 +3,18 @@ import moment from 'moment'
 import { withRouter } from 'react-router'
 import Pool from '../components/exchange/Pool'
 import Navbar from '../components/Navbar'
-import { getLPAddress, getLPInfo, getTokenApproval, getTokenBalance, approveToken, addLiquidity, fetchPoolData, storePoolData, fetchImportedTokens } from '../utils/helpers'
+import { getLPAddress, getLPInfo, getTokenApproval, getTokenBalance, approveToken, addLiquidity, fetchPoolData, storePoolData, fetchImportedTokens, getBNBBalance, addLiquidityWithBNB } from '../utils/helpers'
 import { TOKENS } from '../utils/appTokens'
 import { CircularProgress, Dialog } from '@material-ui/core'
 import { notification } from 'antd'
 import { RiCloseFill } from 'react-icons/ri'
 import { GrPowerCycle } from 'react-icons/gr'
 import { PROVIDER } from '../utils/contracts'
+import AppContext from '../state/AppContext'
 
 class Liquidity extends Component {
+    static contextType = AppContext;
+
     constructor(props) {
         super(props)
         this.state = {
@@ -19,6 +22,7 @@ class Liquidity extends Component {
             liquiditySectionVisible: true,
 			tokenA: TOKENS[0].symbol,
 			tokenAIcon: TOKENS[0].icon,
+			tokenADecimals: TOKENS[0].decimals,
 			tokenAAddress: TOKENS[0].contractAddress,
 			tokenABalance: '',
 			tokenAAmount: '',
@@ -28,6 +32,7 @@ class Liquidity extends Component {
 			tokenASupply: '',
 			tokenB: '',
 			tokenBIcon: '',
+			tokenBDecimals: '',
 			tokenBAddress: '',
 			tokenBBalance: '',
 			tokenBAmount: '',
@@ -57,11 +62,26 @@ class Liquidity extends Component {
 				allTokens = [...TOKENS, ...importedTokens.data]
 			}
             const selectedToken = allTokens.filter((token) => token.symbol === this.state.tokenA)
-			this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, 'A')
-			this.fetchApproval(walletAddress, selectedToken[0].contractAddress, 'A')
+			if (selectedToken[0].symbol === 'BNB') {
+				this.fetchBNBBalance('A')
+			} else {
+				this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, selectedToken[0].decimals, 'A')
+				this.fetchApproval(walletAddress, selectedToken[0].contractAddress, selectedToken[0].decimals, 'A')
+			}
 			const pools = fetchPoolData()
 			if (pools) {
-				this.setState({pools: pools.data})
+				const invalidPoolIndex = pools.data.findIndex((pool) => !pool.lpAddress)
+				if (invalidPoolIndex === -1) {
+					this.setState({pools: pools.data})
+				} else {
+					let newPools = [...pools.data]
+					newPools.splice(invalidPoolIndex, 1)
+					const newPoolData = {
+						data: [...newPools]
+					}
+					storePoolData(newPoolData)
+					this.setState({pools: newPools})
+				}
 			}
 		}
 	}
@@ -72,7 +92,18 @@ class Liquidity extends Component {
 		if ((walletAddress !== prevProps.walletAddress) && walletAddress) {
 			const pools = fetchPoolData()
 			if (pools) {
-				this.setState({pools: pools.data})
+				const invalidPoolIndex = pools.data.findIndex((pool) => !pool.lpAddress)
+				if (invalidPoolIndex === -1) {
+					this.setState({pools: pools.data})
+				} else {
+					let newPools = [...pools.data]
+					newPools.splice(invalidPoolIndex, 1)
+					const newPoolData = {
+						data: [...newPools]
+					}
+					storePoolData(newPoolData)
+					this.setState({pools: newPools})
+				}
 			}
 			const importedTokens = fetchImportedTokens()
 			let allTokens = [...TOKENS]
@@ -80,12 +111,20 @@ class Liquidity extends Component {
 				allTokens = [...TOKENS, ...importedTokens.data]
 			}
 			const selectedToken = allTokens.filter((token) => token.symbol === tokenA)
-			this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, 'A')
-			this.fetchApproval(walletAddress, selectedToken[0].contractAddress, 'A')
+			if (selectedToken[0].symbol === 'BNB') {
+				this.fetchBNBBalance('A')
+			} else {
+				this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, selectedToken[0].decimals, 'A')
+				this.fetchApproval(walletAddress, selectedToken[0].contractAddress, selectedToken[0].decimals, 'A')
+			}
 			if (tokenB) {
 				const selectedToken = allTokens.filter((token) => token.symbol === tokenB)
-				this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, 'B')
-				this.fetchApproval(walletAddress, selectedToken[0].contractAddress, 'B')
+				if (selectedToken[0].symbol === 'BNB') {
+					this.fetchBNBBalance('B')
+				} else {
+					this.fetchBalance(walletAddress, selectedToken[0].contractAddress, selectedToken[0].contractABI, selectedToken[0].decimals, 'B')
+					this.fetchApproval(walletAddress, selectedToken[0].contractAddress, selectedToken[0].decimals, 'B')
+				}
 			}
 			if (tokenA && tokenB) {
 				this.fetchLiquidity()
@@ -122,8 +161,8 @@ class Liquidity extends Component {
         })
     }
 
-	fetchBalance = (walletAddress, contractAddress, contractABI, token) => {
-		getTokenBalance(walletAddress, contractAddress, contractABI)
+	fetchBalance = (walletAddress, contractAddress, contractABI, decimals, token) => {
+		getTokenBalance(walletAddress, contractAddress, contractABI, decimals)
             .then((res) => {
                 if (res.success) {
                     this.setState({
@@ -135,9 +174,23 @@ class Liquidity extends Component {
                 console.log('Unable to fetch balance', err.message)
             })
 	}
+	
+	fetchBNBBalance = async (token) => {
+		getBNBBalance(this.props.walletAddress)
+			.then((res) => {
+				if (res.success) {
+                    this.setState({
+                        [token === 'A' ? 'tokenABalance' : 'tokenBBalance']: res.balance
+                    })
+                }
+			})
+			.catch((err) => {
+                console.log('Unable to fetch balance', err.message)
+            })
+	}
 
-	fetchApproval = (walletAddress, contractAddress, token) => {
-		getTokenApproval(walletAddress, contractAddress)
+	fetchApproval = (walletAddress, contractAddress, decimals, token) => {
+		getTokenApproval(walletAddress, contractAddress, decimals)
 			.then((allowance) => {
 				if (parseFloat(allowance) > 0) {
 					this.setState({
@@ -153,7 +206,7 @@ class Liquidity extends Component {
 	}
 
     fetchLiquidity = (createPool = false, hash) => {
-		const { tokenA, tokenB, tokenAIcon, tokenBIcon, tokenAAddress, tokenBAddress } = this.state
+		const { tokenA, tokenB, tokenAIcon, tokenBIcon, tokenAAddress, tokenBAddress, tokenADecimals, tokenBDecimals } = this.state
         if (tokenAAddress && tokenBAddress) {
 			try {
 				this.setState({loading: true}, async () => {
@@ -169,7 +222,7 @@ class Liquidity extends Component {
 							tokenBSupply: liquidityInfo.data.B,
 							loading: false,
 						}, () => {
-							if (parseFloat(liquidityInfo.data.total) > 0) {
+							if (liquidityInfo.hasLiquidity) {
 								const tokenAPrice = parseFloat(this.state.tokenBSupply)/parseFloat(this.state.tokenASupply)
 								const tokenBPrice = parseFloat(this.state.tokenASupply)/parseFloat(this.state.tokenBSupply)
 								if (this.state.tokenAAmount) {
@@ -183,9 +236,11 @@ class Liquidity extends Component {
 									const createdPool = {
 										tokenA: tokenA,
 										tokenAIcon: tokenAIcon,
+										tokenADecimals: tokenADecimals,
 										tokenAAddress: tokenAAddress,
 										tokenB: tokenB,
 										tokenBIcon: tokenBIcon,
+										tokenBDecimals: tokenBDecimals,
 										tokenBAddress: tokenBAddress,
 										lpAddress: lpAddress,
 									}
@@ -249,8 +304,16 @@ class Liquidity extends Component {
 			}
 			const A = allTokens.filter((token) => token.symbol === this.state.tokenA)[0]
 			const B = allTokens.filter((token) => token.symbol === this.state.tokenB)[0]
-			this.fetchBalance(walletAddress, tokenAAddress, A.contractABI, 'A')
-			this.fetchBalance(walletAddress, tokenBAddress, B.contractABI, 'B')
+			if (A.symbol === 'BNB') {
+				this.fetchBNBBalance('A')
+			} else {
+				this.fetchBalance(walletAddress, tokenAAddress, A.contractABI, A.decimals, 'A')
+			}
+			if (B.symbol === 'BNB') {
+				this.fetchBNBBalance('B')
+			} else {
+				this.fetchBalance(walletAddress, tokenBAddress, B.contractABI, B.decimals, 'B')
+			}
 		})
 	}
 
@@ -261,11 +324,16 @@ class Liquidity extends Component {
 			this.setState({
 				tokenA: token.symbol,
 				tokenAIcon: token.icon,
+				tokenADecimals: token.decimals,
 				tokenAAddress: token.contractAddress,
 			}, () => {
 				if (walletConnected) {
-					this.fetchBalance(walletAddress, token.contractAddress, token.contractABI, 'A')
-					this.fetchApproval(walletAddress, token.contractAddress, 'A')
+					if (token.symbol === 'BNB') {
+						this.fetchBNBBalance('A')
+					} else {
+						this.fetchBalance(walletAddress, token.contractAddress, token.contractABI, token.decimals, 'A')
+						this.fetchApproval(walletAddress, token.contractAddress, token.decimals, 'A')
+					}
 					this.fetchLiquidity()
 				}
 			})
@@ -281,11 +349,16 @@ class Liquidity extends Component {
 			this.setState({
 				tokenB: token.symbol,
 				tokenBIcon: token.icon,
+				tokenBDecimals: token.decimals,
 				tokenBAddress: token.contractAddress,
 			}, () => {
 				if (walletConnected) {
-					this.fetchBalance(walletAddress, token.contractAddress, token.contractABI, 'B')
-					this.fetchApproval(walletAddress, token.contractAddress, 'B')
+					if (token.symbol === 'BNB') {
+						this.fetchBNBBalance('B')
+					} else {
+						this.fetchBalance(walletAddress, token.contractAddress, token.contractABI, token.decimals, 'B')
+						this.fetchApproval(walletAddress, token.contractAddress, token.decimals, 'B')
+					}
 					this.fetchLiquidity()
 				}
 			})
@@ -295,15 +368,17 @@ class Liquidity extends Component {
 	}
 
 	swapTokens = () => {
-		const { tokenA, tokenAIcon, tokenABalance, tokenB, tokenBIcon, tokenBBalance, tokenAAmount, tokenBAmount, tokenAAddress, tokenBAddress } = this.state;
+		const { tokenA, tokenAIcon, tokenABalance, tokenB, tokenBIcon, tokenBBalance, tokenAAmount, tokenBAmount, tokenAAddress, tokenBAddress, tokenADecimals, tokenBDecimals } = this.state;
 		const { walletConnected } = this.props
 		this.setState({
 			tokenB: tokenA,
 			tokenBIcon: tokenAIcon,
+			tokenBDecimals: tokenADecimals,
 			tokenBBalance: tokenABalance,
 			tokenBAddress: tokenAAddress,
 			tokenA: tokenB,
 			tokenAIcon: tokenBIcon,
+			tokenADecimals: tokenBDecimals,
 			tokenABalance: tokenBBalance,
 			tokenAAddress: tokenBAddress,
 			tokenAAmount: tokenBAmount,
@@ -323,7 +398,7 @@ class Liquidity extends Component {
         }, () => {
 			if (walletConnected) {
 				if (liquidityInfo) {
-					if (parseFloat(liquidityInfo.total) > 0) {
+					if (liquidityInfo.hasLiquidity) {
 						this.estimate(type)
 					}
 				}
@@ -360,13 +435,14 @@ class Liquidity extends Component {
 	}
 
 	approve = (token) => {
-		const { tokenA, tokenB, tokenAAddress, tokenBAddress, approvalAmount } = this.state;
+		const { tokenA, tokenB, tokenAAddress, tokenBAddress, approvalAmount, tokenADecimals, tokenBDecimals } = this.state;
 		const { walletAddress, theme } = this.props
 		this.setState({[token === 'A' ? 'approvingTokenA' : 'approvingTokenB']: true, approving: true}, () => {
 			approveToken(
 				token === 'A' ? tokenAAddress : tokenBAddress,
 				this.props.signer,
 				approvalAmount,
+				token === 'A' ? tokenADecimals : tokenBDecimals,
 			).then((res) => {
 				if (res.success) {
 					// console.log(res.data)
@@ -413,9 +489,13 @@ class Liquidity extends Component {
 									let reciept = await PROVIDER.getTransaction(res.data.hash)
 									if(reciept) {
 										if (token === 'A') {
-											this.fetchApproval(walletAddress, tokenAAddress, 'A')
+											if (tokenA !== 'BNB') {
+												this.fetchApproval(walletAddress, tokenAAddress, tokenADecimals, 'A')
+											}
 										} else {
-											this.fetchApproval(walletAddress, tokenBAddress, 'B')
+											if (tokenB !== 'BNB') {
+												this.fetchApproval(walletAddress, tokenBAddress, tokenBDecimals, 'B')
+											}
 										}
 										notification.close('approvalProcessingNotification')
 										const Link = () => (
@@ -458,19 +538,23 @@ class Liquidity extends Component {
 	}
 
 	supply = () => {
-		const { liquidityInfo } = this.state
+		const { liquidityInfo, tokenA, tokenB } = this.state
 		if (!liquidityInfo) {
 			this.setState({createLiquidityModalVisible: true})
 			return
-		} else if (!parseFloat(liquidityInfo.total) > 0) {
+		} else if (!liquidityInfo.hasLiquidity) {
 			this.setState({createLiquidityModalVisible: true})
 			return
 		}
-		this.supplyPool()
+		if (tokenA === 'BNB' || tokenB === 'BNB') {
+			this.supplyWithBNB()
+		} else {
+			this.supplyPool()
+		}
 	}
 
 	supplyPool = () => {
-		const { tokenA, tokenB, tokenAIcon, tokenBIcon, tokenAAddress, tokenBAddress, tokenAAmount, tokenBAmount, lpAddress } = this.state
+		const { tokenA, tokenB, tokenAIcon, tokenBIcon, tokenAAddress, tokenBAddress, tokenAAmount, tokenBAmount, lpAddress, tokenADecimals, tokenBDecimals } = this.state
 		const { walletAddress, signer, theme } = this.props
 		const deadline = moment().add(1, 'years').format('X')
 		const data = {
@@ -481,6 +565,8 @@ class Liquidity extends Component {
 			amountB: tokenBAmount,
 			deadline: parseFloat(deadline),
 			signer: signer,
+			decimalsA: tokenADecimals,
+			decimalsB: tokenBDecimals,
 		}
 		this.setState({supplying: true, createLiquidityModalVisible: false}, () => {
 			addLiquidity(data)
@@ -517,9 +603,114 @@ class Liquidity extends Component {
 												const createdPool = {
 													tokenA: tokenA,
 													tokenAIcon: tokenAIcon,
+													tokenADecimals: tokenADecimals,
 													tokenAAddress: tokenAAddress,
 													tokenB: tokenB,
 													tokenBIcon: tokenBIcon,
+													tokenBDecimals: tokenBDecimals,
+													tokenBAddress: tokenBAddress,
+													lpAddress: lpAddress,
+												}
+												this.storeNewPool(createdPool, res.data.hash)
+												this.fetchLiquidity()
+											} else {
+												this.fetchLiquidity(true, res.data.hash)
+											}
+											clearInterval(intervalId)
+										}
+									} catch(e) {
+										console.log(e.message)
+									}
+								}, 5000)
+							} catch(e) {
+								this.setState({supplying: false})
+								console.log(e.message)
+							}
+						}
+					}
+				})
+				.catch((err) => {
+					this.setState({supplying: false}, () => {
+						notification.error({
+							message: "Couldn't add liquidity",
+							description: "Your transaction could not be processed. Please try again later."
+						})
+					})
+				})
+		})
+	}
+
+	supplyWithBNB = () => {
+		const { tokenA, tokenB, tokenAIcon, tokenBIcon, tokenAAddress, tokenBAddress, tokenAAmount, tokenBAmount, lpAddress, tokenADecimals, tokenBDecimals, liquidityInfo } = this.state
+		const { walletAddress, signer, theme } = this.props
+		const deadline = moment().add(1, 'years').format('X')
+		const amount = tokenA === 'BNB' ? tokenBAmount : tokenAAmount
+		const BNBAmount = tokenA === 'BNB' ? tokenAAmount : tokenBAmount
+		let amountMin, BNBAmountMin;
+		if (liquidityInfo) {
+			if (liquidityInfo.hasLiquidity) {
+				amountMin = parseFloat(amount) - (parseFloat(amount) * (parseFloat(this.context.slippage)/100))
+				BNBAmountMin = parseFloat(BNBAmount) - (parseFloat(BNBAmount) * (parseFloat(this.context.slippage)/100))
+			} else {
+				amountMin = amount
+				BNBAmountMin = BNBAmount
+			}
+		} else {
+			amountMin = amount
+			BNBAmountMin = BNBAmount
+		}
+		const data = {
+			walletAddress: walletAddress,
+			address: tokenA === 'BNB' ? tokenBAddress : tokenAAddress,
+			amount: amount,
+			amountMin: amountMin.toString(),
+			BNBAmount: BNBAmount,
+			BNBAmountMin: BNBAmountMin.toString(),
+			deadline: parseFloat(deadline),
+			signer: signer,
+			decimals: tokenA === 'BNB' ? tokenBDecimals : tokenADecimals,
+			decimalsBNB: tokenA === 'BNB' ? tokenADecimals : tokenBDecimals,
+		}
+		this.setState({supplying: true, createLiquidityModalVisible: false}, () => {
+			addLiquidityWithBNB(data)
+				.then((res) => {
+					if (res.success) {
+						if (res.data.hash) {
+							const Link = () => (
+								<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://${process.env.NODE_ENV === 'development' ? 'testnet.bscscan.com' : 'bscscan.com'}/tx/${res.data.hash}`}>View Transaction</a>
+							)
+							notification.info({
+								key: 'supplyProcessingNotification',
+								message: 'Transaction is being processed. You can view the transaction here.',
+								btn: <Link />,
+								icon: (
+									<CircularProgress
+										size={25}
+										thickness={5}
+										style={{
+											color: theme === 'light' ? '#DE0102' : '#DEB501' ,
+											position: 'relative',
+											top: '6px'
+										}}
+									/>
+								),
+								duration: 0
+							})
+							try {
+								let intervalId = setInterval(async () => {
+									try {
+										let reciept = await PROVIDER.getTransaction(res.data.hash)
+										// console.log('RECEIPT', reciept)
+										if(reciept) {
+											if (lpAddress) {
+												const createdPool = {
+													tokenA: tokenA,
+													tokenAIcon: tokenAIcon,
+													tokenADecimals: tokenADecimals,
+													tokenAAddress: tokenAAddress,
+													tokenB: tokenB,
+													tokenBIcon: tokenBIcon,
+													tokenBDecimals: tokenBDecimals,
 													tokenBAddress: tokenBAddress,
 													lpAddress: lpAddress,
 												}
@@ -558,9 +749,11 @@ class Liquidity extends Component {
 		this.setState({
 			tokenA: tokenA.symbol,
 			tokenAIcon: tokenA.icon,
+			tokenADecimals: tokenA.decimals,
 			tokenAAddress: tokenA.address,
 			tokenB: tokenB.symbol,
 			tokenBIcon: tokenB.icon,
+			tokenBDecimals: tokenB.decimals,
 			tokenBAddress: tokenB.address,
 			liquiditySectionVisible: false
 		}, () => {
@@ -571,10 +764,18 @@ class Liquidity extends Component {
 			}
 			const tokenA = allTokens.filter((token) => token.symbol === this.state.tokenA)[0]
 			const tokenB = allTokens.filter((token) => token.symbol === this.state.tokenB)[0]
-			this.fetchBalance(walletAddress, tokenA.contractAddress, tokenA.contractABI, 'A')
-			this.fetchBalance(walletAddress, tokenB.contractAddress, tokenB.contractABI, 'B')
-			this.fetchApproval(walletAddress, tokenA.contractAddress, 'A')
-			this.fetchApproval(walletAddress, tokenB.contractAddress, 'B')
+			if (tokenA.symbol === 'BNB') {
+				this.fetchBNBBalance('A')
+			} else {
+				this.fetchBalance(walletAddress, tokenA.contractAddress, tokenA.contractABI, tokenA.decimals, 'A')
+				this.fetchBalance(walletAddress, tokenB.contractAddress, tokenB.contractABI, tokenB.decimals, 'B')
+			}
+			if (tokenB.symbol === 'BNB') {
+				this.fetchBNBBalance('B')
+			} else {
+				this.fetchApproval(walletAddress, tokenA.contractAddress, tokenA.decimals, 'A')
+				this.fetchApproval(walletAddress, tokenB.contractAddress, tokenB.decimals, 'B')
+			}
 			this.fetchLiquidity()
 		})
 	}
@@ -586,7 +787,11 @@ class Liquidity extends Component {
 			allTokens = [...TOKENS, ...importedTokens.data]
 		}
 		const selectedToken = allTokens.filter((token) => token.symbol === tokenSymbol)[0]
-		this.fetchBalance(this.props.walletAddress, selectedToken.contractAddress, selectedToken.contractABI, type)
+		if (selectedToken.symbol === 'BNB') {
+			this.fetchBNBBalance(type)
+		} else {
+			this.fetchBalance(this.props.walletAddress, selectedToken.contractAddress, selectedToken.contractABI, selectedToken.decimals, type)
+		}
 	}
 
 	handleModalToggle = () => {
@@ -623,7 +828,7 @@ class Liquidity extends Component {
 	}
 
     render() {
-        const { liquiditySectionVisible, tokenA, tokenABalance, tokenB, tokenBBalance, tokenAIcon, tokenBIcon, tokenAAmount, tokenBAmount, pools, approvingTokenA, approvingTokenB, supplying, tokenAAllowance, tokenBAllowance, loading, approvalModalVisible, approvalToken, approvalAmount, approving, liquidityInfo, inverted, tokenASupply, tokenBSupply, createLiquidityModalVisible } = this.state
+        const { liquiditySectionVisible, tokenA, tokenABalance, tokenB, tokenBBalance, tokenAIcon, tokenBIcon, tokenAAmount, tokenBAmount, pools, approvingTokenA, approvingTokenB, supplying, tokenAAllowance, tokenBAllowance, loading, approvalModalVisible, approvalToken, approvalAmount, approving, liquidityInfo, inverted, tokenASupply, tokenBSupply, createLiquidityModalVisible, tokenADecimals, tokenBDecimals } = this.state
         const { onModalToggle, walletConnected, walletAddress, signer, history, modalVisible, theme, onThemeToggle, ethBalance, vrapBalance } = this.props
         return (
             <>
@@ -640,40 +845,44 @@ class Liquidity extends Component {
             	/>
                 <div className="container">
 					<div className="exchange-card">
-						{liquiditySectionVisible && (
-							<div className="tabs">
-								<a href="/swap" onClick={(e) => {e.preventDefault(); history.push('/swap')}}>Swap</a>
-								<a href="/pool" onClick={(e) => e.preventDefault()} className="tab-active">Pool</a>
-							</div>
-						)}
-						<Pool
-							fetchingLiquidity={loading}
-							theme={theme}
-							liquiditySectionVisible={liquiditySectionVisible}
-                            pools={pools}
-							onSectionToggle={this.toggleLiquiditySectionVisibility}
-							walletConnected={walletConnected}
-							walletAddress={walletAddress}
-							signer={signer}
-							tokenA={tokenA}
-							tokenAIcon={tokenAIcon}
-							tokenABalance={tokenABalance}
-							tokenB={tokenB}
-							tokenBIcon={tokenBIcon}
-							tokenBBalance={tokenBBalance}
-							onTokenAUpdate={this.updateTokenA}
-							onTokenBUpdate={this.updateTokenB}
-							tokenAAmount={tokenAAmount}
-							tokenBAmount={tokenBAmount}
-							onAmountChange={this.updateAmount}
-							onMax={this.handleMax}
-							onAddLiquidity={this.addLiquidity}
-							onRefresh={this.handleRefresh}
-						/>
-						{(walletConnected && !liquiditySectionVisible && (tokenA && tokenB) && !loading && liquidityInfo) && (
-							parseFloat(liquidityInfo.total) > 0 ? (
+						<span className="sale-rotation"></span>
+                        <span className="noise"></span>
+						<div style={{zIndex: 1, position: 'relative'}}>
+							{liquiditySectionVisible && (
+								<div className="tabs">
+									<a href="/swap" onClick={(e) => {e.preventDefault(); history.push('/swap')}}>Swap</a>
+									<a href="/pool" onClick={(e) => e.preventDefault()} className="tab-active">Liquidity</a>
+								</div>
+							)}
+							<Pool
+								fetchingLiquidity={loading}
+								theme={theme}
+								liquiditySectionVisible={liquiditySectionVisible}
+								pools={pools}
+								onSectionToggle={this.toggleLiquiditySectionVisibility}
+								walletConnected={walletConnected}
+								walletAddress={walletAddress}
+								signer={signer}
+								tokenA={tokenA}
+								tokenAIcon={tokenAIcon}
+								tokenADecimals={tokenADecimals}
+								tokenABalance={tokenABalance}
+								tokenB={tokenB}
+								tokenBIcon={tokenBIcon}
+								tokenBDecimals={tokenBDecimals}
+								tokenBBalance={tokenBBalance}
+								onTokenAUpdate={this.updateTokenA}
+								onTokenBUpdate={this.updateTokenB}
+								tokenAAmount={tokenAAmount}
+								tokenBAmount={tokenBAmount}
+								onAmountChange={this.updateAmount}
+								onMax={this.handleMax}
+								onAddLiquidity={this.addLiquidity}
+								onRefresh={this.handleRefresh}
+							/>
+							{(walletConnected && !liquiditySectionVisible && (tokenA && tokenB) && !loading && liquidityInfo && liquidityInfo.hasLiquidity) && (
 								<>
-									<div className="flex-spaced-container" style={{alignItems: 'center', marginTop: '1rem', color: theme === 'light' ? '#000' : '#FFF', fontSize: '13px'}}>
+									<div className="flex-spaced-container" style={{alignItems: 'center', marginTop: '1rem', color: '#FFF', fontSize: '13px', fontFamily: 'PT Sans Caption'}}>
 										<div>Price</div>
 										<div style={{textAlign: 'right', display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
 											{!inverted ? (
@@ -686,93 +895,123 @@ class Liquidity extends Component {
 											</button>
 										</div>
 									</div>
-									<div className="details-section">
-										<div className="flex-spaced-container" style={{alignItems: 'flex-start', color: theme === 'light' ? '#000' : '#FFF', fontSize: '13px'}}>
-											<div>Your total pooled tokens</div>
-											<div style={{textAlign: 'right'}}>
-												{parseFloat(liquidityInfo.total).toFixed(6)}
+									{parseFloat(liquidityInfo.total) > 0 && (
+										<div className="details-section">
+											<div className="flex-spaced-container" style={{alignItems: 'flex-start', color: theme === 'light' ? '#000' : '#FFF', fontSize: '13px'}}>
+												<div>Your total pooled tokens</div>
+												<div style={{textAlign: 'right'}}>
+													{parseFloat(liquidityInfo.total).toFixed(6)}
+												</div>
+											</div>
+											<div className="flex-spaced-container" style={{alignItems: 'flex-start', color: theme === 'light' ? '#000' : '#FFF', fontSize: '13px'}}>
+												<div>Your pool share</div>
+												<div style={{textAlign: 'right'}}>
+													{this.getPoolSharePercent(liquidityInfo.total, liquidityInfo.totalSupply)} %
+												</div>
 											</div>
 										</div>
-										<div className="flex-spaced-container" style={{alignItems: 'flex-start', color: theme === 'light' ? '#000' : '#FFF', fontSize: '13px'}}>
-											<div>Your pool share</div>
-											<div style={{textAlign: 'right'}}>
-												{this.getPoolSharePercent(liquidityInfo.total, liquidityInfo.totalSupply)} %
-											</div>
-										</div>
-									</div>
-								</>
-							) : null
-						)}
-						<span style={{display: 'none'}}>{this.state.lpAddress}</span>
-						{liquiditySectionVisible ? (
-							<div className="exchange-button-container">
-								<p>Don't see a pool you joined? <a href="/find" onClick={(e) => {e.preventDefault(); history.push('/find')}}>Import it.</a></p>
-							</div>
-						) : (!walletConnected ? (
+									)}
+								</> 
+							)}
+							<span style={{display: 'none'}}>{this.state.lpAddress}</span>
+							{liquiditySectionVisible ? (
 								<div className="exchange-button-container">
-									<button onClick={onModalToggle}>Connect wallet</button>
+									<p>Don't see a pool you joined? <a href="/find" onClick={(e) => {e.preventDefault(); history.push('/find')}}>Import it.</a></p>
 								</div>
-							) : ((!tokenA || !tokenB) ? (
+							) : (!walletConnected ? (
 									<div className="exchange-button-container">
-										<button disabled>Invalid pair</button>
+										<button onClick={onModalToggle}>Connect wallet</button>
 									</div>
-								) : ((loading || (!tokenAAllowance && !tokenBAllowance)) ? (
+								) : ((!tokenA || !tokenB) ? (
 										<div className="exchange-button-container">
-											<button disabled><CircularProgress size={12} thickness={5} style={{color: theme === '#FFF' }} /></button>
+											<button disabled>Invalid pair</button>
 										</div>
-									) : (!tokenAAmount || !tokenBAmount) ? (
-										<div className="exchange-button-container">
-											<button disabled>Enter an amount</button>
-										</div>
-									) : ((parseFloat(tokenAAmount) === 0 || parseFloat(tokenBAmount) === 0) ? (
+									) : ((loading || (!tokenAAllowance && !tokenBAllowance)) ? (
+											<div className="exchange-button-container">
+												<button disabled><CircularProgress size={12} thickness={5} style={{color: '#FFF' }} /></button>
+											</div>
+										) : (!tokenAAmount || !tokenBAmount) ? (
 											<div className="exchange-button-container">
 												<button disabled>Enter an amount</button>
 											</div>
-										) : (((parseFloat(tokenAAmount) <= parseFloat(tokenABalance)) && ((parseFloat(tokenBAmount) <= parseFloat(tokenBBalance)))) ? (
-												((parseFloat(tokenAAmount) <= parseFloat(tokenAAllowance) && parseFloat(tokenBAmount) <= parseFloat(tokenBAllowance))) ? (
-													<div className="exchange-button-container">
-														<button onClick={this.supply} disabled={loading || supplying}>Supply {supplying && (
-															<CircularProgress size={12} thickness={5} style={{color: theme === '#FFF' , position: 'relative', top: '1px'}} />
-														)}</button>
-													</div>
-												) : ((parseFloat(tokenAAmount) > parseFloat(tokenAAllowance)) ? (
+										) : ((parseFloat(tokenAAmount) === 0 || parseFloat(tokenBAmount) === 0) ? (
+												<div className="exchange-button-container">
+													<button disabled>Enter an amount</button>
+												</div>
+											) : (((parseFloat(tokenAAmount) <= parseFloat(tokenABalance)) && ((parseFloat(tokenBAmount) <= parseFloat(tokenBBalance)))) ? (tokenA !== 'BNB' && tokenB !== 'BNB') ? 
+												(
+													((parseFloat(tokenAAmount) <= parseFloat(tokenAAllowance)) && (parseFloat(tokenBAmount) <= parseFloat(tokenBAllowance))) ? (
 														<div className="exchange-button-container">
-																<button disabled={approvingTokenA || approvingTokenB} style={{marginBottom: '0.25rem'}} onClick={() => {
-																	this.setState({approvalToken: 'A', approvalAmount: tokenAAmount}, () => this.handleModalToggle())
-																}}>
-																	Approve {tokenA} {approvingTokenA && (<CircularProgress size={12} thickness={5} style={{color: theme === '#FFF' , position: 'relative', top: '1px'}} />)}
-																</button>
-															<button disabled>Supply</button>
+															<button onClick={this.supply} disabled={loading || supplying}>Supply {supplying && (
+																<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />
+															)}</button>
 														</div>
-													) : (parseFloat(tokenBAmount) > parseFloat(tokenBAllowance)) ? (
+													) : ((parseFloat(tokenAAmount) > parseFloat(tokenAAllowance)) ? (
+															<div className="exchange-button-container">
+																	<button disabled={approvingTokenA || approvingTokenB} style={{marginBottom: '0.25rem'}} onClick={() => {
+																		this.setState({approvalToken: 'A', approvalAmount: tokenAAmount}, () => this.handleModalToggle())
+																	}}>
+																		Approve {tokenA} {approvingTokenA && (<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />)}
+																	</button>
+																<button disabled>Supply</button>
+															</div>
+														) : (parseFloat(tokenBAmount) > parseFloat(tokenBAllowance)) ? (
+															<div className="exchange-button-container">
+																<button disabled={approvingTokenB || approvingTokenA} style={{marginBottom: '0.25rem'}} onClick={() => {
+																		this.setState({approvalToken: 'B', approvalAmount: tokenBAmount}, () => this.handleModalToggle())
+																	}}>
+																	Approve {tokenB} {approvingTokenB && (<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />)}
+																</button>
+																<button disabled>Supply</button>
+															</div>
+														) : (
+															<div className="exchange-button-container">
+																<button onClick={this.supply} disabled={loading || supplying}>Supply {supplying && (
+																	<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />
+																)}</button>
+															</div>
+														)	
+													)
+												) : (
+													((tokenA === 'BNB' && parseFloat(tokenBAmount) <= parseFloat(tokenBAllowance)) || (tokenB === 'BNB' && parseFloat(tokenAAmount) <= parseFloat(tokenAAllowance))) ? (
 														<div className="exchange-button-container">
+															<button onClick={this.supply} disabled={loading || supplying}>Supply {supplying && (
+																<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />
+															)}</button>
+														</div>
+													) : (tokenA === 'BNB' ? (
+															<div className="exchange-button-container">
 																<button disabled={approvingTokenB || approvingTokenA} style={{marginBottom: '0.25rem'}} onClick={() => {
 																	this.setState({approvalToken: 'B', approvalAmount: tokenBAmount}, () => this.handleModalToggle())
 																}}>
-																Approve {tokenB} {approvingTokenB && (<CircularProgress size={12} thickness={5} style={{color: theme === '#FFF' , position: 'relative', top: '1px'}} />)}
-															</button>
-															<button disabled>Supply</button>
-														</div>
-													) : (
-														<div className="exchange-button-container">
-															<button onClick={this.supply} disabled={loading || supplying}>Supply {supplying && (
-																<CircularProgress size={12} thickness={5} style={{color: theme === '#FFF' , position: 'relative', top: '1px'}} />
-															)}</button>
-														</div>
-													)	
+																	Approve {tokenB} {approvingTokenB && (<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />)}
+																</button>
+																<button disabled>Supply</button>
+															</div>
+														) : (
+															<div className="exchange-button-container">
+																<button disabled={approvingTokenA || approvingTokenB} style={{marginBottom: '0.25rem'}} onClick={() => {
+																	this.setState({approvalToken: 'A', approvalAmount: tokenAAmount}, () => this.handleModalToggle())
+																}}>
+																	Approve {tokenA} {approvingTokenA && (<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />)}
+																</button>
+																<button disabled>Supply</button>
+															</div>
+														)
+													)
+												) : (
+													<div className="exchange-button-container">
+														<button disabled>
+															{(parseFloat(tokenAAmount) > parseFloat(tokenABalance)) ? `Insufficient ${tokenA} balance` : `Insufficient ${tokenB} balance`}
+														</button>
+													</div>
 												)
-											) : (
-												<div className="exchange-button-container">
-													<button disabled>
-														{(parseFloat(tokenAAmount) > parseFloat(tokenABalance)) ? `Insufficient ${tokenA} balance` : `Insufficient ${tokenB} balance`}
-													</button>
-												</div>
 											)
 										)
 									)
 								)
-							)
-						)}
+							)}
+						</div>
 					</div>
 				</div>
 				<Dialog
@@ -898,8 +1137,8 @@ class Liquidity extends Component {
 								<div>
 									<div>Rates</div>
 									<div>
-										1 {tokenA} = {parseFloat(tokenBAmount)/parseFloat(tokenAAmount).toFixed(4)} {tokenB}<br/>
-										1 {tokenB} = {parseFloat(tokenAAmount)/parseFloat(tokenBAmount).toFixed(4)} {tokenA}
+										1 {tokenA} = {(parseFloat(tokenBAmount)/parseFloat(tokenAAmount)).toFixed(4)} {tokenB}<br/>
+										1 {tokenB} = {(parseFloat(tokenAAmount)/parseFloat(tokenBAmount)).toFixed(4)} {tokenA}
 									</div>
 								</div>
 								<div>
@@ -911,7 +1150,13 @@ class Liquidity extends Component {
 						<div className="staking-modal-footer">
 							<button
 								className="staking-modal-button-primary"
-								onClick={this.supplyPool}
+								onClick={() => {
+									if(tokenA === 'BNB' || tokenB === 'BNB') {
+										this.supplyWithBNB()
+									} else {
+										this.supplyPool()
+									}
+								}}
 								style={{width: '100%'}}
 							>
 								Create Pool & Supply

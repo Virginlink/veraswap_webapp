@@ -1,9 +1,16 @@
 import React, { Component } from 'react'
-import { Tooltip } from 'antd';
+import { Dropdown, Menu, Tooltip } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { ClickAwayListener, Dialog, Fade } from '@material-ui/core';
 import Logo from '../assets/images/logo.png';
 import AppContext from '../state/AppContext';
+import { GiReceiveMoney } from 'react-icons/gi';
+import { RiExchangeLine, RiGamepadLine, RiMenuFill, RiRocketLine } from 'react-icons/ri';
+import { AiOutlineInfoCircle, AiOutlineShop } from 'react-icons/ai';
+import { IoMdSwap } from 'react-icons/io';
+import { BiLoaderCircle, BiNetworkChart } from 'react-icons/bi';
+import { FaChevronDown, FaChevronUp, FaCoins } from 'react-icons/fa';
+import { GrConnect } from 'react-icons/gr';
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Fade timeout={{enter: 1000, exit: 2000}} ref={ref} {...props} />;
 });
@@ -30,6 +37,9 @@ class Navbar extends Component {
             walletAddress: '',
             addressValid: false,
             addressError: false,
+            sidebarVisible: false,
+            exchangeDropdownVisible: false,
+            exchangeAccordionVisible: false,
         }
     }
 
@@ -134,9 +144,45 @@ class Navbar extends Component {
         })
     }
 
+    toggleSidebar = () => {
+        this.setState(state => {
+            return {
+                sidebarVisible: !state.sidebarVisible,
+            }
+        })
+    }
+
+    toggleExchangeAccordion = () => {
+        this.setState(state => {
+            return {
+                exchangeAccordionVisible: !state.exchangeAccordionVisible,
+            }
+        })
+    }
+
     render() {
-        const {moonModalVisible, settingsVisible, slippage, deadline, expertModeOn, expertModeConfirmationModalVisible, theme, moreLinksVisible, walletConnected, loggedIn, claimModalVisible, walletAddress, addressValid, moonBalance, addressError, localSlippage} = this.state;
+        const {moonModalVisible, settingsVisible, slippage, deadline, expertModeOn, expertModeConfirmationModalVisible, theme, moreLinksVisible, walletConnected, loggedIn, claimModalVisible, walletAddress, addressValid, moonBalance, addressError, localSlippage, sidebarVisible, exchangeDropdownVisible, exchangeAccordionVisible} = this.state;
+        const exchangeMenu = (
+            <Menu className="navbar-dropdown">
+                <Menu.Item>
+                    <a className={`${this.props.active === 'swap' && 'active-page'}`} onClick={() => this.props.history.push('/swap')}>
+                        <IoMdSwap size={17} style={{position: 'relative', top: '1px'}} />Swap
+                    </a>
+                </Menu.Item>
+                <Menu.Item>
+                    <a className={`${this.props.active === 'pool' && 'active-page'}`} onClick={() => this.props.history.push('/pool')}>
+                        <BiLoaderCircle size={17} />Liquidity
+                    </a>
+                </Menu.Item>
+                {/* <Menu.Item>
+                    <a className={`${this.props.active === 'bridge' && 'active-page'}`}>
+                        <BiNetworkChart size={17} style={{position: 'relative', top: '1px'}} />Bridge
+                    </a>
+                </Menu.Item> */}
+            </Menu>
+        )
         return (
+            <>
             <div className="navbar-container">
                 <div className="navbar">
                     <div  className="navbar-pages-main-container">
@@ -146,11 +192,34 @@ class Navbar extends Component {
                             </div>
                         </a>
                         <div className="navbar-pages-container">
-                            <a className={`${this.props.active === 'sale' && 'active-page'}`} onClick={() => this.props.history.push('/sale')}>Sale</a>
-                            <a className={`${this.props.active === 'stake' && 'active-page'}`} onClick={() => this.props.history.push('/stake')}>Stake</a>
-                            <a className={`${this.props.active === 'swap' && 'active-page'}`} onClick={() => this.props.history.push('/swap')} id="swap-nav-link">Swap</a>
-                            <a className={`${this.props.active === 'pool' && 'active-page'}`} onClick={() => this.props.history.push('/pool')} id="pool-nav-link">Pool</a>
+                            <a className={`${this.props.active === 'sale' && 'active-page'}`}>
+                                <AiOutlineShop size={17} style={{marginRight: '8px'}} />Sale
+                            </a>
+                            <a className={`${this.props.active === 'stake' && 'active-page'}`}>
+                                <GiReceiveMoney size={16} />Staking
+                            </a>
+                            <Dropdown overlay={exchangeMenu} placement="bottomCenter" trigger="click" onVisibleChange={(visible) => this.setState({exchangeDropdownVisible: visible})} visible={exchangeDropdownVisible}>
+                                <a className={`${(this.props.active === 'swap' || this.props.active === 'pool') && 'active-page'}`}>
+                                    <RiExchangeLine size={17} style={{marginRight: '8px'}} />Exchange
+                                    {!exchangeDropdownVisible ? <FaChevronDown size={13} style={{marginRight: 0, marginLeft: '8px'}} /> : <FaChevronUp size={13} style={{marginRight: 0, marginLeft: '8px'}} />}
+                                </a>
+                            </Dropdown>
+                            {/* <a className={`${this.props.active === 'info' && 'active-page'}`}>
+                                <AiOutlineInfoCircle size={17} style={{marginRight: '8px'}} />Info
+                            </a>
+                            <a className={`${this.props.active === 'ido' && 'active-page'}`}>
+                                <RiRocketLine size={17} style={{marginRight: '4px'}} />IDO
+                            </a>
+                            <a className={`${this.props.active === 'nft' && 'active-page'}`}>
+                                <FaCoins size={15} />NFT
+                            </a>
+                            <a className={`${this.props.active === 'game' && 'active-page'}`}>
+                                <RiGamepadLine size={17} style={{marginRight: '8px'}} />VERAGAME
+                            </a> */}
                         </div>
+                        <button className="navbar-action-button navbar-burger" onClick={this.toggleSidebar} style={{width: 'auto'}}>
+                            <RiMenuFill />
+                        </button>
                     </div>
                     <div className="navbar-actions-main-container">
                         <div className="navbar-actions-1">
@@ -550,6 +619,49 @@ class Navbar extends Component {
                     </div>
                 </Dialog>
             </div>
+            <div className={`sidebar${sidebarVisible ? ' expanded' : ''}`} data-accordion-expanded={exchangeAccordionVisible}>
+                <ul>
+                    <li>
+                        <a className={`${this.props.active === 'sale' && 'active-page'}`}>Sale</a> <AiOutlineShop size={17} style={{marginLeft: '8px'}} />
+                    </li>
+                    <li>
+                        <a className={`${this.props.active === 'stake' && 'active-page'}`}>Staking <GiReceiveMoney size={17} /></a>
+                    </li>
+                    <li style={{flexDirection: 'column', alignItems: 'flex-end'}}>
+                        <a className={`${(this.props.active === 'swap' || this.props.active === 'pool') && 'active-page'}`} onClick={this.toggleExchangeAccordion}>
+                            <RiExchangeLine size={17} style={{marginRight: '8px', position: 'relative', top: '2px'}} />Exchange{!exchangeAccordionVisible ? <FaChevronDown size={13} style={{marginRight: '2px', marginLeft: '8px', position: 'relative', top: '1px'}} /> : <FaChevronUp size={13} style={{marginRight: '2px', marginLeft: '8px', position: 'relative', top: '1px'}} />}
+                        </a>
+                        <div className={!exchangeAccordionVisible ? "exchange-accordion" : "exchange-accordion-expanded"}>
+                            <a className={`${this.props.active === 'swap' && 'active-page'}`} onClick={() => this.props.history.push('/swap')}>
+                                <IoMdSwap size={17} style={{position: 'relative', top: '1px'}} />Swap
+                            </a>
+                            <a className={`${this.props.active === 'pool' && 'active-page'}`} onClick={() => this.props.history.push('/pool')}>
+                                <BiLoaderCircle size={17} />Liquidity
+                            </a>
+                            {/* <a className={`${this.props.active === 'bridge' && 'active-page'}`}>
+                                <BiNetworkChart size={17} style={{position: 'relative', top: '1px'}} />Bridge
+                            </a> */}
+                        </div>
+                    </li>
+                    {/* <li>
+                        <a className={`${this.props.active === 'info' && 'active-page'}`}>
+                            Info<AiOutlineInfoCircle size={17} style={{marginLeft: '8px', position: 'relative', top: '2px'}} />
+                        </a>
+                    </li>
+                    <li>
+                        <a className={`${this.props.active === 'ido' && 'active-page'}`}>IDO <RiRocketLine size={17} style={{position: 'relative', top: '2px'}} /></a>
+                    </li>
+                    <li>
+                        <a className={`${this.props.active === 'nft' && 'active-page'}`}>NFT <FaCoins size={15} style={{position: 'relative', top: '1px'}} /></a>
+                    </li>
+                    <li>
+                        <a className={`${this.props.active === 'game' && 'active-page'}`}>
+                            VERAGAME<RiGamepadLine size={17} style={{marginLeft: '8px', position: 'relative', top: '2px'}} />
+                        </a>
+                    </li>    */}
+                </ul>
+            </div>
+            </>
         )
     }
 }
