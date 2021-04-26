@@ -2382,9 +2382,6 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     @media only screen and (max-width: 820px) {
-      .navbar-pages-container {
-        display: none;
-      }
 
       .navbar-pages-main-container {
         justify-content: space-between;
