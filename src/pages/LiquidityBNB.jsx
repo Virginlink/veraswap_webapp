@@ -13,7 +13,7 @@ import { PROVIDER } from '../utils/contracts'
 import AppContext from '../state/AppContext'
 
 class Liquidity extends Component {
-	static contextType = AppContext;
+    static contextType = AppContext;
 
     constructor(props) {
         super(props)
@@ -70,7 +70,18 @@ class Liquidity extends Component {
 			}
 			const pools = fetchPoolData()
 			if (pools) {
-				this.setState({pools: pools.data})
+				const invalidPoolIndex = pools.data.findIndex((pool) => !pool.lpAddress)
+				if (invalidPoolIndex === -1) {
+					this.setState({pools: pools.data})
+				} else {
+					let newPools = [...pools.data]
+					newPools.splice(invalidPoolIndex, 1)
+					const newPoolData = {
+						data: [...newPools]
+					}
+					storePoolData(newPoolData)
+					this.setState({pools: newPools})
+				}
 			}
 		}
 	}
@@ -81,7 +92,18 @@ class Liquidity extends Component {
 		if ((walletAddress !== prevProps.walletAddress) && walletAddress) {
 			const pools = fetchPoolData()
 			if (pools) {
-				this.setState({pools: pools.data})
+				const invalidPoolIndex = pools.data.findIndex((pool) => !pool.lpAddress)
+				if (invalidPoolIndex === -1) {
+					this.setState({pools: pools.data})
+				} else {
+					let newPools = [...pools.data]
+					newPools.splice(invalidPoolIndex, 1)
+					const newPoolData = {
+						data: [...newPools]
+					}
+					storePoolData(newPoolData)
+					this.setState({pools: newPools})
+				}
 			}
 			const importedTokens = fetchImportedTokens()
 			let allTokens = [...TOKENS]
@@ -152,7 +174,7 @@ class Liquidity extends Component {
                 console.log('Unable to fetch balance', err.message)
             })
 	}
-
+	
 	fetchBNBBalance = async (token) => {
 		getBNBBalance(this.props.walletAddress)
 			.then((res) => {
@@ -200,7 +222,7 @@ class Liquidity extends Component {
 							tokenBSupply: liquidityInfo.data.B,
 							loading: false,
 						}, () => {
-							if (parseFloat(liquidityInfo.data.total) > 0) {
+							if (liquidityInfo.hasLiquidity) {
 								const tokenAPrice = parseFloat(this.state.tokenBSupply)/parseFloat(this.state.tokenASupply)
 								const tokenBPrice = parseFloat(this.state.tokenASupply)/parseFloat(this.state.tokenBSupply)
 								if (this.state.tokenAAmount) {
@@ -262,7 +284,7 @@ class Liquidity extends Component {
 		const { tokenAAddress, tokenBAddress } = this.state;
 		notification.close('supplyProcessingNotification')
 		const Link = () => (
-			<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${hash}`} onClick={() => notification.close('supplySuccessNotification')}>View Transaction</a>
+			<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://${process.env.NODE_ENV === 'development' ? 'testnet.bscscan.com' : 'bscscan.com'}/tx/${hash}`} onClick={() => notification.close('supplySuccessNotification')}>View Transaction</a>
 		)
 		notification.success({
 			key: 'supplySuccessNotification',
@@ -376,7 +398,7 @@ class Liquidity extends Component {
         }, () => {
 			if (walletConnected) {
 				if (liquidityInfo) {
-					if (parseFloat(liquidityInfo.total) > 0) {
+					if (liquidityInfo.hasLiquidity) {
 						this.estimate(type)
 					}
 				}
@@ -442,7 +464,7 @@ class Liquidity extends Component {
 							localStorage.setItem('hashData', JSON.stringify(newHashArray))
 						}
 						const Link = () => (
-							<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`}>View Transaction</a>
+							<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://${process.env.NODE_ENV === 'development' ? 'testnet.bscscan.com' : 'bscscan.com'}/tx/${res.data.hash}`}>View Transaction</a>
 						)
 						notification.info({
 							key: 'approvalProcessingNotification',
@@ -477,7 +499,7 @@ class Liquidity extends Component {
 										}
 										notification.close('approvalProcessingNotification')
 										const Link = () => (
-											<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`} onClick={() => notification.close('approvalSuccessNotification')}>View Transaction</a>
+											<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://${process.env.NODE_ENV === 'development' ? 'testnet.bscscan.com' : 'bscscan.com'}/tx/${res.data.hash}`} onClick={() => notification.close('approvalSuccessNotification')}>View Transaction</a>
 										)
 										notification.success({
 											key: 'approvalSuccessNotification',
@@ -520,14 +542,14 @@ class Liquidity extends Component {
 		if (!liquidityInfo) {
 			this.setState({createLiquidityModalVisible: true})
 			return
-		} else if (!parseFloat(liquidityInfo.total) > 0) {
+		} else if (!liquidityInfo.hasLiquidity) {
 			this.setState({createLiquidityModalVisible: true})
 			return
 		}
-		if (tokenA !== 'BNB' && tokenB !== 'BNB') {
-			this.supplyPool()
-		} else {
+		if (tokenA === 'BNB' || tokenB === 'BNB') {
 			this.supplyWithBNB()
+		} else {
+			this.supplyPool()
 		}
 	}
 
@@ -552,7 +574,7 @@ class Liquidity extends Component {
 					if (res.success) {
 						if (res.data.hash) {
 							const Link = () => (
-								<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`}>View Transaction</a>
+								<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://${process.env.NODE_ENV === 'development' ? 'testnet.bscscan.com' : 'bscscan.com'}/tx/${res.data.hash}`}>View Transaction</a>
 							)
 							notification.info({
 								key: 'supplyProcessingNotification',
@@ -626,7 +648,7 @@ class Liquidity extends Component {
 		const BNBAmount = tokenA === 'BNB' ? tokenAAmount : tokenBAmount
 		let amountMin, BNBAmountMin;
 		if (liquidityInfo) {
-			if (parseFloat(liquidityInfo.total) > 0) {
+			if (liquidityInfo.hasLiquidity) {
 				amountMin = parseFloat(amount) - (parseFloat(amount) * (parseFloat(this.context.slippage)/100))
 				BNBAmountMin = parseFloat(BNBAmount) - (parseFloat(BNBAmount) * (parseFloat(this.context.slippage)/100))
 			} else {
@@ -640,8 +662,8 @@ class Liquidity extends Component {
 		const data = {
 			walletAddress: walletAddress,
 			address: tokenA === 'BNB' ? tokenBAddress : tokenAAddress,
-			amountA: amount,
-			amountAMin: amountMin.toString(),
+			amount: amount,
+			amountMin: amountMin.toString(),
 			BNBAmount: BNBAmount,
 			BNBAmountMin: BNBAmountMin.toString(),
 			deadline: parseFloat(deadline),
@@ -649,14 +671,13 @@ class Liquidity extends Component {
 			decimals: tokenA === 'BNB' ? tokenBDecimals : tokenADecimals,
 			decimalsBNB: tokenA === 'BNB' ? tokenADecimals : tokenBDecimals,
 		}
-		console.log(data)
 		this.setState({supplying: true, createLiquidityModalVisible: false}, () => {
 			addLiquidityWithBNB(data)
 				.then((res) => {
 					if (res.success) {
 						if (res.data.hash) {
 							const Link = () => (
-								<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://testnet.bscscan.com/tx/${res.data.hash}`}>View Transaction</a>
+								<a style={{textDecoration: 'underline'}} target="_blank" rel="noreferrer noopener" href={`https://${process.env.NODE_ENV === 'development' ? 'testnet.bscscan.com' : 'bscscan.com'}/tx/${res.data.hash}`}>View Transaction</a>
 							)
 							notification.info({
 								key: 'supplyProcessingNotification',
@@ -824,42 +845,44 @@ class Liquidity extends Component {
             	/>
                 <div className="container">
 					<div className="exchange-card">
-						{liquiditySectionVisible && (
-							<div className="tabs">
-								<a href="/swap" onClick={(e) => {e.preventDefault(); history.push('/swap')}}>Swap</a>
-								<a href="/pool" onClick={(e) => e.preventDefault()} className="tab-active">Pool</a>
-							</div>
-						)}
-						<Pool
-							fetchingLiquidity={loading}
-							theme={theme}
-							liquiditySectionVisible={liquiditySectionVisible}
-                            pools={pools}
-							onSectionToggle={this.toggleLiquiditySectionVisibility}
-							walletConnected={walletConnected}
-							walletAddress={walletAddress}
-							signer={signer}
-							tokenA={tokenA}
-							tokenAIcon={tokenAIcon}
-							tokenADecimals={tokenADecimals}
-							tokenABalance={tokenABalance}
-							tokenB={tokenB}
-							tokenBIcon={tokenBIcon}
-							tokenBDecimals={tokenBDecimals}
-							tokenBBalance={tokenBBalance}
-							onTokenAUpdate={this.updateTokenA}
-							onTokenBUpdate={this.updateTokenB}
-							tokenAAmount={tokenAAmount}
-							tokenBAmount={tokenBAmount}
-							onAmountChange={this.updateAmount}
-							onMax={this.handleMax}
-							onAddLiquidity={this.addLiquidity}
-							onRefresh={this.handleRefresh}
-						/>
-						{(walletConnected && !liquiditySectionVisible && (tokenA && tokenB) && !loading && liquidityInfo) && (
-							parseFloat(liquidityInfo.total) > 0 ? (
+						<span className="sale-rotation"></span>
+                        <span className="noise"></span>
+						<div style={{zIndex: 1, position: 'relative'}}>
+							{liquiditySectionVisible && (
+								<div className="tabs">
+									<a href="/swap" onClick={(e) => {e.preventDefault(); history.push('/swap')}}>Swap</a>
+									<a href="/pool" onClick={(e) => e.preventDefault()} className="tab-active">Liquidity</a>
+								</div>
+							)}
+							<Pool
+								fetchingLiquidity={loading}
+								theme={theme}
+								liquiditySectionVisible={liquiditySectionVisible}
+								pools={pools}
+								onSectionToggle={this.toggleLiquiditySectionVisibility}
+								walletConnected={walletConnected}
+								walletAddress={walletAddress}
+								signer={signer}
+								tokenA={tokenA}
+								tokenAIcon={tokenAIcon}
+								tokenADecimals={tokenADecimals}
+								tokenABalance={tokenABalance}
+								tokenB={tokenB}
+								tokenBIcon={tokenBIcon}
+								tokenBDecimals={tokenBDecimals}
+								tokenBBalance={tokenBBalance}
+								onTokenAUpdate={this.updateTokenA}
+								onTokenBUpdate={this.updateTokenB}
+								tokenAAmount={tokenAAmount}
+								tokenBAmount={tokenBAmount}
+								onAmountChange={this.updateAmount}
+								onMax={this.handleMax}
+								onAddLiquidity={this.addLiquidity}
+								onRefresh={this.handleRefresh}
+							/>
+							{(walletConnected && !liquiditySectionVisible && (tokenA && tokenB) && !loading && liquidityInfo && liquidityInfo.hasLiquidity) && (
 								<>
-									<div className="flex-spaced-container" style={{alignItems: 'center', marginTop: '1rem', color: theme === 'light' ? '#000' : '#FFF', fontSize: '13px'}}>
+									<div className="flex-spaced-container" style={{alignItems: 'center', marginTop: '1rem', color: '#FFF', fontSize: '13px', fontFamily: 'PT Sans Caption'}}>
 										<div>Price</div>
 										<div style={{textAlign: 'right', display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
 											{!inverted ? (
@@ -872,93 +895,123 @@ class Liquidity extends Component {
 											</button>
 										</div>
 									</div>
-									<div className="details-section">
-										<div className="flex-spaced-container" style={{alignItems: 'flex-start', color: theme === 'light' ? '#000' : '#FFF', fontSize: '13px'}}>
-											<div>Your total pooled tokens</div>
-											<div style={{textAlign: 'right'}}>
-												{parseFloat(liquidityInfo.total).toFixed(6)}
+									{parseFloat(liquidityInfo.total) > 0 && (
+										<div className="details-section">
+											<div className="flex-spaced-container" style={{alignItems: 'flex-start', color: theme === 'light' ? '#000' : '#FFF', fontSize: '13px'}}>
+												<div>Your total pooled tokens</div>
+												<div style={{textAlign: 'right'}}>
+													{parseFloat(liquidityInfo.total).toFixed(6)}
+												</div>
+											</div>
+											<div className="flex-spaced-container" style={{alignItems: 'flex-start', color: theme === 'light' ? '#000' : '#FFF', fontSize: '13px'}}>
+												<div>Your pool share</div>
+												<div style={{textAlign: 'right'}}>
+													{this.getPoolSharePercent(liquidityInfo.total, liquidityInfo.totalSupply)} %
+												</div>
 											</div>
 										</div>
-										<div className="flex-spaced-container" style={{alignItems: 'flex-start', color: theme === 'light' ? '#000' : '#FFF', fontSize: '13px'}}>
-											<div>Your pool share</div>
-											<div style={{textAlign: 'right'}}>
-												{this.getPoolSharePercent(liquidityInfo.total, liquidityInfo.totalSupply)} %
-											</div>
-										</div>
-									</div>
-								</>
-							) : null
-						)}
-						<span style={{display: 'none'}}>{this.state.lpAddress}</span>
-						{liquiditySectionVisible ? (
-							<div className="exchange-button-container">
-								<p>Don't see a pool you joined? <a href="/find" onClick={(e) => {e.preventDefault(); history.push('/find')}}>Import it.</a></p>
-							</div>
-						) : (!walletConnected ? (
+									)}
+								</> 
+							)}
+							<span style={{display: 'none'}}>{this.state.lpAddress}</span>
+							{liquiditySectionVisible ? (
 								<div className="exchange-button-container">
-									<button onClick={onModalToggle}>Connect wallet</button>
+									<p>Don't see a pool you joined? <a href="/find" onClick={(e) => {e.preventDefault(); history.push('/find')}}>Import it.</a></p>
 								</div>
-							) : ((!tokenA || !tokenB) ? (
+							) : (!walletConnected ? (
 									<div className="exchange-button-container">
-										<button disabled>Invalid pair</button>
+										<button onClick={onModalToggle}>Connect wallet</button>
 									</div>
-								) : ((loading || (!tokenAAllowance && !tokenBAllowance)) ? (
+								) : ((!tokenA || !tokenB) ? (
 										<div className="exchange-button-container">
-											<button disabled><CircularProgress size={12} thickness={5} style={{color: theme === '#FFF' }} /></button>
+											<button disabled>Invalid pair</button>
 										</div>
-									) : (!tokenAAmount || !tokenBAmount) ? (
-										<div className="exchange-button-container">
-											<button disabled>Enter an amount</button>
-										</div>
-									) : ((parseFloat(tokenAAmount) === 0 || parseFloat(tokenBAmount) === 0) ? (
+									) : ((loading || (!tokenAAllowance && !tokenBAllowance)) ? (
+											<div className="exchange-button-container">
+												<button disabled><CircularProgress size={12} thickness={5} style={{color: '#FFF' }} /></button>
+											</div>
+										) : (!tokenAAmount || !tokenBAmount) ? (
 											<div className="exchange-button-container">
 												<button disabled>Enter an amount</button>
 											</div>
-										) : (((parseFloat(tokenAAmount) <= parseFloat(tokenABalance)) && ((parseFloat(tokenBAmount) <= parseFloat(tokenBBalance)))) ? (
-												((tokenA !== 'BNB' && (parseFloat(tokenAAmount) <= parseFloat(tokenAAllowance)) && (tokenB !== 'BNB' && parseFloat(tokenBAmount) <= parseFloat(tokenBAllowance)))) ? (
-													<div className="exchange-button-container">
-														<button onClick={this.supply} disabled={loading || supplying}>Supply {supplying && (
-															<CircularProgress size={12} thickness={5} style={{color: theme === '#FFF' , position: 'relative', top: '1px'}} />
-														)}</button>
-													</div>
-												) : ((tokenA !== 'BNB' && (parseFloat(tokenAAmount) > parseFloat(tokenAAllowance))) ? (
+										) : ((parseFloat(tokenAAmount) === 0 || parseFloat(tokenBAmount) === 0) ? (
+												<div className="exchange-button-container">
+													<button disabled>Enter an amount</button>
+												</div>
+											) : (((parseFloat(tokenAAmount) <= parseFloat(tokenABalance)) && ((parseFloat(tokenBAmount) <= parseFloat(tokenBBalance)))) ? (tokenA !== 'BNB' && tokenB !== 'BNB') ? 
+												(
+													((parseFloat(tokenAAmount) <= parseFloat(tokenAAllowance)) && (parseFloat(tokenBAmount) <= parseFloat(tokenBAllowance))) ? (
 														<div className="exchange-button-container">
-																<button disabled={approvingTokenA || approvingTokenB} style={{marginBottom: '0.25rem'}} onClick={() => {
-																	this.setState({approvalToken: 'A', approvalAmount: tokenAAmount}, () => this.handleModalToggle())
-																}}>
-																	Approve {tokenA} {approvingTokenA && (<CircularProgress size={12} thickness={5} style={{color: theme === '#FFF' , position: 'relative', top: '1px'}} />)}
-																</button>
-															<button disabled>Supply</button>
+															<button onClick={this.supply} disabled={loading || supplying}>Supply {supplying && (
+																<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />
+															)}</button>
 														</div>
-													) : ((tokenB !== 'BNB' && parseFloat(tokenBAmount) > parseFloat(tokenBAllowance))) ? (
+													) : ((parseFloat(tokenAAmount) > parseFloat(tokenAAllowance)) ? (
+															<div className="exchange-button-container">
+																	<button disabled={approvingTokenA || approvingTokenB} style={{marginBottom: '0.25rem'}} onClick={() => {
+																		this.setState({approvalToken: 'A', approvalAmount: tokenAAmount}, () => this.handleModalToggle())
+																	}}>
+																		Approve {tokenA} {approvingTokenA && (<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />)}
+																	</button>
+																<button disabled>Supply</button>
+															</div>
+														) : (parseFloat(tokenBAmount) > parseFloat(tokenBAllowance)) ? (
+															<div className="exchange-button-container">
+																<button disabled={approvingTokenB || approvingTokenA} style={{marginBottom: '0.25rem'}} onClick={() => {
+																		this.setState({approvalToken: 'B', approvalAmount: tokenBAmount}, () => this.handleModalToggle())
+																	}}>
+																	Approve {tokenB} {approvingTokenB && (<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />)}
+																</button>
+																<button disabled>Supply</button>
+															</div>
+														) : (
+															<div className="exchange-button-container">
+																<button onClick={this.supply} disabled={loading || supplying}>Supply {supplying && (
+																	<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />
+																)}</button>
+															</div>
+														)	
+													)
+												) : (
+													((tokenA === 'BNB' && parseFloat(tokenBAmount) <= parseFloat(tokenBAllowance)) || (tokenB === 'BNB' && parseFloat(tokenAAmount) <= parseFloat(tokenAAllowance))) ? (
 														<div className="exchange-button-container">
+															<button onClick={this.supply} disabled={loading || supplying}>Supply {supplying && (
+																<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />
+															)}</button>
+														</div>
+													) : (tokenA === 'BNB' ? (
+															<div className="exchange-button-container">
 																<button disabled={approvingTokenB || approvingTokenA} style={{marginBottom: '0.25rem'}} onClick={() => {
 																	this.setState({approvalToken: 'B', approvalAmount: tokenBAmount}, () => this.handleModalToggle())
 																}}>
-																Approve {tokenB} {approvingTokenB && (<CircularProgress size={12} thickness={5} style={{color: theme === '#FFF' , position: 'relative', top: '1px'}} />)}
-															</button>
-															<button disabled>Supply</button>
-														</div>
-													) : (
-														<div className="exchange-button-container">
-															<button onClick={this.supply} disabled={loading || supplying}>Supply {supplying && (
-																<CircularProgress size={12} thickness={5} style={{color: theme === '#FFF' , position: 'relative', top: '1px'}} />
-															)}</button>
-														</div>
-													)	
+																	Approve {tokenB} {approvingTokenB && (<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />)}
+																</button>
+																<button disabled>Supply</button>
+															</div>
+														) : (
+															<div className="exchange-button-container">
+																<button disabled={approvingTokenA || approvingTokenB} style={{marginBottom: '0.25rem'}} onClick={() => {
+																	this.setState({approvalToken: 'A', approvalAmount: tokenAAmount}, () => this.handleModalToggle())
+																}}>
+																	Approve {tokenA} {approvingTokenA && (<CircularProgress size={12} thickness={5} style={{color: '#FFF' , position: 'relative', top: '1px'}} />)}
+																</button>
+																<button disabled>Supply</button>
+															</div>
+														)
+													)
+												) : (
+													<div className="exchange-button-container">
+														<button disabled>
+															{(parseFloat(tokenAAmount) > parseFloat(tokenABalance)) ? `Insufficient ${tokenA} balance` : `Insufficient ${tokenB} balance`}
+														</button>
+													</div>
 												)
-											) : (
-												<div className="exchange-button-container">
-													<button disabled>
-														{(parseFloat(tokenAAmount) > parseFloat(tokenABalance)) ? `Insufficient ${tokenA} balance` : `Insufficient ${tokenB} balance`}
-													</button>
-												</div>
 											)
 										)
 									)
 								)
-							)
-						)}
+							)}
+						</div>
 					</div>
 				</div>
 				<Dialog
@@ -1084,8 +1137,8 @@ class Liquidity extends Component {
 								<div>
 									<div>Rates</div>
 									<div>
-										1 {tokenA} = {parseFloat(tokenBAmount)/parseFloat(tokenAAmount).toFixed(4)} {tokenB}<br/>
-										1 {tokenB} = {parseFloat(tokenAAmount)/parseFloat(tokenBAmount).toFixed(4)} {tokenA}
+										1 {tokenA} = {(parseFloat(tokenBAmount)/parseFloat(tokenAAmount)).toFixed(4)} {tokenB}<br/>
+										1 {tokenB} = {(parseFloat(tokenAAmount)/parseFloat(tokenBAmount)).toFixed(4)} {tokenA}
 									</div>
 								</div>
 								<div>
@@ -1098,10 +1151,10 @@ class Liquidity extends Component {
 							<button
 								className="staking-modal-button-primary"
 								onClick={() => {
-									if(tokenA !== 'BNB' && tokenB !== 'BNB') {
-										this.supplyPool()
-									} else {
+									if(tokenA === 'BNB' || tokenB === 'BNB') {
 										this.supplyWithBNB()
+									} else {
+										this.supplyPool()
 									}
 								}}
 								style={{width: '100%'}}

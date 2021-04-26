@@ -3,7 +3,9 @@ import CryptoJS from 'crypto-js'
 import Empty from '../assets/icons/Empty.png'
 import { FACTORY_ABI, FACTORY_ADDRESS, ROUTER_ABI, ROUTER_ADDRESS, TOKEN_ABI, DONUT_ABI, PROVIDER } from "./contracts"
 
-const ABI = process.env.NODE_ENV === 'development' ? DONUT_ABI : TOKEN_ABI
+// const ABI = process.env.NODE_ENV === 'development' ? DONUT_ABI : TOKEN_ABI
+
+const ABI = TOKEN_ABI
 
 const factoryContract = new ethers.Contract(FACTORY_ADDRESS, FACTORY_ABI, PROVIDER)
 
@@ -152,6 +154,7 @@ export const getLPInfo = (pairAddress, walletAddress, tokenAAddress, tokenBAddre
             resolve({
                 success: true,
                 data: {
+                    hasLiquidity: parseFloat(tokenAShare) > 0 && parseFloat(tokenBShare) > 0,
                     total: totalPooledTokens,
                     totalSupply: totalSupply,
                     A: tokenAShare,
@@ -174,7 +177,7 @@ export const approveToken = (contractAddress, signer, amount, decimals) => {
     return new Promise(async (resolve, reject) => {
         try {
             const contract = new ethers.Contract(contractAddress, ABI, signer)
-            const result = await contract.approve(ROUTER_ADDRESS, ethers.utils.parseUnits(amount, decimals))
+            const result = await contract.approve(ROUTER_ADDRESS, ethers.utils.parseUnits(amount.toString(), decimals))
             resolve({
                 success: true,
                 data: result
@@ -195,8 +198,8 @@ export const addLiquidity = ({walletAddress, addressA, addressB, amountA, amount
             const result = await contract.addLiquidity(
                 addressA, // Token A Address
                 addressB, // Token B Address
-                ethers.utils.parseUnits(amountA, decimalsA), // Token A Amount
-                ethers.utils.parseUnits(amountB, decimalsB), // Token B Amount
+                ethers.utils.parseUnits(amountA.toString(), decimalsA), // Token A Amount
+                ethers.utils.parseUnits(amountB.toString(), decimalsB), // Token B Amount
                 ethers.utils.parseUnits("0", decimalsA), // Token A Minimum Amount
                 ethers.utils.parseUnits("0", decimalsB), // Token B Minimum Amount
                 walletAddress, // To address
@@ -216,17 +219,20 @@ export const addLiquidity = ({walletAddress, addressA, addressB, amountA, amount
     })
 }
 
-export const addLiquidityWithBNB = ({walletAddress, address, amountA, amountAMin, BNBAmount, BNBAmountMin, deadline, signer, decimals, decimalsBNB}) => {
+export const addLiquidityWithBNB = ({walletAddress, address, amount, amountMin, BNBAmount, BNBAmountMin, deadline, signer, decimals, decimalsBNB}) => {
     return new Promise(async (resolve, reject) => {
         try {
             const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer)
             const result = await contract.addLiquidityETH(
                 address, // Token Address
-                ethers.utils.parseUnits(amountA, decimals), // Token Amount
-                ethers.utils.parseUnits(amountAMin, decimals), // Token Amount Minimum
-                ethers.utils.parseUnits(BNBAmountMin, decimalsBNB), // BNB Amount Minimum
+                ethers.utils.parseUnits(amount.toString(), decimals), // Token Amount
+                ethers.utils.parseUnits(amountMin.toString(), decimals), // Token Amount Minimum
+                ethers.utils.parseUnits(BNBAmountMin.toString(), decimalsBNB), // BNB Amount Minimum
                 walletAddress, // To address
-                deadline // Transaction deadline
+                deadline, // Transaction deadline
+                {
+                    value: ethers.utils.parseUnits(BNBAmount.toString(), 18),
+                }
             )
             resolve({
                 success: true,
@@ -250,9 +256,35 @@ export const removeLiquidity = ({liquidity, walletAddress, addressA, addressB, d
             const result = await contract.removeLiquidity(
                 addressA, // Token A Address
                 addressB, // Token B Address
-                ethers.utils.parseUnits(liquidity, 18), // Liquidity
+                ethers.utils.parseUnits(liquidity.toString(), 18), // Liquidity
                 ethers.utils.parseUnits("0", decimalsA), // Token A Minimum Amount
                 ethers.utils.parseUnits("0", decimalsB), // Token B Minimum Amount
+                walletAddress, // To address
+                deadline // Transaction deadline
+            )
+            resolve({
+                success: true,
+                data: result
+            })
+        } catch (err) {
+            console.log(err)
+            reject({
+                error: true,
+                message: err.message
+            })
+        }
+    })
+}
+
+export const removeLiquidityWithBNB = ({liquidity, walletAddress, address, deadline, signer, decimals, decimalsBNB}) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer)
+            const result = await contract.removeLiquidityETH(
+                address, // Token A Address
+                ethers.utils.parseUnits(liquidity.toString(), 18), // Liquidity
+                ethers.utils.parseUnits("0", decimals), // Token Minimum Amount
+                ethers.utils.parseUnits("0", decimalsBNB), // BNB Minimum Amount
                 walletAddress, // To address
                 deadline // Transaction deadline
             )
@@ -341,11 +373,63 @@ export const swapTokens = ({amountIn, amountOut, tokenAddresses, walletAddress, 
         try {
             const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer)
             const result = await contract.swapExactTokensForTokens(
-                ethers.utils.parseUnits(amountIn, amountInDecimals),
-                ethers.utils.parseUnits(amountOut, amountOutDecimals),
+                ethers.utils.parseUnits(amountIn.toString(), amountInDecimals),
+                ethers.utils.parseUnits(amountOut.toString(), amountOutDecimals),
                 tokenAddresses,
                 walletAddress,
                 deadline
+            )
+            resolve({
+                success: true,
+                data: result
+            })
+        } catch (err) {
+            console.log(err)
+            reject({
+                error: true,
+                message: err.message
+            })
+        }
+    })
+}
+
+export const swapBNBForTokens = ({amountIn, amountOutMin, tokenAddresses, walletAddress, deadline, signer, decimalsBNB, decimals}) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer)
+            const result = await contract.swapExactETHForTokens(
+                ethers.utils.parseUnits(amountOutMin.toString(), decimals), // Token Amount Minimum
+                tokenAddresses, // Path
+                walletAddress,
+                deadline,
+                {
+                    value: ethers.utils.parseUnits(amountIn.toString(), decimalsBNB), // BNB Amount
+                },
+            )
+            resolve({
+                success: true,
+                data: result
+            })
+        } catch (err) {
+            console.log(err)
+            reject({
+                error: true,
+                message: err.message
+            })
+        }
+    })
+}
+
+export const swapTokensForBNB = ({amountIn, amountOutMin, tokenAddresses, walletAddress, deadline, signer, decimalsBNB, decimals}) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer)
+            const result = await contract.swapExactTokensForETH(
+                ethers.utils.parseUnits(amountIn.toString(), decimals), // Token Amount
+                ethers.utils.parseUnits(amountOutMin.toString(), decimalsBNB), // BNB Amount Minimum
+                tokenAddresses, // Path
+                walletAddress,
+                deadline,
             )
             resolve({
                 success: true,

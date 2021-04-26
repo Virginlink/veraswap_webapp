@@ -45,7 +45,7 @@ export default class Swap extends Component {
                                 value={tokenAAmount}
                                 inputMode="numeric"
                                 onChange={(e) => {
-                                    if (!fetchingLiquidity && !invalidPair && e.target.value.match(/^(\d+)?([.]?\d{0,9})?$/)) {
+                                    if (!fetchingLiquidity && e.target.value.match(/^(\d+)?([.]?\d{0,9})?$/)) {
                                         onAmountChange(e.target.value, 'A')
                                     }
                                 }}
@@ -91,7 +91,7 @@ export default class Swap extends Component {
                                 value={tokenBAmount}
                                 inputMode="numeric"
                                 onChange={(e) => {
-                                    if (!fetchingLiquidity && !invalidPair && e.target.value.match(/^(\d+)?([.]?\d{0,9})?$/)) {
+                                    if (!fetchingLiquidity && e.target.value.match(/^(\d+)?([.]?\d{0,9})?$/)) {
                                         onAmountChange(e.target.value, 'B')
                                     }
                                 }}

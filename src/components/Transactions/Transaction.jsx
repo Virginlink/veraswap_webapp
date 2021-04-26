@@ -1,7 +1,5 @@
-import { ethers } from 'ethers'
 import React, { Component } from 'react'
-// import { PROVIDER } from '../../utils/contracts'
-const PROVIDER = new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-2-s1.binance.org:8545/')
+import { PROVIDER } from '../../utils/contracts'
 export default class Transaction extends Component {
 
     constructor() {
@@ -34,7 +32,7 @@ export default class Transaction extends Component {
         const {txSuccess} = this.state;
         return (
             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem'}}>
-                <a style={{fontSize: '14px'}} href={`https://testnet.bscscan.com/tx/${this.props.tx.hash}`} target="_blank" rel="noreferrer noopener">
+                <a style={{fontSize: '14px'}} href={`https://${process.env.NODE_ENV === 'development' ? 'testnet.bscscan.com' : 'bscscan.com'}/tx/${this.props.tx.hash}`} target="_blank" rel="noreferrer noopener">
                     {this.props.tx.summary}
                 </a>
                 {
@@ -46,7 +44,7 @@ export default class Transaction extends Component {
 
                     :
 
-                    <a style={{color: 'rgb(39, 174, 96)'}} href={`https://testnet.bscscan.com/tx/${this.props.tx.hash}`} target="_blank" rel="noreferrer noopener">
+                    <a style={{color: 'rgb(39, 174, 96)'}} href={`https://${process.env.NODE_ENV === 'development' ? 'testnet.bscscan.com' : 'bscscan.com'}/tx/${this.props.tx.hash}`} target="_blank" rel="noreferrer noopener">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" color="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                     </a>
                 }

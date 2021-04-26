@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
-import { IoArrowBackSharp, IoChevronDownSharp, IoChevronForwardSharp } from 'react-icons/io5'
+import { IoArrowBackSharp, IoChevronForwardSharp } from 'react-icons/io5'
 import { MdAdd, MdRefresh } from 'react-icons/md'
 import CurrencySelectModal from './CurrencySelectModal'
 import { Tooltip } from 'antd'

@@ -35,7 +35,7 @@ export default class TokenRow extends Component {
             })
 	}
 
-    fetchBNBBalance = async (token) => {
+    fetchBNBBalance = () => {
 		getBNBBalance(this.props.walletAddress)
 			.then((res) => {
 				if (res.success) {
