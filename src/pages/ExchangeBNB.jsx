@@ -539,23 +539,23 @@ class Exchange extends Component {
 
 	calculatePriceImpact = () => {
 		const { tokenASupply, tokenBSupply, tokenAAmount, tokenBAmount, tokenA, tokenB } = this.state;
-        console.log(`Swapping ${tokenAAmount} ${tokenA} for ${tokenBAmount} ${tokenB} `)
-        console.log(`${tokenA} supply`, tokenASupply)
-        console.log(`${tokenB} supply`, tokenBSupply)
+        // console.log(`Swapping ${tokenAAmount} ${tokenA} for ${tokenBAmount} ${tokenB} `)
+        // console.log(`${tokenA} supply`, tokenASupply)
+        // console.log(`${tokenB} supply`, tokenBSupply)
         const constantProduct = parseFloat(tokenASupply) * parseFloat(tokenBSupply)
         const marketPrice = parseFloat(tokenASupply) / parseFloat(tokenBSupply)
-        console.log(`Price before swap (Market price): 1 ${tokenB} = ${marketPrice} ${tokenA}`)
+        // console.log(`Price before swap (Market price): 1 ${tokenB} = ${marketPrice} ${tokenA}`)
         const newTokenASupply = parseFloat(tokenASupply) + parseFloat(tokenAAmount)
-        console.log(`${tokenA} supply after swap`, newTokenASupply)
+        // console.log(`${tokenA} supply after swap`, newTokenASupply)
         const newTokenBSupply = constantProduct/newTokenASupply
-        console.log(`${tokenB} supply after swap`, newTokenBSupply)
+        // console.log(`${tokenB} supply after swap`, newTokenBSupply)
         const tokenBReceived = parseFloat(tokenBSupply) - parseFloat(newTokenBSupply)
-        console.log(`${tokenB} received for swapping ${tokenAAmount} ${tokenA}`, tokenBReceived)
+        // console.log(`${tokenB} received for swapping ${tokenAAmount} ${tokenA}`, tokenBReceived)
         const newPrice = parseFloat(tokenAAmount) / tokenBReceived
-        console.log(`Price after swap: 1 ${tokenB} = ${newPrice} ${tokenA}`)
+        // console.log(`Price after swap: 1 ${tokenB} = ${newPrice} ${tokenA}`)
         const priceDifference = newPrice - marketPrice
         const impact = (priceDifference/marketPrice) * 100
-        console.log('IMPACT', impact)
+        // console.log('IMPACT', impact)
         this.setState({
             impact: impact.toFixed(2)
         })

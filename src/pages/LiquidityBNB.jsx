@@ -428,9 +428,13 @@ class Liquidity extends Component {
 	}
 
 	handleMax = (token) => {
-		const { tokenABalance, tokenBBalance } = this.state;
+		const { tokenABalance, tokenBBalance, liquidityInfo } = this.state;
 		this.setState({
 			[token === 'A' ? 'tokenAAmount' : 'tokenBAmount']: token === 'A' ? tokenABalance : tokenBBalance
+		}, () => {
+			if (liquidityInfo && liquidityInfo.hasLiquidity) {
+				this.estimate(token)
+			}
 		})
 	}
 
