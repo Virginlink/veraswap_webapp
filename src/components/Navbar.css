@@ -597,3 +597,21 @@
         width: 90vw !important;
     }
 }
+
+.moon-button {
+    display: block;
+}
+
+.hidden-tablet {
+    display: none;
+}
+
+@media only screen and (max-width: 520px) {
+    .moon-button {
+        display: none;
+    }
+
+    .hidden-tablet {
+        display: block;
+    }
+}

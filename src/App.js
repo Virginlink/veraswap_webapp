@@ -501,18 +501,42 @@ class App extends Component {
 			<>
 				<ThemeProvider theme={this.state.theme === 'light' ? lightTheme : darkTheme}>
 				<GlobalStyles/>
-				{/* <Navbar
-					modalVisible={connectWalletModalVisible}
-					onModalToggle={this.toggleWalletConnectModal}
-					theme={theme}
-					onThemeToggle={this.toggleTheme}
-					walletConnected={walletConnected}
-					walletAddress = {this.state.walletAddress}
-					ethBalance = {this.state.ethBalance}
-					vrapBalance = {this.state.vrapBalance}
-				/> */}
 				{rendered ? (
 					<Switch>
+						<Route 
+							exact 
+							path="/totalsupply" 
+							render = {(props)=> (
+								<TotalSupply 
+									{...props}
+									modalVisible={connectWalletModalVisible}
+									onModalToggle={this.toggleWalletConnectModal}
+									theme={theme}
+									onThemeToggle={this.toggleTheme}
+									walletConnected={walletConnected}
+									walletAddress = {this.state.walletAddress}
+									ethBalance = {this.state.ethBalance}
+									vrapBalance = {this.state.vrapBalance}
+								/>
+							)} 
+							/>
+						<Route 
+							exact 
+							path="/circulatingsupply" 
+							render = {(props)=> (
+								<CirculatingSupply 
+									{...props}
+									modalVisible={connectWalletModalVisible}
+									onModalToggle={this.toggleWalletConnectModal}
+									theme={theme}
+									onThemeToggle={this.toggleTheme}
+									walletConnected={walletConnected}
+									walletAddress = {this.state.walletAddress}
+									ethBalance = {this.state.ethBalance}
+									vrapBalance = {this.state.vrapBalance}
+								/>
+							)} 
+						/>
 						<Route 
 							path="/sale" 
 							render={(props) => (

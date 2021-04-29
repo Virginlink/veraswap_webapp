@@ -165,6 +165,9 @@ class Navbar extends Component {
                                 <div className="moon-button">
                                     {this.props.vrapBalance === '' ? "VRAP" : parseFloat(this.props.vrapBalance).toFixed(3) + " VRAP"} 
                                 </div>
+                                <div className="moon-button hidden-tablet">
+                                    VRAP
+                                </div>
                                 <span className="noise" />
                             </span>
                             {
@@ -381,29 +384,16 @@ class Navbar extends Component {
                                 </div>
                                 <div className="coloured-modal-divider" />
                                 {
-                                    walletConnected && (
+                                    this.props.walletConnected && (
                                         <>
-                                            <div className="grid-8px" style={{padding: '1rem', zIndex: 1}}>
-                                                <div className="grid" style={{justifyContent: 'center'}}>
-                                                    <img width="48px" src={Logo} alt="Logo" class="spinning-logo" />
-                                                    <div className="balance-large">0.00</div>
-                                                </div>
-                                            </div>
+                                            
                                             <div className="coloured-modal-content-rows-container">
                                                 <div className="coloured-modal-content-row">
                                                     <div className="coloured-modal-text">
                                                         Balance:
                                                     </div>
                                                     <div className="coloured-modal-text">
-                                                        0.00
-                                                    </div>
-                                                </div>
-                                                <div className="coloured-modal-content-row">
-                                                    <div className="coloured-modal-text">
-                                                        Unclaimed:
-                                                    </div>
-                                                    <div className="coloured-modal-text">
-                                                        0.0000
+                                                        {this.props.vrapBalance ? parseFloat(this.props.vrapBalance).toFixed(3) : '0'} VRAP
                                                     </div>
                                                 </div>
                                             </div>
