@@ -2218,21 +2218,19 @@ export const GlobalStyles = createGlobalStyle`
       }
     }
 
-    @media only screen and (max-width: 500px) {
-        .navbar-actions-main-container {
-            flex-direction: column;
-            align-items: center;
-            height: 125px;
-        }
-
-        .settings-menu {
-          left: -7rem;
-        }
-
-        .links-container {
-          top: -12.25rem;
-          left: -5rem;
-        }
+    @media only screen and (max-width: 520px) {
+      .settings-menu {
+        left: -7rem;
+      }
+      .wallet-balance {
+        display: none;
+      }
+      .settings-menu {
+        top: -23rem;
+      }
+      .links-container {
+        top: -16rem;
+      }
     }
 
     @media only screen and (max-width: 600px) {

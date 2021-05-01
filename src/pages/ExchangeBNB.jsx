@@ -558,7 +558,13 @@ class Exchange extends Component {
         console.log('IMPACT', impact)
         this.setState({
             impact: impact.toFixed(2)
-        })
+        }, () => {
+			if (impact <= 20 && impact > 0.01) {
+				this.context.updateSlippage(impact.toFixed(2))
+			} else {
+				this.context.updateSlippage("0.5")
+			}
+		})
 	}
 
     // calculatePriceImpact = () => {
@@ -676,7 +682,7 @@ class Exchange extends Component {
 
     confirmSwap = () => {
         const { impact } = this.state
-        if (parseFloat(impact) > 10) {
+        if (parseFloat(impact) > 20) {
             const promptValue = prompt(`This swap has a price impact of atleast ${parseInt(impact, 10)}%. Please type the word "confirm" to continue with this swap.`)
             if (promptValue && promptValue === 'confirm') {
                 this.setState({confirmationModalVisible: false}, () => this.swap())
@@ -1201,7 +1207,7 @@ class Exchange extends Component {
 								{(walletConnected && (tokenA && tokenB) && (tokenAAmount && tokenBAmount) && !fetchingPrices && !fetchingLiquidity && liquidityInfo && impact && !invalidPair) && (
 									<div className="flex-spaced-container" style={{fontSize: '13px'}}>
 										<div>Price Impact</div>
-										<div data-high-impact={parseFloat(impact) > 10}>{parseFloat(impact) < 0.01 ? "< 0.01" : impact} %</div>
+										<div data-high-impact={parseFloat(impact) > 20}>{parseFloat(impact) < 0.01 ? "< 0.01" : impact} %</div>
 									</div>
 								)}
 								{(this.context.slippage !== "0.5") && (
@@ -1240,7 +1246,7 @@ class Exchange extends Component {
 															minimumReceived > 0 ? (
 																<div className="exchange-button-container">
 																	<button
-                                                                        style={parseFloat(impact) > 10 ? {
+                                                                        style={parseFloat(impact) > 20 ? {
                                                                             backgroundColor: '#fd761f',
                                                                             borderColor: '#fd761f'
                                                                         } : {}}
@@ -1251,7 +1257,7 @@ class Exchange extends Component {
                                                                         }}
                                                                         disabled={loading || swapping}
                                                                     >
-                                                                        Swap{parseFloat(impact) > 10 && " anyway"} {swapping && (
+                                                                        Swap{parseFloat(impact) > 20 && " anyway"} {swapping && (
                                                                             <CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />
                                                                         )}
                                                                     </button>
@@ -1288,7 +1294,7 @@ class Exchange extends Component {
 														) : (
 															<div className="exchange-button-container">
 																<button
-                                                                    style={parseFloat(impact) > 10 ? {
+                                                                    style={parseFloat(impact) > 20 ? {
                                                                         backgroundColor: '#fd761f',
                                                                         borderColor: '#fd761f'
                                                                     } : {}}
@@ -1299,7 +1305,7 @@ class Exchange extends Component {
                                                                     }}
                                                                     disabled={loading || swapping}
                                                                 >
-                                                                    Swap{parseFloat(impact) > 10 && " anyway"} {swapping && (
+                                                                    Swap{parseFloat(impact) > 20 && " anyway"} {swapping && (
                                                                         <CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />
                                                                     )}
                                                                 </button>
@@ -1310,7 +1316,7 @@ class Exchange extends Component {
 													minimumReceived > 0 ? (
 														<div className="exchange-button-container">
 															<button
-                                                                style={parseFloat(impact) > 10 ? {
+                                                                style={parseFloat(impact) > 20 ? {
                                                                     backgroundColor: '#fd761f',
                                                                     borderColor: '#fd761f'
                                                                 } : {}}
@@ -1321,7 +1327,7 @@ class Exchange extends Component {
                                                                 }}
                                                                 disabled={loading || swapping}
                                                             >
-                                                                Swap{parseFloat(impact) > 10 && " anyway"} {swapping && (
+                                                                Swap{parseFloat(impact) > 20 && " anyway"} {swapping && (
 																    <CircularProgress size={12} thickness={5} style={{color: 'var(--primary)', position: 'relative', top: '1px'}} />
 															    )}
                                                             </button>
@@ -1493,7 +1499,7 @@ class Exchange extends Component {
                             </div>
                             <IoArrowDownSharp />
                             <div className="swap-confirmation-token-row">
-                                <div data-high-impact={parseFloat(impact) > 10}>
+                                <div data-high-impact={parseFloat(impact) > 20}>
                                     <img src={tokenBIcon} alt={tokenB} />
                                     {tokenBAmount}
                                 </div>
@@ -1527,7 +1533,7 @@ class Exchange extends Component {
 									</Tooltip>
                                 </div>
                                 <div>
-                                    {minimumReceived.toFixed(4)} {tokenB}
+                                    {minimumReceived.toFixed(6)} {tokenB}
                                 </div>
                             </div>
                             <div>
@@ -1537,18 +1543,18 @@ class Exchange extends Component {
 										<AiOutlineQuestionCircle style={{position: 'relative', top: '2px', cursor: 'pointer'}} />
 									</Tooltip>
                                 </div>
-                                <div data-high-impact={parseFloat(impact) > 10}>
+                                <div data-high-impact={parseFloat(impact) > 20}>
                                     {impact}%
                                 </div>
                             </div>
                         </div>
 						<div className="staking-modal-footer" style={{padding: '0 1rem 0'}}>
 							<button
-                                style={{width: '100%', backgroundColor: parseFloat(impact) > 10 && '#fd761f', borderColor: parseFloat(impact) > 10 && '#fd761f'}}
+                                style={{width: '100%', backgroundColor: parseFloat(impact) > 20 && '#fd761f', borderColor: parseFloat(impact) > 20 && '#fd761f'}}
 								className="staking-modal-button-primary"
 								onClick={this.confirmSwap}
 							>
-                                {parseFloat(impact) > 10 ? "Swap Anyway" : "Confirm Swap"}
+                                {parseFloat(impact) > 20 ? "Swap Anyway" : "Confirm Swap"}
 							</button>
 						</div>
 					</div>

@@ -234,6 +234,9 @@ class Navbar extends Component {
                                 <div className="moon-button">
                                     {this.props.vrapBalance === '' ? "VRAP" : parseFloat(this.props.vrapBalance).toFixed(3) + " VRAP"} 
                                 </div>
+                                <div className="moon-button hidden-tablet">
+                                    VRAP
+                                </div>
                                 <span className="noise" />
                             </span>
                             {
@@ -246,7 +249,7 @@ class Navbar extends Component {
                                     <button className="wallet-address-button" onClick={this.props.onModalToggle}>
                                         <p>{`${this.props.walletAddress}`.substring(0,6) + '...' + `${this.props.walletAddress}`.substring(37,42)}</p>
                                         <div style={{borderRadius: '50px', overflow: 'hidden', padding: 0, margin: 0, width: '16px', height: '16px', display: 'inline-block'}}>
-											<svg height="100" version="1.1" width="100" xmlns="http://www.w3.org/2000/svg"  xmlnsXlink="http://www.w3.org/1999/xlink" style={{overflow: 'hidden', position: 'relative'}}><desc style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}>Created with Raphaël 2.3.0</desc><defs style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></defs><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#f91e01" stroke="none" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#c81465" stroke="none" transform="matrix(0.6111,-0.7916,0.7916,0.6111,-5.5477,11.7858)" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#237fe1" stroke="none" transform="matrix(-0.7983,-0.6023,0.6023,-0.7983,1.3671,25.6874)" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#18b7f2" stroke="none" transform="matrix(0.9689,-0.2476,0.2476,0.9689,-13.2583,-0.0478)" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect></svg>
+											<svg height="100" version="1.1" width="100" xmlns="http://www.w3.org/2000/svg"  xmlnsXlink="http://www.w3.org/1999/xlink" style={{overflow: 'hidden', position: 'relative'}}><defs style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></defs><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#f91e01" stroke="none" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#c81465" stroke="none" transform="matrix(0.6111,-0.7916,0.7916,0.6111,-5.5477,11.7858)" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#237fe1" stroke="none" transform="matrix(-0.7983,-0.6023,0.6023,-0.7983,1.3671,25.6874)" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect><rect x="0" y="0" width="16" height="16" rx="0" ry="0" fill="#18b7f2" stroke="none" transform="matrix(0.9689,-0.2476,0.2476,0.9689,-13.2583,-0.0478)" style={{WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'}}></rect></svg>
 										</div>
                                     </button>
                                 </div>
@@ -452,31 +455,31 @@ class Navbar extends Component {
                                 </div>
                                 <div className="coloured-modal-divider" />
                                 {
-                                    walletConnected && (
+                                    this.props.walletConnected && (
                                         <>
-                                            <div className="grid-8px" style={{padding: '1rem', zIndex: 1}}>
+                                            {/* <div className="grid-8px" style={{padding: '1rem', zIndex: 1}}>
                                                 <div className="grid" style={{justifyContent: 'center'}}>
                                                     <img width="48px" src={Logo} alt="Logo" class="spinning-logo" />
                                                     <div className="balance-large">0.00</div>
                                                 </div>
-                                            </div>
+                                            </div> */}
                                             <div className="coloured-modal-content-rows-container">
                                                 <div className="coloured-modal-content-row">
                                                     <div className="coloured-modal-text">
                                                         Balance:
                                                     </div>
                                                     <div className="coloured-modal-text">
-                                                        0.00
+                                                        {this.props.vrapBalance ? parseFloat(this.props.vrapBalance).toFixed(3) : '0'} VRAP
                                                     </div>
                                                 </div>
-                                                <div className="coloured-modal-content-row">
+                                                {/* <div className="coloured-modal-content-row">
                                                     <div className="coloured-modal-text">
                                                         Unclaimed:
                                                     </div>
                                                     <div className="coloured-modal-text">
                                                         0.0000
                                                     </div>
-                                                </div>
+                                                </div> */}
                                             </div>
                                             <div className="coloured-modal-divider" />
                                         </>
