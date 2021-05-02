@@ -496,7 +496,7 @@ export const searchToken = (address) => {
                     name: name,
                     symbol: symbol,
                     contractAddress: address,
-                    icon: process.env.NODE_ENV === 'development' ? Empty : `https://github.com/trustwallet/assets/blob/master/blockchains/smartchain/assets/${address}/logo.png?raw=true`,
+                    icon: `https://github.com/trustwallet/assets/blob/master/blockchains/smartchain/assets/${address}/logo.png?raw=true`,
                     decimals: decimals,
                     contractABI: ABI,
                 }

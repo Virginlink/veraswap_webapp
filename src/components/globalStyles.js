@@ -2265,19 +2265,18 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     @media only screen and (max-width: 520px) {
-
+      .settings-menu {
+        left: -7rem;
+      }
       .wallet-balance {
         display: none;
       }
-
       .settings-menu {
         top: -23rem;
       }
-
       .links-container {
         top: -16rem;
       }
-
     }
 
     @media only screen and (max-width: 600px) {
@@ -2456,4 +2455,16 @@ export const GlobalStyles = createGlobalStyle`
       position: relative;
       top: 2px !important;
     }
+
+    .swap-form .select-button-loading svg {
+      margin-left: 0;
+      color: ${({theme}) => theme.primary};
+      -webkit-animation: spin 1.5s ease-in-out infinite;
+      -moz-animation: spin 1.5s ease-in-out infinite;
+      animation: spin 1.5s ease-in-out infinite;
+    }
+
+    @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+    @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+    @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
 `
