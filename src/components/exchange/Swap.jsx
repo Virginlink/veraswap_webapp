@@ -4,7 +4,8 @@ import { MdRefresh, MdSwapVert } from 'react-icons/md'
 import CurrencySelectModal from './CurrencySelectModal'
 import { CircularProgress } from '@material-ui/core'
 import { IoMdHourglass } from 'react-icons/io'
-
+import { Image } from 'antd'
+import Empty from '../../assets/icons/Empty.png'
 export default class Swap extends Component {
     constructor(props) {
         super(props)
@@ -80,7 +81,14 @@ export default class Swap extends Component {
                                     } : {}}
                                     onClick={this.toggleModalA}
                                 >
-                                    {tokenAIcon && <img src={tokenAIcon} alt="token-logo" />}
+                                    {tokenAIcon && (
+                                        <Image
+                                            fallback={Empty}
+                                            src={tokenAIcon}
+                                            alt="token-logo"
+                                            preview={false}
+                                        />
+                                    )}
                                     <span style={{textTransform: 'none'}}>{tokenA || 'Select'}</span>
                                     {!tokenA && <IoChevronForwardSharp />}
                                 </button>
@@ -136,7 +144,14 @@ export default class Swap extends Component {
                                     } : {}}
                                     onClick={this.toggleModalB}
                                 >
-                                    {tokenBIcon && <img src={tokenBIcon} alt="token-logo" />}
+                                    {tokenBIcon && (
+                                        <Image
+                                            fallback={Empty}
+                                            src={tokenBIcon}
+                                            alt="token-logo"
+                                            preview={false}
+                                        />
+                                    )}
                                     <span style={{textTransform: 'none'}}>{tokenB || 'Select'}</span>
                                     {!tokenB && <IoChevronForwardSharp />}
                                 </button>
