@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { CircularProgress } from '@material-ui/core'
 import { getBNBBalance, getTokenBalance } from '../../utils/helpers'
-
+import Empty from '../../assets/icons/Empty.png'
+import { Image } from 'antd'
 export default class TokenRow extends Component {
     constructor() {
         super()
@@ -54,7 +55,12 @@ export default class TokenRow extends Component {
         const { balance } = this.state;
         return (
             <div className="currency-row" data-disabled={disabled ? "true" : "false"} onClick={!disabled ? onTokenPress : () => false}>
-                <img src={token.icon} alt="token-icon" />
+                <Image
+                    src={token.icon}
+                    fallback={Empty}
+                    alt="token-icon"
+                    preview={false}
+                />
                 <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
                     <div>{token.symbol}</div>
                     <div style={{fontSize: '12px', color: 'rgb(136, 141, 155)'}}>{token.name}</div>
