@@ -486,7 +486,8 @@ export const fetchImportedTokens = () => {
 export const searchToken = (address) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const contract = new ethers.Contract(address, ABI, PROVIDER)
+            const checkSummedAddress = ethers.utils.getAddress(address)
+            const contract = new ethers.Contract(checkSummedAddress, ABI, PROVIDER)
             const symbol = await contract.symbol()
             const name = await contract.name()
             const decimals = await contract.decimals()
@@ -495,8 +496,8 @@ export const searchToken = (address) => {
                 data: {
                     name: name,
                     symbol: symbol,
-                    contractAddress: address,
-                    icon: process.env.NODE_ENV === 'development' ? Empty : `https://github.com/trustwallet/assets/blob/master/blockchains/smartchain/assets/${address}/logo.png?raw=true`,
+                    contractAddress: checkSummedAddress,
+                    icon: `https://github.com/trustwallet/assets/blob/master/blockchains/smartchain/assets/${checkSummedAddress}/logo.png?raw=true`,
                     decimals: decimals,
                     contractABI: ABI,
                 }
