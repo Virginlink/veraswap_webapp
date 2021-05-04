@@ -311,7 +311,7 @@ export const estimateInAmounts = ({ amount, addresses, token, decimals }) => {
             )
             resolve({
                 success: true,
-                amount: ethers.utils.formatUnits(result[result.length - 1], 18),
+                amount: ethers.utils.formatUnits(result[0], 18),
             })
         } catch (err) {
             reject({
