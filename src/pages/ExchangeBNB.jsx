@@ -310,26 +310,32 @@ class Exchange extends Component {
 	}
 
 	fetchLiquidity = async () => {
-		const { tokenAAddress, tokenBAddress } = this.state
+		const { tokenAAddress, tokenBAddress, tokenA, tokenB } = this.state
         if (tokenAAddress && tokenBAddress) {
 			this.setState({fetchingLiquidity: true}, async () => {
 					getLPAddress(tokenAAddress, tokenBAddress)
 						.then((lpAddress) => {
 							// console.log(lpAddress)
 							if (lpAddress === "0x0000000000000000000000000000000000000000") {
-								this.setState({
-									fetchingLiquidity: false,
-									liquidityInfo: null,
-								})
-								// if ((tokenA !== 'BNB' && tokenA === 'WBNB') && (tokenB !== 'BNB' && tokenB !== 'WBNB')) {
-								// 	this.checkIntermediaryLiquidity()
-								// } else {
-								// 	this.setState({
-								// 		multipathSwap: false,
-								// 		fetchingLiquidity: false,
-								// 		liquidityInfo: null,
-								// 	})
-								// }
+								// this.setState({
+								// 	fetchingLiquidity: false,
+								// 	liquidityInfo: null,
+								// })
+								if (tokenA === 'BNB' || tokenB === 'BNB') {
+									this.setState({
+										multipathSwap: false,
+										fetchingLiquidity: false,
+										liquidityInfo: null,
+									})
+								} else if (tokenA === 'WBNB' || tokenB === 'BNB') {
+									this.setState({
+										multipathSwap: false,
+										fetchingLiquidity: false,
+										liquidityInfo: null,
+									})
+								} else {
+									this.checkIntermediaryLiquidity()
+								}
 							} else {
                                 // console.log('LP Address', lpAddress)
 								getLPInfo(lpAddress, this.props.walletAddress, tokenAAddress, tokenBAddress)
@@ -371,7 +377,11 @@ class Exchange extends Component {
 						if (resultB.data.hasLiquidity) {
 							this.setState({
 								multipathSwap: true,
-								fetchingLiquidity: false,
+								liquidityInfo: resultB.data,
+								tokenASupply: resultA.data.A,
+								tokenBSupply: resultB.data.B,
+							}, () => {
+								this.setState({fetchingLiquidity: false})
 							})
 						} else {
 							this.setState({
@@ -433,6 +443,7 @@ class Exchange extends Component {
 				tokenAIcon: token.icon,
 				tokenADecimals: token.decimals,
 				tokenAAddress: token.contractAddress,
+				multipathSwap: false,
 			}, () => {
 				if (walletConnected) {
 					this.fetchLiquidity()
@@ -461,6 +472,7 @@ class Exchange extends Component {
 				tokenBIcon: token.icon,
 				tokenBDecimals: token.decimals,
 				tokenBAddress: token.contractAddress,
+				multipathSwap: false,
 			}, () => {
 				if (walletConnected) {
 					this.fetchLiquidity()
@@ -499,7 +511,8 @@ class Exchange extends Component {
 			tokenAAllowance: '',
             tokenBAllowance: '',
             tokenAPrice: '',
-            tokenBPrice: ''
+            tokenBPrice: '',
+			multipathSwap: false,
 		}, () => {
 			if (walletConnected) {
 				this.fetchBalances()
@@ -571,7 +584,6 @@ class Exchange extends Component {
 				} else {
 					this.setState({
 						[type === 'A' ? 'tokenBAmount' : 'tokenAAmount']: '',
-						multipathSwap: false,
                         invalidPair: false,
                         tokenAPrice: '',
                         tokenBPrice: '',
@@ -583,7 +595,7 @@ class Exchange extends Component {
 
 	estimate = (type) => {
 		const { tokenAAmount, tokenBAmount, tokenABalance, tokenBBalance, tokenAAddress, tokenBAddress, tokenA, tokenB, liquidityInfo, tokenADecimals, tokenBDecimals, tokenBSupply, tokenASupply, multipathSwap } = this.state;
-		if (tokenABalance && tokenBBalance && (liquidityInfo && liquidityInfo.hasLiquidity > 0)) {
+		if (tokenABalance && tokenBBalance && (liquidityInfo && liquidityInfo.hasLiquidity)) {
 			if (type === 'A') {
 				this.setState({estimatingA: true}, () => {
 					const estimateData = {
@@ -1085,7 +1097,7 @@ class Exchange extends Component {
 	}
 
 	swapTokensForTokens = () => {
-		const { tokenA, tokenB, tokenAAmount, tokenBAmount, tokenAAddress, tokenBAddress, tokenADecimals, tokenBDecimals } = this.state
+		const { tokenA, tokenB, tokenAAmount, tokenBAmount, tokenAAddress, tokenBAddress, tokenADecimals, tokenBDecimals, multipathSwap } = this.state
 		const { slippage } = this.context
 		const { walletAddress, signer, theme } = this.props
 		const deadline = moment().add(1, 'years').format('X')
@@ -1094,7 +1106,7 @@ class Exchange extends Component {
 			const swapData = {
 				amountIn: tokenAAmount,
 				amountOut: amountOut.toString(),
-				tokenAddresses: [tokenAAddress, tokenBAddress],
+				tokenAddresses: multipathSwap ? [tokenAAddress, WBNB_ADDRESS, tokenBAddress] : [tokenAAddress, tokenBAddress],
 				walletAddress: walletAddress,
 				deadline: parseFloat(deadline),
 				signer: signer,
@@ -1259,7 +1271,7 @@ class Exchange extends Component {
     }
 
     render() {
-        const { tokenA, tokenABalance, tokenAAllowance, tokenB, tokenBBalance, tokenBAllowance, tokenAIcon, tokenBIcon, tokenAAmount, tokenBAmount, liquidityInfo, swapping, loading, estimatingA, estimatingB, approvingTokenA, approving, approvalModalVisible, approvalToken, approvalAmount, fetchingLiquidity, impact, tokenAPrice, tokenBPrice, fetchingPrices, inverted, invalidPair, confirmationModalVisible, fetchingTokenA, fetchingTokenB } = this.state
+        const { tokenA, tokenABalance, tokenAAllowance, tokenB, tokenBBalance, tokenBAllowance, tokenAIcon, tokenBIcon, tokenAAmount, tokenBAmount, liquidityInfo, swapping, loading, estimatingA, estimatingB, approvingTokenA, approving, approvalModalVisible, approvalToken, approvalAmount, fetchingLiquidity, impact, tokenAPrice, tokenBPrice, fetchingPrices, inverted, invalidPair, confirmationModalVisible, fetchingTokenA, fetchingTokenB, multipathSwap } = this.state
         const { onModalToggle, walletConnected, walletAddress, signer, modalVisible, theme, onThemeToggle, ethBalance, vrapBalance, history } = this.props
 		const minimumReceived = (parseFloat(tokenBAmount) - (parseFloat(tokenBAmount) * (parseFloat(this.context.slippage)/100)))
         return (
@@ -1356,6 +1368,12 @@ class Exchange extends Component {
 										</Tooltip>
 										</div>
 										<div>{this.context.slippage} %</div>
+									</div>
+								)}
+								{(!fetchingLiquidity && multipathSwap) && (
+									<div className="flex-spaced-container" style={{fontSize: '13px'}}>
+										<div>Route</div>
+										<div>{`${tokenA} > BNB > ${tokenB}`}</div>
 									</div>
 								)}
 							</div>

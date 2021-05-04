@@ -368,6 +368,7 @@ export const estimateSwapAmount = ({amount, balanceA, balanceB}) => {
 }
 
 export const swapTokens = ({amountIn, amountOut, tokenAddresses, walletAddress, deadline, signer, amountInDecimals, amountOutDecimals}) => {
+    console.log(amountIn, amountOut)
     return new Promise(async (resolve, reject) => {
         try {
             const contract = new ethers.Contract(ROUTER_ADDRESS, ROUTER_ABI, signer)
