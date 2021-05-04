@@ -606,6 +606,7 @@ class Exchange extends Component {
 					}
 					estimateOutAmounts(estimateData)
 						.then((res) => {
+							console.log(res)
 							if (res.success) {
 								let amount = this.state.tokenAAmount
 								// console.log(tokenAAmount, res.amount)
@@ -714,16 +715,6 @@ class Exchange extends Component {
 			}
 		})
 	}
-
-    // calculatePriceImpact = () => {
-	// 	const { tokenASupply, tokenBSupply, tokenAAmount, tokenBAmount } = this.state;
-	// 	const numerator = (parseFloat(tokenASupply) * parseFloat(tokenBAmount)) + (parseFloat(tokenBSupply) * parseFloat(tokenAAmount))
-	// 	const denominator = parseFloat(tokenBSupply) * (parseFloat(tokenBSupply) + parseFloat(tokenBAmount))
-	// 	const impact = (numerator/denominator) * 100
-	// 	this.setState({
-	// 		impact: impact.toFixed(2)
-	// 	})
-	// }
 
 	handleMax = (token) => {
 		const { tokenABalance, tokenBBalance } = this.state;
@@ -1274,6 +1265,8 @@ class Exchange extends Component {
         const { tokenA, tokenABalance, tokenAAllowance, tokenB, tokenBBalance, tokenBAllowance, tokenAIcon, tokenBIcon, tokenAAmount, tokenBAmount, liquidityInfo, swapping, loading, estimatingA, estimatingB, approvingTokenA, approving, approvalModalVisible, approvalToken, approvalAmount, fetchingLiquidity, impact, tokenAPrice, tokenBPrice, fetchingPrices, inverted, invalidPair, confirmationModalVisible, fetchingTokenA, fetchingTokenB, multipathSwap } = this.state
         const { onModalToggle, walletConnected, walletAddress, signer, modalVisible, theme, onThemeToggle, ethBalance, vrapBalance, history } = this.props
 		const minimumReceived = (parseFloat(tokenBAmount) - (parseFloat(tokenBAmount) * (parseFloat(this.context.slippage)/100)))
+		console.log(tokenA, tokenAAmount)
+		console.log(tokenB, tokenBAmount)
         return (
             <>
               	<Navbar
@@ -1700,7 +1693,7 @@ class Exchange extends Component {
 									</Tooltip>
                                 </div>
                                 <div data-high-impact={parseFloat(impact) > 20}>
-                                    {impact}%
+									{parseFloat(impact) < 0.01 ? "< 0.01" : impact}%
                                 </div>
                             </div>
                         </div>
