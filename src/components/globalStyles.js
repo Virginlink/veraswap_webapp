@@ -10,19 +10,19 @@ export const GlobalStyles = createGlobalStyle`
 				background-repeat: no-repeat;
 				background-color: ${({ theme }) => theme.bodyBackgroundColor};
 				${({ theme }) =>
-					theme.bodyBackground ===
-					"radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 122, 0.1) 0%, rgba(255, 255, 255, 0) 100%)"
-						? "background: radial-gradient(50% 50% at 50% 50%, rgba(223, 0, 4, 0.18) 0%, rgba(255, 255, 255, 0) 100%);"
-						: ""}
+          theme.bodyBackground ===
+          "radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 122, 0.1) 0%, rgba(255, 255, 255, 0) 100%)"
+            ? "background: radial-gradient(50% 50% at 50% 50%, rgba(223, 0, 4, 0.18) 0%, rgba(255, 255, 255, 0) 100%);"
+            : ""}
 		}
 
 		.loading-container {
 			background-color: ${({ theme }) => theme.bodyBackgroundColor};
 			${({ theme }) =>
-				theme.bodyBackground ===
-				"radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 122, 0.1) 0%, rgba(255, 255, 255, 0) 100%)"
-					? "background: radial-gradient(50% 50% at 50% 50%, rgba(223, 0, 4, 0.18) 0%, rgba(255, 255, 255, 0) 100%);"
-					: ""}
+        theme.bodyBackground ===
+        "radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 122, 0.1) 0%, rgba(255, 255, 255, 0) 100%)"
+          ? "background: radial-gradient(50% 50% at 50% 50%, rgba(223, 0, 4, 0.18) 0%, rgba(255, 255, 255, 0) 100%);"
+          : ""}
 			height: 100vh;
 			width: 100vw;
 			display: flex;
