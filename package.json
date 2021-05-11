@@ -37,17 +37,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "pretty": "prettier --write 'src/**/*.{js,jsx,css}'",
-    "check": "prettier --check 'src/**/*.{js,jsx,css}'"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{js,jsx,css,md}": [
-      "prettier --write"
-    ]
+    "check": "prettier --check 'src/**/*.{js,jsx,css}'",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": [
@@ -71,5 +62,8 @@
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
     "prettier": "^2.3.0"
+  },
+  "lint-staged": {
+    "*.{js,css,md}": "prettier --write"
   }
 }
