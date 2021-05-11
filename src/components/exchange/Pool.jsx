@@ -66,8 +66,8 @@ export default class Pool extends Component {
         <div className="flex-spaced-container" style={{ color: "#FFF" }}>
           <div>Your Liquidity</div>
           {/* <div>                            
-                            <AiOutlineQuestionCircle size={16} />
-                        </div> */}
+            <AiOutlineQuestionCircle size={16} />
+          </div> */}
         </div>
         <div className="liquidity-section">
           {walletConnected && walletAddress ? (
