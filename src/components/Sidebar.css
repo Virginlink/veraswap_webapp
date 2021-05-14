@@ -1,0 +1,35 @@
+* {
+	font-family: "normal", sans-serif;
+}
+
+.sidebar-logo {
+	display: flex;
+	justify-content: center;
+}
+
+.app-links li:not(:last-child) {
+	margin-bottom: 40px;
+}
+
+.app-links a img {
+	margin-right: 24px;
+}
+
+.interface-settings {
+	padding-top: 30px;
+}
+
+.sidebar-switch {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	margin-top: 0.5rem;
+	padding: 0 38px;
+}
+
+.sidebar-social-links {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 0.5rem;
+}

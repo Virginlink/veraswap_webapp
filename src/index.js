@@ -10,16 +10,16 @@ import bsc from "@binance-chain/bsc-use-wallet";
 import { UseWalletProvider } from "use-wallet";
 import { AppProvider } from "./state/AppContext";
 ReactDOM.render(
-  <React.StrictMode>
-    <AppProvider>
-      <Router>
-        <UseWalletProvider connectors={{ bsc }}>
-          <App />
-        </UseWalletProvider>
-      </Router>
-    </AppProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
+	<React.StrictMode>
+		<AppProvider>
+			<Router>
+				<UseWalletProvider connectors={{ bsc }}>
+					<App />
+				</UseWalletProvider>
+			</Router>
+		</AppProvider>
+	</React.StrictMode>,
+	document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function

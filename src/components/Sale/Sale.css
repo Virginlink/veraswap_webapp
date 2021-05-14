@@ -1,193 +1,179 @@
 .sale-main-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding-top: 100px;
-  -webkit-box-align: center;
-  align-items: center;
-  flex: 1 1 0%;
-  overflow: scroll auto;
-  z-index: 10 !important;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	padding-top: 60px;
+	-webkit-box-align: center;
+	align-items: center;
+	flex: 1 1 0%;
+	z-index: 10 !important;
 }
 
 .empty-grid {
-  grid-auto-rows: auto;
-  row-gap: 20px;
-  position: fixed;
-  top: 108px;
-  right: 1rem;
-  width: 100%;
-  z-index: 3;
-  max-width: 355px !important;
+	grid-auto-rows: auto;
+	row-gap: 20px;
+	position: fixed;
+	top: 108px;
+	right: 1rem;
+	width: 100%;
+	z-index: 3;
+	max-width: 355px !important;
 }
 
 .sale-grid-container {
-  display: grid;
-  grid-auto-rows: auto;
-  row-gap: 24px;
-  justify-items: center;
-  max-width: 640px;
-  width: 100%;
+	display: grid;
+	grid-auto-rows: auto;
+	row-gap: 24px;
+	justify-items: center;
+	width: 100%;
 }
 
 .sale-block-outer-container-wrapper {
-  box-sizing: border-box;
-  margin: 0px;
-  min-width: 0px;
-  width: 100%;
-  display: flex;
-  padding: 0px;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: justify;
-  justify-content: space-between;
+	box-sizing: border-box;
+	margin: 0px;
+	min-width: 0px;
+	width: 100%;
+	display: flex;
+	padding: 0px;
+	-webkit-box-align: center;
+	align-items: center;
+	-webkit-box-pack: justify;
+	justify-content: space-between;
 }
 
 .sale-block-outer-container {
-  display: grid;
-  grid-auto-rows: auto;
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #de0102 0%, #22162c 100%);
-  border-radius: 12px;
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-}
-
-.sale-rotation {
-  width: 1000px;
-  height: 600px;
-  position: absolute;
-  border-radius: 12px;
-  opacity: 0.4;
-  top: -100px;
-  left: -100px;
-  transform: rotate(-15deg);
-  user-select: none;
+	display: grid;
+	grid-auto-rows: auto;
+	padding: 30px 50px;
+	background: transparent linear-gradient(180deg, #e60000 0%, #62181a 100%) 0% 0% no-repeat
+		padding-box;
+	box-shadow: 4px 4px 25px #0000001f;
+	border-radius: 20px;
+	width: 100%;
+	position: relative;
+	overflow: hidden;
 }
 
 .sale-block-inner-grid-wrapper {
-  display: grid;
-  grid-auto-rows: auto;
-  padding: 1rem;
-  z-index: 1;
+	display: grid;
+	grid-auto-rows: auto;
+	z-index: 1;
 }
 
 .sale-block-inner-grid {
-  display: grid;
-  grid-auto-rows: auto;
-  row-gap: 12px;
+	display: grid;
+	grid-auto-rows: auto;
+	row-gap: 27px;
 }
 
 .sale-block-title-container {
-  box-sizing: border-box;
-  margin: 0px;
-  min-width: 0px;
-  width: 100%;
-  display: flex;
-  padding: 0px;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: justify;
-  justify-content: space-between;
+	box-sizing: border-box;
+	margin: 0px;
+	min-width: 0px;
+	width: 100%;
+	display: flex;
+	padding: 0px;
+	-webkit-box-align: center;
+	align-items: center;
+	-webkit-box-pack: justify;
+	justify-content: space-between;
 }
 
 .sale-block-title {
-  font-size: 16px;
-  box-sizing: border-box;
-  margin: 0px;
-  min-width: 0px;
-  font-family: "PT Sans Caption", "sans-serif";
-  font-weight: 600;
-  color: #fff;
+	font-size: 17px;
+	box-sizing: border-box;
+	margin: 0px;
+	min-width: 0px;
+	font-family: "bold", "sans-serif";
+	color: #fff;
 }
 
 .sale-block-content-container {
-  box-sizing: border-box;
-  margin: 0px;
-  min-width: 0px;
-  width: 100%;
-  display: flex;
-  padding: 0px;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: justify;
-  justify-content: space-between;
+	box-sizing: border-box;
+	margin: 0px;
+	min-width: 0px;
+	width: 100%;
+	display: flex;
+	padding: 0px;
+	-webkit-box-align: center;
+	align-items: center;
+	-webkit-box-pack: justify;
+	justify-content: space-between;
 }
 
 .sale-block-content {
-  box-sizing: border-box;
-  margin: 0px;
-  min-width: 0px;
-  font-weight: 500;
-  color: white;
-  font-family: "PT Sans Caption", "sans-serif";
-  font-size: 14px;
-  line-height: 1.1rem;
+	box-sizing: border-box;
+	margin: 0px;
+	min-width: 0px;
+	color: white;
+	font-family: "normal", "sans-serif";
+	font-size: 17px;
+	line-height: 1.1rem;
 }
 
 .countdown-container {
-  box-sizing: border-box;
-  margin: 0px;
-  min-width: 0px;
-  width: 100%;
-  display: flex;
-  padding: 0px;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  justify-content: center;
-  gap: 12px;
+	box-sizing: border-box;
+	margin: 0px;
+	min-width: 0px;
+	width: 100%;
+	display: flex;
+	padding: 0px;
+	-webkit-box-align: center;
+	align-items: center;
+	-webkit-box-pack: center;
+	justify-content: center;
+	gap: 12px;
 }
 
 .sale-block-2-outer-container {
-  display: grid;
-  grid-auto-rows: auto;
-  background: radial-gradient(91.85% 100% at 1.84% 0%, #edb56e 0%, rgb(24, 10, 10) 100%);
-  border-radius: 12px;
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 10px;
+	display: grid;
+	grid-auto-rows: auto;
+	background: radial-gradient(91.85% 100% at 1.84% 0%, #edb56e 0%, rgb(24, 10, 10) 100%);
+	border-radius: 12px;
+	width: 100%;
+	position: relative;
+	overflow: hidden;
+	box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 10px;
 }
 
 .balance {
-  box-sizing: border-box;
-  margin: 0px;
-  min-width: 0px;
-  font-weight: 600;
-  color: #fff;
-  font-size: 36px;
+	box-sizing: border-box;
+	margin: 0px;
+	min-width: 0px;
+	font-weight: 600;
+	color: #fff;
+	font-size: 36px;
 }
 
 .buy-container {
-  box-sizing: border-box;
-  margin: 0px;
-  min-width: 0px;
-  width: 100%;
-  display: flex;
-  padding: 0px;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  justify-content: center;
-  gap: 12px;
+	box-sizing: border-box;
+	margin: 0px;
+	min-width: 0px;
+	width: 100%;
+	display: flex;
+	padding: 0px;
+	-webkit-box-align: center;
+	align-items: center;
+	-webkit-box-pack: center;
+	justify-content: center;
+	gap: 12px;
 }
 
 .ant-notification-notice-btn {
-  float: left !important;
-  margin-left: 3rem;
+	float: left !important;
+	margin-left: 3rem;
 }
 
 .ant-notification-notice-btn:hover {
-  text-decoration: underline;
+	text-decoration: underline;
 }
 
 @media only screen and (max-width: 720px) {
-  .sale-main-container {
-    padding: 2rem 16px 16px;
-  }
+	.sale-main-container {
+		padding: 2rem 16px 16px;
+	}
 }
 
 .eg {
-  color: rgba(223, 0, 4, 0.555);
+	color: rgba(223, 0, 4, 0.555);
 }

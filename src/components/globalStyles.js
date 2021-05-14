@@ -6,23 +6,17 @@ export const GlobalStyles = createGlobalStyle`
 				-webkit-font-smoothing: antialiased;
 				-moz-osx-font-smoothing: grayscale;
 				min-height: 100vh;
-				background-position: 0px -30vh !important;
 				background-repeat: no-repeat;
 				background-color: ${({ theme }) => theme.bodyBackgroundColor};
-				${({ theme }) =>
-          theme.bodyBackground ===
-          "radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 122, 0.1) 0%, rgba(255, 255, 255, 0) 100%)"
-            ? "background: radial-gradient(50% 50% at 50% 50%, rgba(223, 0, 4, 0.18) 0%, rgba(255, 255, 255, 0) 100%);"
-            : ""}
 		}
 
 		.loading-container {
 			background-color: ${({ theme }) => theme.bodyBackgroundColor};
 			${({ theme }) =>
-        theme.bodyBackground ===
-        "radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 122, 0.1) 0%, rgba(255, 255, 255, 0) 100%)"
-          ? "background: radial-gradient(50% 50% at 50% 50%, rgba(223, 0, 4, 0.18) 0%, rgba(255, 255, 255, 0) 100%);"
-          : ""}
+				theme.bodyBackground ===
+				"radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 122, 0.1) 0%, rgba(255, 255, 255, 0) 100%)"
+					? "background: radial-gradient(50% 50% at 50% 50%, rgba(223, 0, 4, 0.18) 0%, rgba(255, 255, 255, 0) 100%);"
+					: ""}
 			height: 100vh;
 			width: 100vw;
 			display: flex;
@@ -31,7 +25,7 @@ export const GlobalStyles = createGlobalStyle`
 			justify-content: center;
 			overflow: hidden;
 			color: ${({ theme }) => theme.formControlText};
-			font-family: 'PT Sans Caption', sans-serif;
+			font-family: 'normal', sans-serif;
 		}
 
 		.loading-container > div {
@@ -132,7 +126,7 @@ export const GlobalStyles = createGlobalStyle`
 		}
 
 		.modal-header {
-				font-family: 'PT Sans Caption', sans-serif;
+				font-family: 'normal', sans-serif;
 				display: flex;
 				flex-flow: row nowrap;
 				padding: 1rem;
@@ -181,7 +175,7 @@ export const GlobalStyles = createGlobalStyle`
 			padding: 1rem 1.25rem 1rem 1rem;
 			background-color: ${({ theme }) => theme.modalHeaderBackgroundColor};
 			max-width: 400px;
-			font-family: 'PT Sans Caption', sans-serif;
+			font-family: 'normal', sans-serif;
 		}
 
 		.swap-confirmation-token-row {
@@ -227,7 +221,7 @@ export const GlobalStyles = createGlobalStyle`
 		.swap-confirmation-details > div {
 			display: flex;
 			justify-content: space-between;
-			font-family: 'PT Sans Caption', sans-serif;
+			font-family: 'normal', sans-serif;
 			font-size: 14px;
 		}
 
@@ -271,7 +265,7 @@ export const GlobalStyles = createGlobalStyle`
 				justify-content: center;
 				padding: 1rem;
 				font-size: 16px;
-				font-family: 'PT Sans Caption';
+				font-family: 'normal';
 				color: ${({ theme }) => theme.modalHeaderTextColor};
 		}
 
@@ -297,7 +291,7 @@ export const GlobalStyles = createGlobalStyle`
 				justify-content: center;
 				padding: 0.1rem;
 				font-size: 16px;
-				font-family: 'PT Sans Caption';
+				font-family: 'normal';
 				color: ${({ theme }) => theme.modalHeaderTextColor};
 		}
 
@@ -691,7 +685,7 @@ export const GlobalStyles = createGlobalStyle`
 				color: ${({ theme }) => theme.tooltipTextColor} !important;
 				box-shadow: rgba(0, 0, 0, 0.01) 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 8px, rgba(0, 0, 0, 0.04) 0px 16px 24px, rgba(0, 0, 0, 0.01) 0px 24px 32px !important;
 				padding: 0.9rem !important;
-				font-family: 'PT Sans Caption';
+				font-family: 'normal';
 				font-size: 14px;
 				border-radius: 12px !important;
 				line-height: 1.6rem;
@@ -706,7 +700,7 @@ export const GlobalStyles = createGlobalStyle`
 				-webkit-box-align: center;
 				align-items: center;
 				height: 2rem;
-				border-radius: 36px;
+				border-radius: 5px;
 				font-size: 1rem;
 				width: auto;
 				min-width: 3.5rem;
@@ -730,7 +724,7 @@ export const GlobalStyles = createGlobalStyle`
 				color: rgb(0, 0, 0);
 				-webkit-box-align: center;
 				align-items: center;
-				border-radius: 36px;
+				border-radius: 5px;
 				font-size: 1rem;
 				width: auto;
 				min-width: 3.5rem;
@@ -846,7 +840,7 @@ export const GlobalStyles = createGlobalStyle`
 				box-sizing: border-box;
 				margin: 0px auto;
 				min-width: 0px;
-				font-family: 'PT Sans Caption';
+				font-family: 'normal';
 				font-weight: 500;
 				font-size: 20px;
 				color: ${({ theme }) => theme.modalContentColor};
@@ -899,7 +893,7 @@ export const GlobalStyles = createGlobalStyle`
 				box-sizing: border-box;
 				margin: 0px;
 				min-width: 0px;
-				font-family: 'PT Sans Caption';
+				font-family: 'normal';
 				font-weight: 600;
 				font-size: 20px;
 				color: ${({ theme }) => theme.modalContentColor};
@@ -1014,23 +1008,25 @@ export const GlobalStyles = createGlobalStyle`
 				align-items: center;
 				justify-content: center;
 				z-index: 1;
-				background-color: ${({ theme }) => theme.buyModalButtonBackgroundColor};
+				// background-color: ${({ theme }) => theme.buyModalButtonBackgroundColor};
+				background-color: #333;
 				color: ${({ theme }) => theme.buyModalButtonTextColor};
 				cursor: pointer;
 				box-shadow: none;
 				border: 1px solid transparent;
 				outline: none;
 				opacity: 1;
-				padding: 18px;
+				padding: 8px;
+				font-family: 'bold', sans-serif !important;
 				margin: 0px 0.5rem 0px 0px;
 				width: 100%;
-				font-weight: 500;
 				text-align: center;
-				border-radius: 12px;
+				border-radius: 7px;
 		}
 
 		.buy-action-button:hover {
-				background-color: ${({ theme }) => theme.buyModalButtonBackgroundColoronHover};
+				// background-color: ${({ theme }) => theme.buyModalButtonBackgroundColoronHover};
+				background-color: #333;
 		}
 
 		.buy-action-button:disabled {
@@ -1145,9 +1141,10 @@ export const GlobalStyles = createGlobalStyle`
 		}
 
 		.buy-button {
+				font-size: 15px;
 				padding: 8px;
 				width: 160px;
-				font-weight: 500;
+				font-family: 'bold', sans-serif !important;
 				text-align: center;
 				border-radius: 8px;
 				outline: none;
@@ -1162,12 +1159,13 @@ export const GlobalStyles = createGlobalStyle`
 				cursor: pointer;
 				position: relative;
 				z-index: 1;
-				background-color: ${({ theme }) => theme.buyButtonBackgroundColor};
+				// background-color: ${({ theme }) => theme.buyButtonBackgroundColor};
+				background-color: #333;
 				color: white;
 		}
 		
 		.buy-button:hover {
-				background-color: ${({ theme }) => theme.buyButtonBackgroundColoronHover};
+			// background-color: ${({ theme }) => theme.buyButtonBackgroundColoronHover};
 		}
 
 		.claim-moon-button {
@@ -1272,18 +1270,27 @@ export const GlobalStyles = createGlobalStyle`
 				box-sizing: border-box;
 				margin: 0.5rem 0 0 0;
 				min-width: 0px;
-				font-weight: 500;
-				font-size: 20px;
+				font-size: 17px;
+				font-family: 'bold', sans-serif;
 				color: ${({ theme }) => theme.modalHeaderTextColor};
 		}
 
 		.stake-card-heading {
-				box-sizing: border-box;
-				margin: 0px;
-				min-width: 0px;
-				font-weight: 600;
-				color: white;
-				font-size: 18px;
+			box-sizing: border-box;
+			margin: 0px;
+			min-width: 0px;
+			font-family: 'bold', sans-serif;
+			color: #333;
+			font-size: 18px;
+		}
+
+		.stake-deposits-info-banner {
+			width: 100%;
+			background-color: #FFF;
+			padding: 30px 35px;
+			box-shadow: 4px 4px 25px #0000001F;
+			border: 1px solid #7070704D;
+			border-radius: 17px;
 		}
 
 		.outlined-box {
@@ -1295,7 +1302,7 @@ export const GlobalStyles = createGlobalStyle`
 				overflow: hidden;
 				background: none;
 				border: 1px solid ${({ theme }) => theme.outlinedBoxBorderColor};
-				padding: 1rem;
+				padding: 1rem 2rem;
 				z-index: 1;
 		}
 
@@ -1321,7 +1328,7 @@ export const GlobalStyles = createGlobalStyle`
 				color : ${({ theme }) => theme.deadlineTextColor} !important;
 				font-size : 1.3rem;
 				font-weight : 600;
-				font-family: 'PT Sans Caption', sans-serif; 
+				font-family: 'normal', sans-serif; 
 		}
 
 		.stats-text{
@@ -1329,7 +1336,7 @@ export const GlobalStyles = createGlobalStyle`
 				font-size : 1.2rem;
 				font-weight : 500;
 				padding-top : 2rem;
-				font-family: 'PT Sans Caption', sans-serif;
+				font-family: 'normal', sans-serif;
 		}
 
 		.text-regular {
@@ -1344,7 +1351,7 @@ export const GlobalStyles = createGlobalStyle`
 				box-sizing: border-box;
 				margin: 0px;
 				min-width: 0px;
-				font-weight: 500;
+				font-family: 'bold', sans-serif;;
 				color: ${({ theme }) => theme.modalHeaderTextColor};
 		}
 
@@ -1352,22 +1359,21 @@ export const GlobalStyles = createGlobalStyle`
 				box-sizing: border-box;
 				margin: 0px;
 				min-width: 0px;
-				font-weight: 600;
+				font-weight: bolder;
 				color: ${({ theme }) => theme.modalHeaderTextColor};
 		}
 
 		.shaded-container {
 				display: grid;
 				grid-auto-rows: auto;
-				border-radius: 12px;
+				border: 1px solid #7070704D;
+				border-radius: 20px;
 				width: 100%;
 				position: relative;
 				overflow: hidden;
-				background: ${({ theme }) => theme.shadedContainerBackgroundColor};
-				opacity: 0.4;
-				margin-top: -40px;
-				padding: 32px 1.25rem 1rem;
-				z-index: -5;
+				// background: ${({ theme }) => theme.shadedContainerBackgroundColor};
+				background-color: #FFF;
+				padding: 1rem 2rem;
 		}
 
 		.header-lp{
@@ -1375,12 +1381,13 @@ export const GlobalStyles = createGlobalStyle`
 				flex-direction : row;
 				justify-content : space-between;
 				align-items : center;
+				padding: 0 50px;
 		}
 
 		.total-liquidity{
-				color: ${({ theme }) => theme.modalHeaderTextColor};
-				font-size: 14px;
-				font-weight : 500;
+			color: ${({ theme }) => theme.modalHeaderTextColor};
+			font-size: 17px;
+			font-family: 'bold', sans-serif;
 		}
 
 		.shaded-text {
@@ -1404,7 +1411,7 @@ export const GlobalStyles = createGlobalStyle`
 		}
 		
 		.tabs a {
-			font-family: "PT Sans Caption", sans-serif;
+			font-family: "normal", sans-serif;
 			font-size: 15px;
 			// color: ${({ theme }) => theme.formControlText};
 			color: #FFF;
@@ -1468,7 +1475,7 @@ export const GlobalStyles = createGlobalStyle`
 			
 			.form-control > .flex-spaced-container > div:nth-child(2) {
 				color: ${({ theme }) => theme.formControlText} !important;
-				font-family : "PT Sans Caption" !important;
+				font-family : "normal" !important;
 				font-size : 12px !important;
 			}
 			
@@ -1489,7 +1496,7 @@ export const GlobalStyles = createGlobalStyle`
 				outline: none;
 				background-color: transparent;
 				box-shadow: none;
-				font-family: "PT Sans Caption";
+				font-family: "normal";
 				font-size: 19px;
 				padding: 0 0.5rem 0 0;
 			}
@@ -1530,7 +1537,7 @@ export const GlobalStyles = createGlobalStyle`
 				box-shadow: none;
 				padding: 0 9px;
 				color: ${({ theme }) => theme.formControlText};
-				font-family: "PT Sans Caption";
+				font-family: "normal";
 				font-size: 14px;
 			}
 
@@ -1594,7 +1601,7 @@ export const GlobalStyles = createGlobalStyle`
 				display: grid;
 				grid-auto-rows: auto;
 				row-gap: 0.75rem;
-				font-family: "PT Sans Caption", sans-serif;
+				font-family: "normal", sans-serif;
 				background-color: ${({ theme }) => theme.swapFormControlBackgroundColor};
 				color: ${({ theme }) => theme.formControlText};
 				border-radius: 10px;
@@ -1661,7 +1668,7 @@ export const GlobalStyles = createGlobalStyle`
 			}
 			
 			.exchange-button-container {
-				font-family: "PT Sans Caption";
+				font-family: "normal";
 				z-index: 5;
 				margin-top: 20px;
 				max-width: 400px;
@@ -1724,7 +1731,7 @@ export const GlobalStyles = createGlobalStyle`
 			
 			.pool-details .flex-spaced-container > div {
 				font-size: 15px;
-				font-family: "PT Sans Caption";
+				font-family: "normal";
 			}
 			
 			.liquidity-section {
@@ -1753,12 +1760,12 @@ export const GlobalStyles = createGlobalStyle`
 			}
 			
 			.pool-form .flex-spaced-container span {
-				font-family: "PT Sans Caption";
+				font-family: "normal";
 				font-size: 16px;
 			}
 			
 			.search-currency-input {
-				font-family: "PT Sans Caption", sans-serif;
+				font-family: "normal", sans-serif;
 				border-radius: 15px;
 				color: ${({ theme }) => theme.formControlText};
 				border: 1px solid ${({ theme }) => theme.formControlBorderColor};
@@ -1771,7 +1778,7 @@ export const GlobalStyles = createGlobalStyle`
 			}
 
 			.search-currency-input + div {
-				font-family: "PT Sans Caption", sans-serif;
+				font-family: "normal", sans-serif;
 				color: ${({ theme }) => theme.primary} !important;
 			}
 			
@@ -1838,7 +1845,7 @@ export const GlobalStyles = createGlobalStyle`
 			}
 			
 			.currency-row {
-				font-family: "PT Sans Caption", sans-serif;
+				font-family: "normal", sans-serif;
 				box-sizing: border-box;
 				margin: 0px;
 				min-width: 0px;
@@ -1891,7 +1898,7 @@ export const GlobalStyles = createGlobalStyle`
 			
 			.lp-card-heading {
 				color: ${({ theme }) => theme.formControlText};
-				font-family: "PT Sans Caption";
+				font-family: "normal";
 				display: flex;
 			}
 			
@@ -1905,7 +1912,7 @@ export const GlobalStyles = createGlobalStyle`
 			
 			.lp-card-heading + a {
 				color: ${({ theme }) => theme.primary};
-				font-family: "PT Sans Caption";
+				font-family: "normal";
 				font-size: 13px;
 				text-decoration: underline;
 			}
@@ -1916,7 +1923,7 @@ export const GlobalStyles = createGlobalStyle`
 			}
 			
 			.lp-card .flex-spaced-container > div:nth-child(1) {
-				font-family: 'PT Sans Caption';
+				font-family: 'normal';
 			}
 			
 			.lp-card .flex-spaced-container > div:nth-child(2) {
@@ -1955,7 +1962,7 @@ export const GlobalStyles = createGlobalStyle`
 			
 			.text-large {
 				margin: 5px 0;
-				font-family: 'PT Sans Caption';
+				font-family: 'normal';
 				font-weight: bold;
 				font-size: 2.8rem;
 			}
@@ -2007,7 +2014,7 @@ export const GlobalStyles = createGlobalStyle`
 			
 			.pool-amount-row > div:nth-child(1) {
 				color: ${({ theme }) => theme.formControlText};
-				font-family: 'PT Sans Caption';
+				font-family: 'normal';
 				font-size: 0.9rem;
 			}
 			
@@ -2121,7 +2128,7 @@ export const GlobalStyles = createGlobalStyle`
 				border-radius: 10px;
 				background-color: transparent;
 				color: ${({ theme }) => theme.primary};
-				font-family: 'PT Sans Caption';
+				font-family: 'normal';
 				font-size: 14px;
 		}
 		
@@ -2134,7 +2141,7 @@ export const GlobalStyles = createGlobalStyle`
 				border-radius: 10px;
 				background-color: ${({ theme }) => theme.primary};
 				color: #FFF;
-				font-family: 'PT Sans Caption';
+				font-family: 'normal';
 				font-size: 14px;
 		}
 		
@@ -2170,7 +2177,7 @@ export const GlobalStyles = createGlobalStyle`
 			}
 
 			.new-pool-details h1 {
-				font-family: "PT Sans Caption", sans-serif;
+				font-family: "normal", sans-serif;
 				color: ${({ theme }) => theme.formControlText} !important;
 				margin: 0;
 			}
@@ -2202,7 +2209,7 @@ export const GlobalStyles = createGlobalStyle`
 			}
 
 			.details-grid {
-				font-family: "PT Sans Caption", sans-serif;
+				font-family: "normal", sans-serif;
 				color: ${({ theme }) => theme.formControlText};
 				display: grid;
 				grid-auto-rows: auto;
@@ -2223,7 +2230,7 @@ export const GlobalStyles = createGlobalStyle`
 					outline: none;
 					background-color: transparent;
 					box-shadow: none;
-					font-family: "PT Sans Caption";
+					font-family: "normal";
 					font-size: 19px;
 					color: var(--text);
 					padding: 0;
@@ -2274,7 +2281,7 @@ export const GlobalStyles = createGlobalStyle`
 
 		@media only screen and (max-width: 520px) {
 			.settings-menu {
-				left: -7rem;
+				left: -15.5rem;
 			}
 			.wallet-balance {
 				display: none;
@@ -2475,4 +2482,274 @@ export const GlobalStyles = createGlobalStyle`
 		@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
 		@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 		@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+		.app-sidebar {
+			position: fixed;
+			left: 0;
+			height: 100vh;
+			overflow-y: scroll;
+			width: 230px;
+			background-color: #F8F9FA;
+			padding-top: 30px;
+			border-right: 1px solid #D9D9D9;
+			transition: 0.3s all ease;
+		}
+
+		.sidebar-hidden {
+			width: 0;
+		}
+
+		.app-links {
+			padding: 30px 25px;
+			background-color: transparent;
+			font-size: 17px;
+			margin: 0 38px;
+			list-style-type: none;
+			border-bottom: 1px solid #D9D9D9;
+		}
+
+		.app-links a{
+			color: #333;
+		}
+
+		.app-links a:hover {
+			color: #E60000;
+		}
+
+		.interface-settings span {
+			color: #333;
+			font-size: 12px;
+			margin-left: 3px;
+			padding: 0 38px;
+		}
+
+		.interface-settings button {
+			cursor: pointer;
+			padding: 4px 0;
+			background-color: #FFF;
+			color: #333;
+			border: 1px solid #D9D9D9;
+			border-radius: 5px;
+			box-shadow: none;
+			text-transform: uppercase;
+			width: 50%;
+		}
+
+		.interface-settings button:first-child {
+			z-index: 1;
+			position: relative;
+			left: 3px;
+			border-right: none;
+			border-radius: 5px 0 0 5px;
+		}
+
+		.interface-settings button:last-child {
+			z-index: 1;
+			position: relative;
+			right: 3px;
+			border-left: none;
+			border-radius: 0 5px 5px 0;
+		}
+
+		.interface-settings button[data-enabled=true] {
+			z-index: 2;
+			border-radius: 5px;
+			border: 1px solid #333;
+			background-color: #333;
+			color: #FFF;
+		}
+
+		.sidebar-social-links a{
+			color: #333;
+		}
+
+		.app-sidebar-footer {
+			background-color: #F8F9FA;
+			padding: 3rem 38px 0;
+			z-index: 10;
+		}
+
+		.sidebar-copyrights {
+			color: #333;
+			text-align: center;
+			letter-spacing: 2px;
+			font-size: 13px;
+			margin-bottom: 0.5rem;
+		}
+
+		.app-container {
+			width: 100%;
+			padding-left: 230px;
+			background-color: #FFF;
+			min-height: 100vh;
+		}
+
+		.app-bar {
+			padding: 24px 54px;
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+		}
+
+		.app-bar > div {
+			display: flex;
+			align-items: center;
+		}
+
+		.app-bar > div > *:not(:last-child) {
+			margin-right: 35px;
+		}
+
+		.app-bar .connect-wallet-button {
+			cursor: pointer;
+			color: #FFF;
+			background-color: #333;
+			padding: 0.75rem 2rem;
+			border: none;
+			border-radius: 7px;
+			box-shadow: none;
+			font-family: 'bold', sans-serif !important;
+			font-size: 15px;
+		}
+
+		.app-bar .vrap-button {
+			cursor: pointer;
+			background: transparent linear-gradient(180deg, #E60000 0%, #730000 100%) 0% 0% no-repeat padding-box;
+			color: #FFF;
+			border: none;
+			border-radius: 7px;
+			box-shadow: none;
+			font-size: 15px;
+			padding: 0.75rem;
+		}
+
+		.app-bar .settings-dropdown {
+			position: absolute;
+			z-index: 100;
+			top: 3rem;
+			right: 0;
+			min-width: 0;
+			width: 290px;
+			padding: 12px;
+			border-radius: 7px;
+			background-color: #FFF;
+			box-shadow: 0px 0px 20px #00000033;
+		}
+
+		.app-bar .category {
+			font-family: 'bold', sans-serif;
+			text-align: center;
+			margin-bottom: 14px;
+		}
+
+		.app-bar .wallet-details-container > * {
+			padding: 0.75rem;
+		}
+
+		.app-bar .details-dropdown {
+			position: absolute;
+			z-index: 100;
+			top: 4rem;
+			right: 0;
+			min-width: 0;
+			padding: 12px 30px;
+			min-width: 250px;
+			border-radius: 7px;
+			background-color: #FFF;
+			box-shadow: 0px 0px 20px #00000033;
+		}
+
+		.app-bar .details-dropdown .detail {
+			text-align: center;
+			padding: 12px 0;
+			border-top: 1px solid #D9D9D9;
+		}
+
+		.app-bar .details-dropdown .detail p {
+			font-family: 'bold', sans-serif;
+			font-size: 20px;
+			color: #E60000;
+			margin-bottom: 0;
+		}
+
+		.app-bar .details-dropdown .detail span {
+			font-family: 'bold', sans-serif;
+			color: #333;
+			font-size: 12px;
+		}
+
+		.landing-section h1 {
+			color: #333;
+		}
+
+		.landing-section-inverted h1, .landing-section-centered h1 {
+			color: rgba(0, 0, 0, 0.7) !important;
+		}
+
+		.landing-main h1 span {
+			color: #E60000;
+		}
+
+		.landing-main p {
+			color: #333;
+			opacity: 0.8;
+		}
+
+		.landing-section button {
+			margin-top: 4rem;
+			border: none;
+			border-radius: 7px;
+			background-color: #333;
+			color: #FFF;
+			box-shadow: none;
+			cursor: pointer;
+			font-size: 0.9rem;
+			font-family: 'bold', sans-serif !important;
+			padding: 0.75rem 2rem;
+			display: flex;
+			align-items: center;
+			transition: 0.3s all ease;
+		}
+
+		.landing-section button svg {
+			position: relative;
+			left: 1rem;
+			transition: 0.3s all ease;
+		}
+
+		.landing-section button:hover svg {
+			left: 1.45rem;
+		}
+
+		.landing-card {
+			text-align: center;
+			margin: 1rem;
+			padding: 28px 21px;
+			max-width: 26%;
+			min-width: 26%;
+			background-color: #FFF;
+			border-radius: 20px;
+			box-shadow: 4px 4px 30px #00000029;
+		}
+
+		.landing-card .icon {
+			border-radius: 20px;
+			padding: 24px;
+			width: 85px;
+			height: 85px;
+			margin: 0 auto 1rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background-color: rgba(230, 0, 0, 0.7);
+		}
+
+		.landing-card h2 {
+			font-size: 1.65rem;
+			color: #000;
+		}
+
+		.landing-card p {
+			color: rgba(0, 0, 0, 0.8);
+		}
 `;

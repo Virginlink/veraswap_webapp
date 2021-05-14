@@ -1,0 +1,57 @@
+.landing-main section {
+	padding: 60px 0;
+}
+
+.landing-main h1,
+.landing-main h1 span {
+	font-size: 2.5rem;
+	transition: 0.3s all ease;
+}
+
+.landing-main p {
+	font-size: 1.1rem;
+}
+
+.landing-section {
+	display: flex;
+	align-items: center;
+}
+
+.landing-section > div,
+.landing-section-inverted > div {
+	padding: 1rem 1.5rem;
+}
+
+.landing-section h1,
+.landing-section span {
+	font-family: "bold", sans-serif;
+}
+
+.landing-section-inverted {
+	display: flex;
+	align-items: center;
+	flex-direction: row-reverse;
+}
+
+.landing-section-centered {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.landing-section-centered h1,
+.landing-section-centered p {
+	text-align: center;
+}
+
+.landing-section-centered h1 {
+	width: 90%;
+}
+
+.landing-cards-container {
+	margin-top: 1rem;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: stretch;
+	justify-content: center;
+}
