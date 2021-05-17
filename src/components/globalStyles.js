@@ -1,22 +1,14 @@
 import { createGlobalStyle } from "styled-components";
 export const GlobalStyles = createGlobalStyle`
 		body {
-				margin: 0;
-				height : 110vh;
-				-webkit-font-smoothing: antialiased;
-				-moz-osx-font-smoothing: grayscale;
-				min-height: 100vh;
-				background-repeat: no-repeat;
-				background-color: ${({ theme }) => theme.bodyBackgroundColor};
+			margin: 0;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+			min-height: 100vh;
 		}
 
 		.loading-container {
 			background-color: ${({ theme }) => theme.bodyBackgroundColor};
-			${({ theme }) =>
-				theme.bodyBackground ===
-				"radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 122, 0.1) 0%, rgba(255, 255, 255, 0) 100%)"
-					? "background: radial-gradient(50% 50% at 50% 50%, rgba(223, 0, 4, 0.18) 0%, rgba(255, 255, 255, 0) 100%);"
-					: ""}
 			height: 100vh;
 			width: 100vw;
 			display: flex;
@@ -50,6 +42,20 @@ export const GlobalStyles = createGlobalStyle`
 		.loading-container p {
 			margin-top: 1rem;
 			font-size: 16px;
+		}
+
+		.app-container {
+			width: 100%;
+			padding-left: 230px;
+			background-color: ${({ theme }) => theme.bodyBackgroundColor};
+			min-height: 100vh;
+			transition: 0.3s all ease;
+		}
+
+		@media only screen and (max-width: 1200px) {
+			.app-container {
+				padding-left: 0;
+			}
 		}
 
 		.navbar-pages-container a {
@@ -107,6 +113,7 @@ export const GlobalStyles = createGlobalStyle`
 				justify-content: center;
 				align-items: center;
 				color: ${({ theme }) => theme.modalContentColor};
+				font-size: 16px;
 		}
 
 		.modal-footer span {
@@ -148,16 +155,16 @@ export const GlobalStyles = createGlobalStyle`
 		
 		.modal-content {
 				background-color: ${({ theme }) => theme.modalContentBackgroundColor};
-				padding: 2rem;
+				padding: 1rem;
 				border-bottom-left-radius: 20px;
 				border-bottom-right-radius: 20px;
 		}
 
 		.modal-content-button {
 				cursor: pointer;
-				background-color: ${({ theme }) => theme.modalButtonBackgroundColor};
+				background-color: ${({ theme }) => theme.swapFormControlBackgroundColor};
 				outline: none;
-				border: 1px solid ${({ theme }) => theme.modalButtonBorderColor};
+				border: 1px solid ${({ theme }) => theme.swapFormControlBorderColor};
 				border-radius: 12px;
 				display: flex;
 				flex-direction: row;
@@ -165,7 +172,7 @@ export const GlobalStyles = createGlobalStyle`
 				align-items: center;
 				-webkit-box-pack: justify;
 				justify-content: space-between;
-				padding: 1rem;
+				padding: 1.35rem 1.5rem;
 				margin-top: 0px;
 				opacity: 1;
 				width: 100% !important;
@@ -584,16 +591,17 @@ export const GlobalStyles = createGlobalStyle`
 		}
 		
 		.modal-footer-link {
-				text-decoration: none;
+				text-decoration: underline;
 				cursor: pointer;
-				color: ${({ theme }) => theme.modalFooterLinkText};
 				font-weight: 500;
 				margin-left: 5px;
+				color: ${({ theme }) => theme.modalFooterText};
 		}
-		
+
 		.modal-footer-link:hover {
-				text-decoration: underline;
-				color: ${({ theme }) => theme.modalFooterLinkText};
+			color: ${({ theme }) => theme.modalFooterText};
+			text-decoration: underline;
+			opacity: 0.6;
 		}
 
 		.navbar-action-button {
@@ -1008,9 +1016,9 @@ export const GlobalStyles = createGlobalStyle`
 				align-items: center;
 				justify-content: center;
 				z-index: 1;
-				// background-color: ${({ theme }) => theme.buyModalButtonBackgroundColor};
-				background-color: #333;
-				color: ${({ theme }) => theme.buyModalButtonTextColor};
+				background-color: ${({ theme }) => theme.buttonBackgroundColor};
+				background: ${({ theme }) => theme.buttonBackground};
+				color: #FFF;
 				cursor: pointer;
 				box-shadow: none;
 				border: 1px solid transparent;
@@ -1159,13 +1167,14 @@ export const GlobalStyles = createGlobalStyle`
 				cursor: pointer;
 				position: relative;
 				z-index: 1;
-				// background-color: ${({ theme }) => theme.buyButtonBackgroundColor};
-				background-color: #333;
-				color: white;
+				background-color: ${({ theme }) => theme.buttonBackgroundColor};
+				background: ${({ theme }) => theme.buttonBackground};
+				color: #FFF;
+				transition: 0.3s all ease;
 		}
 		
 		.buy-button:hover {
-			// background-color: ${({ theme }) => theme.buyButtonBackgroundColoronHover};
+			opacity: 0.8;
 		}
 
 		.claim-moon-button {
@@ -1286,11 +1295,17 @@ export const GlobalStyles = createGlobalStyle`
 
 		.stake-deposits-info-banner {
 			width: 100%;
-			background-color: #FFF;
+			background-color: ${({ theme }) => theme.assetCardBackgroundColor};
 			padding: 30px 35px;
 			box-shadow: 4px 4px 25px #0000001F;
 			border: 1px solid #7070704D;
 			border-radius: 17px;
+		}
+
+		@media only screen and (max-width: 768px) {
+			.stake-deposits-container {
+				flex-direction: column;
+			}
 		}
 
 		.outlined-box {
@@ -1300,7 +1315,7 @@ export const GlobalStyles = createGlobalStyle`
 				width: 100%;
 				position: relative;
 				overflow: hidden;
-				background: none;
+				background-color: ${({ theme }) => theme.outlinedBoxBackgroundColor};
 				border: 1px solid ${({ theme }) => theme.outlinedBoxBorderColor};
 				padding: 1rem 2rem;
 				z-index: 1;
@@ -1366,14 +1381,19 @@ export const GlobalStyles = createGlobalStyle`
 		.shaded-container {
 				display: grid;
 				grid-auto-rows: auto;
-				border: 1px solid #7070704D;
+				border: 1px solid ${({ theme }) => theme.outlinedBoxBorderColor};
 				border-radius: 20px;
 				width: 100%;
 				position: relative;
 				overflow: hidden;
-				// background: ${({ theme }) => theme.shadedContainerBackgroundColor};
-				background-color: #FFF;
+				background-color: ${({ theme }) => theme.outlinedBoxBackgroundColor};
 				padding: 1rem 2rem;
+		}
+
+		@media only screen and (max-width: 500px) {
+			.shaded-container div > div:nth-child(2)  {
+				flex-direction: column;
+			}
 		}
 
 		.header-lp{
@@ -1401,38 +1421,82 @@ export const GlobalStyles = createGlobalStyle`
 				justify-content: center;
 				flex-direction: column;
 				z-index : 1;
-				overflow: hidden;
 		}
 
 		.tabs {
 			display: flex;
-			justify-content: space-around;
-			margin-bottom: 1rem;
+			margin-bottom: 2rem;
 		}
 		
 		.tabs a {
-			font-family: "normal", sans-serif;
-			font-size: 15px;
-			// color: ${({ theme }) => theme.formControlText};
-			color: #FFF;
-			opacity: 0.7;
-			transition: all 0.3s ease;
+			padding: 10px 0;
+			font-family: 'bold', sans-serif !important;
+			background-color: ${({ theme }) => theme.tabBackgroundColor};
+			color: ${({ theme }) => theme.tabTextColor};
+			border: 1px solid ${({ theme }) => theme.tabBorderColor};
+			border-radius: 10px;
+			box-shadow: none;
+			width: 50%;
+			text-align: center;
+		}
+
+		.tabs a:first-child {
+			z-index: 1;
+			position: relative;
+			left: 3px;
+			border-right: none;
+			border-radius: 10px 0 0 10px;
+		}
+
+		.tabs a:last-child {
+			z-index: 1;
+			position: relative;
+			right: 3px;
+			border-left: none;
+			border-radius: 0 10px 10px 0;
 		}
 		
+		.tabs a[data-enabled=true] {
+			z-index: 2;
+			border-radius: 10px;
+			border: 1px solid ${({ theme }) => theme.activeTabBackgroundColor};
+			background-color: ${({ theme }) => theme.activeTabBackgroundColor};
+			color: ${({ theme }) => theme.activeTabTextColor};
+			box-shadow: 0px 0px 20px #00000033;
+		}
+
 		.tabs a:hover,
 		.tabs a:focus,
 		.tab-active {
 			opacity: 1 !important;
 		}
 
+		@media only screen and (max-width: 500px) {
+			.tabs a[data-enabled=true], .tabs a:first-child, .tabs a:last-child{
+				background-color: #FFF;
+				color: #00000033;
+				box-shadow: none;
+				border-radius: 0;
+				border: none;
+				border-bottom: 1px solid #00000033;
+			}
+
+			.tabs a[data-enabled=true] {
+				color: #333;
+				border-bottom: 2px solid #333;
+			}
+		}
+
 		.exchange-card {
 				position: relative;
-				max-width: 400px;
+				max-width: 550px;
 				width: 100%;
 				border-radius: 20px;
-				// background-color: ${({ theme }) => theme.exchangeCardBackgroundColor};
-				background: ${({ theme }) => theme.exchangeCardBackground};
-				padding: 20px 18px;
+				background-color: ${({ theme }) => theme.exchangeCardBackgroundColor};
+				border: 1px solid #7070704D;
+				box-shadow: 4px 4px 25px #0000001F;
+				padding: 31px 35px 56px;
+				margin-bottom: 2rem;
 			}
 		
 		.exchange-card .noise {
@@ -1440,12 +1504,10 @@ export const GlobalStyles = createGlobalStyle`
 		}
 			
 			.form-control {
-				padding: 12px 13px;
-				// background-color: ${({ theme }) => theme.formControlBackgroundColor};
+				padding: 20px;
 				border-radius: 10px;
-				// border: 1px solid ${({ theme }) => theme.exchangeCardBackgroundColor};
 				background-color: ${({ theme }) => theme.swapFormControlBackgroundColor};
-				border: 1px solid ${({ theme }) => theme.swapFormControlBackgroundColor};
+				border: 1px solid ${({ theme }) => theme.swapFormControlBorderColor};
 				font-size: 12px;
 				text-transform: uppercase;
 				color: ${({ theme }) => theme.formControlText} !important;
@@ -1453,7 +1515,7 @@ export const GlobalStyles = createGlobalStyle`
 
 			.swap-form .form-control {
 				background-color: ${({ theme }) => theme.swapFormControlBackgroundColor};
-				border: 1px solid ${({ theme }) => theme.swapFormControlBackgroundColor};
+				border: 1px solid ${({ theme }) => theme.swapFormControlBorderColor};
 			}
 
 			.swap-form .input-container input {
@@ -1462,11 +1524,10 @@ export const GlobalStyles = createGlobalStyle`
 
 			.swap-form .input-container input + div {
 				opacity: 0.7;
-				font-size: 12px !important;
+				font-size: 13px !important;
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
-				margin-top: 8px;
 			}
 
 			.swap-form .input-container {
@@ -1480,8 +1541,10 @@ export const GlobalStyles = createGlobalStyle`
 			}
 			
 			.swap-form .form-control .flex-spaced-container > div {
-				opacity: 0.7;
+				font-size: 16px;
+				opacity: 0.5;
 				text-transform: capitalize;
+				margin-bottom: 0.5rem;
 			}
 			
 			.input-container {
@@ -1491,7 +1554,7 @@ export const GlobalStyles = createGlobalStyle`
 			}
 			
 			.input-container input {
-				width: 100%;
+				flex: 1 1 0%;
 				border: none;
 				outline: none;
 				background-color: transparent;
@@ -1510,13 +1573,29 @@ export const GlobalStyles = createGlobalStyle`
 				align-items: center;
 				justify-content: flex-end;
 			}
+
+			.input-container > div:nth-child(1) {
+				flex: 1 1 0%;
+			}
+
+			@media only screen and (max-width: 550px) {
+				.input-container input {
+					flex: auto;
+					width: 100%;
+				}
+
+				.swap-form .input-container input + div {
+					overflow: visible;
+					margin-top: 0;
+				}
+			}
 			
 			.max-button {
 				cursor: pointer;
 				height: 30px;
 				border: none;
 				border-radius: 10px;
-				background-color: ${({ theme }) => theme.primary};
+				background: transparent linear-gradient(180deg,#E60000 0%,#730000 100%) 0% 0% no-repeat padding-box;
 				color: #fff;
 				box-shadow: none;
 				text-transform: uppercase;
@@ -1530,14 +1609,13 @@ export const GlobalStyles = createGlobalStyle`
 				display: flex;
 				align-items: center;
 				cursor: pointer;
-				height: 32px;
+				height: 34px;
 				border: none;
-				border-radius: 10px;
+				border-radius: 8px;
 				background-color: ${({ theme }) => theme.assetSelectBackgroundColor};
 				box-shadow: none;
-				padding: 0 9px;
-				color: ${({ theme }) => theme.formControlText};
-				font-family: "normal";
+				padding: 0 1rem;
+				color: ${({ theme }) => theme.buttonText};
 				font-size: 14px;
 			}
 
@@ -1548,6 +1626,8 @@ export const GlobalStyles = createGlobalStyle`
 
 			.swap-form .asset-select-button span {
 				position: relative;
+				font-family: 'bold', sans-serif !important;
+				color: #FFF;
 			}
 
 			.swap-form .asset-select-button img {
@@ -1564,10 +1644,6 @@ export const GlobalStyles = createGlobalStyle`
 
 			.swap-form .asset-select-button[data-empty=true] svg {
 				margin-left: 8px;
-			}
-
-			.asset-select-button[data-empty=true] {
-				background-color: ${({ theme }) => theme.primary};
 			}
 			
 			.asset-select-button img {
@@ -1604,8 +1680,9 @@ export const GlobalStyles = createGlobalStyle`
 				font-family: "normal", sans-serif;
 				background-color: ${({ theme }) => theme.swapFormControlBackgroundColor};
 				color: ${({ theme }) => theme.formControlText};
+				border: 1px solid ${({ theme }) => theme.swapFormControlBorderColor};
 				border-radius: 10px;
-				padding: 10px;
+				padding: 10px 23px;
 			}
 			
 			.invert-button {
@@ -1626,7 +1703,7 @@ export const GlobalStyles = createGlobalStyle`
 			}
 			
 			.invert-button:focus, .invert-button:hover {
-				border-color: ${({ theme }) => theme.primary};
+				opacity: 0.8;
 			}
 
 			.swap-form .action {
@@ -1641,17 +1718,18 @@ export const GlobalStyles = createGlobalStyle`
 
 			.swap-form .action svg {
 				position: absolute;
-				background-color: ${({ theme }) => theme.swapDividerColor};
+				background-color: ${({ theme }) => theme.actionBackgroundColor};
 				border: 1px solid transparent;
-				height: 25px;
-				width: 25px;
-				padding: 4px;
+				height: 45px;
+				width: 45px;
+				padding: 8px;
 				border-radius: 50%;
 				margin: auto;
+				color: #FFF;
 			}
 
 			.swap-form .action svg:hover {
-				border-color: ${({ theme }) => theme.primary};
+				border-color: ${({ theme }) => theme.swapFormControlBorderColor};
 			}
 			
 			.action {
@@ -1671,13 +1749,13 @@ export const GlobalStyles = createGlobalStyle`
 				font-family: "normal";
 				z-index: 5;
 				margin-top: 20px;
-				max-width: 400px;
+				// max-width: 400px;
 				width: 100%;
 				border-radius: 0 0 10px 10px;
 			}
 			
 			.exchange-button-container a {
-				color: ${({ theme }) => theme.primary};
+				color: #DE0102;
 				font-size: 13px;
 			}
 			
@@ -1686,8 +1764,7 @@ export const GlobalStyles = createGlobalStyle`
 			}
 			
 			.exchange-button-container p {
-				// color: ${({ theme }) => theme.formControlText};
-				color: #FFF;
+				color: ${({ theme }) => theme.formControlText};
 				text-align: center;
 				margin: 0.45rem 0;
 				font-size: 13px;
@@ -1696,15 +1773,17 @@ export const GlobalStyles = createGlobalStyle`
 			.exchange-button-container button {
 				cursor: pointer;
 				width: 100%;
-				height: 41px;
+				height: 45px;
 				border: none;
 				border-radius: 10px;
-				background-color: ${({ theme }) => theme.primary};
+				background-color: ${({ theme }) => theme.buttonBackgroundColor};
+				background: ${({ theme }) => theme.buttonBackground};
 				color: #FFF;
 				margin-top: 1rem;
-				font-weight : 600;
-				outline : none;
+				font-weight: 600;
+				outline: none;
 				font-size: 14px;
+				transition: 0.3s all ease;
 			}
 			
 			.exchange-button-container button:disabled, .remove-liquidity-actions button:disabled {
@@ -1716,11 +1795,12 @@ export const GlobalStyles = createGlobalStyle`
 				cursor: pointer;
 				box-shadow: none;
 				width: 100%;
-				margin: 2rem 0 1.5rem;
+				margin: 0 0 1.5rem;
 				height: 45px;
 				border: none;
 				border-radius: 10px;
-				background-color: ${({ theme }) => theme.primary};
+				background-color: ${({ theme }) => theme.buttonBackgroundColor};
+				background: ${({ theme }) => theme.buttonBackground};
 				color: #fff;
 				font-weight : bold;
 			}
@@ -1730,15 +1810,16 @@ export const GlobalStyles = createGlobalStyle`
 			}
 			
 			.pool-details .flex-spaced-container > div {
+				color: ${({ theme }) => theme.formControlText};
 				font-size: 15px;
 				font-family: "normal";
 			}
 			
 			.liquidity-section {
 				margin-top: 0.75rem;
-				background-color: ${({ theme }) => theme.formControlBackgroundColor};
+				background-color: ${({ theme }) => theme.swapFormControlBackgroundColor};
 				border-radius: 10px;
-				border: 2px solid ${({ theme }) => theme.formControlBorderColor};
+				border: 1px solid ${({ theme }) => theme.swapFormControlBorderColor};
 				max-height: 260px;
 				overflow: auto;
 				display: flex;
@@ -1748,7 +1829,6 @@ export const GlobalStyles = createGlobalStyle`
 			}
 			
 			.liquidity-section > span {
-				opacity: 0.5;
 				margin: 50px auto;
 				font-size: 14px;
 				color: ${({ theme }) => theme.formControlText};
@@ -1761,20 +1841,20 @@ export const GlobalStyles = createGlobalStyle`
 			
 			.pool-form .flex-spaced-container span {
 				font-family: "normal";
-				font-size: 16px;
+				font-size: 18px;
 			}
 			
 			.search-currency-input {
 				font-family: "normal", sans-serif;
 				border-radius: 15px;
 				color: ${({ theme }) => theme.formControlText};
-				border: 1px solid ${({ theme }) => theme.formControlBorderColor};
+				border: 1px solid ${({ theme }) => theme.swapFormControlBorderColor};
 				outline: none;
 				padding: 5px 10px;
-				height: 40px;
+				height: 45px;
 				width: 100%;
 				margin-bottom: 15px;
-				background-color: ${({ theme }) => theme.formControlBackgroundColor};
+				background-color: ${({ theme }) => theme.swapFormControlBackgroundColor};
 			}
 
 			.search-currency-input + div {
@@ -1816,7 +1896,7 @@ export const GlobalStyles = createGlobalStyle`
 			}
 			
 			.common-base img {
-				width: 24px;
+				width: auto;
 				height: 24px;
 				box-shadow: rgb(0 0 0 / 8%) 0px 6px 10px;
 				border-radius: 24px;
@@ -1828,20 +1908,14 @@ export const GlobalStyles = createGlobalStyle`
 				font-size: 16px;
 			}
 			
-			.currency-rows-container::before {
-				content: '';
-				height: 1px;
-				width: 360px;
-				position: absolute;
-				left: 0;
-				background-color: ${({ theme }) => theme.modalContentBackgroundColor};
-			}
-			
 			.currency-rows-container {
 				height: 328px;
-				width: 100%;
+				width: 90%;
+				margin: 0 auto 1.5rem;
 				overflow: auto;
 				background-color: ${({ theme }) => theme.modalContentBackgroundColor};
+				border: 1px solid ${({ theme }) => theme.swapFormControlBorderColor};
+				border-radius: 20px;
 			}
 			
 			.currency-row {
@@ -1855,7 +1929,7 @@ export const GlobalStyles = createGlobalStyle`
 				padding: 4px 24px;
 				height: 56px;
 				display: grid;
-				grid-template-columns: auto minmax(auto, 1fr) auto minmax(0px, 72px);
+				grid-template-columns: auto minmax(auto, 1fr) auto;
 				gap: 16px;
 				cursor: pointer;
 				opacity: 1;
@@ -1863,7 +1937,7 @@ export const GlobalStyles = createGlobalStyle`
 			}
 			
 			.currency-row img{
-				width: 24px;
+				width: auto;
 				height: 24px;
 				box-shadow: rgb(0 0 0 / 8%) 0px 6px 10px;
 				border-radius: 24px;
@@ -1881,6 +1955,7 @@ export const GlobalStyles = createGlobalStyle`
 			.lp-card {
 				width: 100%;
 				background-color: ${({ theme }) => theme.poolCardBackgroundColor};
+				border: 1px solid ${({ theme }) => theme.swapFormControlBorderColor};
 				border-radius: 10px;
 				padding: 10px;
 			}
@@ -1911,7 +1986,7 @@ export const GlobalStyles = createGlobalStyle`
 			}
 			
 			.lp-card-heading + a {
-				color: ${({ theme }) => theme.primary};
+				color: #DE0102;
 				font-family: "normal";
 				font-size: 13px;
 				text-decoration: underline;
@@ -1950,9 +2025,10 @@ export const GlobalStyles = createGlobalStyle`
 				width: 100%;
 				border: none;
 				border-radius: 10px;
-				background-color: ${({ theme }) => theme.primary};
+				background-color: ${({ theme }) => theme.buttonBackgroundColor};
+				background: ${({ theme }) => theme.buttonBackground};
 				color: #FFF;
-				height: 30px;
+				height: 40px;
 				font-size: 13px;
 			}
 
@@ -1973,15 +2049,15 @@ export const GlobalStyles = createGlobalStyle`
 			}
 			
 			.percent-slider .rc-slider-handle, .percent-slider .rc-slider-handle-click-focused:focus {
-				border-color: ${({ theme }) => theme.primary};
+				border-color: #DE0102;
 			}
 			
 			.percent-slider .rc-slider-track {
-				background-color: ${({ theme }) => theme.primary};
+				background-color: #DE0102;
 			}
 			
 			.percent-slider .rc-slider-handle:active, .percent-slider .rc-slider-handle:focus {
-				box-shadow: 0 0 5px ${({ theme }) => theme.primary};
+				box-shadow: 0 0 5px #DE0102;
 			}
 			
 			.percent-buttons {
@@ -2035,7 +2111,6 @@ export const GlobalStyles = createGlobalStyle`
 				position: relative;
 				z-index: 1;
 				top: 1px;
-				max-width: 400px;
 				width: 100%;
 				padding: 20px 0 0;
 				background-color: transparent;
@@ -2052,7 +2127,8 @@ export const GlobalStyles = createGlobalStyle`
 				border: none;
 				border-radius: 10px;
 				color: #fff;
-				background-color: ${({ theme }) => theme.primary};
+				background-color: ${({ theme }) => theme.buttonBackgroundColor};
+				background: ${({ theme }) => theme.buttonBackground};
 				width: 100%;
 			}
 			
@@ -2081,13 +2157,13 @@ export const GlobalStyles = createGlobalStyle`
 				cursor: pointer;
 				position: relative;
 				z-index: 1;
-				border: 1px solid ${({ theme }) => theme.formControlBorderColor};
-				background-color: ${({ theme }) => theme.formControlBackgroundColor};
+				border: 1px solid ${({ theme }) => theme.swapFormControlBorderColor};
+				background-color: ${({ theme }) => theme.swapFormControlBackgroundColor};
 				color: ${({ theme }) => theme.formControlText};
 			}
 			
 			.import-pool-select:hover, .import-pool-select:focus {
-				border-color: ${({ theme }) => theme.primary};
+				border-color: #DE0102;
 			}
 			
 			.import-pool-select > div {
@@ -2294,6 +2370,31 @@ export const GlobalStyles = createGlobalStyle`
 			}
 		}
 
+		.asset-card {
+			display: grid;
+			grid-auto-rows: auto;
+			border-radius: 20px;
+			width: 100%;
+			overflow: hidden;
+			position: relative;
+			opacity: 1;
+			background-color: ${({ theme }) => theme.assetCardBackgroundColor};
+			box-shadow: 4px 4px 25px #0000001F;
+			padding: 20px 20px 40px 50px;
+			border: 1px solid #7070704D;
+			transition: 0.3s all ease;
+		}
+
+		.asset-card .stake-card-heading {
+			color: ${({ theme }) => theme.formControlText} !important;
+		}
+
+		.asset-card > div:nth-child(2) > div > * {
+			color: ${({ theme }) => theme.formControlText} !important;
+			opacity: 0.8;
+			transition: 0.3s all ease;
+		}
+
 		@media only screen and (max-width: 600px) {
 				.stake-deposit-container {
 						padding-top: 30px !important;
@@ -2301,10 +2402,7 @@ export const GlobalStyles = createGlobalStyle`
 						overflow: scroll !important;
 				}
 				.header-lp{
-						display : flex;
-						flex-direction : column;
-						justify-content : space-between;
-						align-items : center;
+					padding: 0;
 				}
 
 				.total-liquidity{
@@ -2312,10 +2410,33 @@ export const GlobalStyles = createGlobalStyle`
 						font-size: 18px;
 						font-weight : 500;
 				}
+				
+				.sale-block-outer-container, .asset-card {
+					padding: 1rem 1.5rem;
+				}
 		}
 
-		.navbar-burger svg {
-			stroke-width: 0;
+		@media only screen and (max-width: 500px) {
+			.header-lp {
+				flex-direction: column;
+				margin: 1rem auto;
+				text-align: center;
+			}
+		}
+
+		@media only screen and (max-width: 450px) {
+			.asset-card > div:nth-child(1) {
+				display: flex !important;
+				flex-direction: column !important;
+			}
+
+			.asset-card > div:nth-child(2) > div > div:nth-child(2) {
+				text-align: right;
+			}
+
+			.asset-card .stake-card-heading {
+				margin: 0.5rem 0 1rem !important;
+			}
 		}
 
 		.sidebar .ant-drawer-close {
@@ -2386,12 +2507,6 @@ export const GlobalStyles = createGlobalStyle`
 		.sidebar ul li a.active-page, .sidebar ul li a.active-page svg, .navbar-pages-container a.active-page svg {
 			font-weight: bold;
 			color: ${({ theme }) => theme.pageLinkTextPrimary};
-		}
-
-		@media only screen and (min-width: 821px) {
-			.navbar-burger, .sidebar {
-				display: none;
-			}
 		}
 
 		@media only screen and (max-width: 820px) {
@@ -2483,6 +2598,10 @@ export const GlobalStyles = createGlobalStyle`
 		@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 		@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
 
+		.swap-form .form-control > div .pool-balance {
+			font-size: 14px !important;
+		}
+
 		.app-sidebar {
 			position: fixed;
 			left: 0;
@@ -2492,11 +2611,13 @@ export const GlobalStyles = createGlobalStyle`
 			background-color: #F8F9FA;
 			padding-top: 30px;
 			border-right: 1px solid #D9D9D9;
-			transition: 0.3s all ease;
+			transition: 0.25s all ease;
 		}
 
-		.sidebar-hidden {
-			width: 0;
+		@media only screen and (max-width: 1200px) {
+			.app-sidebar {
+				display: none;
+			}
 		}
 
 		.app-links {
@@ -2577,23 +2698,27 @@ export const GlobalStyles = createGlobalStyle`
 			margin-bottom: 0.5rem;
 		}
 
-		.app-container {
-			width: 100%;
-			padding-left: 230px;
-			background-color: #FFF;
-			min-height: 100vh;
-		}
-
 		.app-bar {
 			padding: 24px 54px;
 			display: flex;
 			align-items: center;
 			justify-content: flex-end;
+			transition: 0.3s all ease;
+		}
+
+		@media only screen and (max-width: 960px) {
+			.app-bar {
+				padding: 24px;
+			}
 		}
 
 		.app-bar > div {
 			display: flex;
 			align-items: center;
+		}
+
+		.app-bar svg {
+			color: ${({ theme }) => theme.formControlText};
 		}
 
 		.app-bar > div > *:not(:last-child) {
@@ -2603,7 +2728,8 @@ export const GlobalStyles = createGlobalStyle`
 		.app-bar .connect-wallet-button {
 			cursor: pointer;
 			color: #FFF;
-			background-color: #333;
+			background-color: ${({ theme }) => theme.connectToWalletBackgroundColor};
+			background: ${({ theme }) => theme.connectToWalletBackground};
 			padding: 0.75rem 2rem;
 			border: none;
 			border-radius: 7px;
@@ -2623,17 +2749,33 @@ export const GlobalStyles = createGlobalStyle`
 			padding: 0.75rem;
 		}
 
+		@media only screen and (max-width: 960px) {
+			.app-bar .vrap-button {
+				display: none;
+			}
+
+			.app-bar .wallet-mobile-button {
+				margin-right: 0 !important;
+			}
+		}
+
 		.app-bar .settings-dropdown {
 			position: absolute;
 			z-index: 100;
 			top: 3rem;
 			right: 0;
 			min-width: 0;
-			width: 290px;
+			width: 300px;
 			padding: 12px;
 			border-radius: 7px;
 			background-color: #FFF;
 			box-shadow: 0px 0px 20px #00000033;
+		}
+
+		@media only screen and (max-width: 400px) {
+			.app-bar .settings-dropdown {
+				right: -5rem;
+			}
 		}
 
 		.app-bar .category {
@@ -2665,25 +2807,77 @@ export const GlobalStyles = createGlobalStyle`
 			border-top: 1px solid #D9D9D9;
 		}
 
-		.app-bar .details-dropdown .detail p {
+		.app-bar .details-dropdown .detail p, .landing-main .detail p {
 			font-family: 'bold', sans-serif;
 			font-size: 20px;
 			color: #E60000;
 			margin-bottom: 0;
 		}
 
-		.app-bar .details-dropdown .detail span {
+		.app-bar .details-dropdown .detail span, .landing-main .detail span {
 			font-family: 'bold', sans-serif;
-			color: #333;
+			color: ${({ theme }) => theme.formControlText};
 			font-size: 12px;
 		}
 
+		.landing-main .detail:not(:last-child) {
+			margin-bottom: 1.5rem;
+		}
+
+		.app-bar .burger, .app-bar .burger + img, .landing-logo {
+			display: none;
+		}
+
+		@media only screen and (max-width: 1200px) {
+			.app-bar {
+				align-items: center;
+				justify-content: space-between;
+			}
+
+			.app-bar .burger, .app-bar .burger + img, .landing-logo {
+				display: block;
+			}
+		}
+
+		.app-bar .wallet-mobile-button {
+			display: none;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			color: #FFF;
+			background-color: #333;
+			border: none;
+			border-radius: 7px;
+			box-shadow: none;
+			font-size: 15px;
+			padding: 0.75rem;
+		}
+
+		.app-bar .wallet-mobile-button svg {
+			color: #FFF;
+		}
+
+		@media only screen and (max-width: 1200px) {
+			.app-bar .wallet-mobile-button {
+				display: flex;
+			}
+
+			.app-bar .connect-wallet-button, .app-bar .wallet-details-container {
+				display: none;
+			}
+		}
+
+		.app-drawer .ant-drawer-body {
+			padding: 3.5rem 0 0;
+			background-color: #F8F9FA;
+		}
+
 		.landing-section h1 {
-			color: #333;
+			color: ${({ theme }) => theme.formControlText} !important;
 		}
 
 		.landing-section-inverted h1, .landing-section-centered h1 {
-			color: rgba(0, 0, 0, 0.7) !important;
+			color: ${({ theme }) => theme.landingHeading} !important;
 		}
 
 		.landing-main h1 span {
@@ -2691,7 +2885,7 @@ export const GlobalStyles = createGlobalStyle`
 		}
 
 		.landing-main p {
-			color: #333;
+			color: ${({ theme }) => theme.landingParagraph};
 			opacity: 0.8;
 		}
 
@@ -2699,7 +2893,8 @@ export const GlobalStyles = createGlobalStyle`
 			margin-top: 4rem;
 			border: none;
 			border-radius: 7px;
-			background-color: #333;
+			background-color: ${({ theme }) => theme.buttonBackgroundColor};
+			background: ${({ theme }) => theme.buttonBackground};
 			color: #FFF;
 			box-shadow: none;
 			cursor: pointer;
@@ -2727,9 +2922,10 @@ export const GlobalStyles = createGlobalStyle`
 			padding: 28px 21px;
 			max-width: 26%;
 			min-width: 26%;
-			background-color: #FFF;
+			background-color: ${({ theme }) => theme.landingCardBackgroundColor};
 			border-radius: 20px;
 			box-shadow: 4px 4px 30px #00000029;
+			transition: 0.3s all ease;
 		}
 
 		.landing-card .icon {
@@ -2746,10 +2942,12 @@ export const GlobalStyles = createGlobalStyle`
 
 		.landing-card h2 {
 			font-size: 1.65rem;
-			color: #000;
+			color: ${({ theme }) => theme.landingHeading} !important;
+			transition: 0.3s all ease;
 		}
 
 		.landing-card p {
-			color: rgba(0, 0, 0, 0.8);
+			color: ${({ theme }) => theme.landingParagraph};
+			transition: 0.3s all ease;
 		}
 `;

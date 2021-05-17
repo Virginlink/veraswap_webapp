@@ -74,21 +74,7 @@ class AssetCard extends React.Component {
 		const { icons, ticker } = this.props.data;
 		let { totalDeposit, poolRate } = this.state;
 		return (
-			<div
-				style={{
-					display: "grid",
-					gridAutoRows: "auto",
-					borderRadius: "20px",
-					width: "100%",
-					overflow: "hidden",
-					position: "relative",
-					opacity: 1,
-					backgroundColor: "#FFF",
-					boxShadow: "4px 4px 25px #0000001F",
-					padding: "20px 20px 40px 50px",
-					border: "1px solid #7070704D",
-				}}
-			>
+			<div className="asset-card">
 				<div
 					style={{
 						display: "grid",

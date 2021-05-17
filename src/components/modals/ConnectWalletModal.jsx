@@ -60,6 +60,7 @@ const ConnectWalletModal = ({
 					display: "flex",
 					borderRadius: "20px",
 					margin: "0 0 2rem",
+					padding: "1.5rem 0.5rem",
 				},
 			}}
 		>
@@ -71,7 +72,7 @@ const ConnectWalletModal = ({
 					{showWalletConnection ? (
 						walletConnected ? (
 							<div className="modal-header">
-								<div>Account</div>
+								<h3 style={{ flex: "1 1 0%", textAlign: "center" }}>Account</h3>
 							</div>
 						) : (
 							<div className="modal-back-header">
@@ -88,11 +89,11 @@ const ConnectWalletModal = ({
 						</div>
 					) : (
 						<div className="modal-header">
-							<div>Connect to a wallet</div>
+							<h3 style={{ flex: "1 1 0%", textAlign: "center" }}>Connect to a wallet</h3>
 						</div>
 					)}
 					<div
-						style={{ padding: !showWalletConnection ? "2rem" : 0 }}
+						style={{ padding: !showWalletConnection ? "2rem 2rem 0" : 0 }}
 						className={`${showWalletConnection ? "wallet-main-container" : "modal-content"}`}
 					>
 						{showWalletConnection ? (

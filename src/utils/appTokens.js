@@ -10,7 +10,7 @@
 // } from "./contracts";
 // import Empty from "../assets/icons/Empty.png";
 import BNB from "../assets/images/bnb.png";
-import VRAP from "../assets/images/logo.png";
+import VRAP from "../assets/images/vrap-red.svg";
 import LIT from "../assets/images/lit.webp";
 
 // const TESTNET_TOKENS = [

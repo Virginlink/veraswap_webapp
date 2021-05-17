@@ -48,9 +48,12 @@ class RemoveLP extends Component {
 		return (
 			<>
 				<div className="pool-form">
-					<div className="flex-spaced-container" style={{ marginBottom: "1.5rem" }}>
+					<div
+						className="flex-spaced-container"
+						style={{ marginBottom: "1.5rem", color: theme === "light" ? "#333" : "#FFF" }}
+					>
 						<IoArrowBackSharp
-							size={16}
+							size={24}
 							style={{ cursor: "pointer" }}
 							onClick={() => history.goBack()}
 						/>
@@ -59,15 +62,15 @@ class RemoveLP extends Component {
 							title="Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
 							placement="bottom"
 						>
-							<AiOutlineQuestionCircle size={16} />
+							<AiOutlineQuestionCircle size={24} />
 						</Tooltip>
 					</div>
 					<div className="form-control">
 						<div
 							style={{
-								fontFamily: "PT Sans Caption",
+								fontFamily: "normal",
 								textTransform: "none",
-								fontSize: "14px",
+								fontSize: "16px",
 							}}
 						>
 							Amount
@@ -117,7 +120,7 @@ class RemoveLP extends Component {
 						</div>
 					</div>
 					<div className="action">
-						<MdArrowDownward />
+						<MdArrowDownward size={24} />
 					</div>
 					<div className="form-control" style={{ textTransform: "none" }}>
 						<div
@@ -171,7 +174,8 @@ class RemoveLP extends Component {
 						style={{
 							alignItems: "flex-start",
 							marginTop: "1rem",
-							fontFamily: "PT Sans Caption",
+							fontFamily: "normal",
+							color: theme === "light" ? "#333" : "#FFF",
 						}}
 					>
 						<div>Price:</div>

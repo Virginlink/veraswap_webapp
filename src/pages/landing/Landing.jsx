@@ -27,9 +27,12 @@ class Landing extends Component {
 		} = this.props;
 		return (
 			<>
-				<Sidebar active="swap" theme={theme} onThemeToggle={onThemeToggle} />
+				<Sidebar theme={theme} onThemeToggle={onThemeToggle} />
 				<div className="app-container">
 					<AppBar
+						home
+						theme={theme}
+						onThemeToggle={onThemeToggle}
 						modalVisible={modalVisible}
 						onModalToggle={onModalToggle}
 						walletAddress={walletAddress}
@@ -40,12 +43,21 @@ class Landing extends Component {
 					<Container maxWidth="md">
 						<main className="landing-main">
 							<section className="landing-section">
-								<img width="400px" height="auto" src={Hero} alt="User friendly defi exchange" />
+								<>
+									<button onClick={() => history.push("/stake")} className="hidden-desktop">
+										Launch App <FiChevronRight size={26} />
+									</button>
+									<img width="400px" height="100%" src={Hero} alt="User friendly defi exchange" />
+								</>
 								<div>
 									<h1>
 										<span>User-friendly</span> Decentralized Exchange
 									</h1>
-									<p>
+									<p className="hidden-desktop">
+										VeraSwap is a user-friendly decentralized exchange running on Binance Smart
+										Chain (BSC)
+									</p>
+									<p className="hidden-tablet">
 										VeraSwap is a user-friendly decentralized exchange running on Binance Smart
 										Chain (BSC), with lots of other features that let you stake and earn tokens.
 										<br />
@@ -53,13 +65,27 @@ class Landing extends Component {
 										It's fast, cheap, and secure, hence anyone can use it without any prior
 										knowledge.
 									</p>
-									<button onClick={() => history.push("/sale")}>
+									<div className="hidden-desktop">
+										<div className="detail">
+											<p>$0.05</p>
+											<span>VRAP Price</span>
+										</div>
+										<div className="detail">
+											<p>100,000,000</p>
+											<span>VRAP in circulation</span>
+										</div>
+										<div className="detail">
+											<p>100,000,000</p>
+											<span>Total supply</span>
+										</div>
+									</div>
+									<button onClick={() => history.push("/stake")} className="hidden-tablet">
 										Launch App <FiChevronRight size={26} />
 									</button>
 								</div>
 							</section>
 							<section className="landing-section-inverted">
-								<img width="500px" height="auto" src={WhyVeraswap} alt="Why veraswap?" />
+								<img width="500px" height="100%" src={WhyVeraswap} alt="Why veraswap?" />
 								<div>
 									<h1>
 										Why <span>VeraSwap?</span>
@@ -87,7 +113,7 @@ class Landing extends Component {
 								</p>
 								<img
 									width="500px"
-									height="auto"
+									height="100%"
 									src={DefiProtocols}
 									alt="Defi Protocols"
 									style={{ marginTop: "4rem" }}
@@ -100,21 +126,21 @@ class Landing extends Component {
 								<div className="landing-cards-container">
 									<div className="landing-card">
 										<div className="icon">
-											<img width="35px" height="auto" src={Swap} alt="swap" />
+											<img width="35px" height="100%" src={Swap} alt="swap" />
 										</div>
 										<h2>Swap</h2>
 										<p>Swap or exchange two tokens on the Binance Smart Chain</p>
 									</div>
 									<div className="landing-card">
 										<div className="icon">
-											<img width="35px" height="auto" src={Stake} alt="stake" />
+											<img width="35px" height="100%" src={Stake} alt="stake" />
 										</div>
 										<h2>Stake</h2>
 										<p>Earn VRAP tokens by staking in your favorite pools</p>
 									</div>
 									<div className="landing-card">
 										<div className="icon">
-											<img width="35px" height="auto" src={Pool} alt="pool" />
+											<img width="35px" height="100%" src={Pool} alt="pool" />
 										</div>
 										<h2>Pool</h2>
 										<p>

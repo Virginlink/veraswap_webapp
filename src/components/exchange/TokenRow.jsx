@@ -81,7 +81,6 @@ export default class TokenRow extends Component {
 						{token.name}
 					</div>
 				</div>
-				<span />
 				{walletConnected && walletAddress && (
 					<div style={{ justifySelf: "flex-end" }}>
 						{importToken ? (

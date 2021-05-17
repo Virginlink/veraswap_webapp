@@ -1,12 +1,22 @@
 import React, { Component } from "react";
 import { ClickAwayListener, Fade } from "@material-ui/core";
-import Logo from "../assets/images/vrap-white.svg";
-import { RiSettingsFill } from "react-icons/ri";
+import LogoWhite from "../assets/images/vrap-white.svg";
+import { ExpertModeModal } from "./modals";
+import { FaMedium, FaTelegramPlane, FaTwitter } from "react-icons/fa";
+import Logo from "../assets/images/vrap-red.svg";
+import Stake from "../assets/icons/stake.svg";
+import Swap from "../assets/icons/swap.svg";
+import Pool from "../assets/icons/pool.svg";
+import Blog from "../assets/icons/blog.svg";
+import Docs from "../assets/icons/docs.svg";
+import { RiSettingsFill, RiWallet3Fill } from "react-icons/ri";
+import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import { AccountAvatar } from "../assets/icons/ReactIcons";
 import AppContext from "../state/AppContext";
-import "./AppBar.css";
-
-export default class AppBar extends Component {
+import { Drawer } from "antd";
+import "./Sidebar.css";
+import { withRouter } from "react-router";
+class AppBar extends Component {
 	static contextType = AppContext;
 
 	constructor(props) {
@@ -18,15 +28,27 @@ export default class AppBar extends Component {
 			deadline: "",
 			settingsMenuVisible: false,
 			vrapDetailsVisible: false,
+			sidebarVisible: false,
+			expertModeConfirmationModalVisible: false,
+			expertMode: false,
+			darkMode: false,
 		};
 	}
 
 	componentDidMount() {
 		const { deadline, slippage } = this.context;
+		const { theme } = this.props;
 		this.setState({
 			deadline: deadline,
 			slippage: slippage,
 		});
+		const expertMode = localStorage.getItem("expertMode");
+		if (theme === "dark") {
+			this.setState({ darkMode: true });
+		}
+		if (expertMode === "true") {
+			this.setState({ expertMode: true });
+		}
 	}
 
 	componentDidUpdate() {
@@ -97,6 +119,52 @@ export default class AppBar extends Component {
 		}));
 	};
 
+	toggleSidebar = () => {
+		this.setState((state) => ({
+			sidebarVisible: !state.sidebarVisible,
+		}));
+	};
+
+	navigateTo = (e, path) => {
+		e.preventDefault();
+		this.props.history.push(path);
+	};
+
+	toggleExpertMode = () => {
+		const { expertMode } = this.state;
+		if (expertMode) {
+			this.setState({ expertMode: false }, () => localStorage.setItem("expertMode", "false"));
+		} else {
+			this.setState({
+				expertModeConfirmationModalVisible: true,
+			});
+		}
+	};
+
+	turnOnExpertMode = () => {
+		const promptValue = prompt('Please type the word "confirm" to enable expert mode.');
+		if (promptValue === "confirm") {
+			this.setState(
+				{
+					expertMode: true,
+					expertModeConfirmationModalVisible: false,
+				},
+				() => localStorage.setItem("expertMode", "true")
+			);
+		}
+	};
+
+	toggleDarkMode = () => {
+		this.setState(
+			(state) => {
+				return {
+					darkMode: !state.darkMode,
+				};
+			},
+			() => this.props.onThemeToggle()
+		);
+	};
+
 	render() {
 		const {
 			settingsMenuVisible,
@@ -105,158 +173,197 @@ export default class AppBar extends Component {
 			deadline,
 			localDeadline,
 			vrapDetailsVisible,
+			sidebarVisible,
+			expertModeConfirmationModalVisible,
+			expertMode,
+			darkMode,
 		} = this.state;
-		const { onModalToggle, walletAddress, walletConnected, ethBalance } = this.props;
+		const { onModalToggle, walletAddress, walletConnected, ethBalance, home, history } = this.props;
 		return (
 			<nav className="app-bar">
 				<div>
-					<ClickAwayListener onClickAway={this.handleMenuClose}>
-						<div style={{ position: "relative" }}>
-							<RiSettingsFill
-								size={24}
-								style={{ cursor: "pointer", position: "relative", top: "3px", userSelect: "none" }}
-								onClick={this.toggleSettingsMenu}
-							/>
-							<Fade in={settingsMenuVisible}>
-								<div className="settings-dropdown">
-									<div className="category">Slippage Tolerance</div>
-									<div className="settings-button-group">
-										<button
-											className={`tolerance-button ${slippage === "0.1" && "tolerance-active"}`}
-											onClick={() =>
-												this.setState(
-													{
-														slippage: "0.1",
-													},
-													() => this.context.updateSlippage("0.1")
-												)
-											}
+					<div className="burger" onClick={this.toggleSidebar}>
+						<HiOutlineMenuAlt2 size={30} />
+					</div>
+					{!home && (
+						<img src={Logo} alt="VRAP" width="40" height="100%" onClick={() => history.push("/")} />
+					)}
+				</div>
+				{home && (
+					<img
+						src={Logo}
+						alt="VRAP"
+						width="60"
+						height="100%"
+						className="landing-logo"
+						onClick={() => history.push("/")}
+					/>
+				)}
+				<div>
+					{!home && (
+						<ClickAwayListener onClickAway={this.handleMenuClose}>
+							<div style={{ position: "relative" }}>
+								<RiSettingsFill
+									size={24}
+									style={{
+										cursor: "pointer",
+										position: "relative",
+										top: "3px",
+										userSelect: "none",
+									}}
+									onClick={this.toggleSettingsMenu}
+								/>
+								<Fade in={settingsMenuVisible}>
+									<div className="settings-dropdown">
+										<div className="category">Slippage Tolerance</div>
+										<div className="settings-button-group">
+											<button
+												className={`tolerance-button ${slippage === "0.1" && "tolerance-active"}`}
+												onClick={() =>
+													this.setState(
+														{
+															slippage: "0.1",
+														},
+														() => this.context.updateSlippage("0.1")
+													)
+												}
+											>
+												0.1%
+											</button>
+											<button
+												className={`tolerance-button ${slippage === "0.5" && "tolerance-active"}`}
+												onClick={() =>
+													this.setState(
+														{
+															slippage: "0.5",
+														},
+														() => this.context.updateSlippage("0.5")
+													)
+												}
+											>
+												0.5%
+											</button>
+											<button
+												className={`tolerance-button ${slippage === "1" && "tolerance-active"}`}
+												onClick={() =>
+													this.setState(
+														{
+															slippage: "1",
+														},
+														() => this.context.updateSlippage("1")
+													)
+												}
+											>
+												1%
+											</button>
+											<button tabIndex="-1" className="tolerance-input-button">
+												<div className="tolerance-input-container">
+													<input
+														className="tolerance-input"
+														onChange={this.handleSlippageChange}
+														placeholder={slippage}
+														value={localSlippage}
+													/>
+													<span
+														style={{
+															position: "relative",
+															top: "1px",
+														}}
+													>
+														%
+													</span>
+												</div>
+											</button>
+										</div>
+										{slippage === "0.1" && (
+											<div
+												style={{
+													fontSize: "14px",
+													paddingTop: "7px",
+													color: "rgb(243, 132, 30)",
+												}}
+											>
+												Your transaction may fail
+											</div>
+										)}
+										<div className="category" style={{ marginTop: "20px" }}>
+											Transaction Deadline
+										</div>
+										<div
+											className="tolerance-input-container"
+											style={{ width: "200px", margin: "0 auto 1rem" }}
 										>
-											0.1%
-										</button>
-										<button
-											className={`tolerance-button ${slippage === "0.5" && "tolerance-active"}`}
-											onClick={() =>
-												this.setState(
-													{
-														slippage: "0.5",
-													},
-													() => this.context.updateSlippage("0.5")
-												)
-											}
-										>
-											0.5%
-										</button>
-										<button
-											className={`tolerance-button ${slippage === "1" && "tolerance-active"}`}
-											onClick={() =>
-												this.setState(
-													{
-														slippage: "1",
-													},
-													() => this.context.updateSlippage("1")
-												)
-											}
-										>
-											1%
-										</button>
-										<button tabIndex="-1" className="tolerance-input-button">
-											<div className="tolerance-input-container">
+											<button tabIndex="-1" className="tolerance-input-button">
 												<input
 													className="tolerance-input"
-													onChange={this.handleSlippageChange}
-													placeholder={slippage}
-													value={localSlippage}
-												/>
-												<span
+													onChange={this.handleDeadlineChange}
+													placeholder={deadline}
 													style={{
-														position: "relative",
-														top: "1px",
+														color: localDeadline === "0" && "red",
 													}}
-												>
-													%
-												</span>
-											</div>
-										</button>
-									</div>
-									{slippage === "0.1" && (
-										<div
-											style={{
-												fontSize: "14px",
-												paddingTop: "7px",
-												color: "rgb(243, 132, 30)",
-											}}
-										>
-											Your transaction may fail
-										</div>
-									)}
-									<div className="category" style={{ marginTop: "20px" }}>
-										Transaction Deadline
-									</div>
-									<div
-										className="tolerance-input-container"
-										style={{ width: "200px", margin: "0 auto 1rem" }}
-									>
-										<button tabIndex="-1" className="tolerance-input-button">
-											<input
-												className="tolerance-input"
-												onChange={this.handleDeadlineChange}
-												placeholder={deadline}
+													value={localDeadline}
+												/>
+											</button>
+											<span
 												style={{
-													color: localDeadline === "0" && "red",
+													paddingLeft: "8px",
+													fontSize: "14px",
 												}}
-												value={localDeadline}
-											/>
-										</button>
-										<span
-											style={{
-												paddingLeft: "8px",
-												fontSize: "14px",
-											}}
-										>
-											minutes
-										</span>
+											>
+												minutes
+											</span>
+										</div>
 									</div>
-								</div>
-							</Fade>
-						</div>
-					</ClickAwayListener>
-					{walletConnected ? (
-						<div className="wallet-details-container">
-							<div className="wallet-balance" style={{ flexShrink: 0 }}>
-								{ethBalance === "" ? 0.0 : parseFloat(ethBalance).toFixed(3)} BNB
+								</Fade>
 							</div>
-							<button className="wallet-address-button" onClick={onModalToggle}>
-								<p>
-									{`${walletAddress}`.substring(0, 6) +
-										"..." +
-										`${walletAddress}`.substring(37, 42)}
-								</p>
-								<div
-									style={{
-										borderRadius: "50px",
-										overflow: "hidden",
-										padding: 0,
-										margin: 0,
-										width: "16px",
-										height: "16px",
-										display: "inline-block",
-									}}
-								>
-									<AccountAvatar />
-								</div>
+						</ClickAwayListener>
+					)}
+					{walletConnected ? (
+						<>
+							<button className="wallet-mobile-button" onClick={onModalToggle}>
+								<RiWallet3Fill size={24} />
 							</button>
-						</div>
+							<div className="wallet-details-container">
+								<div className="wallet-balance" style={{ flexShrink: 0 }}>
+									{ethBalance === "" ? 0.0 : parseFloat(ethBalance).toFixed(3)} BNB
+								</div>
+								<button className="wallet-address-button" onClick={onModalToggle}>
+									<p>
+										{`${walletAddress}`.substring(0, 6) +
+											"..." +
+											`${walletAddress}`.substring(37, 42)}
+									</p>
+									<div
+										style={{
+											borderRadius: "50px",
+											overflow: "hidden",
+											padding: 0,
+											margin: 0,
+											width: "16px",
+											height: "16px",
+											display: "inline-block",
+										}}
+									>
+										<AccountAvatar />
+									</div>
+								</button>
+							</div>
+						</>
 					) : (
-						<button className="connect-wallet-button" onClick={onModalToggle}>
-							Connect to a wallet
-						</button>
+						<>
+							<button className="wallet-mobile-button" onClick={onModalToggle}>
+								<RiWallet3Fill size={24} />
+							</button>
+							<button className="connect-wallet-button" onClick={onModalToggle}>
+								Connect to a wallet
+							</button>
+						</>
 					)}
 					<div>
 						<ClickAwayListener onClickAway={() => this.setState({ vrapDetailsVisible: false })}>
 							<div style={{ position: "relative" }}>
 								<button className="vrap-button" onClick={this.toggleVRAPDetails}>
-									<img src={Logo} alt="VRAP" height="20px" width="auto" />
+									<img src={LogoWhite} alt="VRAP" height="20px" width="auto" />
 								</button>
 								<Fade in={vrapDetailsVisible}>
 									<div className="details-dropdown">
@@ -279,7 +386,120 @@ export default class AppBar extends Component {
 						</ClickAwayListener>
 					</div>
 				</div>
+				<Drawer
+					onClose={this.toggleSidebar}
+					maskClosable
+					closable
+					visible={sidebarVisible}
+					placement="left"
+					className="app-drawer"
+				>
+					<div className="sidebar-logo">
+						<a href="/" onClick={(e) => this.navigateTo(e, "/")}>
+							<img src={Logo} height="50px" width="auto" alt="VRAP" />
+						</a>
+					</div>
+					<ul className="app-links">
+						<li>
+							<a href="/stake" onClick={(e) => this.navigateTo(e, "/stake")}>
+								<img src={Stake} alt="stake" height="20px" width="auto" />
+								Stake
+							</a>
+						</li>
+						<li>
+							<a href="/swap" onClick={(e) => this.navigateTo(e, "/swap")}>
+								<img src={Swap} alt="swap" height="20px" width="auto" />
+								Swap
+							</a>
+						</li>
+						<li>
+							<a href="/pool" onClick={(e) => this.navigateTo(e, "/pool")}>
+								<img
+									src={Pool}
+									alt="pool"
+									height="20px"
+									width="auto"
+									style={{ marginRight: "18px" }}
+								/>
+								Pool
+							</a>
+						</li>
+					</ul>
+					<ul className="app-links">
+						<li>
+							<a href="##" onClick={(e) => this.navigateTo(e, "/")}>
+								<img
+									src={Blog}
+									alt="blog"
+									height="23px"
+									width="auto"
+									style={{ marginRight: "22px" }}
+								/>
+								Blog
+							</a>
+						</li>
+						<li>
+							<a href="##" onClick={(e) => this.navigateTo(e, "/")}>
+								<img
+									src={Docs}
+									alt="docs"
+									height="23px"
+									width="auto"
+									style={{ marginRight: "26px" }}
+								/>
+								Docs
+							</a>
+						</li>
+					</ul>
+					<div className="interface-settings">
+						<span>Expert mode</span>
+						<div className="sidebar-switch">
+							<button data-enabled={!expertMode} onClick={this.toggleExpertMode}>
+								off
+							</button>
+							<button data-enabled={expertMode} onClick={this.toggleExpertMode}>
+								on
+							</button>
+						</div>
+					</div>
+					<div className="interface-settings">
+						<span>Dark mode</span>
+						<div className="sidebar-switch">
+							<button data-enabled={!darkMode} onClick={this.toggleDarkMode}>
+								off
+							</button>
+							<button data-enabled={darkMode} onClick={this.toggleDarkMode}>
+								on
+							</button>
+						</div>
+					</div>
+					<div className="app-sidebar-footer">
+						<div className="sidebar-social-links">
+							<a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+								<FaTwitter size={24} />
+							</a>
+							<a href="https://telegram.org" target="_blank" rel="noopener noreferrer">
+								<FaTelegramPlane size={24} />
+							</a>
+							<a href="https://medium.com" target="_blank" rel="noopener noreferrer">
+								<FaMedium size={24} />
+							</a>
+						</div>
+						<div className="sidebar-copyrights">&copy; 2021 Veraswap</div>
+					</div>
+					<ExpertModeModal
+						open={expertModeConfirmationModalVisible}
+						onClose={() =>
+							this.setState({
+								expertModeConfirmationModalVisible: false,
+							})
+						}
+						onConfirm={this.turnOnExpertMode}
+					/>
+				</Drawer>
 			</nav>
 		);
 	}
 }
+
+export default withRouter(AppBar);

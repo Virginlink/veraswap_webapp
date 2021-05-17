@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import moment from "moment";
 import { withRouter } from "react-router";
-import Navbar from "../components/Navbar";
 import Empty from "../assets/icons/Empty.png";
 import {
 	getLPInfo,
@@ -12,10 +11,12 @@ import {
 	removeLiquidity,
 	removeLiquidityWithBNB,
 } from "../utils/helpers";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress, Container } from "@material-ui/core";
 import { notification } from "antd";
 import RemoveLP from "../components/exchange/RemoveLP";
 import { PROVIDER } from "../utils/contracts";
+import Sidebar from "../components/Sidebar";
+import AppBar from "../components/AppBar";
 class RemoveLiquidityBNB extends Component {
 	constructor(props) {
 		super(props);
@@ -634,92 +635,98 @@ class RemoveLiquidityBNB extends Component {
 		} = this.props;
 		return (
 			<>
-				<Navbar
-					modalVisible={modalVisible}
-					onModalToggle={onModalToggle}
-					theme={theme}
-					onThemeToggle={onThemeToggle}
-					walletAddress={walletAddress}
-					walletConnected={walletConnected}
-					ethBalance={ethBalance}
-					vrapBalance={vrapBalance}
-				/>
-				<div className="container">
-					<div className="exchange-card">
-						<RemoveLP
-							theme={theme}
-							walletConnected={walletConnected}
-							walletAddress={walletAddress}
-							signer={signer}
-							liquidityInfo={liquidityInfo}
-							tokenA={tokenA}
-							tokenASupply={totalATokens}
-							tokenAIcon={tokenAIcon}
-							tokenB={tokenB}
-							tokenBSupply={totalBTokens}
-							tokenBIcon={tokenBIcon}
-							tokenAAmount={tokenAAmount}
-							tokenBAmount={tokenBAmount}
-							onAmountChange={this.updateAmount}
-							onMax={this.handleMax}
-							onPercentChange={this.handleSlider}
-							percent={percent}
-							tokensInPool={tokensInPool}
-							totalSUpply={totalSupply}
-						/>
-						{!walletConnected ? (
-							<div className="exchange-button-container">
-								<button onClick={onModalToggle}>Connect wallet</button>
+				<Sidebar active="pool" theme={theme} onThemeToggle={onThemeToggle} />
+				<div className="app-container">
+					<AppBar
+						theme={theme}
+						onThemeToggle={onThemeToggle}
+						modalVisible={modalVisible}
+						onModalToggle={onModalToggle}
+						walletAddress={walletAddress}
+						walletConnected={walletConnected}
+						ethBalance={ethBalance}
+						vrapBalance={vrapBalance}
+					/>
+					<Container maxWidth="md">
+						<div className="container">
+							<div className="exchange-card">
+								<RemoveLP
+									theme={theme}
+									walletConnected={walletConnected}
+									walletAddress={walletAddress}
+									signer={signer}
+									liquidityInfo={liquidityInfo}
+									tokenA={tokenA}
+									tokenASupply={totalATokens}
+									tokenAIcon={tokenAIcon}
+									tokenB={tokenB}
+									tokenBSupply={totalBTokens}
+									tokenBIcon={tokenBIcon}
+									tokenAAmount={tokenAAmount}
+									tokenBAmount={tokenBAmount}
+									onAmountChange={this.updateAmount}
+									onMax={this.handleMax}
+									onPercentChange={this.handleSlider}
+									percent={percent}
+									tokensInPool={tokensInPool}
+									totalSUpply={totalSupply}
+								/>
+								{!walletConnected ? (
+									<div className="exchange-button-container">
+										<button onClick={onModalToggle}>Connect wallet</button>
+									</div>
+								) : fetchingApproval ? (
+									<div className="remove-liquidity-actions">
+										<button disabled>
+											<CircularProgress
+												size={14}
+												thickness={5}
+												style={{ color: theme === "light" ? "#DE0102" : "#DEB501" }}
+											/>
+										</button>
+										<button disabled>Remove</button>
+									</div>
+								) : parseFloat(lpAllowance) === 0 ||
+								  parseFloat(liquidity) > parseFloat(lpAllowance) ? (
+									<div className="remove-liquidity-actions">
+										<button disabled={percent === 0 || approvingLP} onClick={this.approve}>
+											Approve{" "}
+											{approvingLP && (
+												<CircularProgress
+													size={14}
+													thickness={5}
+													style={{
+														color: theme === "light" ? "#DE0102" : "#DEB501",
+														position: "relative",
+														top: "1px",
+													}}
+												/>
+											)}
+										</button>
+										<button disabled>Remove</button>
+									</div>
+								) : (
+									<div className="remove-liquidity-actions">
+										<button disabled>Approved</button>
+										<button disabled={percent === 0 || removingLP} onClick={this.removeLP}>
+											Remove{" "}
+											{removingLP && (
+												<CircularProgress
+													size={14}
+													thickness={5}
+													style={{
+														color: theme === "light" ? "#DE0102" : "#DEB501",
+														position: "relative",
+														top: "1px",
+													}}
+												/>
+											)}
+										</button>
+									</div>
+								)}
 							</div>
-						) : fetchingApproval ? (
-							<div className="remove-liquidity-actions">
-								<button disabled>
-									<CircularProgress
-										size={14}
-										thickness={5}
-										style={{ color: theme === "light" ? "#DE0102" : "#DEB501" }}
-									/>
-								</button>
-								<button disabled>Remove</button>
-							</div>
-						) : parseFloat(lpAllowance) === 0 || parseFloat(liquidity) > parseFloat(lpAllowance) ? (
-							<div className="remove-liquidity-actions">
-								<button disabled={percent === 0 || approvingLP} onClick={this.approve}>
-									Approve{" "}
-									{approvingLP && (
-										<CircularProgress
-											size={14}
-											thickness={5}
-											style={{
-												color: theme === "light" ? "#DE0102" : "#DEB501",
-												position: "relative",
-												top: "1px",
-											}}
-										/>
-									)}
-								</button>
-								<button disabled>Remove</button>
-							</div>
-						) : (
-							<div className="remove-liquidity-actions">
-								<button disabled>Approved</button>
-								<button disabled={percent === 0 || removingLP} onClick={this.removeLP}>
-									Remove{" "}
-									{removingLP && (
-										<CircularProgress
-											size={14}
-											thickness={5}
-											style={{
-												color: theme === "light" ? "#DE0102" : "#DEB501",
-												position: "relative",
-												top: "1px",
-											}}
-										/>
-									)}
-								</button>
-							</div>
-						)}
-					</div>
+						</div>
+					</Container>
 				</div>
 			</>
 		);

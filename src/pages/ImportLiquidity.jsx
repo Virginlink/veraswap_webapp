@@ -1,4 +1,4 @@
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress, Container } from "@material-ui/core";
 import { notification, Tooltip } from "antd";
 import React, { Component } from "react";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
@@ -7,9 +7,10 @@ import { IoArrowBackSharp } from "react-icons/io5";
 import { withRouter } from "react-router";
 import CurrencySelectModal from "../components/exchange/CurrencySelectModal";
 import LPCard from "../components/exchange/LPCard";
-import Navbar from "../components/Navbar";
 import { fetchPoolData, getLPAddress, getLPInfo, storePoolData } from "../utils/helpers";
 import { TOKENS } from "../utils/appTokens";
+import Sidebar from "../components/Sidebar";
+import AppBar from "../components/AppBar";
 
 class ImportLiquidity extends Component {
 	constructor(props) {
@@ -171,123 +172,128 @@ class ImportLiquidity extends Component {
 		} = this.props;
 		return (
 			<>
-				<Navbar
-					modalVisible={modalVisible}
-					onModalToggle={onModalToggle}
-					theme={theme}
-					onThemeToggle={onThemeToggle}
-					walletAddress={walletAddress}
-					walletConnected={walletConnected}
-					ethBalance={ethBalance}
-					vrapBalance={vrapBalance}
-				/>
-				<div className="container">
-					<div className="exchange-card">
-						<div className="pool-form">
-							<div
-								className="flex-spaced-container"
-								style={{
-									marginBottom: "1.5rem",
-									color: theme === "light" ? "#000" : "#FFF",
-								}}
-							>
-								<IoArrowBackSharp
-									size={16}
-									style={{ cursor: "pointer" }}
-									onClick={() => history.goBack()}
-								/>
-								<span>Import Pool</span>
-								<Tooltip
-									title="Use this tool to find pairs that don't automatically appear in the interface."
-									placement="bottom"
-								>
-									<AiOutlineQuestionCircle size={16} />
-								</Tooltip>
-							</div>
-							<button
-								className="import-pool-select"
-								style={{ marginBottom: "1rem" }}
-								onClick={this.toggleModalA}
-							>
-								<div>
+				<Sidebar active="pool" theme={theme} onThemeToggle={onThemeToggle} />
+				<div className="app-container">
+					<AppBar
+						theme={theme}
+						onThemeToggle={onThemeToggle}
+						modalVisible={modalVisible}
+						onModalToggle={onModalToggle}
+						walletAddress={walletAddress}
+						walletConnected={walletConnected}
+						ethBalance={ethBalance}
+						vrapBalance={vrapBalance}
+					/>
+					<Container maxWidth="md">
+						<div className="container">
+							<div className="exchange-card">
+								<div className="pool-form">
 									<div
+										className="flex-spaced-container"
 										style={{
-											display: "flex",
-											alignItems: "center",
+											marginBottom: "1.5rem",
+											color: theme === "light" ? "#000" : "#FFF",
 										}}
 									>
-										<img className="import-pool-select-icon" src={tokenAIcon} alt="token-1" />
-										<div style={{ fontWeight: 500 }}>{tokenA}</div>
-									</div>
-									<FiChevronDown size={15} />
-								</div>
-							</button>
-							<button className="import-pool-select" onClick={this.toggleModalB}>
-								<div>
-									{tokenB ? (
-										<div
-											style={{
-												display: "flex",
-												alignItems: "center",
-											}}
-										>
-											<img className="import-pool-select-icon" src={tokenBIcon} alt="token-1" />
-											<div style={{ fontWeight: 500 }}>{tokenB}</div>
-										</div>
-									) : (
-										<div
-											style={{
-												display: "flex",
-												alignItems: "center",
-											}}
-										>
-											<div style={{ fontWeight: 500 }}>Select a token</div>
-										</div>
-									)}
-									<FiChevronDown size={15} />
-								</div>
-							</button>
-							<div className="liquidity-section">
-								{walletConnected && walletAddress ? (
-									loading ? (
-										<div
-											style={{
-												padding: "2rem 0",
-												display: "flex",
-												alignItems: "center",
-												justifyContent: "center",
-											}}
-										>
-											<CircularProgress
-												size={16}
-												thickness={5}
-												style={{
-													color: theme === "light" ? "#DE0102" : "#DEB501",
-												}}
-											/>
-										</div>
-									) : !poolFound ? (
-										<span>You don’t have liquidity in this pool yet.</span>
-									) : (
-										<LPCard
-											walletAddress={walletAddress}
-											tokenA={tokenA}
-											tokenB={tokenB}
-											tokenAIcon={tokenAIcon}
-											tokenBIcon={tokenBIcon}
-											tokenAAddress={tokenAAddress}
-											tokenBAddress={tokenBAddress}
-											lpAddress={lpAddress}
-											importLP
-											onImport={this.importPool}
+										<IoArrowBackSharp
+											size={16}
+											style={{ cursor: "pointer" }}
+											onClick={() => history.goBack()}
 										/>
-									)
-								) : (
-									<span>Connect to a wallet.</span>
-								)}
+										<span>Import Pool</span>
+										<Tooltip
+											title="Use this tool to find pairs that don't automatically appear in the interface."
+											placement="bottom"
+										>
+											<AiOutlineQuestionCircle size={16} />
+										</Tooltip>
+									</div>
+									<button
+										className="import-pool-select"
+										style={{ marginBottom: "1rem" }}
+										onClick={this.toggleModalA}
+									>
+										<div>
+											<div
+												style={{
+													display: "flex",
+													alignItems: "center",
+												}}
+											>
+												<img className="import-pool-select-icon" src={tokenAIcon} alt="token-1" />
+												<div style={{ fontWeight: 500 }}>{tokenA}</div>
+											</div>
+											<FiChevronDown size={15} />
+										</div>
+									</button>
+									<button className="import-pool-select" onClick={this.toggleModalB}>
+										<div>
+											{tokenB ? (
+												<div
+													style={{
+														display: "flex",
+														alignItems: "center",
+													}}
+												>
+													<img className="import-pool-select-icon" src={tokenBIcon} alt="token-1" />
+													<div style={{ fontWeight: 500 }}>{tokenB}</div>
+												</div>
+											) : (
+												<div
+													style={{
+														display: "flex",
+														alignItems: "center",
+													}}
+												>
+													<div style={{ fontWeight: 500 }}>Select a token</div>
+												</div>
+											)}
+											<FiChevronDown size={15} />
+										</div>
+									</button>
+									<div className="liquidity-section">
+										{walletConnected && walletAddress ? (
+											loading ? (
+												<div
+													style={{
+														padding: "2rem 0",
+														display: "flex",
+														alignItems: "center",
+														justifyContent: "center",
+													}}
+												>
+													<CircularProgress
+														size={16}
+														thickness={5}
+														style={{
+															color: theme === "light" ? "#DE0102" : "#DEB501",
+														}}
+													/>
+												</div>
+											) : !poolFound ? (
+												<span>You don’t have liquidity in this pool yet.</span>
+											) : (
+												<LPCard
+													walletAddress={walletAddress}
+													tokenA={tokenA}
+													tokenB={tokenB}
+													tokenAIcon={tokenAIcon}
+													tokenBIcon={tokenBIcon}
+													tokenAAddress={tokenAAddress}
+													tokenBAddress={tokenBAddress}
+													lpAddress={lpAddress}
+													importLP
+													onImport={this.importPool}
+												/>
+											)
+										) : (
+											<span>Connect to a wallet.</span>
+										)}
+									</div>
+								</div>
 							</div>
 						</div>
-					</div>
+					</Container>
 				</div>
 				{tokenAModalVisible && (
 					<CurrencySelectModal

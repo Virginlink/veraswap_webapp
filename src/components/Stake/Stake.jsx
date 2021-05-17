@@ -66,7 +66,6 @@ class Stake extends Component {
 							className="total-liquidity"
 							style={{
 								marginTop: "1.75rem",
-								paddingTop: ".25rem",
 							}}
 						>
 							Total Liquidity:{" "}

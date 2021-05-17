@@ -41,6 +41,7 @@ export default class xPoolInfo extends React.Component {
 		return (
 			<div className="stake-deposits-info-banner">
 				<div
+					className="stake-deposits-container"
 					style={{
 						display: "flex",
 						justifyContent: "center",

@@ -2,6 +2,7 @@ import BNB from "../assets/images/eth.png";
 import LIT from "../assets/images/lit.webp";
 import SFP from "../assets/images/sfp.webp";
 import DAI from "../assets/images/dai.webp";
+import VRAP from "../assets/images/vrap-red.svg";
 import SWINGBY from "../assets/images/empty-token.webp";
 const TWT =
 	"https://github.com/trustwallet/assets/blob/master/blockchains/binance/assets/TWT-8C2/logo.png?raw=true";
@@ -14,7 +15,7 @@ export const TOKEN = [
 	{
 		name: "VeraSwap",
 		ticker: "VRAP",
-		icon: ["/static/media/logo.d65c2ffe.png"],
+		icon: [VRAP],
 		decimal: 0,
 		decimalCorrection: 18,
 		fetchPrice: true,
@@ -7801,7 +7802,7 @@ export const TOKEN = [
 	{
 		name: "VRAP-BNB",
 		ticker: "VRAP-BNB",
-		icon: ["/static/media/logo.d65c2ffe.png", BNB],
+		icon: [VRAP, BNB],
 		decimal: 0,
 		decimalCorrection: 18,
 		contractAddress: "0xcd01316afcafe8acfc59f4d9236bfcd8345f8f12",

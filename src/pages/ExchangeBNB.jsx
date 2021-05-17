@@ -18,10 +18,9 @@ import {
 	swapTokens,
 	swapTokensForBNB,
 } from "../utils/helpers";
-import { CircularProgress, Dialog } from "@material-ui/core";
+import { CircularProgress, Container, Dialog } from "@material-ui/core";
 import { notification, Tooltip } from "antd";
 import moment from "moment";
-import Navbar from "../components/Navbar";
 import { RiCloseFill } from "react-icons/ri";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { GrPowerCycle } from "react-icons/gr";
@@ -29,6 +28,8 @@ import AppContext from "../state/AppContext";
 import { PROVIDER, WBNB_ADDRESS } from "../utils/contracts";
 import { IoArrowDownSharp } from "react-icons/io5";
 import queryString from "query-string";
+import Sidebar from "../components/Sidebar";
+import AppBar from "../components/AppBar";
 
 var timerA = null;
 var timerB = null;
@@ -1720,211 +1721,355 @@ class ExchangeBNB extends Component {
 			parseFloat(tokenBAmount) * (parseFloat(this.context.slippage) / 100);
 		return (
 			<>
-				<Navbar
-					active="swap"
-					modalVisible={modalVisible}
-					onModalToggle={onModalToggle}
-					theme={theme}
-					onThemeToggle={onThemeToggle}
-					walletAddress={walletAddress}
-					walletConnected={walletConnected}
-					ethBalance={ethBalance}
-					vrapBalance={vrapBalance}
-				/>
-				<div className="container">
-					<div className="exchange-card">
-						<span className="sale-rotation"></span>
-						<span className="noise"></span>
-						<div style={{ zIndex: 1, position: "relative" }}>
-							<div className="tabs">
-								<a href="/swap" onClick={(e) => e.preventDefault()} className="tab-active">
-									Swap
-								</a>
-								<a
-									href="/pool"
-									onClick={(e) => {
-										e.preventDefault();
-										history.push("/pool");
-									}}
-								>
-									Liquidity
-								</a>
-							</div>
-							<Swap
-								fetchingTokenA={fetchingTokenA}
-								fetchingTokenB={fetchingTokenB}
-								invalidPair={invalidPair}
-								fetchingLiquidity={fetchingLiquidity}
-								walletConnected={walletConnected}
-								walletAddress={walletAddress}
-								signer={signer}
-								tokenA={tokenA}
-								tokenAIcon={tokenAIcon}
-								tokenABalance={tokenABalance}
-								tokenAAllowance={tokenAAllowance}
-								tokenB={tokenB}
-								tokenBIcon={tokenBIcon}
-								tokenBBalance={tokenBBalance}
-								tokenBAllowance={tokenBAllowance}
-								onTokenAUpdate={this.updateTokenA}
-								onTokenBUpdate={this.updateTokenB}
-								tokenAAmount={tokenAAmount}
-								tokenBAmount={tokenBAmount}
-								onAmountChange={this.updateAmount}
-								estimatingA={estimatingA}
-								estimatingB={estimatingB}
-								onMax={this.handleMax}
-								onTokenSwap={this.swapTokensInternal}
-								onRefresh={this.handleRefresh}
-								onPercentChange={this.handlePercentChange}
-							/>
-							{walletConnected ? (
-								!fetchingPrices && !fetchingTokenA && !fetchingTokenB ? (
-									!invalidPair ? (
-										tokenAPrice && tokenBPrice ? (
-											<div
-												style={{
-													display: "flex",
-													justifyContent: "center",
-													marginTop: "1rem",
-													fontSize: "13px",
-													color: theme === "light" ? "#000" : "#FFF",
-													fontFamily: "PT Sans Caption",
-													padding: "0 0.8rem",
-												}}
-											>
-												<div
-													style={{
-														display: "flex",
-														alignItems: "center",
-														color: "#FFF",
-													}}
-												>
-													{!inverted ? (
-														<div>
-															1 {tokenA} ~ {parseFloat(tokenAPrice).toFixed(6)} {tokenB}
-														</div>
-													) : (
-														<div>
-															1 {tokenB} ~ {parseFloat(tokenBPrice).toFixed(6)} {tokenA}
-														</div>
-													)}
-													<button className="invert-button" onClick={this.toggleInversion}>
-														<GrPowerCycle size={15} />
-													</button>
-												</div>
-											</div>
-										) : null
-									) : null
-								) : null
-							) : null}
-							<div className="details-section">
-								{walletConnected &&
-									!fetchingTokenA &&
-									!fetchingTokenB &&
-									tokenA &&
-									tokenB &&
-									tokenAAmount &&
-									tokenBAmount &&
-									!fetchingPrices &&
-									!invalidPair &&
-									minimumReceived > 0 && (
-										<div className="flex-spaced-container" style={{ fontSize: "13px" }}>
-											<div>
-												Minimum received{" "}
-												<Tooltip
-													placement="right"
-													title="Your transaction will revert if there is a large, unfavourable price movement before it is confirmed."
-												>
-													<AiOutlineQuestionCircle
+				<Sidebar active="swap" theme={theme} onThemeToggle={onThemeToggle} />
+				<div className="app-container">
+					<AppBar
+						theme={theme}
+						onThemeToggle={onThemeToggle}
+						modalVisible={modalVisible}
+						onModalToggle={onModalToggle}
+						walletAddress={walletAddress}
+						walletConnected={walletConnected}
+						ethBalance={ethBalance}
+						vrapBalance={vrapBalance}
+					/>
+					<Container maxWidth="md">
+						<div className="container">
+							<div className="exchange-card">
+								<div style={{ zIndex: 1, position: "relative" }}>
+									<div className="tabs">
+										<a href="/swap" onClick={(e) => e.preventDefault()} data-enabled={true}>
+											Swap
+										</a>
+										<a
+											href="/pool"
+											onClick={(e) => {
+												e.preventDefault();
+												history.push("/pool");
+											}}
+										>
+											Liquidity
+										</a>
+									</div>
+									<Swap
+										theme={theme}
+										fetchingTokenA={fetchingTokenA}
+										fetchingTokenB={fetchingTokenB}
+										invalidPair={invalidPair}
+										fetchingLiquidity={fetchingLiquidity}
+										walletConnected={walletConnected}
+										walletAddress={walletAddress}
+										signer={signer}
+										tokenA={tokenA}
+										tokenAIcon={tokenAIcon}
+										tokenABalance={tokenABalance}
+										tokenAAllowance={tokenAAllowance}
+										tokenB={tokenB}
+										tokenBIcon={tokenBIcon}
+										tokenBBalance={tokenBBalance}
+										tokenBAllowance={tokenBAllowance}
+										onTokenAUpdate={this.updateTokenA}
+										onTokenBUpdate={this.updateTokenB}
+										tokenAAmount={tokenAAmount}
+										tokenBAmount={tokenBAmount}
+										onAmountChange={this.updateAmount}
+										estimatingA={estimatingA}
+										estimatingB={estimatingB}
+										onMax={this.handleMax}
+										onTokenSwap={this.swapTokensInternal}
+										onRefresh={this.handleRefresh}
+										onPercentChange={this.handlePercentChange}
+									/>
+									{walletConnected ? (
+										!fetchingPrices && !fetchingTokenA && !fetchingTokenB ? (
+											!invalidPair ? (
+												tokenAPrice && tokenBPrice ? (
+													<div
 														style={{
-															position: "relative",
-															top: "2px",
-															cursor: "pointer",
+															display: "flex",
+															justifyContent: "center",
+															marginTop: "1rem",
+															fontSize: "13px",
+															fontFamily: "normal",
+															padding: "0 0.8rem",
 														}}
-													/>
-												</Tooltip>
+													>
+														<div
+															style={{
+																display: "flex",
+																alignItems: "center",
+																color: theme === "light" ? "#333" : "#FFF",
+															}}
+														>
+															{!inverted ? (
+																<div>
+																	1 {tokenA} ~ {parseFloat(tokenAPrice).toFixed(6)} {tokenB}
+																</div>
+															) : (
+																<div>
+																	1 {tokenB} ~ {parseFloat(tokenBPrice).toFixed(6)} {tokenA}
+																</div>
+															)}
+															<button className="invert-button" onClick={this.toggleInversion}>
+																<GrPowerCycle size={15} />
+															</button>
+														</div>
+													</div>
+												) : null
+											) : null
+										) : null
+									) : null}
+									<div className="details-section">
+										{walletConnected &&
+											!fetchingTokenA &&
+											!fetchingTokenB &&
+											tokenA &&
+											tokenB &&
+											tokenAAmount &&
+											tokenBAmount &&
+											!fetchingPrices &&
+											!invalidPair &&
+											minimumReceived > 0 && (
+												<div className="flex-spaced-container" style={{ fontSize: "13px" }}>
+													<div>
+														Minimum received{" "}
+														<Tooltip
+															placement="right"
+															title="Your transaction will revert if there is a large, unfavourable price movement before it is confirmed."
+														>
+															<AiOutlineQuestionCircle
+																style={{
+																	position: "relative",
+																	top: "2px",
+																	cursor: "pointer",
+																}}
+															/>
+														</Tooltip>
+													</div>
+													<div>
+														{(
+															parseFloat(tokenBAmount) -
+															parseFloat(tokenBAmount) * (parseFloat(this.context.slippage) / 100)
+														).toFixed(6)}{" "}
+														{tokenB}
+													</div>
+												</div>
+											)}
+										{walletConnected &&
+											!fetchingTokenA &&
+											!fetchingTokenB &&
+											tokenA &&
+											tokenB &&
+											tokenAAmount &&
+											tokenBAmount &&
+											!fetchingPrices &&
+											!fetchingLiquidity &&
+											liquidityInfo &&
+											impact &&
+											!invalidPair && (
+												<div className="flex-spaced-container" style={{ fontSize: "13px" }}>
+													<div>Price Impact</div>
+													<div data-high-impact={parseFloat(impact) > 20}>
+														{parseFloat(impact) < 0.01 ? "< 0.01" : impact} %
+													</div>
+												</div>
+											)}
+										{this.context.slippage !== "0.5" && (
+											<div className="flex-spaced-container" style={{ fontSize: "13px" }}>
+												<div>
+													Slippage Tolerance{" "}
+													<Tooltip
+														placement="right"
+														title="Slippage tolerance must be greater than the price impact or else trade will not be executed."
+													>
+														<AiOutlineQuestionCircle
+															style={{
+																position: "relative",
+																top: "2px",
+																cursor: "pointer",
+															}}
+														/>
+													</Tooltip>
+												</div>
+												<div>{this.context.slippage} %</div>
 											</div>
-											<div>
-												{(
-													parseFloat(tokenBAmount) -
-													parseFloat(tokenBAmount) * (parseFloat(this.context.slippage) / 100)
-												).toFixed(6)}{" "}
-												{tokenB}
+										)}
+										{!fetchingLiquidity && multipathSwap && (
+											<div className="flex-spaced-container" style={{ fontSize: "13px" }}>
+												<div>Route</div>
+												<div>{`${tokenA} > BNB > ${tokenB}`}</div>
 											</div>
+										)}
+									</div>
+									{!walletConnected ? (
+										<div className="exchange-button-container">
+											<button onClick={onModalToggle}>Connect wallet</button>
 										</div>
-									)}
-								{walletConnected &&
-									!fetchingTokenA &&
-									!fetchingTokenB &&
-									tokenA &&
-									tokenB &&
-									tokenAAmount &&
-									tokenBAmount &&
-									!fetchingPrices &&
-									!fetchingLiquidity &&
-									liquidityInfo &&
-									impact &&
-									!invalidPair && (
-										<div className="flex-spaced-container" style={{ fontSize: "13px" }}>
-											<div>Price Impact</div>
-											<div data-high-impact={parseFloat(impact) > 20}>
-												{parseFloat(impact) < 0.01 ? "< 0.01" : impact} %
-											</div>
+									) : !tokenA || !tokenB ? (
+										<div className="exchange-button-container">
+											<button disabled>Select a token</button>
 										</div>
-									)}
-								{this.context.slippage !== "0.5" && (
-									<div className="flex-spaced-container" style={{ fontSize: "13px" }}>
-										<div>
-											Slippage Tolerance{" "}
-											<Tooltip
-												placement="right"
-												title="Slippage tolerance must be greater than the price impact or else trade will not be executed."
-											>
-												<AiOutlineQuestionCircle
-													style={{
-														position: "relative",
-														top: "2px",
-														cursor: "pointer",
-													}}
+									) : fetchingTokenA || fetchingTokenB || loading || fetchingLiquidity ? (
+										<div className="exchange-button-container">
+											<button disabled>
+												<CircularProgress
+													size={12}
+													thickness={5}
+													style={{ color: "var(--primary)" }}
 												/>
-											</Tooltip>
+											</button>
 										</div>
-										<div>{this.context.slippage} %</div>
-									</div>
-								)}
-								{!fetchingLiquidity && multipathSwap && (
-									<div className="flex-spaced-container" style={{ fontSize: "13px" }}>
-										<div>Route</div>
-										<div>{`${tokenA} > BNB > ${tokenB}`}</div>
-									</div>
-								)}
-							</div>
-							{!walletConnected ? (
-								<div className="exchange-button-container">
-									<button onClick={onModalToggle}>Connect wallet</button>
-								</div>
-							) : !tokenA || !tokenB ? (
-								<div className="exchange-button-container">
-									<button disabled>Select a token</button>
-								</div>
-							) : fetchingTokenA || fetchingTokenB || loading || fetchingLiquidity ? (
-								<div className="exchange-button-container">
-									<button disabled>
-										<CircularProgress size={12} thickness={5} style={{ color: "var(--primary)" }} />
-									</button>
-								</div>
-							) : liquidityInfo ? (
-								liquidityInfo.hasLiquidity ? (
-									!invalidPair ? (
-										!tokenAAmount || !tokenBAmount ? (
-											<div className="exchange-button-container">
-												<button disabled>Enter an amount</button>
-											</div>
-										) : parseFloat(tokenAAmount) <= parseFloat(tokenABalance) ? (
-											tokenA !== "BNB" ? (
-												parseFloat(tokenAAmount) <= parseFloat(tokenAAllowance) ? (
-													parseFloat(impact) <= parseFloat(this.context.slippage) ? (
+									) : liquidityInfo ? (
+										liquidityInfo.hasLiquidity ? (
+											!invalidPair ? (
+												!tokenAAmount || !tokenBAmount ? (
+													<div className="exchange-button-container">
+														<button disabled>Enter an amount</button>
+													</div>
+												) : parseFloat(tokenAAmount) <= parseFloat(tokenABalance) ? (
+													tokenA !== "BNB" ? (
+														parseFloat(tokenAAmount) <= parseFloat(tokenAAllowance) ? (
+															parseFloat(impact) <= parseFloat(this.context.slippage) ? (
+																minimumReceived > 0 ? (
+																	<div className="exchange-button-container">
+																		<button
+																			style={
+																				parseFloat(impact) > 20
+																					? {
+																							backgroundColor: "#fd761f",
+																							borderColor: "#fd761f",
+																					  }
+																					: {}
+																			}
+																			onClick={() => {
+																				if (!estimatingA && !estimatingB) {
+																					this.setState({
+																						confirmationModalVisible: true,
+																					});
+																				}
+																			}}
+																			disabled={
+																				fetchingTokenA || fetchingTokenB || loading || swapping
+																			}
+																		>
+																			Swap
+																			{parseFloat(impact) > 20 && " anyway"}{" "}
+																			{swapping && (
+																				<CircularProgress
+																					size={12}
+																					thickness={5}
+																					style={{
+																						color: "var(--primary)",
+																						position: "relative",
+																						top: "1px",
+																					}}
+																				/>
+																			)}
+																		</button>
+																	</div>
+																) : (
+																	<div className="exchange-button-container">
+																		<button disabled>Slippage too high</button>
+																		<div
+																			style={{
+																				textAlign: "center",
+																				fontSize: "13px",
+																				color: "#FFF",
+																				margin: "8px auto 0",
+																			}}
+																		>
+																			Reduce slippage tolerance
+																		</div>
+																	</div>
+																)
+															) : (
+																<div className="exchange-button-container">
+																	<button disabled>High Price Impact</button>
+																	<div
+																		style={{
+																			textAlign: "center",
+																			fontSize: "13px",
+																			color: "#FFF",
+																			margin: "8px auto 0",
+																		}}
+																	>
+																		Set slippage higher than {impact} %
+																	</div>
+																</div>
+															)
+														) : parseFloat(tokenAAmount) > parseFloat(tokenAAllowance) ? (
+															<div className="exchange-button-container">
+																<button
+																	disabled={approvingTokenA || approving}
+																	style={{
+																		marginBottom: "0.25rem",
+																	}}
+																	onClick={() => {
+																		this.setState(
+																			{
+																				approvalToken: "A",
+																				approvalAmount: tokenAAmount,
+																			},
+																			() => this.handleModalToggle()
+																		);
+																	}}
+																>
+																	Approve {tokenA}{" "}
+																	{approvingTokenA && (
+																		<CircularProgress
+																			size={12}
+																			thickness={5}
+																			style={{
+																				color: "var(--primary)",
+																				position: "relative",
+																				top: "1px",
+																			}}
+																		/>
+																	)}
+																</button>
+																<button disabled>
+																	{!invalidPair && liquidityInfo && liquidityInfo.hasLiquidity
+																		? "Swap"
+																		: "Insufiicient liquidity for this trade"}
+																</button>
+															</div>
+														) : (
+															<div className="exchange-button-container">
+																<button
+																	style={
+																		parseFloat(impact) > 20
+																			? {
+																					backgroundColor: "#fd761f",
+																					borderColor: "#fd761f",
+																			  }
+																			: {}
+																	}
+																	onClick={() => {
+																		if (!estimatingA && !estimatingB) {
+																			this.setState({
+																				confirmationModalVisible: true,
+																			});
+																		}
+																	}}
+																	disabled={fetchingTokenA || fetchingTokenB || loading || swapping}
+																>
+																	Swap
+																	{parseFloat(impact) > 20 && " anyway"}{" "}
+																	{swapping && (
+																		<CircularProgress
+																			size={12}
+																			thickness={5}
+																			style={{
+																				color: "var(--primary)",
+																				position: "relative",
+																				top: "1px",
+																			}}
+																		/>
+																	)}
+																</button>
+															</div>
+														)
+													) : parseFloat(impact) <= parseFloat(this.context.slippage) ? (
 														minimumReceived > 0 ? (
 															<div className="exchange-button-container">
 																<button
@@ -1990,194 +2135,58 @@ class ExchangeBNB extends Component {
 															</div>
 														</div>
 													)
-												) : parseFloat(tokenAAmount) > parseFloat(tokenAAllowance) ? (
-													<div className="exchange-button-container">
-														<button
-															disabled={approvingTokenA || approving}
-															style={{
-																marginBottom: "0.25rem",
-															}}
-															onClick={() => {
-																this.setState(
-																	{
-																		approvalToken: "A",
-																		approvalAmount: tokenAAmount,
-																	},
-																	() => this.handleModalToggle()
-																);
-															}}
-														>
-															Approve {tokenA}{" "}
-															{approvingTokenA && (
-																<CircularProgress
-																	size={12}
-																	thickness={5}
-																	style={{
-																		color: "var(--primary)",
-																		position: "relative",
-																		top: "1px",
-																	}}
-																/>
-															)}
-														</button>
-														<button disabled>
-															{!invalidPair && liquidityInfo && liquidityInfo.hasLiquidity
-																? "Swap"
-																: "Insufiicient liquidity for this trade"}
-														</button>
-													</div>
 												) : (
 													<div className="exchange-button-container">
-														<button
-															style={
-																parseFloat(impact) > 20
-																	? {
-																			backgroundColor: "#fd761f",
-																			borderColor: "#fd761f",
-																	  }
-																	: {}
-															}
-															onClick={() => {
-																if (!estimatingA && !estimatingB) {
-																	this.setState({
-																		confirmationModalVisible: true,
-																	});
-																}
-															}}
-															disabled={fetchingTokenA || fetchingTokenB || loading || swapping}
-														>
-															Swap
-															{parseFloat(impact) > 20 && " anyway"}{" "}
-															{swapping && (
-																<CircularProgress
-																	size={12}
-																	thickness={5}
-																	style={{
-																		color: "var(--primary)",
-																		position: "relative",
-																		top: "1px",
-																	}}
-																/>
-															)}
-														</button>
-													</div>
-												)
-											) : parseFloat(impact) <= parseFloat(this.context.slippage) ? (
-												minimumReceived > 0 ? (
-													<div className="exchange-button-container">
-														<button
-															style={
-																parseFloat(impact) > 20
-																	? {
-																			backgroundColor: "#fd761f",
-																			borderColor: "#fd761f",
-																	  }
-																	: {}
-															}
-															onClick={() => {
-																if (!estimatingA && !estimatingB) {
-																	this.setState({
-																		confirmationModalVisible: true,
-																	});
-																}
-															}}
-															disabled={fetchingTokenA || fetchingTokenB || loading || swapping}
-														>
-															Swap
-															{parseFloat(impact) > 20 && " anyway"}{" "}
-															{swapping && (
-																<CircularProgress
-																	size={12}
-																	thickness={5}
-																	style={{
-																		color: "var(--primary)",
-																		position: "relative",
-																		top: "1px",
-																	}}
-																/>
-															)}
-														</button>
-													</div>
-												) : (
-													<div className="exchange-button-container">
-														<button disabled>Slippage too high</button>
-														<div
-															style={{
-																textAlign: "center",
-																fontSize: "13px",
-																color: "#FFF",
-																margin: "8px auto 0",
-															}}
-														>
-															Reduce slippage tolerance
-														</div>
+														<button disabled>Insufficient {tokenA} balance</button>
 													</div>
 												)
 											) : (
 												<div className="exchange-button-container">
-													<button disabled>High Price Impact</button>
-													<div
-														style={{
-															textAlign: "center",
-															fontSize: "13px",
-															color: "#FFF",
-															margin: "8px auto 0",
-														}}
-													>
-														Set slippage higher than {impact} %
-													</div>
+													<button disabled>Insufficient liquidity for this trade</button>
 												</div>
 											)
 										) : (
 											<div className="exchange-button-container">
-												<button disabled>Insufficient {tokenA} balance</button>
+												<button disabled>
+													{fetchingLiquidity ? (
+														<CircularProgress
+															size={12}
+															thickness={5}
+															style={{
+																color: "var(--primary)",
+																position: "relative",
+																top: "1px",
+															}}
+														/>
+													) : (
+														"Insufficient liquidity for this trade"
+													)}
+												</button>
 											</div>
 										)
 									) : (
 										<div className="exchange-button-container">
-											<button disabled>Insufficient liquidity for this trade</button>
+											<button disabled>
+												{fetchingLiquidity ? (
+													<CircularProgress
+														size={12}
+														thickness={5}
+														style={{
+															color: "var(--primary)",
+															position: "relative",
+															top: "1px",
+														}}
+													/>
+												) : (
+													"Insufficient liquidity for this trade"
+												)}
+											</button>
 										</div>
-									)
-								) : (
-									<div className="exchange-button-container">
-										<button disabled>
-											{fetchingLiquidity ? (
-												<CircularProgress
-													size={12}
-													thickness={5}
-													style={{
-														color: "var(--primary)",
-														position: "relative",
-														top: "1px",
-													}}
-												/>
-											) : (
-												"Insufficient liquidity for this trade"
-											)}
-										</button>
-									</div>
-								)
-							) : (
-								<div className="exchange-button-container">
-									<button disabled>
-										{fetchingLiquidity ? (
-											<CircularProgress
-												size={12}
-												thickness={5}
-												style={{
-													color: "var(--primary)",
-													position: "relative",
-													top: "1px",
-												}}
-											/>
-										) : (
-											"Insufficient liquidity for this trade"
-										)}
-									</button>
+									)}
 								</div>
-							)}
+							</div>
 						</div>
-					</div>
+					</Container>
 				</div>
 				<Dialog
 					open={approvalModalVisible}

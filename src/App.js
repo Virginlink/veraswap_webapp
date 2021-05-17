@@ -20,7 +20,6 @@ import { ethers } from "ethers";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import Fortmatic from "fortmatic";
 import { Redirect, Route, Switch } from "react-router-dom";
-import SalePage from "./pages/SalePage";
 import StakePage from "./pages/StakePage";
 import StakeDeposit from "./pages/StakeDeposit";
 import TotalSupply from "./pages/TotalSupply";
@@ -32,10 +31,10 @@ import LiquidityBNB from "./pages/LiquidityBNB";
 import ExchangeBNB from "./pages/ExchangeBNB";
 import RemoveLiquidityBNB from "./pages/RemoveLiquidityBNB";
 import { ConnectWalletModal } from "./components/modals";
+import Landing from "./pages/landing/Landing";
 import "./App.css";
 import "./components/Navbar.css";
 import "./components/Sale/Sale.css";
-import Landing from "./pages/landing/Landing";
 
 class App extends Component {
 	constructor() {
@@ -547,7 +546,7 @@ class App extends Component {
 									/>
 								)}
 							/>
-							<Route
+							{/* <Route
 								path="/sale"
 								render={(props) => (
 									<SalePage
@@ -573,7 +572,7 @@ class App extends Component {
 										ethBuying={this.state.ethBuying}
 									/>
 								)}
-							/>
+							/> */}
 							<Route
 								exact
 								path="/stake"

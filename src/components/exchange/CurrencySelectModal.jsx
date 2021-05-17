@@ -102,10 +102,13 @@ export default class CurrencySelectModal extends Component {
 					},
 				}}
 				className="app-modal"
+				PaperProps={{
+					style: { padding: "1rem" },
+				}}
 			>
 				<div className="modal-header flex-spaced-container">
-					<div>
-						<h4 style={{ marginBottom: 0 }}>Select a token</h4>
+					<div style={{ flex: "1 1 0%" }}>
+						<h4 style={{ marginBottom: 0, textAlign: "center" }}>Select a token</h4>
 					</div>
 					<button className="close-modal-button" onClick={onModalClose}>
 						<RiCloseFill />

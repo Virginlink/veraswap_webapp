@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { IoChevronForwardSharp } from "react-icons/io5";
-import { MdRefresh, MdSwapVert } from "react-icons/md";
+import { MdRefresh } from "react-icons/md";
 import CurrencySelectModal from "./CurrencySelectModal";
 import { CircularProgress } from "@material-ui/core";
 import { IoMdHourglass } from "react-icons/io";
 import { Image } from "antd";
 import Empty from "../../assets/icons/Empty.png";
+import { IoSwapVerticalOutline } from "react-icons/io5";
 export default class Swap extends Component {
 	constructor(props) {
 		super(props);
@@ -60,7 +60,10 @@ export default class Swap extends Component {
 		const { tokenAModalVisible, tokenBModalVisible } = this.state;
 		return (
 			<div className="swap-form">
-				<div className="form-control" style={{ borderRadius: "10px 10px 0 0" }}>
+				<div
+					className="form-control"
+					style={{ borderRadius: "20px 20px 0 0", borderBottom: "none", paddingBottom: "26px" }}
+				>
 					<div className="flex-spaced-container">
 						<div>
 							you pay
@@ -71,14 +74,14 @@ export default class Swap extends Component {
 									style={{
 										position: "relative",
 										top: "1px",
-										color: theme === "light" ? "#DE0102" : "#DEB501",
+										color: "#DE0102",
 										marginLeft: "4px",
 									}}
 								/>
 							)}
 						</div>
 					</div>
-					<div className="input-container">
+					<div className="input-container without-max">
 						<div
 							style={{
 								flexDirection: "column",
@@ -99,7 +102,7 @@ export default class Swap extends Component {
 								}}
 							/>
 							{walletConnected && walletAddress && tokenABalance && (
-								<div>
+								<div style={{ marginTop: "12px" }}>
 									<MdRefresh
 										style={{
 											cursor: "pointer",
@@ -111,8 +114,7 @@ export default class Swap extends Component {
 									balance:{" "}
 									<span
 										style={{
-											fontFamily: "PT Sans Caption",
-											fontSize: "12px",
+											fontFamily: "normal",
 										}}
 									>
 										{parseFloat(tokenABalance).toFixed(6)}
@@ -121,9 +123,6 @@ export default class Swap extends Component {
 							)}
 						</div>
 						<div style={fetchingTokenA ? { flex: 1, justifyContent: "flex-end" } : {}}>
-							{/* {(tokenA && parseFloat(tokenABalance) > 0) && (
-                                <button className="max-button" disabled={invalidPair} onClick={() => onMax('A')}>max</button>
-                            )} */}
 							{fetchingTokenA ? (
 								<button
 									className="asset-select-button select-button-loading"
@@ -142,9 +141,7 @@ export default class Swap extends Component {
 									style={
 										!tokenA
 											? {
-													backgroundColor: theme === "light" ? "#DE0102" : "#DEB501",
-													color: "#FFF",
-													padding: "0 11px",
+													padding: "0 1.5rem",
 											  }
 											: {}
 									}
@@ -154,16 +151,18 @@ export default class Swap extends Component {
 										<Image fallback={Empty} src={tokenAIcon} alt="token-logo" preview={false} />
 									)}
 									<span style={{ textTransform: "none" }}>{tokenA || "Select"}</span>
-									{!tokenA && <IoChevronForwardSharp />}
 								</button>
 							)}
 						</div>
 					</div>
 				</div>
 				<div className="action" style={{ userSelect: "none" }}>
-					<MdSwapVert style={{ cursor: "pointer" }} onClick={onTokenSwap} />
+					<IoSwapVerticalOutline style={{ cursor: "pointer" }} onClick={onTokenSwap} />
 				</div>
-				<div className="form-control" style={{ borderRadius: "0 0 10px 10px" }}>
+				<div
+					className="form-control"
+					style={{ borderRadius: "0 0 20px 20px", borderTop: "none", paddingTop: "26px" }}
+				>
 					<div className="flex-spaced-container">
 						<div>
 							you get
@@ -174,7 +173,7 @@ export default class Swap extends Component {
 									style={{
 										position: "relative",
 										top: "1px",
-										color: theme === "light" ? "#DE0102" : "#DEB501",
+										color: "#DE0102",
 										marginLeft: "4px",
 									}}
 								/>
@@ -202,7 +201,7 @@ export default class Swap extends Component {
 								}}
 							/>
 							{walletConnected && walletAddress && tokenBBalance && (
-								<div>
+								<div style={{ marginTop: "12px" }}>
 									<MdRefresh
 										style={{
 											cursor: "pointer",
@@ -214,8 +213,7 @@ export default class Swap extends Component {
 									balance:{" "}
 									<span
 										style={{
-											fontFamily: "PT Sans Caption",
-											fontSize: "12px",
+											fontFamily: "normal",
 										}}
 									>
 										{parseFloat(tokenBBalance).toFixed(6)}
@@ -224,9 +222,6 @@ export default class Swap extends Component {
 							)}
 						</div>
 						<div style={fetchingTokenB ? { flex: 1, justifyContent: "flex-end" } : {}}>
-							{/* {(tokenB && parseFloat(tokenBBalance) > 0) && (
-                                <button className="max-button" disabled={invalidPair} onClick={() => onMax('B')}>max</button>
-                            )} */}
 							{fetchingTokenB ? (
 								<button
 									className="asset-select-button select-button-loading"
@@ -246,8 +241,7 @@ export default class Swap extends Component {
 									style={
 										!tokenB
 											? {
-													color: "#FFF",
-													padding: "0 11px",
+													padding: "0 1.5rem",
 											  }
 											: {}
 									}
@@ -257,7 +251,6 @@ export default class Swap extends Component {
 										<Image fallback={Empty} src={tokenBIcon} alt="token-logo" preview={false} />
 									)}
 									<span style={{ textTransform: "none" }}>{tokenB || "Select"}</span>
-									{!tokenB && <IoChevronForwardSharp />}
 								</button>
 							)}
 						</div>

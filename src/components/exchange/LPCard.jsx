@@ -72,7 +72,6 @@ class LPCard extends Component {
 			walletAddress,
 			importLP,
 			onImport,
-			theme,
 			tokenADecimals,
 			tokenBDecimals,
 		} = this.props;
@@ -120,7 +119,7 @@ class LPCard extends Component {
 								size={16}
 								thickness={5}
 								style={{
-									color: theme === "light" ? "#DE0102" : "#DEB501",
+									color: "#DE0102",
 								}}
 							/>
 						</div>

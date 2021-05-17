@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
-import { IoArrowBackSharp, IoChevronForwardSharp } from "react-icons/io5";
+import { IoArrowBackSharp } from "react-icons/io5";
 import { MdAdd, MdRefresh } from "react-icons/md";
 import CurrencySelectModal from "./CurrencySelectModal";
 import { Tooltip } from "antd";
@@ -58,12 +58,10 @@ export default class Pool extends Component {
 		const { tokenAModalVisible, tokenBModalVisible } = this.state;
 		return liquiditySectionVisible ? (
 			<div className="pool-details">
-				<div style={{ padding: "0 1rem" }}>
-					<button className="add-liquidity-button" onClick={onSectionToggle}>
-						Add Liquidity
-					</button>
-				</div>
-				<div className="flex-spaced-container" style={{ color: "#FFF" }}>
+				<button className="add-liquidity-button" onClick={onSectionToggle}>
+					Add Liquidity
+				</button>
+				<div className="flex-spaced-container">
 					<div>Your Liquidity</div>
 					{/* <div>                            
             <AiOutlineQuestionCircle size={16} />
@@ -100,31 +98,37 @@ export default class Pool extends Component {
 			</div>
 		) : (
 			<>
-				<div className="pool-form">
-					<div className="flex-spaced-container" style={{ marginBottom: "1.5rem", color: "#FFF" }}>
-						<IoArrowBackSharp size={16} style={{ cursor: "pointer" }} onClick={onSectionToggle} />
-						<span>Add Liquidity</span>
+				<div className="swap-form">
+					<div
+						className="flex-spaced-container"
+						style={{ marginBottom: "1.5rem", color: theme === "light" ? "#333" : "#FFF" }}
+					>
+						<IoArrowBackSharp size={24} style={{ cursor: "pointer" }} onClick={onSectionToggle} />
+						<span style={{ fontSize: "18px" }}>Add Liquidity</span>
 						<Tooltip
 							title="When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
 							placement="bottom"
 						>
-							<AiOutlineQuestionCircle size={16} />
+							<AiOutlineQuestionCircle size={24} />
 						</Tooltip>
 					</div>
-					<div className="form-control">
+					<div
+						className="form-control"
+						style={{ borderRadius: "20px 20px 0 0", borderBottom: "none", paddingBottom: "26px" }}
+					>
 						<div className="flex-spaced-container">
 							<div
 								style={{
 									color: theme === "dark" ? "#FFF" : "#000",
 									textTransform: "none",
-									opacity: 0.7,
-									fontFamily: "PT Sans Caption",
+									opacity: 0.5,
+									fontFamily: "normal",
 								}}
 							>
 								Input
 							</div>
 							{walletConnected && walletAddress && tokenABalance && (
-								<div style={{ fontSize: "12px" }}>
+								<div className="pool-balance">
 									<MdRefresh
 										style={{
 											cursor: "pointer",
@@ -133,15 +137,7 @@ export default class Pool extends Component {
 										}}
 										onClick={() => onRefresh(tokenA, "A")}
 									/>{" "}
-									balance:{" "}
-									<span
-										style={{
-											fontFamily: "PT Sans Caption",
-											fontSize: "12px",
-										}}
-									>
-										{parseFloat(tokenABalance).toFixed(6)}
-									</span>
+									balance: <span>{parseFloat(tokenABalance).toFixed(6)}</span>
 								</div>
 							)}
 						</div>
@@ -156,7 +152,7 @@ export default class Pool extends Component {
 									}
 								}}
 							/>
-							<div>
+							<div style={{ opacity: 1 }}>
 								{walletConnected && tokenA && parseFloat(tokenABalance) > 0 && (
 									<button className="max-button" onClick={() => onMax("A")}>
 										max
@@ -167,9 +163,7 @@ export default class Pool extends Component {
 									style={
 										!tokenA
 											? {
-													backgroundColor: theme === "light" ? "#DE0102" : "#DEB501",
-													color: "#FFF",
-													padding: "0 11px",
+													padding: "0 1.5rem",
 											  }
 											: {}
 									}
@@ -177,7 +171,6 @@ export default class Pool extends Component {
 								>
 									{tokenAIcon && <img src={tokenAIcon} alt="token-logo" />}
 									<span style={{ textTransform: "none" }}>{tokenA || "Select"}</span>
-									{!tokenA && <IoChevronForwardSharp size={14} />}
 								</button>
 							</div>
 						</div>
@@ -185,20 +178,23 @@ export default class Pool extends Component {
 					<div className="action">
 						<MdAdd />
 					</div>
-					<div className="form-control">
+					<div
+						className="form-control"
+						style={{ borderRadius: "0 0 20px 20px", borderTop: "none", paddingTop: "26px" }}
+					>
 						<div className="flex-spaced-container">
 							<div
 								style={{
 									color: theme === "dark" ? "#FFF" : "#000",
 									textTransform: "none",
-									opacity: 0.7,
-									fontFamily: "PT Sans Caption",
+									opacity: 0.5,
+									fontFamily: "normal",
 								}}
 							>
 								Input
 							</div>
 							{walletConnected && walletAddress && tokenBBalance && (
-								<div style={{ fontSize: "10px" }}>
+								<div className="pool-balance">
 									<MdRefresh
 										style={{
 											cursor: "pointer",
@@ -207,15 +203,7 @@ export default class Pool extends Component {
 										}}
 										onClick={() => onRefresh(tokenB, "B")}
 									/>{" "}
-									balance:{" "}
-									<span
-										style={{
-											fontFamily: "PT Sans Caption",
-											fontSize: "12px",
-										}}
-									>
-										{parseFloat(tokenBBalance).toFixed(6)}
-									</span>
+									balance: <span>{parseFloat(tokenBBalance).toFixed(6)}</span>
 								</div>
 							)}
 						</div>
@@ -229,7 +217,7 @@ export default class Pool extends Component {
 									}
 								}}
 							/>
-							<div>
+							<div style={{ opacity: 1 }}>
 								{walletConnected && tokenB && parseFloat(tokenBBalance) > 0 && (
 									<button className="max-button" onClick={() => onMax("B")}>
 										max
@@ -240,9 +228,7 @@ export default class Pool extends Component {
 									style={
 										!tokenB
 											? {
-													backgroundColor: theme === "light" ? "#DE0102" : "#DEB501",
-													color: "#FFF",
-													padding: "0 11px",
+													padding: "0 1.5rem",
 											  }
 											: {}
 									}
@@ -250,7 +236,6 @@ export default class Pool extends Component {
 								>
 									{tokenBIcon && <img src={tokenBIcon} alt="token-logo" />}
 									<span style={{ textTransform: "none" }}>{tokenB || "Select"}</span>
-									{!tokenB && <IoChevronForwardSharp size={14} />}
 								</button>
 							</div>
 						</div>

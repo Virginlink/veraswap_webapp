@@ -3,7 +3,7 @@ import SWINGBY from "../assets/images/empty-token.webp";
 import LIT from "../assets/images/lit.webp";
 import SFP from "../assets/images/sfp.webp";
 import DAI from "../assets/images/dai.webp";
-import VRAP from "../assets/images/logo.png";
+import VRAP from "../assets/images/vrap-red.svg";
 
 const TWT =
 	"https://github.com/trustwallet/assets/blob/master/blockchains/binance/assets/TWT-8C2/logo.png?raw=true";
