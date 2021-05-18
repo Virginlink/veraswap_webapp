@@ -407,12 +407,10 @@
 	cursor: pointer;
 	position: relative;
 	z-index: 1;
-	background-color: rgb(255, 104, 113);
-	border: 1px solid rgb(255, 104, 113);
 }
 
 .confirmation-modal-button:hover {
-	background-color: rgb(255, 78, 89);
+	opacity: 0.7;
 }
 
 .confirmation-modal-button-text {

@@ -1,7 +1,9 @@
 import React from "react";
-import Navbar from "../components/Navbar";
 import { ethers } from "ethers";
 import { STAKING_ADDRESS, TOKEN_ABI, TOKEN_ADDRESS, PROVIDER } from "../utils/contracts";
+import Sidebar from "../components/Sidebar";
+import AppBar from "../components/AppBar";
+import { Container } from "@material-ui/core";
 export default class CirculatingSupply extends React.Component {
 	constructor(props) {
 		super(props);
@@ -29,31 +31,45 @@ export default class CirculatingSupply extends React.Component {
 
 	render() {
 		const { totalSupply, adminWallet, stakingBalance } = this.state;
+		const {
+			theme,
+			onThemeToggle,
+			modalVisible,
+			onModalToggle,
+			walletAddress,
+			walletConnected,
+			ethBalance,
+			vrapBalance,
+		} = this.props;
 		return this.state.loading ? null : (
-			<div>
-				<Navbar
-					active="total-supply"
-					modalVisible={this.props.modalVisible}
-					onModalToggle={this.props.onModalToggle}
-					theme={this.props.theme}
-					onThemeToggle={this.props.onThemeToggle}
-					walletConnected={this.props.walletConnected}
-					walletAddress={this.props.walletAddress}
-					ethBalance={this.props.ethBalance}
-					vrapBalance={this.props.vrapBalance}
-				/>
-				<div className="stats-wrapper">
-					<div className="stats-card">
-						<h3 className="stats-text-heading">Circulating Supply</h3>
-						<p className="stats-text">
-							{new Intl.NumberFormat("en-US").format(
-								parseFloat(totalSupply - (adminWallet + stakingBalance)).toFixed(4)
-							)}{" "}
-							VRAP
-						</p>
-					</div>
+			<>
+				<Sidebar theme={theme} onThemeToggle={onThemeToggle} />
+				<div className="app-container">
+					<AppBar
+						theme={theme}
+						onThemeToggle={onThemeToggle}
+						modalVisible={modalVisible}
+						onModalToggle={onModalToggle}
+						walletAddress={walletAddress}
+						walletConnected={walletConnected}
+						ethBalance={ethBalance}
+						vrapBalance={vrapBalance}
+					/>
+					<Container maxWidth="md">
+						<div className="stats-wrapper">
+							<div className="stats-card">
+								<h3 className="stats-text-heading">Circulating Supply</h3>
+								<p className="stats-text">
+									{new Intl.NumberFormat("en-US").format(
+										parseFloat(totalSupply - (adminWallet + stakingBalance)).toFixed(4)
+									)}{" "}
+									VRAP
+								</p>
+							</div>
+						</div>
+					</Container>
 				</div>
-			</div>
+			</>
 		);
 	}
 }

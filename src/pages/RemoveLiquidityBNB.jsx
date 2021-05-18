@@ -199,7 +199,7 @@ class RemoveLiquidityBNB extends Component {
 
 	approve = () => {
 		const { lpAddress, tokensInPool, percent } = this.state;
-		const { walletAddress, theme } = this.props;
+		const { walletAddress } = this.props;
 		let liquidity;
 		if (percent === 100) {
 			liquidity = tokensInPool.toString();
@@ -233,7 +233,7 @@ class RemoveLiquidityBNB extends Component {
 										size={25}
 										thickness={5}
 										style={{
-											color: theme === "light" ? "#DE0102" : "#DEB501",
+											color: "#DE0102",
 											position: "relative",
 											top: "6px",
 										}}
@@ -318,7 +318,7 @@ class RemoveLiquidityBNB extends Component {
 			tokenADecimals,
 			tokenBDecimals,
 		} = this.state;
-		const { walletAddress, signer, history, theme } = this.props;
+		const { walletAddress, signer, history } = this.props;
 		const deadline = moment().add(1, "years").format("X");
 		let liquidity;
 		if (percent === 100) {
@@ -362,7 +362,7 @@ class RemoveLiquidityBNB extends Component {
 										size={25}
 										thickness={5}
 										style={{
-											color: theme === "light" ? "#DE0102" : "#DEB501",
+											color: "#DE0102",
 											position: "relative",
 											top: "6px",
 										}}
@@ -465,7 +465,7 @@ class RemoveLiquidityBNB extends Component {
 			tokenADecimals,
 			tokenBDecimals,
 		} = this.state;
-		const { walletAddress, signer, history, theme } = this.props;
+		const { walletAddress, signer, history } = this.props;
 		const deadline = moment().add(1, "years").format("X");
 		let liquidity;
 		if (percent === 100) {
@@ -509,7 +509,7 @@ class RemoveLiquidityBNB extends Component {
 										size={25}
 										thickness={5}
 										style={{
-											color: theme === "light" ? "#DE0102" : "#DEB501",
+											color: "#DE0102",
 											position: "relative",
 											top: "6px",
 										}}
@@ -638,6 +638,7 @@ class RemoveLiquidityBNB extends Component {
 				<Sidebar active="pool" theme={theme} onThemeToggle={onThemeToggle} />
 				<div className="app-container">
 					<AppBar
+						active="pool"
 						theme={theme}
 						onThemeToggle={onThemeToggle}
 						modalVisible={modalVisible}
@@ -678,11 +679,7 @@ class RemoveLiquidityBNB extends Component {
 								) : fetchingApproval ? (
 									<div className="remove-liquidity-actions">
 										<button disabled>
-											<CircularProgress
-												size={14}
-												thickness={5}
-												style={{ color: theme === "light" ? "#DE0102" : "#DEB501" }}
-											/>
+											<CircularProgress size={14} thickness={5} style={{ color: "#DE0102" }} />
 										</button>
 										<button disabled>Remove</button>
 									</div>
@@ -696,7 +693,7 @@ class RemoveLiquidityBNB extends Component {
 													size={14}
 													thickness={5}
 													style={{
-														color: theme === "light" ? "#DE0102" : "#DEB501",
+														color: "#DE0102",
 														position: "relative",
 														top: "1px",
 													}}
@@ -715,7 +712,7 @@ class RemoveLiquidityBNB extends Component {
 													size={14}
 													thickness={5}
 													style={{
-														color: theme === "light" ? "#DE0102" : "#DEB501",
+														color: "#DE0102",
 														position: "relative",
 														top: "1px",
 													}}

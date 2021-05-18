@@ -54,7 +54,7 @@ export default class TokenRow extends Component {
 	};
 
 	render() {
-		const { onTokenPress, token, walletConnected, walletAddress, disabled, importToken, theme } =
+		const { onTokenPress, token, walletConnected, walletAddress, disabled, importToken } =
 			this.props;
 		const { balance } = this.state;
 		return (
@@ -94,7 +94,7 @@ export default class TokenRow extends Component {
 										size={16}
 										thickness={5}
 										style={{
-											color: theme === "light" ? "#DE0102" : "#DEB501",
+											color: "#DE0102",
 										}}
 									/>
 								)}

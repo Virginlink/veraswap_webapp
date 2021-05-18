@@ -4,18 +4,14 @@ import LogoWhite from "../assets/images/vrap-white.svg";
 import { ExpertModeModal } from "./modals";
 import { FaMedium, FaTelegramPlane, FaTwitter } from "react-icons/fa";
 import Logo from "../assets/images/vrap-red.svg";
-import Stake from "../assets/icons/stake.svg";
-import Swap from "../assets/icons/swap.svg";
-import Pool from "../assets/icons/pool.svg";
-import Blog from "../assets/icons/blog.svg";
-import Docs from "../assets/icons/docs.svg";
+import { Stake, Swap, Pool, VRAPBlog, VRAPDocs } from "../assets/icons/ReactIcons";
 import { RiSettingsFill, RiWallet3Fill } from "react-icons/ri";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import { AccountAvatar } from "../assets/icons/ReactIcons";
 import AppContext from "../state/AppContext";
 import { Drawer } from "antd";
-import "./Sidebar.css";
 import { withRouter } from "react-router";
+import "./Sidebar.css";
 class AppBar extends Component {
 	static contextType = AppContext;
 
@@ -178,7 +174,8 @@ class AppBar extends Component {
 			expertMode,
 			darkMode,
 		} = this.state;
-		const { onModalToggle, walletAddress, walletConnected, ethBalance, home, history } = this.props;
+		const { onModalToggle, walletAddress, walletConnected, ethBalance, home, history, active } =
+			this.props;
 		return (
 			<nav className="app-bar">
 				<div>
@@ -256,24 +253,23 @@ class AppBar extends Component {
 											>
 												1%
 											</button>
-											<button tabIndex="-1" className="tolerance-input-button">
-												<div className="tolerance-input-container">
-													<input
-														className="tolerance-input"
-														onChange={this.handleSlippageChange}
-														placeholder={slippage}
-														value={localSlippage}
-													/>
-													<span
-														style={{
-															position: "relative",
-															top: "1px",
-														}}
-													>
-														%
-													</span>
-												</div>
-											</button>
+											<div className="tolerance-input-container">
+												<input
+													className="tolerance-input"
+													onChange={this.handleSlippageChange}
+													placeholder={slippage}
+													value={localSlippage}
+													style={{ borderRadius: "5px", height: "1.9rem" }}
+												/>
+												<span
+													style={{
+														position: "relative",
+														left: "4px",
+													}}
+												>
+													%
+												</span>
+											</div>
 										</div>
 										{slippage === "0.1" && (
 											<div
@@ -401,26 +397,32 @@ class AppBar extends Component {
 					</div>
 					<ul className="app-links">
 						<li>
-							<a href="/stake" onClick={(e) => this.navigateTo(e, "/stake")}>
-								<img src={Stake} alt="stake" height="20px" width="auto" />
+							<a
+								href="/stake"
+								onClick={(e) => this.navigateTo(e, "/stake")}
+								className={active === "stake" ? "active" : ""}
+							>
+								<Stake />
 								Stake
 							</a>
 						</li>
 						<li>
-							<a href="/swap" onClick={(e) => this.navigateTo(e, "/swap")}>
-								<img src={Swap} alt="swap" height="20px" width="auto" />
+							<a
+								href="/swap"
+								onClick={(e) => this.navigateTo(e, "/swap")}
+								className={active === "swap" ? "active" : ""}
+							>
+								<Swap />
 								Swap
 							</a>
 						</li>
 						<li>
-							<a href="/pool" onClick={(e) => this.navigateTo(e, "/pool")}>
-								<img
-									src={Pool}
-									alt="pool"
-									height="20px"
-									width="auto"
-									style={{ marginRight: "18px" }}
-								/>
+							<a
+								href="/pool"
+								onClick={(e) => this.navigateTo(e, "/pool")}
+								className={active === "pool" ? "active" : ""}
+							>
+								<Pool />
 								Pool
 							</a>
 						</li>
@@ -428,25 +430,13 @@ class AppBar extends Component {
 					<ul className="app-links">
 						<li>
 							<a href="##" onClick={(e) => this.navigateTo(e, "/")}>
-								<img
-									src={Blog}
-									alt="blog"
-									height="23px"
-									width="auto"
-									style={{ marginRight: "22px" }}
-								/>
+								<VRAPBlog />
 								Blog
 							</a>
 						</li>
 						<li>
 							<a href="##" onClick={(e) => this.navigateTo(e, "/")}>
-								<img
-									src={Docs}
-									alt="docs"
-									height="23px"
-									width="auto"
-									style={{ marginRight: "26px" }}
-								/>
+								<VRAPDocs />
 								Docs
 							</a>
 						</li>

@@ -169,8 +169,6 @@ export default class Sale extends Component {
 				<div className="sale-grid-container">
 					<div className="sale-block-outer-container-wrapper" style={{ gap: "24px" }}>
 						<div className="sale-block-outer-container">
-							<span className="sale-rotation"></span>
-							<span className="noise"></span>
 							<div className="sale-block-inner-grid-wrapper">
 								<div className="sale-block-inner-grid">
 									<div className="sale-block-title-container">
@@ -186,8 +184,6 @@ export default class Sale extends Component {
 									</div>
 								</div>
 							</div>
-							<span className="sale-rotation"></span>
-							<span className="noise"></span>
 						</div>
 					</div>
 					<div className="countdown-container">
@@ -198,9 +194,7 @@ export default class Sale extends Component {
 						</div>
 					</div>
 					<div className="sale-block-outer-container-wrapper" style={{ gap: "24px" }}>
-						<div className="sale-block-2-outer-container">
-							<span className="sale-rotation"></span>
-							<span className="noise"></span>
+						<div className="sale-block-outer-container">
 							<div className="sale-block-inner-grid-wrapper">
 								<div className="sale-block-inner-grid">
 									<div className="sale-block-title-container">
@@ -216,8 +210,6 @@ export default class Sale extends Component {
 									</div>
 								</div>
 							</div>
-							<span className="sale-rotation"></span>
-							<span className="noise"></span>
 						</div>
 					</div>
 					<div className="buy-container" style={{ marginBottom: "1rem" }}>

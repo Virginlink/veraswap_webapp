@@ -175,6 +175,7 @@ class ImportLiquidity extends Component {
 				<Sidebar active="pool" theme={theme} onThemeToggle={onThemeToggle} />
 				<div className="app-container">
 					<AppBar
+						active="pool"
 						theme={theme}
 						onThemeToggle={onThemeToggle}
 						modalVisible={modalVisible}
@@ -266,7 +267,7 @@ class ImportLiquidity extends Component {
 														size={16}
 														thickness={5}
 														style={{
-															color: theme === "light" ? "#DE0102" : "#DEB501",
+															color: "#DE0102",
 														}}
 													/>
 												</div>

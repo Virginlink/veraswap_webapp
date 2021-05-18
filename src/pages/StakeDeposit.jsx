@@ -134,6 +134,7 @@ class StakeDeposit extends Component {
 				<Sidebar active="stake" theme={theme} onThemeToggle={onThemeToggle} />
 				<div className="app-container">
 					<AppBar
+						active="stake"
 						theme={theme}
 						onThemeToggle={onThemeToggle}
 						modalVisible={modalVisible}

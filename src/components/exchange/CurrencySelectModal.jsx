@@ -137,8 +137,8 @@ export default class CurrencySelectModal extends Component {
 								thickness={5}
 								style={{
 									position: "absolute",
-									right: "0.75rem",
-									top: "0.75rem",
+									right: "0.9rem",
+									top: "0.9rem",
 									color: "var(--text)",
 								}}
 							/>

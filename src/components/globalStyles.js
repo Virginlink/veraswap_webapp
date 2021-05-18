@@ -336,6 +336,7 @@ export const GlobalStyles = createGlobalStyle`
 		.connected-wallet-container {
 				padding: 1rem;
 				border: 1px solid ${({ theme }) => theme.modalButtonBorderColor};
+				background-color: ${({ theme }) => theme.connectedWalletBackgroundColor};
 				border-radius: 20px;
 				position: relative;
 				display: grid;
@@ -711,7 +712,7 @@ export const GlobalStyles = createGlobalStyle`
 				border-radius: 5px;
 				font-size: 1rem;
 				width: auto;
-				min-width: 3.5rem;
+				min-width: 3.6rem;
 				border: 1px solid ${({ theme }) => theme.toleranceButtonBorderColor};
 				outline: none;
 				background: ${({ theme }) => theme.toleranceButtonBackgroundColor};
@@ -753,9 +754,13 @@ export const GlobalStyles = createGlobalStyle`
 				background: ${({ theme }) => theme.toleranceInputBackgroundColor};
 				font-size: 16px;
 				outline: none;
-				color: ${({ theme }) => theme.toleranceInputTextColor};
+				color: ${({ theme }) => theme.formControlText};
 				text-align: right;
 				font-family: 'Inrer var';
+		}
+
+		.settings-button-group .tolerance-input {
+			border: 1px solid ${({ theme }) => theme.toleranceButtonInputBorderColor};
 		}
 		
 		.tolerance-input:focus .tolerance-input-button{
@@ -820,7 +825,7 @@ export const GlobalStyles = createGlobalStyle`
 				-webkit-box-pack: center;
 				justify-content: center;
 				padding: 2rem 0px;
-				background-color: ${({ theme }) => theme.confirmationModalBackgroundColor};
+				background-color: ${({ theme }) => theme.modalBackgroundColor};
 				border-radius: 20px;
 		}
 
@@ -836,6 +841,12 @@ export const GlobalStyles = createGlobalStyle`
 				-webkit-box-pack: justify;
 				justify-content: space-between;
 				color: ${({ theme }) => theme.modalContentColor};
+		}
+
+		.confirmation-modal-button {
+			border: none;
+			background-color: ${({ theme }) => theme.buttonBackgroundColor};
+			background: ${({ theme }) => theme.buttonBackground};
 		}
 
 		.modal-divider {
@@ -921,10 +932,10 @@ export const GlobalStyles = createGlobalStyle`
 		}
 
 		.buy-inner-container {
-				border-radius: 20px;
-				width: 100%;
-				border: 1px solid ${({ theme }) => theme.modalContentBackgroundColor};
-				background-color: ${({ theme }) => theme.modalHeaderBackgroundColor};
+			border-radius: 20px;
+			width: 100%;
+			border: 1px solid ${({ theme }) => theme.modalContentBackgroundColor};
+			background-color: ${({ theme }) => theme.buyInputBackgroundColor};
 		}
 
 		.available-deposit-container {
@@ -955,7 +966,7 @@ export const GlobalStyles = createGlobalStyle`
 				outline: none;
 				border: none;
 				flex: 1 1 auto;
-				background-color: ${({ theme }) => theme.buyModalBackgroundColor};
+				background-color: ${({ theme }) => theme.buyInputBackgroundColor};
 				font-size: 24px !important;
 				white-space: nowrap;
 				overflow: hidden;
@@ -1271,8 +1282,8 @@ export const GlobalStyles = createGlobalStyle`
 				background-color: ${({ theme }) => theme.notificationBackgroundColor};
 		}
 
-		.ant-notification-notice-message, .ant-notification-close-icon {
-				color: ${({ theme }) => theme.modalHeaderTextColor};
+		.ant-notification-notice-message, .ant-notification-close-icon, .ant-drawer-close {
+			color: ${({ theme }) => theme.modalHeaderTextColor};
 		}
 
 		.heading {
@@ -1330,7 +1341,7 @@ export const GlobalStyles = createGlobalStyle`
 		}
 
 		.stats-card{
-				background : ${({ theme }) => theme.buyModalBackgroundColor};
+				background : ${({ theme }) => theme.appDrawerBackgroundColor};
 				padding : 3rem;
 				border-radius : 12px;
 				display : flex;
@@ -1473,17 +1484,17 @@ export const GlobalStyles = createGlobalStyle`
 
 		@media only screen and (max-width: 500px) {
 			.tabs a[data-enabled=true], .tabs a:first-child, .tabs a:last-child{
-				background-color: #FFF;
-				color: #00000033;
+				background-color: transparent;
+				color: ${({ theme }) => theme.mobileTabTextColor};
 				box-shadow: none;
 				border-radius: 0;
 				border: none;
-				border-bottom: 1px solid #00000033;
+				border-bottom: 1px solid ${({ theme }) => theme.mobileTabTextColor};
 			}
 
 			.tabs a[data-enabled=true] {
-				color: #333;
-				border-bottom: 2px solid #333;
+				color: ${({ theme }) => theme.formControlText};
+				border-bottom: 2px solid ${({ theme }) => theme.formControlText};
 			}
 		}
 
@@ -1913,7 +1924,7 @@ export const GlobalStyles = createGlobalStyle`
 				width: 90%;
 				margin: 0 auto 1.5rem;
 				overflow: auto;
-				background-color: ${({ theme }) => theme.modalContentBackgroundColor};
+				background-color: ${({ theme }) => theme.currencyContainerBackgroundColor};
 				border: 1px solid ${({ theme }) => theme.swapFormControlBorderColor};
 				border-radius: 20px;
 			}
@@ -1926,7 +1937,7 @@ export const GlobalStyles = createGlobalStyle`
 				width: 100%;
 				align-items: center;
 				justify-content: space-between;
-				padding: 4px 24px;
+				padding: 4px 16px;
 				height: 56px;
 				display: grid;
 				grid-template-columns: auto minmax(auto, 1fr) auto;
@@ -2200,10 +2211,11 @@ export const GlobalStyles = createGlobalStyle`
 				cursor: pointer;
 				height: 45px;
 				padding: 5px 0;
-				border: 1px solid ${({ theme }) => theme.primary};
+				border: none;
 				border-radius: 10px;
 				background-color: transparent;
-				color: ${({ theme }) => theme.primary};
+				background-color: ${({ theme }) => theme.buttonBackgroundColor};
+				background: ${({ theme }) => theme.buttonBackground};
 				font-family: 'normal';
 				font-size: 14px;
 		}
@@ -2213,9 +2225,10 @@ export const GlobalStyles = createGlobalStyle`
 				cursor: pointer;
 				height: 45px;
 				padding: 5px 0;
-				border: 1px solid ${({ theme }) => theme.primary};
+				border: none;
 				border-radius: 10px;
-				background-color: ${({ theme }) => theme.primary};
+				background-color: ${({ theme }) => theme.buttonBackgroundColor};
+				background: ${({ theme }) => theme.buttonBackground};
 				color: #FFF;
 				font-family: 'normal';
 				font-size: 14px;
@@ -2608,9 +2621,9 @@ export const GlobalStyles = createGlobalStyle`
 			height: 100vh;
 			overflow-y: scroll;
 			width: 230px;
-			background-color: #F8F9FA;
+			background-color: ${({ theme }) => theme.sidebarBackgroundColor};
 			padding-top: 30px;
-			border-right: 1px solid #D9D9D9;
+			border-right: 1px solid ${({ theme }) => theme.sidebarBorderColor};
 			transition: 0.25s all ease;
 		}
 
@@ -2630,15 +2643,30 @@ export const GlobalStyles = createGlobalStyle`
 		}
 
 		.app-links a{
-			color: #333;
+			color: ${({ theme }) => theme.formControlText};
+			display: flex;
+			align-items: center;
+			transition: 0.3s all ease;
 		}
 
-		.app-links a:hover {
+		.app-links li a svg {
+			fill: ${({ theme }) => theme.formControlText};
+			width: 22px;
+			height: 22px;
+			margin-right: 20px;
+			transition: 0.3s all ease;
+		}
+
+		.app-links a:hover, .app-links a.active {
 			color: #E60000;
 		}
 
+		.app-links a:hover svg, .app-links a.active svg {
+			fill: #E60000;
+		}
+
 		.interface-settings span {
-			color: #333;
+			color: ${({ theme }) => theme.formControlText};
 			font-size: 12px;
 			margin-left: 3px;
 			padding: 0 38px;
@@ -2647,9 +2675,9 @@ export const GlobalStyles = createGlobalStyle`
 		.interface-settings button {
 			cursor: pointer;
 			padding: 4px 0;
-			background-color: #FFF;
-			color: #333;
-			border: 1px solid #D9D9D9;
+			background-color: ${({ theme }) => theme.tabBackgroundColor};
+			color: ${({ theme }) => theme.tabTextColor};
+			border: 1px solid ${({ theme }) => theme.tabBorderColor};
 			border-radius: 5px;
 			box-shadow: none;
 			text-transform: uppercase;
@@ -2675,23 +2703,23 @@ export const GlobalStyles = createGlobalStyle`
 		.interface-settings button[data-enabled=true] {
 			z-index: 2;
 			border-radius: 5px;
-			border: 1px solid #333;
-			background-color: #333;
-			color: #FFF;
+			border: 1px solid ${({ theme }) => theme.tabBorderColor};
+			background-color: ${({ theme }) => theme.activeTabBackgroundColor};
+			color: ${({ theme }) => theme.activeTabTextColor};
 		}
 
 		.sidebar-social-links a{
-			color: #333;
+			color: ${({ theme }) => theme.formControlText};
 		}
 
 		.app-sidebar-footer {
-			background-color: #F8F9FA;
+			background-color: transparent;
 			padding: 3rem 38px 0;
 			z-index: 10;
 		}
 
 		.sidebar-copyrights {
-			color: #333;
+			color: ${({ theme }) => theme.formControlText};
 			text-align: center;
 			letter-spacing: 2px;
 			font-size: 13px;
@@ -2768,8 +2796,9 @@ export const GlobalStyles = createGlobalStyle`
 			width: 300px;
 			padding: 12px;
 			border-radius: 7px;
-			background-color: #FFF;
+			background-color: ${({ theme }) => theme.dropdownBackgroundColor};
 			box-shadow: 0px 0px 20px #00000033;
+			transition: 0.3s all ease;
 		}
 
 		@media only screen and (max-width: 400px) {
@@ -2782,6 +2811,7 @@ export const GlobalStyles = createGlobalStyle`
 			font-family: 'bold', sans-serif;
 			text-align: center;
 			margin-bottom: 14px;
+			color: ${({ theme }) => theme.formControlText};
 		}
 
 		.app-bar .wallet-details-container > * {
@@ -2797,8 +2827,9 @@ export const GlobalStyles = createGlobalStyle`
 			padding: 12px 30px;
 			min-width: 250px;
 			border-radius: 7px;
-			background-color: #FFF;
+			background-color: ${({ theme }) => theme.dropdownBackgroundColor};
 			box-shadow: 0px 0px 20px #00000033;
+			transition: 0.3s all ease;
 		}
 
 		.app-bar .details-dropdown .detail {
@@ -2869,7 +2900,7 @@ export const GlobalStyles = createGlobalStyle`
 
 		.app-drawer .ant-drawer-body {
 			padding: 3.5rem 0 0;
-			background-color: #F8F9FA;
+			background-color: ${({ theme }) => theme.appDrawerBackgroundColor};
 		}
 
 		.landing-section h1 {
@@ -2950,4 +2981,59 @@ export const GlobalStyles = createGlobalStyle`
 			color: ${({ theme }) => theme.landingParagraph};
 			transition: 0.3s all ease;
 		}
+
+		.MuiPaper-root {
+			background-color: ${({ theme }) => theme.modalBackgroundColor};
+		}
+
+		.app-footer {
+			display: none;
+			align-items: center;
+			justify-content: space-between;
+			padding: 1rem 2rem;
+			background-color: ${({ theme }) => theme.bodyBackgroundColor};
+		}
+
+		.app-footer > div:nth-child(1) {
+			color: ${({ theme }) => theme.formControlText};
+			text-align: center;
+			letter-spacing: 2px;
+			font-size: 13px;
+		}
+
+		.app-footer > div:nth-child(2) a {
+			color: ${({ theme }) => theme.formControlText};
+		}
+
+		.app-footer > div:nth-child(2) a:not(:last-child) {
+			margin-right: 2.5rem;
+		}
+
+		.ant-drawer {
+			display: none;
+		}
+		
+		@media only screen and (max-width: 1200px) {
+			.app-footer {
+				display: flex;
+			}
+
+			.ant-drawer {
+				display: block;
+			}
+		}
+
+		@media only screen and (max-width: 400px) {
+			.app-footer {
+				flex-direction: column;
+			}
+
+			.app-footer > div:nth-child(1) {
+				margin-bottom: 1.25rem;
+			}
+
+			.app-footer > div:nth-child(2) a:not(:last-child) {
+				margin-right: 2.25rem;
+			}
+		} 
 `;

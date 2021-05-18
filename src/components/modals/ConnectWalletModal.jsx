@@ -53,7 +53,6 @@ const ConnectWalletModal = ({
 			PaperProps={{
 				style: {
 					width: "50vw",
-					backgroundColor: "#FFF",
 					boxShadow: "rgba(47, 128, 237, 0.05) 0px 4px 8px 0px",
 					maxWidth: "420px",
 					maxHeight: "90vh",

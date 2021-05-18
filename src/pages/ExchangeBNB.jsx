@@ -908,7 +908,7 @@ class ExchangeBNB extends Component {
 			tokenADecimals,
 			tokenBDecimals,
 		} = this.state;
-		const { walletAddress, theme } = this.props;
+		const { walletAddress } = this.props;
 		this.setState(
 			{
 				[token === "A" ? "approvingTokenA" : "approvingTokenB"]: true,
@@ -949,7 +949,7 @@ class ExchangeBNB extends Component {
 											size={25}
 											thickness={5}
 											style={{
-												color: theme === "light" ? "#DE0102" : "#DEB501",
+												color: "#DE0102",
 												position: "relative",
 												top: "6px",
 											}}
@@ -1076,7 +1076,7 @@ class ExchangeBNB extends Component {
 			tokenBDecimals,
 		} = this.state;
 		const { slippage } = this.context;
-		const { walletAddress, signer, theme } = this.props;
+		const { walletAddress, signer } = this.props;
 		const deadline = moment().add(1, "years").format("X");
 		const amountOut =
 			parseFloat(tokenBAmount) - parseFloat(tokenBAmount) * (parseFloat(slippage) / 100);
@@ -1139,7 +1139,7 @@ class ExchangeBNB extends Component {
 										size={25}
 										thickness={5}
 										style={{
-											color: theme === "light" ? "#DE0102" : "#DEB501",
+											color: "#DE0102",
 											position: "relative",
 											top: "6px",
 										}}
@@ -1255,7 +1255,7 @@ class ExchangeBNB extends Component {
 			tokenADecimals,
 		} = this.state;
 		const { slippage } = this.context;
-		const { walletAddress, signer, theme } = this.props;
+		const { walletAddress, signer } = this.props;
 		const deadline = moment().add(1, "years").format("X");
 		const amountOut =
 			parseFloat(tokenBAmount) - parseFloat(tokenBAmount) * (parseFloat(slippage) / 100);
@@ -1317,7 +1317,7 @@ class ExchangeBNB extends Component {
 										size={25}
 										thickness={5}
 										style={{
-											color: theme === "light" ? "#DE0102" : "#DEB501",
+											color: "#DE0102",
 											position: "relative",
 											top: "6px",
 										}}
@@ -1435,7 +1435,7 @@ class ExchangeBNB extends Component {
 			multipathSwap,
 		} = this.state;
 		const { slippage } = this.context;
-		const { walletAddress, signer, theme } = this.props;
+		const { walletAddress, signer } = this.props;
 		const deadline = moment().add(1, "years").format("X");
 		const amountOut =
 			parseFloat(tokenBAmount) - parseFloat(tokenBAmount) * (parseFloat(slippage) / 100);
@@ -1499,7 +1499,7 @@ class ExchangeBNB extends Component {
 										size={25}
 										thickness={5}
 										style={{
-											color: theme === "light" ? "#DE0102" : "#DEB501",
+											color: "#DE0102",
 											position: "relative",
 											top: "6px",
 										}}
@@ -1724,6 +1724,7 @@ class ExchangeBNB extends Component {
 				<Sidebar active="swap" theme={theme} onThemeToggle={onThemeToggle} />
 				<div className="app-container">
 					<AppBar
+						active="swap"
 						theme={theme}
 						onThemeToggle={onThemeToggle}
 						modalVisible={modalVisible}

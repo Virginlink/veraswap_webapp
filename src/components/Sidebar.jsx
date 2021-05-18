@@ -2,12 +2,8 @@ import React, { Component } from "react";
 import { withRouter } from "react-router";
 import { ExpertModeModal } from "./modals";
 import { FaMedium, FaTelegramPlane, FaTwitter } from "react-icons/fa";
+import { Stake, Swap, Pool, VRAPBlog, VRAPDocs } from "../assets/icons/ReactIcons";
 import Logo from "../assets/images/vrap-red.svg";
-import Stake from "../assets/icons/stake.svg";
-import Swap from "../assets/icons/swap.svg";
-import Pool from "../assets/icons/pool.svg";
-import Blog from "../assets/icons/blog.svg";
-import Docs from "../assets/icons/docs.svg";
 import "./Sidebar.css";
 
 class Sidebar extends Component {
@@ -73,6 +69,7 @@ class Sidebar extends Component {
 
 	render() {
 		const { expertMode, expertModeConfirmationModalVisible, darkMode } = this.state;
+		const { active } = this.props;
 		return (
 			<aside className="app-sidebar">
 				<div className="sidebar-logo">
@@ -82,26 +79,32 @@ class Sidebar extends Component {
 				</div>
 				<ul className="app-links">
 					<li>
-						<a href="/stake" onClick={(e) => this.navigateTo(e, "/stake")}>
-							<img src={Stake} alt="stake" height="20px" width="auto" />
+						<a
+							href="/stake"
+							onClick={(e) => this.navigateTo(e, "/stake")}
+							className={active === "stake" ? "active" : ""}
+						>
+							<Stake />
 							Stake
 						</a>
 					</li>
 					<li>
-						<a href="/swap" onClick={(e) => this.navigateTo(e, "/swap")}>
-							<img src={Swap} alt="swap" height="20px" width="auto" />
+						<a
+							href="/swap"
+							onClick={(e) => this.navigateTo(e, "/swap")}
+							className={active === "swap" ? "active" : ""}
+						>
+							<Swap />
 							Swap
 						</a>
 					</li>
 					<li>
-						<a href="/pool" onClick={(e) => this.navigateTo(e, "/pool")}>
-							<img
-								src={Pool}
-								alt="pool"
-								height="20px"
-								width="auto"
-								style={{ marginRight: "18px" }}
-							/>
+						<a
+							href="/pool"
+							onClick={(e) => this.navigateTo(e, "/pool")}
+							className={active === "pool" ? "active" : ""}
+						>
+							<Pool />
 							Pool
 						</a>
 					</li>
@@ -109,25 +112,13 @@ class Sidebar extends Component {
 				<ul className="app-links">
 					<li>
 						<a href="##" onClick={(e) => this.navigateTo(e, "/")}>
-							<img
-								src={Blog}
-								alt="blog"
-								height="23px"
-								width="auto"
-								style={{ marginRight: "22px" }}
-							/>
+							<VRAPBlog />
 							Blog
 						</a>
 					</li>
 					<li>
 						<a href="##" onClick={(e) => this.navigateTo(e, "/")}>
-							<img
-								src={Docs}
-								alt="docs"
-								height="23px"
-								width="auto"
-								style={{ marginRight: "26px" }}
-							/>
+							<VRAPDocs />
 							Docs
 						</a>
 					</li>

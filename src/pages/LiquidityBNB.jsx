@@ -573,7 +573,7 @@ class LiquidityBNB extends Component {
 			tokenADecimals,
 			tokenBDecimals,
 		} = this.state;
-		const { walletAddress, theme } = this.props;
+		const { walletAddress } = this.props;
 		this.setState(
 			{
 				[token === "A" ? "approvingTokenA" : "approvingTokenB"]: true,
@@ -629,7 +629,7 @@ class LiquidityBNB extends Component {
 											size={25}
 											thickness={5}
 											style={{
-												color: theme === "light" ? "#DE0102" : "#DEB501",
+												color: "#DE0102",
 												position: "relative",
 												top: "6px",
 											}}
@@ -743,7 +743,7 @@ class LiquidityBNB extends Component {
 			tokenADecimals,
 			tokenBDecimals,
 		} = this.state;
-		const { walletAddress, signer, theme } = this.props;
+		const { walletAddress, signer } = this.props;
 		const deadline = moment().add(1, "years").format("X");
 		const data = {
 			walletAddress: walletAddress,
@@ -782,7 +782,7 @@ class LiquidityBNB extends Component {
 										size={25}
 										thickness={5}
 										style={{
-											color: theme === "light" ? "#DE0102" : "#DEB501",
+											color: "#DE0102",
 											position: "relative",
 											top: "6px",
 										}}
@@ -852,7 +852,7 @@ class LiquidityBNB extends Component {
 			tokenBDecimals,
 			liquidityInfo,
 		} = this.state;
-		const { walletAddress, signer, theme } = this.props;
+		const { walletAddress, signer } = this.props;
 		const deadline = moment().add(1, "years").format("X");
 		const amount = tokenA === "BNB" ? tokenBAmount : tokenAAmount;
 		const BNBAmount = tokenA === "BNB" ? tokenAAmount : tokenBAmount;
@@ -909,7 +909,7 @@ class LiquidityBNB extends Component {
 										size={25}
 										thickness={5}
 										style={{
-											color: theme === "light" ? "#DE0102" : "#DEB501",
+											color: "#DE0102",
 											position: "relative",
 											top: "6px",
 										}}
@@ -1117,6 +1117,7 @@ class LiquidityBNB extends Component {
 				<Sidebar active="pool" theme={theme} onThemeToggle={onThemeToggle} />
 				<div className="app-container">
 					<AppBar
+						active="pool"
 						theme={theme}
 						onThemeToggle={onThemeToggle}
 						modalVisible={modalVisible}

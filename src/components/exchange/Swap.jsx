@@ -69,7 +69,7 @@ export default class Swap extends Component {
 							you pay
 							{estimatingB && (
 								<CircularProgress
-									size={9}
+									size={14}
 									thickness={5}
 									style={{
 										position: "relative",
@@ -168,7 +168,7 @@ export default class Swap extends Component {
 							you get
 							{estimatingA && (
 								<CircularProgress
-									size={9}
+									size={14}
 									thickness={5}
 									style={{
 										position: "relative",
