@@ -19,7 +19,6 @@ import {
 } from "./utils/contracts";
 import { ethers } from "ethers";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import Fortmatic from "fortmatic";
 import { TOKEN } from "./utils/tokens";
 import { notification } from "antd";
 import { ConnectWalletModal } from "./components/modals";
@@ -117,8 +116,6 @@ class App extends Component {
 			this.handleWalletConnect();
 		} else if (type === "trustwallet") {
 			this.handleTrustWallet();
-		} else {
-			this.handleFormaticWallet();
 		}
 		this.setState({
 			selectedWallet: type,
@@ -369,27 +366,6 @@ class App extends Component {
 					signer: signer,
 				});
 			}
-		} catch (e) {
-			console.log(e);
-		}
-	}
-
-	async handleFormaticWallet() {
-		try {
-			const fm = new Fortmatic("pk_live_BF6CBA62373566D4");
-			const provider = new ethers.providers.Web3Provider(fm.getProvider());
-			const address = await provider.listAccounts();
-			const signer = provider.getSigner();
-			this.fetchEthBalance(address[0]);
-			this.fetchVrapBalance(address[0]);
-			this.fetchTetherBalance(address[0]);
-			this.setState({
-				walletConnected: true,
-				walletAddress: address[0],
-				connectWalletModalVisible: false,
-				activeWallet: "formatic",
-				signer: signer,
-			});
 		} catch (e) {
 			console.log(e);
 		}

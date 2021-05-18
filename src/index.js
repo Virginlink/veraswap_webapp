@@ -6,16 +6,12 @@ import "./index.css";
 import "antd/dist/antd.css";
 import "rc-slider/assets/index.css";
 import reportWebVitals from "./reportWebVitals";
-import bsc from "@binance-chain/bsc-use-wallet";
-import { UseWalletProvider } from "use-wallet";
 import { AppProvider } from "./state/AppContext";
 ReactDOM.render(
 	<React.StrictMode>
 		<AppProvider>
 			<Router>
-				<UseWalletProvider connectors={{ bsc }}>
-					<App />
-				</UseWalletProvider>
+				<App />
 			</Router>
 		</AppProvider>
 	</React.StrictMode>,
