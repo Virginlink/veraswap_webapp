@@ -38,7 +38,6 @@ import {
 import "./App.css";
 import "./components/Navbar.css";
 import "./components/Sale/Sale.css";
-
 class App extends Component {
 	constructor() {
 		super();
