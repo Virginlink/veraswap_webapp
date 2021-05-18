@@ -429,13 +429,13 @@ class AppBar extends Component {
 					</ul>
 					<ul className="app-links">
 						<li>
-							<a href="##" onClick={(e) => this.navigateTo(e, "/")}>
+							<a href="https://veraswap.medium.com/about" target="_blank" rel="noreferrer noopener">
 								<VRAPBlog />
 								Blog
 							</a>
 						</li>
 						<li>
-							<a href="##" onClick={(e) => this.navigateTo(e, "/")}>
+							<a href="https://docs.veraswap.org/" target="_blank" rel="noreferrer noopener">
 								<VRAPDocs />
 								Docs
 							</a>
@@ -465,13 +465,13 @@ class AppBar extends Component {
 					</div>
 					<div className="app-sidebar-footer">
 						<div className="sidebar-social-links">
-							<a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+							<a href="https://twitter.com/veraswap" target="_blank" rel="noopener noreferrer">
 								<FaTwitter size={24} />
 							</a>
-							<a href="https://telegram.org" target="_blank" rel="noopener noreferrer">
+							<a href="https://t.me/veraswap" target="_blank" rel="noopener noreferrer">
 								<FaTelegramPlane size={24} />
 							</a>
-							<a href="https://medium.com" target="_blank" rel="noopener noreferrer">
+							<a href="https://veraswap.medium.com/about" target="_blank" rel="noopener noreferrer">
 								<FaMedium size={24} />
 							</a>
 						</div>
