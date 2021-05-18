@@ -1,8 +1,10 @@
 import React, { Component } from "react";
+import { Redirect, Route, Switch } from "react-router-dom";
 import { CircularProgress } from "@material-ui/core";
 import Logo from "./assets/images/vrap-red.svg";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyles } from "./components/globalStyles";
+import { lightTheme, darkTheme } from "./components/Themes";
 import {
 	PROVIDER,
 	TOKEN_ABI,
@@ -15,11 +17,9 @@ import {
 	STAKING_ABI,
 	STAKING_ADDRESS_V1,
 } from "./utils/contracts";
-import { lightTheme, darkTheme } from "./components/Themes";
 import { ethers } from "ethers";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import Fortmatic from "fortmatic";
-import { Redirect, Route, Switch } from "react-router-dom";
 import { TOKEN } from "./utils/tokens";
 import { notification } from "antd";
 import { ConnectWalletModal } from "./components/modals";

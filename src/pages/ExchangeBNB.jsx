@@ -4,6 +4,7 @@ import { withRouter } from "react-router";
 import { TOKENS } from "../utils/appTokens";
 import {
 	approveToken,
+	checkIntermediaryLiquidity,
 	estimateInAmounts,
 	estimateOutAmounts,
 	fetchImportedTokens,
@@ -12,6 +13,7 @@ import {
 	getLPInfo,
 	getTokenApproval,
 	getTokenBalance,
+	MULTIPATH_TOKENS,
 	searchToken,
 	storeImportedTokens,
 	swapBNBForTokens,
@@ -77,6 +79,7 @@ class ExchangeBNB extends Component {
 			invalidPair: false,
 			confirmationModalVisible: false,
 			multipathSwap: false,
+			multipathToken: "",
 		};
 	}
 
@@ -366,33 +369,30 @@ class ExchangeBNB extends Component {
 			this.setState({ fetchingLiquidity: true }, async () => {
 				getLPAddress(tokenAAddress, tokenBAddress)
 					.then((lpAddress) => {
-						// console.log(lpAddress)
 						if (lpAddress === "0x0000000000000000000000000000000000000000") {
-							// this.setState({
-							// 	fetchingLiquidity: false,
-							// 	liquidityInfo: null,
-							// })
 							if (tokenA === "BNB" || tokenB === "BNB") {
 								this.setState({
 									multipathSwap: false,
+									multipathToken: "",
 									fetchingLiquidity: false,
 									liquidityInfo: null,
 								});
 							} else if (tokenA === "WBNB" || tokenB === "BNB") {
 								this.setState({
 									multipathSwap: false,
+									multipathToken: "",
 									fetchingLiquidity: false,
 									liquidityInfo: null,
 								});
 							} else {
-								this.checkIntermediaryLiquidity();
+								this.checkMultiPath();
 							}
 						} else {
-							// console.log('LP Address', lpAddress)
 							getLPInfo(lpAddress, this.props.walletAddress, tokenAAddress, tokenBAddress)
 								.then((liquidityInfo) => {
 									this.setState({
 										multipathSwap: false,
+										multipathToken: "",
 										fetchingLiquidity: false,
 										liquidityInfo: liquidityInfo.data,
 										tokenASupply: liquidityInfo.data.A,
@@ -405,6 +405,7 @@ class ExchangeBNB extends Component {
 											fetchingLiquidity: false,
 											liquidityInfo: null,
 											multipathSwap: false,
+											multipathToken: "",
 										},
 										() => {
 											console.log(err.message);
@@ -419,6 +420,7 @@ class ExchangeBNB extends Component {
 								fetchingLiquidity: false,
 								liquidityInfo: null,
 								multipathSwap: false,
+								multipathToken: "",
 							},
 							() => {
 								console.log(err);
@@ -429,69 +431,70 @@ class ExchangeBNB extends Component {
 		}
 	};
 
-	checkIntermediaryLiquidity = async () => {
-		const { tokenAAddress, tokenBAddress } = this.state;
+	checkMultiPath = async () => {
 		try {
-			const tokenAwithBNBAddress = await getLPAddress(tokenAAddress, WBNB_ADDRESS);
-			if (tokenAwithBNBAddress !== "0x0000000000000000000000000000000000000000") {
-				const resultA = await getLPInfo(
-					tokenAwithBNBAddress,
-					this.props.walletAddress,
-					tokenAAddress,
-					WBNB_ADDRESS
-				);
-				if (resultA.data.hasLiquidity) {
-					const tokenBwithBNBAddress = await getLPAddress(WBNB_ADDRESS, tokenBAddress);
-					if (tokenAwithBNBAddress !== "0x0000000000000000000000000000000000000000") {
-						const resultB = await getLPInfo(
-							tokenBwithBNBAddress,
-							this.props.walletAddress,
-							WBNB_ADDRESS,
-							tokenBAddress
-						);
-						if (resultB.data.hasLiquidity) {
-							this.setState(
-								{
-									multipathSwap: true,
-									liquidityInfo: resultB.data,
-									tokenASupply: resultA.data.A,
-									tokenBSupply: resultB.data.B,
-								},
-								() => {
-									this.setState({ fetchingLiquidity: false });
-								}
-							);
-						} else {
-							this.setState({
-								multipathSwap: false,
-								fetchingLiquidity: false,
-								liquidityInfo: null,
-							});
-						}
-					} else {
-						this.setState({
-							multipathSwap: false,
-							fetchingLiquidity: false,
-							liquidityInfo: null,
+			const { tokenA, tokenAAddress, tokenB, tokenBAddress } = this.state;
+			const { walletAddress } = this.props;
+			let prices = [];
+			const tokens = {
+				A: {
+					name: tokenA,
+					address: tokenAAddress,
+				},
+				B: {
+					name: tokenB,
+					address: tokenBAddress,
+				},
+			};
+			await Promise.all(
+				MULTIPATH_TOKENS.map(async ({ name, address }) => {
+					const result = await checkIntermediaryLiquidity(name, address, tokens, walletAddress);
+					if (result.data) {
+						const tokenAAmount = parseFloat(result.data.tokenASupply) * (10 / 100);
+						const priceData = {
+							tokenASupply: result.data.tokenASupply,
+							tokenBSupply: result.data.tokenBSupply,
+							amount: tokenAAmount,
+						};
+						const impact = this.calculatePriceImpact(priceData);
+						prices.push({
+							name: name,
+							impact: impact,
+							liquidityInfo: result.data.liquidityInfo,
+							tokenASupply: result.data.tokenASupply,
+							tokenBSupply: result.data.tokenBSupply,
 						});
 					}
-				} else {
-					this.setState({
-						multipathSwap: false,
-						fetchingLiquidity: false,
-						liquidityInfo: null,
-					});
-				}
+				})
+			);
+			prices.sort((a, b) => a.impact - b.impact);
+			if (prices.length > 0) {
+				console.log(
+					"Best route",
+					`${this.state.tokenA} > ${prices[0].name} > ${this.state.tokenB}`
+				);
+				this.setState({
+					fetchingLiquidity: false,
+					multipathSwap: true,
+					multipathToken: prices[0].name,
+					liquidityInfo: prices[0].liquidityInfo,
+					tokenASupply: prices[0].tokenASupply,
+					tokenBSupply: prices[0].tokenBSupply,
+				});
 			} else {
 				this.setState({
-					multipathSwap: false,
 					fetchingLiquidity: false,
+					multipathSwap: false,
+					multipathToken: "",
 					liquidityInfo: null,
+					tokenASupply: "",
+					tokenBSupply: "",
 				});
 			}
-		} catch (err) {
+		} catch (_) {
 			this.setState({
 				multipathSwap: false,
+				multipathToken: "",
 				fetchingLiquidity: false,
 				liquidityInfo: null,
 			});
@@ -523,6 +526,7 @@ class ExchangeBNB extends Component {
 					tokenADecimals: token.decimals,
 					tokenAAddress: token.contractAddress,
 					multipathSwap: false,
+					multipathToken: "",
 				},
 				() => {
 					if (walletConnected) {
@@ -561,6 +565,7 @@ class ExchangeBNB extends Component {
 					tokenBDecimals: token.decimals,
 					tokenBAddress: token.contractAddress,
 					multipathSwap: false,
+					multipathToken: "",
 				},
 				() => {
 					if (walletConnected) {
@@ -619,6 +624,7 @@ class ExchangeBNB extends Component {
 				tokenAPrice: "",
 				tokenBPrice: "",
 				multipathSwap: false,
+				multipathToken: "",
 			},
 			() => {
 				if (walletConnected) {
@@ -739,14 +745,18 @@ class ExchangeBNB extends Component {
 			tokenBSupply,
 			tokenASupply,
 			multipathSwap,
+			multipathToken,
 		} = this.state;
 		if (tokenABalance && tokenBBalance && liquidityInfo && liquidityInfo.hasLiquidity) {
 			if (type === "A") {
 				this.setState({ estimatingA: true }, () => {
+					const intermediaryTokenAddress = MULTIPATH_TOKENS.filter(
+						(token) => token.name === multipathToken
+					)[0].address;
 					const estimateData = {
 						amount: tokenAAmount.toString(),
 						addresses: multipathSwap
-							? [tokenAAddress, WBNB_ADDRESS, tokenBAddress]
+							? [tokenAAddress, intermediaryTokenAddress, tokenBAddress]
 							: [tokenAAddress, tokenBAddress],
 						token: tokenA,
 						decimals: tokenADecimals,
@@ -794,10 +804,13 @@ class ExchangeBNB extends Component {
 				});
 			} else if (type === "B") {
 				this.setState({ estimatingB: true }, () => {
+					const intermediaryTokenAddress = MULTIPATH_TOKENS.filter(
+						(token) => token.name === multipathToken
+					)[0].address;
 					const estimateData = {
 						amount: tokenBAmount.toString(),
 						addresses: multipathSwap
-							? [tokenAAddress, WBNB_ADDRESS, tokenBAddress]
+							? [tokenAAddress, intermediaryTokenAddress, tokenBAddress]
 							: [tokenAAddress, tokenBAddress],
 						token: tokenB,
 						decimals: tokenBDecimals,
@@ -846,8 +859,11 @@ class ExchangeBNB extends Component {
 		}
 	};
 
-	calculatePriceImpact = () => {
-		const { tokenASupply, tokenBSupply, tokenAAmount } = this.state;
+	calculatePriceImpact = (priceData = null) => {
+		const { tokenASupply: supplyA, tokenBSupply: supplyB, tokenAAmount: amount } = this.state;
+		const tokenASupply = priceData ? priceData.tokenASupply : supplyA;
+		const tokenBSupply = priceData ? priceData.tokenBSupply : supplyB;
+		const tokenAAmount = priceData ? priceData.amount : amount;
 		// console.log(`Swapping ${tokenAAmount} ${tokenA} for ${tokenBAmount} ${tokenB} `)
 		// console.log(`${tokenA} supply`, tokenASupply)
 		// console.log(`${tokenB} supply`, tokenBSupply)
@@ -865,18 +881,22 @@ class ExchangeBNB extends Component {
 		const priceDifference = newPrice - marketPrice;
 		const impact = (priceDifference / marketPrice) * 100;
 		// console.log('IMPACT', impact)
-		this.setState(
-			{
-				impact: impact.toFixed(2),
-			},
-			() => {
-				if (impact <= 20 && impact > 0.01) {
-					this.context.updateSlippage(impact.toFixed(2));
-				} else {
-					this.context.updateSlippage("0.5");
+		if (priceData) {
+			return impact;
+		} else {
+			this.setState(
+				{
+					impact: impact.toFixed(2),
+				},
+				() => {
+					if (impact <= 20 && impact > 0.01) {
+						this.context.updateSlippage(impact.toFixed(2));
+					} else {
+						this.context.updateSlippage("0.5");
+					}
 				}
-			}
-		);
+			);
+		}
 	};
 
 	handleMax = (token) => {
@@ -1433,6 +1453,7 @@ class ExchangeBNB extends Component {
 			tokenADecimals,
 			tokenBDecimals,
 			multipathSwap,
+			multipathToken,
 		} = this.state;
 		const { slippage } = this.context;
 		const { walletAddress, signer } = this.props;
@@ -1440,11 +1461,14 @@ class ExchangeBNB extends Component {
 		const amountOut =
 			parseFloat(tokenBAmount) - parseFloat(tokenBAmount) * (parseFloat(slippage) / 100);
 		this.setState({ swapping: true }, () => {
+			const intermediaryTokenAddress = MULTIPATH_TOKENS.filter(
+				(token) => token.name === multipathToken
+			)[0].address;
 			const swapData = {
 				amountIn: tokenAAmount,
 				amountOut: amountOut.toString(),
 				tokenAddresses: multipathSwap
-					? [tokenAAddress, WBNB_ADDRESS, tokenBAddress]
+					? [tokenAAddress, intermediaryTokenAddress, tokenBAddress]
 					: [tokenAAddress, tokenBAddress],
 				walletAddress: walletAddress,
 				deadline: parseFloat(deadline),
@@ -1703,6 +1727,7 @@ class ExchangeBNB extends Component {
 			fetchingTokenA,
 			fetchingTokenB,
 			multipathSwap,
+			multipathToken,
 		} = this.state;
 		const {
 			onModalToggle,
@@ -1898,7 +1923,7 @@ class ExchangeBNB extends Component {
 										{!fetchingLiquidity && multipathSwap && (
 											<div className="flex-spaced-container" style={{ fontSize: "13px" }}>
 												<div>Route</div>
-												<div>{`${tokenA} > BNB > ${tokenB}`}</div>
+												<div>{`${tokenA} > ${multipathToken} > ${tokenB}`}</div>
 											</div>
 										)}
 									</div>

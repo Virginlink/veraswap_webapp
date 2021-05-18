@@ -11,6 +11,21 @@ import {
 
 // const ABI = process.env.NODE_ENV === 'development' ? DONUT_ABI : TOKEN_ABI
 
+export const MULTIPATH_TOKENS = [
+	{
+		name: "WBNB",
+		address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+	},
+	{
+		name: "BUSDT",
+		address: "0x55d398326f99059fF775485246999027B3197955",
+	},
+	{
+		name: "BUSD",
+		address: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+	},
+];
+
 const ABI = TOKEN_ABI;
 
 const factoryContract = new ethers.Contract(FACTORY_ADDRESS, FACTORY_ABI, PROVIDER);
@@ -601,6 +616,83 @@ export const getPoolName = (address) => {
 			reject({
 				error: true,
 				message: err.message,
+			});
+		}
+	});
+};
+
+export const checkIntermediaryLiquidity = (
+	name,
+	intermediaryTokenAddress,
+	tokens,
+	walletAddress
+) => {
+	return new Promise(async (resolve) => {
+		try {
+			const { A, B } = tokens;
+			console.log(`Trying ${A.name} > ${name} > ${B.name}`);
+			const tokenAwithBNBAddress = await getLPAddress(A.address, intermediaryTokenAddress);
+			if (tokenAwithBNBAddress !== "0x0000000000000000000000000000000000000000") {
+				console.log(`${A.name}/${name} address - ${tokenAwithBNBAddress}`);
+				const resultA = await getLPInfo(
+					tokenAwithBNBAddress,
+					walletAddress,
+					A.address,
+					intermediaryTokenAddress
+				);
+				if (resultA.data.hasLiquidity) {
+					const tokenBwithBNBAddress = await getLPAddress(intermediaryTokenAddress, B.address);
+					if (tokenBwithBNBAddress !== "0x0000000000000000000000000000000000000000") {
+						console.log(`${name}/${B.name} address - ${tokenBwithBNBAddress}`);
+						const resultB = await getLPInfo(
+							tokenBwithBNBAddress,
+							walletAddress,
+							intermediaryTokenAddress,
+							B.address
+						);
+						if (resultB.data.hasLiquidity) {
+							resolve({
+								error: false,
+								data: {
+									liquidityInfo: resultB.data,
+									tokenASupply: resultA.data.A,
+									tokenBSupply: resultB.data.B,
+								},
+							});
+						} else {
+							resolve({
+								error: true,
+								data: null,
+							});
+						}
+					} else {
+						console.log(
+							`${name}/${B.name} pair not found, abandoning route ${A.name} > ${name} > ${B.name}`
+						);
+						resolve({
+							error: true,
+							data: null,
+						});
+					}
+				} else {
+					resolve({
+						error: true,
+						data: null,
+					});
+				}
+			} else {
+				console.log(
+					`${A.name}/${name} pair not found, abandoning route ${A.name} > ${name} > ${B.name}`
+				);
+				resolve({
+					error: true,
+					data: null,
+				});
+			}
+		} catch (err) {
+			resolve({
+				error: true,
+				data: null,
 			});
 		}
 	});
