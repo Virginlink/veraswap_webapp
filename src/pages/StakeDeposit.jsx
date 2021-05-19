@@ -322,7 +322,6 @@ class StakeDeposit extends Component {
 													viewBox="0 0 24 24"
 													fill="none"
 													xmlns="http://www.w3.org/2000/svg"
-													class="sc-bYSBpT fhfZBu sc-gqPbQI dCfdPK"
 												>
 													<path
 														d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 9.27455 20.9097 6.80375 19.1414 5"
@@ -424,7 +423,6 @@ class StakeDeposit extends Component {
 									stroke-width="2"
 									stroke-linecap="round"
 									stroke-linejoin="round"
-									class="sc-jnlKLf fEBVhk"
 								>
 									<line x1="18" y1="6" x2="6" y2="18"></line>
 									<line x1="6" y1="6" x2="18" y2="18"></line>
@@ -475,7 +473,6 @@ class StakeDeposit extends Component {
 									stroke-width="2"
 									stroke-linecap="round"
 									stroke-linejoin="round"
-									class="sc-jnlKLf fEBVhk"
 								>
 									<line x1="18" y1="6" x2="6" y2="18"></line>
 									<line x1="6" y1="6" x2="18" y2="18"></line>
@@ -536,7 +533,6 @@ class StakeDeposit extends Component {
 														borderRadius: "24px",
 														boxShadow: "rgba(0, 0, 0, 0.075) 0px 6px 10px",
 													}}
-													class="sc-fZwumE evMpaO"
 													alt="logo"
 													src={this.state.icon}
 												/>
@@ -611,7 +607,6 @@ class StakeDeposit extends Component {
 												viewBox="0 0 24 24"
 												fill="none"
 												xmlns="http://www.w3.org/2000/svg"
-												class="sc-bYSBpT fhfZBu sc-gqPbQI dCfdPK"
 											>
 												<path
 													d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 9.27455 20.9097 6.80375 19.1414 5"
@@ -654,7 +649,6 @@ class StakeDeposit extends Component {
 												viewBox="0 0 24 24"
 												fill="none"
 												xmlns="http://www.w3.org/2000/svg"
-												class="sc-bYSBpT fhfZBu sc-gqPbQI dCfdPK"
 											>
 												<path
 													d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 9.27455 20.9097 6.80375 19.1414 5"

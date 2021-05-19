@@ -630,10 +630,10 @@ export const checkIntermediaryLiquidity = (
 	return new Promise(async (resolve) => {
 		try {
 			const { A, B } = tokens;
-			console.log(`Trying ${A.name} > ${name} > ${B.name}`);
+			// console.log(`Trying ${A.name} > ${name} > ${B.name}`);
 			const tokenAwithBNBAddress = await getLPAddress(A.address, intermediaryTokenAddress);
 			if (tokenAwithBNBAddress !== "0x0000000000000000000000000000000000000000") {
-				console.log(`${A.name}/${name} address - ${tokenAwithBNBAddress}`);
+				// console.log(`${A.name}/${name} address - ${tokenAwithBNBAddress}`);
 				const resultA = await getLPInfo(
 					tokenAwithBNBAddress,
 					walletAddress,
@@ -643,7 +643,7 @@ export const checkIntermediaryLiquidity = (
 				if (resultA.data.hasLiquidity) {
 					const tokenBwithBNBAddress = await getLPAddress(intermediaryTokenAddress, B.address);
 					if (tokenBwithBNBAddress !== "0x0000000000000000000000000000000000000000") {
-						console.log(`${name}/${B.name} address - ${tokenBwithBNBAddress}`);
+						// console.log(`${name}/${B.name} address - ${tokenBwithBNBAddress}`);
 						const resultB = await getLPInfo(
 							tokenBwithBNBAddress,
 							walletAddress,
@@ -666,9 +666,9 @@ export const checkIntermediaryLiquidity = (
 							});
 						}
 					} else {
-						console.log(
-							`${name}/${B.name} pair not found, abandoning route ${A.name} > ${name} > ${B.name}`
-						);
+						// console.log(
+						// 	`${name}/${B.name} pair not found, abandoning route ${A.name} > ${name} > ${B.name}`
+						// );
 						resolve({
 							error: true,
 							data: null,
@@ -681,9 +681,9 @@ export const checkIntermediaryLiquidity = (
 					});
 				}
 			} else {
-				console.log(
-					`${A.name}/${name} pair not found, abandoning route ${A.name} > ${name} > ${B.name}`
-				);
+				// console.log(
+				// 	`${A.name}/${name} pair not found, abandoning route ${A.name} > ${name} > ${B.name}`
+				// );
 				resolve({
 					error: true,
 					data: null,

@@ -465,7 +465,7 @@ class ExchangeBNB extends Component {
 			if (prices.length > 0) {
 				prices.sort((a, b) => parseFloat(a.tokenASupply) - parseFloat(b.tokenASupply));
 				const tokenAAmount = parseFloat(prices[0].tokenASupply) * (10 / 100);
-				console.log("Amount to swap", `${tokenAAmount.toFixed(3)} ${tokenA}`);
+				// console.log("Amount to swap", `${tokenAAmount.toFixed(3)} ${tokenA}`);
 				const newPrices = await Promise.all(
 					prices.map(async (token) => {
 						const tokenBAmountResult = await estimateOutAmounts({
@@ -482,18 +482,18 @@ class ExchangeBNB extends Component {
 					})
 				);
 				newPrices.sort((a, b) => b.price - a.price);
-				console.log(
-					`Prices & Tokens received for swapping ${tokenAAmount.toFixed(3)} ${tokenA}`,
-					newPrices.map((token) => ({
-						name: token.name,
-						price: token.price,
-						received: token.received,
-					}))
-				);
-				console.log(
-					"Best route",
-					`${this.state.tokenA} > ${newPrices[0].name} > ${this.state.tokenB}`
-				);
+				// console.log(
+				// 	`Prices & Tokens received for swapping ${tokenAAmount.toFixed(3)} ${tokenA}`,
+				// 	newPrices.map((token) => ({
+				// 		name: token.name,
+				// 		price: token.price,
+				// 		received: token.received,
+				// 	}))
+				// );
+				// console.log(
+				// 	"Best route",
+				// 	`${this.state.tokenA} > ${newPrices[0].name} > ${this.state.tokenB}`
+				// );
 				this.setState({
 					fetchingLiquidity: false,
 					multipathSwap: true,
