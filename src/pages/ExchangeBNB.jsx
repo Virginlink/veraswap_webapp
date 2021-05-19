@@ -450,16 +450,8 @@ class ExchangeBNB extends Component {
 				MULTIPATH_TOKENS.map(async ({ name, address }) => {
 					const result = await checkIntermediaryLiquidity(name, address, tokens, walletAddress);
 					if (result.data) {
-						const tokenAAmount = parseFloat(result.data.tokenASupply) * (10 / 100);
-						const priceData = {
-							tokenASupply: result.data.tokenASupply,
-							tokenBSupply: result.data.tokenBSupply,
-							amount: tokenAAmount,
-						};
-						const impact = this.calculatePriceImpact(priceData);
 						prices.push({
 							name: name,
-							impact: impact,
 							liquidityInfo: result.data.liquidityInfo,
 							tokenASupply: result.data.tokenASupply,
 							tokenBSupply: result.data.tokenBSupply,
@@ -467,8 +459,19 @@ class ExchangeBNB extends Component {
 					}
 				})
 			);
-			prices.sort((a, b) => a.impact - b.impact);
+			prices.sort((a, b) => parseFloat(a.tokenASupply) - parseFloat(b.tokenASupply));
 			if (prices.length > 0) {
+				const tokenAAmount = parseFloat(prices[0].tokenASupply) * (10 / 100);
+				prices.forEach((token) => {
+					const priceData = {
+						tokenASupply: token.tokenASupply,
+						tokenBSupply: token.tokenBSupply,
+						amount: tokenAAmount,
+					};
+					const impact = this.calculatePriceImpact(priceData);
+					token.impact = impact;
+				});
+				prices.sort((a, b) => a.impact - b.impact);
 				console.log(
 					"Best route",
 					`${this.state.tokenA} > ${prices[0].name} > ${this.state.tokenB}`

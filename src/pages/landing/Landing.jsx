@@ -71,7 +71,7 @@ class Landing extends Component {
 											<span>VRAP Price</span>
 										</div>
 										<div className="detail">
-											<p>100,000,000</p>
+											<p>8,840,214.755</p>
 											<span>VRAP in circulation</span>
 										</div>
 										<div className="detail">
