@@ -102,6 +102,7 @@ class AppBar extends Component {
 	};
 
 	handleSlippageChange = (e) => {
+		e.persist();
 		const { updateSlippage } = this.context;
 		if (e.target.value.match(/^(\d+)?([.]?\d{0,9})?$/)) {
 			this.setState({ slippage: e.target.value, localSlippage: e.target.value }, () =>
@@ -111,6 +112,7 @@ class AppBar extends Component {
 	};
 
 	handleDeadlineChange = (e) => {
+		e.persist();
 		const { updateDeadline } = this.context;
 		if (e.target.value.match(/^[0-9]*$/)) {
 			this.setState({ deadline: e.target.value, localDeadline: e.target.value }, () =>
