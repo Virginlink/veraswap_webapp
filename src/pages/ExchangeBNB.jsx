@@ -771,9 +771,12 @@ class ExchangeBNB extends Component {
 		if (tokenABalance && tokenBBalance && liquidityInfo && liquidityInfo.hasLiquidity) {
 			if (type === "A") {
 				this.setState({ estimatingA: true }, () => {
-					const intermediaryTokenAddress = MULTIPATH_TOKENS.filter(
-						(token) => token.name === multipathToken
-					)[0].address;
+					let intermediaryTokenAddress;
+					if (multipathSwap) {
+						intermediaryTokenAddress = MULTIPATH_TOKENS.filter(
+							(token) => token.name === multipathToken
+						)[0].address;
+					}
 					const estimateData = {
 						amount: tokenAAmount.toString(),
 						addresses: multipathSwap
@@ -825,9 +828,12 @@ class ExchangeBNB extends Component {
 				});
 			} else if (type === "B") {
 				this.setState({ estimatingB: true }, () => {
-					const intermediaryTokenAddress = MULTIPATH_TOKENS.filter(
-						(token) => token.name === multipathToken
-					)[0].address;
+					let intermediaryTokenAddress;
+					if (multipathSwap) {
+						intermediaryTokenAddress = MULTIPATH_TOKENS.filter(
+							(token) => token.name === multipathToken
+						)[0].address;
+					}
 					const estimateData = {
 						amount: tokenBAmount.toString(),
 						addresses: multipathSwap
@@ -1482,9 +1488,12 @@ class ExchangeBNB extends Component {
 		const amountOut =
 			parseFloat(tokenBAmount) - parseFloat(tokenBAmount) * (parseFloat(slippage) / 100);
 		this.setState({ swapping: true }, () => {
-			const intermediaryTokenAddress = MULTIPATH_TOKENS.filter(
-				(token) => token.name === multipathToken
-			)[0].address;
+			let intermediaryTokenAddress;
+			if (multipathSwap) {
+				intermediaryTokenAddress = MULTIPATH_TOKENS.filter(
+					(token) => token.name === multipathToken
+				)[0].address;
+			}
 			const swapData = {
 				amountIn: tokenAAmount,
 				amountOut: amountOut.toString(),

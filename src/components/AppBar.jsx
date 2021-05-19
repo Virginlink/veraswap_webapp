@@ -4,7 +4,16 @@ import LogoWhite from "../assets/images/vrap-white.svg";
 import { ExpertModeModal } from "./modals";
 import { FaMedium, FaTelegramPlane, FaTwitter } from "react-icons/fa";
 import Logo from "../assets/images/vrap-red.svg";
-import { Stake, Swap, Pool, VRAPDocs, ICO, Audit, Analytics } from "../assets/icons/ReactIcons";
+import {
+	Stake,
+	Swap,
+	Pool,
+	VRAPDocs,
+	ICO,
+	Audit,
+	Analytics,
+	VRAPBlog,
+} from "../assets/icons/ReactIcons";
 import { RiSettingsFill, RiWallet3Fill } from "react-icons/ri";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import { AccountAvatar } from "../assets/icons/ReactIcons";
@@ -463,7 +472,7 @@ class AppBar extends Component {
 								className={active === "ico" ? "active" : ""}
 							>
 								<ICO />
-								ICO
+								IDO
 							</a>
 						</li>
 						<li>
@@ -486,6 +495,12 @@ class AppBar extends Component {
 							<a href="##" onClick={(e) => e.preventDefault()}>
 								<VRAPDocs />
 								Listings
+							</a>
+						</li>
+						<li>
+							<a href="https://docs.veraswap.org/" target="_blank" rel="noreferrer noopener">
+								<VRAPBlog />
+								Docs
 							</a>
 						</li>
 					</ul>

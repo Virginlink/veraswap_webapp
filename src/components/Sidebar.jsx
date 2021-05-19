@@ -2,7 +2,16 @@ import React, { Component } from "react";
 import { withRouter } from "react-router";
 import { ExpertModeModal } from "./modals";
 import { FaMedium, FaTelegramPlane, FaTwitter } from "react-icons/fa";
-import { Stake, Swap, Pool, VRAPDocs, ICO, Audit, Analytics } from "../assets/icons/ReactIcons";
+import {
+	Stake,
+	Swap,
+	Pool,
+	VRAPDocs,
+	ICO,
+	Audit,
+	Analytics,
+	VRAPBlog,
+} from "../assets/icons/ReactIcons";
 import Logo from "../assets/images/vrap-red.svg";
 import "./Sidebar.css";
 
@@ -115,7 +124,7 @@ class Sidebar extends Component {
 							className={active === "ico" ? "active" : ""}
 						>
 							<ICO />
-							ICO
+							IDO
 						</a>
 					</li>
 					<li>
@@ -131,13 +140,19 @@ class Sidebar extends Component {
 					<li>
 						<a href="##" onClick={(e) => e.preventDefault()}>
 							<Analytics style={{ transform: "scale(1.2)", position: "relative", left: "3px" }} />
-							<span style={{ position: "relative", left: "5px" }}>Analytics</span>
+							<span style={{ position: "relative", left: "px" }}>Analytics</span>
 						</a>
 					</li>
 					<li>
 						<a href="##" onClick={(e) => e.preventDefault()}>
 							<VRAPDocs />
 							Listings
+						</a>
+					</li>
+					<li>
+						<a href="https://docs.veraswap.org/" target="_blank" rel="noreferrer noopener">
+							<VRAPBlog />
+							Docs
 						</a>
 					</li>
 				</ul>
