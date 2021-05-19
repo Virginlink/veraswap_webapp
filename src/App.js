@@ -301,10 +301,18 @@ class App extends Component {
 					});
 				}
 			} else {
-				console.log("Error");
+				notification["error"]({
+					message: "Couldn't find any wallets",
+					description: "Make sure metamask is supported and installed on your browser",
+				});
 			}
-		} catch (e) {
-			console.log(e);
+		} catch (err) {
+			this.setState({ showWalletConnection: false }, () => {
+				notification["error"]({
+					message: "Couldn't connect wallet",
+					description: err.message,
+				});
+			});
 		}
 	}
 
@@ -317,10 +325,16 @@ class App extends Component {
 				qrcode: true,
 				chainId: 56,
 			});
-			await web3Provider.enable().catch((e) => {
-				console.log(e);
+			await web3Provider.enable().catch((err) => {
+				this.setState({ showWalletConnection: false }, () => {
+					notification["error"]({
+						message: "Couldn't connect wallet",
+						description: err.message,
+					});
+				});
 			});
 			const provider = new ethers.providers.Web3Provider(web3Provider);
+			provider.on("disconnect", (_, reason) => console.log(reason));
 			const address = await provider.listAccounts();
 			const signer = provider.getSigner();
 			let network = await provider.getNetwork();
@@ -343,8 +357,14 @@ class App extends Component {
 					signer: signer,
 				});
 			}
-		} catch (e) {
-			console.log(e);
+		} catch (err) {
+			console.log(err);
+			this.setState({ showWalletConnection: false }, () => {
+				notification["error"]({
+					message: "Couldn't connect wallet",
+					description: err.message,
+				});
+			});
 		}
 	}
 
@@ -366,8 +386,13 @@ class App extends Component {
 					signer: signer,
 				});
 			}
-		} catch (e) {
-			console.log(e);
+		} catch (err) {
+			this.setState({ showWalletConnection: false }, () => {
+				notification["error"]({
+					message: "Couldn't connect wallet",
+					description: err.message,
+				});
+			});
 		}
 	}
 
