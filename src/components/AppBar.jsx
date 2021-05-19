@@ -1,16 +1,17 @@
 import React, { Component } from "react";
-import { ClickAwayListener, Fade } from "@material-ui/core";
+import { CircularProgress, ClickAwayListener, Fade } from "@material-ui/core";
 import LogoWhite from "../assets/images/vrap-white.svg";
 import { ExpertModeModal } from "./modals";
 import { FaMedium, FaTelegramPlane, FaTwitter } from "react-icons/fa";
 import Logo from "../assets/images/vrap-red.svg";
-import { Stake, Swap, Pool, VRAPBlog, VRAPDocs } from "../assets/icons/ReactIcons";
+import { Stake, Swap, Pool, VRAPDocs, ICO, Audit, Analytics } from "../assets/icons/ReactIcons";
 import { RiSettingsFill, RiWallet3Fill } from "react-icons/ri";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import { AccountAvatar } from "../assets/icons/ReactIcons";
 import AppContext from "../state/AppContext";
 import { Drawer } from "antd";
 import { withRouter } from "react-router";
+import { getVRAPPrice } from "../utils/helpers";
 import "./Sidebar.css";
 class AppBar extends Component {
 	static contextType = AppContext;
@@ -18,6 +19,8 @@ class AppBar extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			vrapPrice: "",
+			fetchingVrapPrice: false,
 			slippage: "0.5",
 			localSlippage: "",
 			localDeadline: "",
@@ -45,6 +48,7 @@ class AppBar extends Component {
 		if (expertMode === "true") {
 			this.setState({ expertMode: true });
 		}
+		this.fetchVRAPPrice();
 	}
 
 	componentDidUpdate() {
@@ -60,6 +64,24 @@ class AppBar extends Component {
 			});
 		}
 	}
+
+	fetchVRAPPrice = () => {
+		this.setState({ fetchingVrapPrice: true }, () => {
+			getVRAPPrice()
+				.then((res) => {
+					this.setState({ fetchingVrapPrice: false }, () => {
+						if (!res.error) {
+							this.setState({
+								vrapPrice: parseFloat(res.price).toFixed(3),
+							});
+						}
+					});
+				})
+				.catch((_) => {
+					this.setState({ fetchingVrapPrice: false });
+				});
+		});
+	};
 
 	toggleSettingsMenu = () => {
 		const { settingsMenuVisible } = this.state;
@@ -173,6 +195,8 @@ class AppBar extends Component {
 			expertModeConfirmationModalVisible,
 			expertMode,
 			darkMode,
+			fetchingVrapPrice,
+			vrapPrice,
 		} = this.state;
 		const { onModalToggle, walletAddress, walletConnected, ethBalance, home, history, active } =
 			this.props;
@@ -365,7 +389,13 @@ class AppBar extends Component {
 									<div className="details-dropdown">
 										<div className="category">Your VRAP Breakdown</div>
 										<div className="detail">
-											<p>$0.05</p>
+											<p>
+												{fetchingVrapPrice ? (
+													<CircularProgress size={16} thickness={5} />
+												) : (
+													`$${vrapPrice}`
+												)}
+											</p>
 											<span>VRAP Price</span>
 										</div>
 										<div className="detail">
@@ -398,16 +428,6 @@ class AppBar extends Component {
 					<ul className="app-links">
 						<li>
 							<a
-								href="/stake"
-								onClick={(e) => this.navigateTo(e, "/stake")}
-								className={active === "stake" ? "active" : ""}
-							>
-								<Stake />
-								Stake
-							</a>
-						</li>
-						<li>
-							<a
 								href="/swap"
 								onClick={(e) => this.navigateTo(e, "/swap")}
 								className={active === "swap" ? "active" : ""}
@@ -426,18 +446,46 @@ class AppBar extends Component {
 								Pool
 							</a>
 						</li>
-					</ul>
-					<ul className="app-links">
 						<li>
-							<a href="https://veraswap.medium.com/about" target="_blank" rel="noreferrer noopener">
-								<VRAPBlog />
-								Blog
+							<a
+								href="/stake"
+								onClick={(e) => this.navigateTo(e, "/stake")}
+								className={active === "stake" ? "active" : ""}
+							>
+								<Stake />
+								Stake
 							</a>
 						</li>
 						<li>
-							<a href="https://docs.veraswap.org/" target="_blank" rel="noreferrer noopener">
+							<a
+								href="##"
+								onClick={(e) => e.preventDefault()}
+								className={active === "ico" ? "active" : ""}
+							>
+								<ICO />
+								ICO
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://solidity.finance/audits/Vera-Staking/"
+								target="_blank"
+								rel="noreferrer noopener"
+							>
+								<Audit />
+								Audits
+							</a>
+						</li>
+						<li>
+							<a href="##" onClick={(e) => e.preventDefault()}>
+								<Analytics style={{ transform: "scale(1.2)", position: "relative", left: "3px" }} />
+								<span style={{ position: "relative", left: "5px" }}>Analytics</span>
+							</a>
+						</li>
+						<li>
+							<a href="##" onClick={(e) => e.preventDefault()}>
 								<VRAPDocs />
-								Docs
+								Listings
 							</a>
 						</li>
 					</ul>

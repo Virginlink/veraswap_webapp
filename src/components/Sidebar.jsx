@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router";
 import { ExpertModeModal } from "./modals";
 import { FaMedium, FaTelegramPlane, FaTwitter } from "react-icons/fa";
-import { Stake, Swap, Pool, VRAPBlog, VRAPDocs } from "../assets/icons/ReactIcons";
+import { Stake, Swap, Pool, VRAPDocs, ICO, Audit, Analytics } from "../assets/icons/ReactIcons";
 import Logo from "../assets/images/vrap-red.svg";
 import "./Sidebar.css";
 
@@ -80,16 +80,6 @@ class Sidebar extends Component {
 				<ul className="app-links">
 					<li>
 						<a
-							href="/stake"
-							onClick={(e) => this.navigateTo(e, "/stake")}
-							className={active === "stake" ? "active" : ""}
-						>
-							<Stake />
-							Stake
-						</a>
-					</li>
-					<li>
-						<a
 							href="/swap"
 							onClick={(e) => this.navigateTo(e, "/swap")}
 							className={active === "swap" ? "active" : ""}
@@ -108,18 +98,46 @@ class Sidebar extends Component {
 							Pool
 						</a>
 					</li>
-				</ul>
-				<ul className="app-links">
 					<li>
-						<a href="https://veraswap.medium.com/about" target="_blank" rel="noreferrer noopener">
-							<VRAPBlog />
-							Blog
+						<a
+							href="/stake"
+							onClick={(e) => this.navigateTo(e, "/stake")}
+							className={active === "stake" ? "active" : ""}
+						>
+							<Stake />
+							Stake
 						</a>
 					</li>
 					<li>
-						<a href="https://docs.veraswap.org/" target="_blank" rel="noreferrer noopener">
+						<a
+							href="##"
+							onClick={(e) => e.preventDefault()}
+							className={active === "ico" ? "active" : ""}
+						>
+							<ICO />
+							ICO
+						</a>
+					</li>
+					<li>
+						<a
+							href="https://solidity.finance/audits/Vera-Staking/"
+							target="_blank"
+							rel="noreferrer noopener"
+						>
+							<Audit />
+							Audits
+						</a>
+					</li>
+					<li>
+						<a href="##" onClick={(e) => e.preventDefault()}>
+							<Analytics style={{ transform: "scale(1.2)", position: "relative", left: "3px" }} />
+							<span style={{ position: "relative", left: "5px" }}>Analytics</span>
+						</a>
+					</li>
+					<li>
+						<a href="##" onClick={(e) => e.preventDefault()}>
 							<VRAPDocs />
-							Docs
+							Listings
 						</a>
 					</li>
 				</ul>

@@ -2634,7 +2634,7 @@ export const GlobalStyles = createGlobalStyle`
 		}
 
 		.app-links {
-			padding: 30px 25px;
+			padding: 30px 22px;
 			background-color: transparent;
 			font-size: 17px;
 			margin: 0 38px;

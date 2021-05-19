@@ -17,7 +17,7 @@ export const MULTIPATH_TOKENS = [
 		address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
 	},
 	{
-		name: "BUSDT",
+		name: "USDT",
 		address: "0x55d398326f99059fF775485246999027B3197955",
 	},
 	{
@@ -693,6 +693,26 @@ export const checkIntermediaryLiquidity = (
 			resolve({
 				error: true,
 				data: null,
+			});
+		}
+	});
+};
+
+export const getVRAPPrice = () => {
+	return new Promise(async (resolve, reject) => {
+		try {
+			const result = await fetch(
+				"https://api.coingecko.com/api/v3/simple/price?ids=veraswap&vs_currencies=usd"
+			);
+			let responseJson = await result.json();
+			resolve({
+				error: false,
+				price: responseJson.veraswap.usd,
+			});
+		} catch (err) {
+			reject({
+				error: true,
+				message: err.message,
 			});
 		}
 	});

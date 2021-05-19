@@ -433,7 +433,7 @@ class ExchangeBNB extends Component {
 
 	checkMultiPath = async () => {
 		try {
-			const { tokenA, tokenAAddress, tokenB, tokenBAddress } = this.state;
+			const { tokenA, tokenAAddress, tokenADecimals, tokenB, tokenBAddress } = this.state;
 			const { walletAddress } = this.props;
 			let prices = [];
 			const tokens = {
@@ -447,42 +447,60 @@ class ExchangeBNB extends Component {
 				},
 			};
 			await Promise.all(
-				MULTIPATH_TOKENS.map(async ({ name, address }) => {
-					const result = await checkIntermediaryLiquidity(name, address, tokens, walletAddress);
-					if (result.data) {
-						prices.push({
-							name: name,
-							liquidityInfo: result.data.liquidityInfo,
-							tokenASupply: result.data.tokenASupply,
-							tokenBSupply: result.data.tokenBSupply,
-						});
+				MULTIPATH_TOKENS.filter((token) => token.name !== tokenA && token.name !== tokenB).map(
+					async ({ name, address }) => {
+						const result = await checkIntermediaryLiquidity(name, address, tokens, walletAddress);
+						if (result.data) {
+							prices.push({
+								name: name,
+								address: address,
+								liquidityInfo: result.data.liquidityInfo,
+								tokenASupply: result.data.tokenASupply,
+								tokenBSupply: result.data.tokenBSupply,
+							});
+						}
 					}
-				})
+				)
 			);
-			prices.sort((a, b) => parseFloat(a.tokenASupply) - parseFloat(b.tokenASupply));
 			if (prices.length > 0) {
+				prices.sort((a, b) => parseFloat(a.tokenASupply) - parseFloat(b.tokenASupply));
 				const tokenAAmount = parseFloat(prices[0].tokenASupply) * (10 / 100);
-				prices.forEach((token) => {
-					const priceData = {
-						tokenASupply: token.tokenASupply,
-						tokenBSupply: token.tokenBSupply,
-						amount: tokenAAmount,
-					};
-					const impact = this.calculatePriceImpact(priceData);
-					token.impact = impact;
-				});
-				prices.sort((a, b) => a.impact - b.impact);
+				console.log("Amount to swap", `${tokenAAmount.toFixed(3)} ${tokenA}`);
+				const newPrices = await Promise.all(
+					prices.map(async (token) => {
+						const tokenBAmountResult = await estimateOutAmounts({
+							amount: tokenAAmount.toString(),
+							addresses: [tokenAAddress, token.address, tokenBAddress],
+							decimals: tokenADecimals,
+							token: tokenA,
+						});
+						return {
+							...token,
+							received: parseFloat(tokenBAmountResult.amount),
+							price: parseFloat(tokenBAmountResult.amount) / tokenAAmount,
+						};
+					})
+				);
+				newPrices.sort((a, b) => b.price - a.price);
+				console.log(
+					`Prices & Tokens received for swapping ${tokenAAmount.toFixed(3)} ${tokenA}`,
+					newPrices.map((token) => ({
+						name: token.name,
+						price: token.price,
+						received: token.received,
+					}))
+				);
 				console.log(
 					"Best route",
-					`${this.state.tokenA} > ${prices[0].name} > ${this.state.tokenB}`
+					`${this.state.tokenA} > ${newPrices[0].name} > ${this.state.tokenB}`
 				);
 				this.setState({
 					fetchingLiquidity: false,
 					multipathSwap: true,
-					multipathToken: prices[0].name,
-					liquidityInfo: prices[0].liquidityInfo,
-					tokenASupply: prices[0].tokenASupply,
-					tokenBSupply: prices[0].tokenBSupply,
+					multipathToken: newPrices[0].name,
+					liquidityInfo: newPrices[0].liquidityInfo,
+					tokenASupply: newPrices[0].tokenASupply,
+					tokenBSupply: newPrices[0].tokenBSupply,
 				});
 			} else {
 				this.setState({

@@ -1,4 +1,4 @@
-import { Container } from "@material-ui/core";
+import { CircularProgress, Container } from "@material-ui/core";
 import React, { Component } from "react";
 import { FiChevronRight } from "react-icons/fi";
 import { withRouter } from "react-router";
@@ -11,8 +11,39 @@ import Swap from "../../assets/icons/swap-white.svg";
 import Stake from "../../assets/icons/stake-white.svg";
 import Pool from "../../assets/icons/pool-white.svg";
 import "./Landing.css";
+import { getVRAPPrice } from "../../utils/helpers";
 
 class Landing extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			vrapPrice: "",
+			fetchingVRAPPrice: false,
+		};
+	}
+
+	componentDidMount() {
+		this.fetchVRAPPrice();
+	}
+
+	fetchVRAPPrice = () => {
+		this.setState({ fetchingVrapPrice: true }, () => {
+			getVRAPPrice()
+				.then((res) => {
+					this.setState({ fetchingVrapPrice: false }, () => {
+						if (!res.error) {
+							this.setState({
+								vrapPrice: parseFloat(res.price).toFixed(3),
+							});
+						}
+					});
+				})
+				.catch((_) => {
+					this.setState({ fetchingVrapPrice: false });
+				});
+		});
+	};
+
 	render() {
 		const {
 			theme,
@@ -25,6 +56,7 @@ class Landing extends Component {
 			vrapBalance,
 			history,
 		} = this.props;
+		const { vrapPrice, fetchingVRAPPrice } = this.state;
 		return (
 			<>
 				<Sidebar theme={theme} onThemeToggle={onThemeToggle} />
@@ -67,7 +99,13 @@ class Landing extends Component {
 									</p>
 									<div className="hidden-desktop">
 										<div className="detail">
-											<p>$0.05</p>
+											<p>
+												{fetchingVRAPPrice ? (
+													<CircularProgress size={16} thickness={5} style={{ color: "#333" }} />
+												) : (
+													`$${vrapPrice}`
+												)}
+											</p>
 											<span>VRAP Price</span>
 										</div>
 										<div className="detail">
