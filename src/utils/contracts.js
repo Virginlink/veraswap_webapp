@@ -1291,7 +1291,7 @@ export const STAKING_ABI = [
 
 const { ethers } = require("ethers");
 
-const MAIN_PROVIDER = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
+const MAIN_PROVIDER = new ethers.providers.JsonRpcProvider("https://bsc-dataseed1.defibit.io/");
 
 // const TEST_PROVIDER = new ethers.providers.JsonRpcProvider(
 // 	"https://data-seed-prebsc-1-s1.binance.org:8545/"

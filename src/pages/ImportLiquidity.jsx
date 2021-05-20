@@ -111,7 +111,7 @@ class ImportLiquidity extends Component {
 	importPool = () => {
 		const { tokenA, tokenAIcon, tokenAAddress, tokenB, tokenBIcon, tokenBAddress, lpAddress } =
 			this.state;
-		const { history } = this.props;
+		const { history, walletAddress } = this.props;
 		const createdPool = {
 			tokenA: tokenA,
 			tokenAIcon: tokenAIcon,
@@ -123,23 +123,43 @@ class ImportLiquidity extends Component {
 		};
 		let pools = fetchPoolData();
 		if (pools) {
-			const poolExists =
-				pools.data.filter(
-					(pool) => pool.tokenA === createdPool.tokenA && pool.tokenB === createdPool.tokenB
-				).length > 0;
-			if (!poolExists) {
-				pools.data.push(createdPool);
+			const accountExists =
+				pools.data.filter((account) => account.address === walletAddress).length > 0;
+			if (accountExists) {
+				const accountIndex = pools.data.findIndex((account) => account.address === walletAddress);
+				const poolExists =
+					pools.data[accountIndex].pools.filter(
+						(pool) => pool.tokenA === createdPool.tokenA && pool.tokenB === createdPool.tokenB
+					).length > 0;
+				if (!poolExists) {
+					pools.data[accountIndex].pools.push(createdPool);
+					console.log(pools);
+					storePoolData(pools);
+					history.goBack();
+				} else {
+					notification["info"]({
+						message: "This liquidity pool has been already added to the interface",
+					});
+				}
+			} else {
+				pools.data.push({
+					address: walletAddress,
+					pools: [createdPool],
+				});
+				console.log(pools);
 				storePoolData(pools);
 				history.goBack();
-			} else {
-				notification["info"]({
-					message: "This liquidity pool has been already added to the interface",
-				});
 			}
 		} else {
 			const newPool = {
-				data: [createdPool],
+				data: [
+					{
+						address: walletAddress,
+						pools: [createdPool],
+					},
+				],
 			};
+			console.log(newPool);
 			storePoolData(newPool);
 			history.goBack();
 		}

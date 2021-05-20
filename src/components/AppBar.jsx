@@ -356,7 +356,7 @@ class AppBar extends Component {
 							</button>
 							<div className="wallet-details-container">
 								<div className="wallet-balance" style={{ flexShrink: 0 }}>
-									{ethBalance === "" ? 0.0 : parseFloat(ethBalance).toFixed(3)} BNB
+									{ethBalance === "" ? 0.0 : parseFloat(ethBalance).toFixed(5)} BNB
 								</div>
 								<button className="wallet-address-button" onClick={onModalToggle}>
 									<p>

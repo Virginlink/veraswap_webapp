@@ -1566,6 +1566,7 @@ export const GlobalStyles = createGlobalStyle`
 			
 			.input-container input {
 				flex: 1 1 0%;
+				width: 75%;
 				border: none;
 				outline: none;
 				background-color: transparent;
@@ -2218,6 +2219,7 @@ export const GlobalStyles = createGlobalStyle`
 				background: ${({ theme }) => theme.buttonBackground};
 				font-family: 'normal';
 				font-size: 14px;
+				color: #FFF;
 		}
 		
 		.staking-modal-button-primary {

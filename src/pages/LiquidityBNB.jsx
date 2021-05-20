@@ -92,19 +92,28 @@ class LiquidityBNB extends Component {
 					"A"
 				);
 			}
-			const pools = fetchPoolData();
+			let pools = fetchPoolData();
 			if (pools) {
-				const invalidPoolIndex = pools.data.findIndex((pool) => !pool.lpAddress);
-				if (invalidPoolIndex === -1) {
-					this.setState({ pools: pools.data });
+				pools = pools.data.filter((account) => account.address === walletAddress);
+				if (pools.length > 0) {
+					pools = pools[0].pools;
+					const invalidPoolIndex = pools.findIndex((pool) => !pool.lpAddress);
+					if (invalidPoolIndex === -1) {
+						this.setState({ pools: pools });
+					} else {
+						let newPools = fetchPoolData();
+						const accountIndex = newPools.data.findIndex(
+							(account) => account.address === walletAddress
+						);
+						newPools.data[accountIndex].pools.splice(invalidPoolIndex, 1);
+						storePoolData(newPools);
+						const currentAccountPools = newPools.data.filter(
+							(account) => account.address === walletAddress
+						)[0];
+						this.setState({ pools: currentAccountPools.pools });
+					}
 				} else {
-					let newPools = [...pools.data];
-					newPools.splice(invalidPoolIndex, 1);
-					const newPoolData = {
-						data: [...newPools],
-					};
-					storePoolData(newPoolData);
-					this.setState({ pools: newPools });
+					this.setState({ pools: [] });
 				}
 			}
 		}
@@ -114,19 +123,28 @@ class LiquidityBNB extends Component {
 		const { walletAddress } = this.props;
 		const { tokenA, tokenB } = this.state;
 		if (walletAddress !== prevProps.walletAddress && walletAddress) {
-			const pools = fetchPoolData();
-			if (pools) {
-				const invalidPoolIndex = pools.data.findIndex((pool) => !pool.lpAddress);
-				if (invalidPoolIndex === -1) {
-					this.setState({ pools: pools.data });
+			let pools = fetchPoolData();
+			if (pools && walletAddress) {
+				pools = pools.data.filter((account) => account.address === walletAddress);
+				if (pools.length > 0) {
+					pools = pools[0].pools;
+					const invalidPoolIndex = pools.findIndex((pool) => !pool.lpAddress);
+					if (invalidPoolIndex === -1) {
+						this.setState({ pools: pools });
+					} else {
+						let newPools = fetchPoolData();
+						const accountIndex = newPools.data.findIndex(
+							(account) => account.address === walletAddress
+						);
+						newPools.data[accountIndex].pools.splice(invalidPoolIndex, 1);
+						storePoolData(newPools);
+						const currentAccountPools = newPools.data.filter(
+							(account) => account.address === walletAddress
+						)[0];
+						this.setState({ pools: currentAccountPools.pools });
+					}
 				} else {
-					let newPools = [...pools.data];
-					newPools.splice(invalidPoolIndex, 1);
-					const newPoolData = {
-						data: [...newPools],
-					};
-					storePoolData(newPoolData);
-					this.setState({ pools: newPools });
+					this.setState({ pools: [] });
 				}
 			}
 			const importedTokens = fetchImportedTokens();
@@ -328,25 +346,48 @@ class LiquidityBNB extends Component {
 
 	storeNewPool = (newPool, hash) => {
 		// console.log('NEW POOL', newPool)
+		const { walletAddress } = this.props;
 		let pools = fetchPoolData();
 		if (pools) {
-			const poolExists =
-				pools.data.filter(
-					(pool) => pool.tokenA === newPool.tokenA && pool.tokenB === newPool.tokenB
-				).length > 0;
-			if (!poolExists) {
-				pools.data.push(newPool);
-				storePoolData(pools);
-				this.setState({ pools: pools.data }, () => this.handleCreatePoolSuccess(hash));
+			const accountExists =
+				pools.data.filter((account) => account.address === walletAddress).length > 0;
+			if (accountExists) {
+				const accountIndex = pools.data.findIndex((account) => account.address === walletAddress);
+				const poolExists =
+					pools.data[accountIndex].pools.filter(
+						(pool) => pool.tokenA === newPool.tokenA && pool.tokenB === newPool.tokenB
+					).length > 0;
+				if (!poolExists) {
+					pools.data[accountIndex].pools.push(newPool);
+					storePoolData(pools);
+					this.setState({ pools: pools.data[accountIndex].pools }, () =>
+						this.handleCreatePoolSuccess(hash)
+					);
+				} else {
+					this.handleCreatePoolSuccess(hash);
+				}
 			} else {
-				this.handleCreatePoolSuccess(hash);
+				pools.data.push({
+					address: walletAddress,
+					pools: [newPool],
+				});
+				storePoolData(pools);
+				const accountIndex = pools.data.findIndex((account) => account.address === walletAddress);
+				this.setState({ pools: pools.data[accountIndex].pools }, () =>
+					this.handleCreatePoolSuccess(hash)
+				);
 			}
 		} else {
 			const newPools = {
-				data: [newPool],
+				data: [
+					{
+						address: walletAddress,
+						pools: [newPool],
+					},
+				],
 			};
 			storePoolData(newPools);
-			this.setState({ pools: newPools.data }, () => this.handleCreatePoolSuccess(hash));
+			this.setState({ pools: newPools.data[0].pools }, () => this.handleCreatePoolSuccess(hash));
 		}
 	};
 
@@ -622,7 +663,9 @@ class LiquidityBNB extends Component {
 								);
 								notification.info({
 									key: "approvalProcessingNotification",
-									message: "Approval is being processed. You can view the transaction here.",
+									message: `${
+										token === "A" ? tokenA : tokenB
+									} approval is being processed. You can view the transaction here.`,
 									btn: <Link />,
 									icon: (
 										<CircularProgress
@@ -669,17 +712,25 @@ class LiquidityBNB extends Component {
 												);
 												notification.success({
 													key: "approvalSuccessNotification",
-													message: "Approval successful. You can view the transaction here.",
+													message: `${
+														token === "A" ? tokenA : tokenB
+													} approval successful. You can view the transaction here`,
 													btn: <Link />,
 													duration: 0,
 												});
-												this.setState({
-													approving: false,
-													[token === "A" ? "approvingTokenA" : "approvingTokenB"]: false,
-													[token === "A" ? "tokenAApproved" : "tokenBApproved"]: true,
-													approvalModalVisible: false,
-													approvalAmount: "",
-												});
+												this.setState(
+													{
+														approving: false,
+														[token === "A" ? "approvingTokenA" : "approvingTokenB"]: false,
+														[token === "A" ? "tokenAApproved" : "tokenBApproved"]: true,
+														approvalModalVisible: false,
+														[token === "A" ? "tokenAAllowance" : "tokenBAllowance"]:
+															parseFloat(approvalAmount),
+													},
+													() => {
+														setTimeout(() => this.setState({ approvalAmount: "" }), 500);
+													}
+												);
 												clearInterval(intervalId);
 											}
 										} catch (e) {
@@ -696,10 +747,11 @@ class LiquidityBNB extends Component {
 							}
 						}
 					})
-					.catch((err) => {
+					.catch(() => {
 						this.setState(
 							{
 								[token === "A" ? "approvingTokenA" : "approvingTokenB"]: false,
+								approving: false,
 							},
 							() => {
 								notification.error({
@@ -921,7 +973,7 @@ class LiquidityBNB extends Component {
 								let intervalId = setInterval(async () => {
 									try {
 										let reciept = await PROVIDER.getTransaction(res.data.hash);
-										// console.log('RECEIPT', reciept)
+										// console.log("RECEIPT", reciept);
 										if (reciept) {
 											if (lpAddress) {
 												const createdPool = {

@@ -103,9 +103,46 @@ class StakeDeposit extends Component {
 			parseFloat(this.state.depositAmount - 0.00000001),
 			this.state.currentToken
 		);
-		console.log(result);
+		console.log("Staking result", result);
 		if (result.success) {
-			this.setState({ txSuccess: true, txHash: result.hash });
+			let intervalId = setInterval(async () => {
+				try {
+					let reciept = await PROVIDER.getTransaction(result.hash);
+					if (reciept) {
+						notification.close("stakingProcessingNotification");
+						const Link = () => (
+							<a
+								style={{
+									color: "#DC2410",
+									textDecoration: "underline",
+								}}
+								target="_blank"
+								rel="noreferrer noopener"
+								href={`https://${
+									process.env.NODE_ENV === "development" ? "testnet.bscscan.com" : "bscscan.com"
+								}/tx/${result.hash}`}
+								onClick={() => notification.close("stakingSuccessNotification")}
+							>
+								View Transaction
+							</a>
+						);
+						notification.success({
+							key: "stakingSuccessNotification",
+							message: `${this.state.ticker} staking successful. You can view the transaction here`,
+							btn: <Link />,
+							duration: 0,
+						});
+						this.setState({
+							txSuccess: true,
+							txHash: result.hash,
+							depositAmount: "",
+						});
+						clearInterval(intervalId);
+					}
+				} catch (e) {
+					console.log(e.message);
+				}
+			}, 5000);
 			this.forceUpdate();
 		} else {
 			this.setState({ error: true });

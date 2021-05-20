@@ -74,6 +74,10 @@ class App extends Component {
 	}
 
 	componentDidMount() {
+		if (window.ethereum) {
+			window.ethereum.addListener("accountsChanged", this.handleAccountsChange);
+			window.ethereum.addListener("chainChanged", () => window.location.reload());
+		}
 		const theme = localStorage.getItem("theme");
 		if (theme) {
 			if (theme === "light") {
@@ -85,6 +89,13 @@ class App extends Component {
 		setTimeout(() => {
 			this.setState({ rendered: true });
 		}, 3000);
+	}
+
+	componentWillUnmount() {
+		if (window.ethereum) {
+			window.ethereum.removeListener("accountsChanged", this.handleAccountsChange);
+			window.ethereum.removeListener("chainChanged", () => window.location.reload());
+		}
 	}
 
 	toggleTheme = () => {
@@ -144,12 +155,68 @@ class App extends Component {
 				);
 				try {
 					let tx = await contract.approve(STAKING_ADDRESS, value);
-					console.log(tx.hash);
 					if (tx.hash) {
+						const Link = () => (
+							<a
+								style={{
+									color: "#DC2410",
+									textDecoration: "underline",
+								}}
+								target="_blank"
+								rel="noreferrer noopener"
+								href={`https://${
+									process.env.NODE_ENV === "development" ? "testnet.bscscan.com" : "bscscan.com"
+								}/tx/${tx.hash}`}
+							>
+								View Transaction
+							</a>
+						);
+						notification.info({
+							key: "approvalProcessingNotification",
+							message: `${info[0].ticker} approval is being processed. You can view the transaction here`,
+							btn: <Link />,
+							icon: (
+								<CircularProgress
+									size={25}
+									thickness={5}
+									style={{
+										color: "#DE0102",
+										position: "relative",
+										top: "6px",
+									}}
+								/>
+							),
+							duration: 0,
+						});
 						let intervalId = setInterval(() => {
 							PROVIDER.getTransactionReceipt(tx.hash).then((res) => {
 								try {
 									if (res && res.blockNumber) {
+										notification.close("approvalProcessingNotification");
+										const Link = () => (
+											<a
+												style={{
+													color: "#DC2410",
+													textDecoration: "underline",
+												}}
+												target="_blank"
+												rel="noreferrer noopener"
+												href={`https://${
+													process.env.NODE_ENV === "development"
+														? "testnet.bscscan.com"
+														: "bscscan.com"
+												}/tx/${tx.hash}`}
+												onClick={() => notification.close("approvalSuccessNotification")}
+											>
+												View Transaction
+											</a>
+										);
+										notification.success({
+											key: "approvalSuccessNotification",
+											message: `${info[0].ticker} approval successful. You can view the transaction here`,
+											btn: <Link />,
+											duration: 0,
+										});
 										this.setState({ sapproved: true, sapproving: false });
 										clearInterval(intervalId);
 									}
@@ -187,6 +254,38 @@ class App extends Component {
 						ethers.utils.parseUnits(String(value), info[0].decimalCorrection),
 						info[0].contractAddress
 					);
+					const Link = () => (
+						<a
+							style={{
+								color: "#DC2410",
+								textDecoration: "underline",
+							}}
+							target="_blank"
+							rel="noreferrer noopener"
+							href={`https://${
+								process.env.NODE_ENV === "development" ? "testnet.bscscan.com" : "bscscan.com"
+							}/tx/${tx.hash}`}
+						>
+							View Transaction
+						</a>
+					);
+					notification.info({
+						key: "stakingProcessingNotification",
+						message: `${info[0].ticker} staking is being processed. You can view the transaction here`,
+						btn: <Link />,
+						icon: (
+							<CircularProgress
+								size={25}
+								thickness={5}
+								style={{
+									color: "#DE0102",
+									position: "relative",
+									top: "6px",
+								}}
+							/>
+						),
+						duration: 0,
+					});
 					return {
 						success: true,
 						message: `Transaction Successful. Refer Hash : ${tx.hash}`,
@@ -271,11 +370,17 @@ class App extends Component {
 		}
 	}
 
+	handleAccountsChange = () => {
+		if (this.state.selectedWallet === "metamask") {
+			this.handleMetmask();
+		}
+	};
+
 	async handleMetmask() {
 		try {
 			if (typeof window.ethereum !== undefined) {
 				let provider = new ethers.providers.Web3Provider(window.ethereum);
-				await window.ethereum.enable();
+				await window.ethereum.request({ method: "eth_requestAccounts" });
 				const address = await provider.listAccounts();
 				let network = await provider.getNetwork();
 				// const chainId = process.env.NODE_ENV === 'development' ? 97 : 56
@@ -334,7 +439,6 @@ class App extends Component {
 				});
 			});
 			const provider = new ethers.providers.Web3Provider(web3Provider);
-			provider.on("disconnect", (_, reason) => console.log(reason));
 			const address = await provider.listAccounts();
 			const signer = provider.getSigner();
 			let network = await provider.getNetwork();
@@ -372,7 +476,7 @@ class App extends Component {
 		try {
 			if (typeof window.ethereum !== undefined) {
 				let provider = new ethers.providers.Web3Provider(window.ethereum);
-				await window.ethereum.enable();
+				await window.ethereum.request({ method: "eth_requestAccounts" });
 				const address = await provider.listAccounts();
 				let signer = await provider.getSigner();
 				this.fetchEthBalance(address[0]);
@@ -754,6 +858,7 @@ class App extends Component {
 							this.setState({
 								showWalletConnection: false,
 								walletConnected: false,
+								walletAddress: "",
 								activeWallet: "",
 							});
 						}}

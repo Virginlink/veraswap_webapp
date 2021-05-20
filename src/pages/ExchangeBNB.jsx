@@ -548,6 +548,8 @@ class ExchangeBNB extends Component {
 					tokenAAddress: token.contractAddress,
 					multipathSwap: false,
 					multipathToken: "",
+					tokenAPrice: "",
+					tokenBPrice: "",
 				},
 				() => {
 					if (walletConnected) {
@@ -587,6 +589,8 @@ class ExchangeBNB extends Component {
 					tokenBAddress: token.contractAddress,
 					multipathSwap: false,
 					multipathToken: "",
+					tokenAPrice: "",
+					tokenBPrice: "",
 				},
 				() => {
 					if (walletConnected) {
@@ -989,7 +993,9 @@ class ExchangeBNB extends Component {
 								);
 								notification.info({
 									key: "approvalProcessingNotification",
-									message: "Approval is being processed. You can view the transaction here.",
+									message: `${
+										token === "A" ? tokenA : tokenB
+									} approval is being processed. You can view the transaction here.`,
 									btn: <Link />,
 									icon: (
 										<CircularProgress
@@ -1040,7 +1046,9 @@ class ExchangeBNB extends Component {
 												);
 												notification.success({
 													key: "approvalSuccessNotification",
-													message: "Approval successful. You can view the transaction here.",
+													message: `${
+														token === "A" ? tokenA : tokenB
+													} approval successful. You can view the transaction here`,
 													btn: <Link />,
 													duration: 0,
 												});
@@ -1071,6 +1079,7 @@ class ExchangeBNB extends Component {
 						this.setState(
 							{
 								[token === "A" ? "approvingTokenA" : "approvingTokenB"]: false,
+								approving: false,
 							},
 							() => {
 								notification.error({
