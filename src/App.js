@@ -47,6 +47,7 @@ class App extends Component {
 			selectedWallet: "metamask",
 			connectionError: false,
 			walletConnected: false,
+			web3Provider: null,
 			walletConnectionActive: false,
 			activeWallet: "",
 			walletAddress: "",
@@ -448,12 +449,15 @@ class App extends Component {
 				});
 				this.setState({ connectWalletModalVisible: false });
 			} else {
+				web3Provider.on("disconnect", this.handleWalletConnectDisconnect);
+				web3Provider.on("chainChanged", () => window.location.reload());
 				this.fetchEthBalance(address[0]);
 				if (process.env.NODE_ENV === "production") {
 					this.fetchVrapBalance(address[0]);
 					this.fetchTetherBalance(address[0]);
 				}
 				this.setState({
+					web3Provider: web3Provider,
 					walletConnected: true,
 					walletAddress: address[0],
 					connectWalletModalVisible: false,
@@ -471,6 +475,17 @@ class App extends Component {
 			});
 		}
 	}
+
+	handleWalletConnectDisconnect = () => {
+		localStorage.removeItem("walletconnect");
+		this.setState({
+			showWalletConnection: false,
+			walletConnected: false,
+			walletAddress: "",
+			activeWallet: "",
+			web3Provider: null,
+		});
+	};
 
 	async handleTrustWallet() {
 		try {
@@ -608,6 +623,7 @@ class App extends Component {
 			sapproving,
 			staking,
 			stakeSuccess,
+			web3Provider,
 		} = this.state;
 		return (
 			<>
@@ -853,6 +869,7 @@ class App extends Component {
 						activeWallet={activeWallet}
 						onWalletChange={() => {
 							if (activeWallet === "walletConnect") {
+								web3Provider.disconnect();
 								localStorage.removeItem("walletconnect");
 							}
 							this.setState({
@@ -860,6 +877,7 @@ class App extends Component {
 								walletConnected: false,
 								walletAddress: "",
 								activeWallet: "",
+								web3Provider: null,
 							});
 						}}
 						walletAddress={walletAddress}

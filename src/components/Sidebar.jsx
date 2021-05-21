@@ -14,7 +14,6 @@ import {
 } from "../assets/icons/ReactIcons";
 import Logo from "../assets/images/vrap-red.svg";
 import "./Sidebar.css";
-
 class Sidebar extends Component {
 	constructor(props) {
 		super(props);
@@ -140,7 +139,7 @@ class Sidebar extends Component {
 					<li>
 						<a href="##" onClick={(e) => e.preventDefault()}>
 							<Analytics style={{ transform: "scale(1.2)", position: "relative", left: "3px" }} />
-							<span style={{ position: "relative", left: "px" }}>Analytics</span>
+							<span style={{ position: "relative", left: "4px" }}>Analytics</span>
 						</a>
 					</li>
 					<li>
