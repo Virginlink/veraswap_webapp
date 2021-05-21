@@ -227,7 +227,7 @@ export const darkTheme = {
 	rowHoverBackgroundColor: "#383737",
 	swapDividerColor: "#383737",
 	actionBackgroundColor: "#383737",
-	newPoolBlockBackgroundColor: "rgb(33,36,41)",
+	newPoolBlockBackgroundColor: "#2B2A2A",
 	exchangeCardBackground:
 		"radial-gradient(91.85% 100% at 1.84% 0%, rgb(187, 141, 0) 0%, rgb(108, 114, 132) 100%)",
 	navbarDropdownBackgroundColor: "rgb(64,68,79)",
