@@ -174,7 +174,6 @@ class StakeDeposit extends Component {
 			vrapBalance,
 			history,
 		} = this.props;
-		console.log(this.state.icon);
 		return (this.state.ticker !== "" && this.state.icon !== "") || !this.state.loading ? (
 			<>
 				<Sidebar active="stake" theme={theme} onThemeToggle={onThemeToggle} />
