@@ -133,7 +133,6 @@ class ImportLiquidity extends Component {
 					).length > 0;
 				if (!poolExists) {
 					pools.data[accountIndex].pools.push(createdPool);
-					console.log(pools);
 					storePoolData(pools);
 					history.goBack();
 				} else {
@@ -146,7 +145,6 @@ class ImportLiquidity extends Component {
 					address: walletAddress,
 					pools: [createdPool],
 				});
-				console.log(pools);
 				storePoolData(pools);
 				history.goBack();
 			}

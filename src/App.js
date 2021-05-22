@@ -38,6 +38,7 @@ const ImportLiquidity = lazy(() => import("./pages/ImportLiquidity"));
 const RemoveLiquidity = lazy(() => import("./pages/RemoveLiquidityBNB"));
 const CirculatingSupply = lazy(() => import("./pages/CirculatingSupply"));
 const TotalSupply = lazy(() => import("./pages/TotalSupply"));
+
 class App extends Component {
 	constructor() {
 		super();
