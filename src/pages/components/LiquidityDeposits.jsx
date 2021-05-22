@@ -12,14 +12,19 @@ export default class LiquidityDeposits extends React.Component {
 	}
 
 	componentDidMount() {
-		if (this.props.ticker && this.props.currentToken && this.props.walletAddress !== "") {
+		if (this.props.ticker && this.props.currentToken && this.props.walletAddress) {
 			this.setState({ walletAddress: this.props.walletAddress });
 			this.fetch(this.props.walletAddress);
 		}
 	}
 
 	UNSAFE_componentWillReceiveProps(props) {
-		if (props.ticker && props.currentToken && props.walletAddress !== this.state.walletAddress) {
+		if (
+			props.ticker &&
+			props.currentToken &&
+			props.walletAddress !== this.state.walletAddress &&
+			props.walletAddress
+		) {
 			this.setState({ walletAddress: props.walletAddress });
 			this.fetch(props.walletAddress);
 		}

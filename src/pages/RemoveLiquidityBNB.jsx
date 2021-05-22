@@ -17,6 +17,7 @@ import RemoveLP from "../components/exchange/RemoveLP";
 import { PROVIDER } from "../utils/contracts";
 import Sidebar from "../components/Sidebar";
 import AppBar from "../components/AppBar";
+import ExternalLink from "../components/Transactions/ExternalLink";
 class RemoveLiquidityBNB extends Component {
 	constructor(props) {
 		super(props);
@@ -210,24 +211,11 @@ class RemoveLiquidityBNB extends Component {
 			approveToken(lpAddress, this.props.signer, liquidity, 18)
 				.then((res) => {
 					if (res.success) {
-						// console.log(res.data)
 						if (res.data.hash) {
-							const Link = () => (
-								<a
-									style={{ textDecoration: "underline" }}
-									target="_blank"
-									rel="noreferrer noopener"
-									href={`https://${
-										process.env.NODE_ENV === "development" ? "testnet.bscscan.com" : "bscscan.com"
-									}/tx/${res.data.hash}`}
-								>
-									View Transaction
-								</a>
-							);
 							notification.info({
 								key: "approvalProcessingNotification",
 								message: "Approval is being processed. You can view the transaction here.",
-								btn: <Link />,
+								btn: <ExternalLink hash={res.data.hash}>View Transaction</ExternalLink>,
 								icon: (
 									<CircularProgress
 										size={25}
@@ -249,25 +237,10 @@ class RemoveLiquidityBNB extends Component {
 										this.fetchApproval(walletAddress, lpAddress);
 										if (reciept) {
 											notification.close("approvalProcessingNotification");
-											const Link = () => (
-												<a
-													style={{ textDecoration: "underline" }}
-													target="_blank"
-													rel="noreferrer noopener"
-													href={`https://${
-														process.env.NODE_ENV === "development"
-															? "testnet.bscscan.com"
-															: "bscscan.com"
-													}/tx/${res.data.hash}`}
-													onClick={() => notification.close("approvalSuccessNotification")}
-												>
-													View Transaction
-												</a>
-											);
 											notification.success({
 												key: "approvalSuccessNotification",
 												message: "Approval successful. You can view the transaction here.",
-												btn: <Link />,
+												btn: <ExternalLink hash={res.data.hash}>View Transaction</ExternalLink>,
 												duration: 0,
 											});
 											this.setState({
@@ -341,22 +314,10 @@ class RemoveLiquidityBNB extends Component {
 				.then((res) => {
 					if (res.success) {
 						if (res.data.hash) {
-							const Link = () => (
-								<a
-									style={{ textDecoration: "underline" }}
-									target="_blank"
-									rel="noreferrer noopener"
-									href={`https://${
-										process.env.NODE_ENV === "development" ? "testnet.bscscan.com" : "bscscan.com"
-									}/tx/${res.data.hash}`}
-								>
-									View Transaction
-								</a>
-							);
 							notification.info({
 								key: "removalProcessingNotification",
 								message: "Transaction is being processed. You can view the transaction here.",
-								btn: <Link />,
+								btn: <ExternalLink hash={res.data.hash}>View Transaction</ExternalLink>,
 								icon: (
 									<CircularProgress
 										size={25}
@@ -378,43 +339,37 @@ class RemoveLiquidityBNB extends Component {
 										if (percent === 100) {
 											let pools = fetchPoolData();
 											if (pools) {
-												const poolExists =
-													pools.data.filter(
+												const accountExists =
+													pools.data.filter((account) => account.address === walletAddress).length >
+													0;
+												if (accountExists) {
+													const accountIndex = pools.data.findIndex(
+														(account) => account.address === walletAddress
+													);
+													const poolExists =
+														pools.data[accountIndex].pools.filter(
+															(pool) =>
+																pool.tokenA === this.state.tokenA &&
+																pool.tokenB === this.state.tokenB
+														).length > 0;
+													const index = pools.data[accountIndex].pools.findIndex(
 														(pool) =>
 															pool.tokenA === this.state.tokenA && pool.tokenB === this.state.tokenB
-													).length > 0;
-												const index = pools.data.findIndex(
-													(pool) =>
-														pool.tokenA === this.state.tokenA && pool.tokenB === this.state.tokenB
-												);
-												if (poolExists && index !== -1) {
-													pools.data.splice(index, 1);
-													storePoolData(pools);
+													);
+													if (poolExists && index !== -1) {
+														pools.data[accountIndex].pools.splice(index, 1);
+														storePoolData(pools);
+													}
 												}
 											}
 										}
 										if (reciept) {
 											notification.close("removalProcessingNotification");
-											const Link = () => (
-												<a
-													style={{ textDecoration: "underline" }}
-													target="_blank"
-													rel="noreferrer noopener"
-													href={`https://${
-														process.env.NODE_ENV === "development"
-															? "testnet.bscscan.com"
-															: "bscscan.com"
-													}/tx/${res.data.hash}`}
-													onClick={() => notification.close("removalSuccessNotification")}
-												>
-													View Transaction
-												</a>
-											);
 											notification.success({
 												key: "removalSuccessNotification",
 												message:
 													"Liquidity removed successfully. You can view the transaction here.",
-												btn: <Link />,
+												btn: <ExternalLink hash={res.data.hash}>View Transaction</ExternalLink>,
 												duration: 0,
 											});
 											this.setState(
@@ -488,22 +443,10 @@ class RemoveLiquidityBNB extends Component {
 				.then((res) => {
 					if (res.success) {
 						if (res.data.hash) {
-							const Link = () => (
-								<a
-									style={{ textDecoration: "underline" }}
-									target="_blank"
-									rel="noreferrer noopener"
-									href={`https://${
-										process.env.NODE_ENV === "development" ? "testnet.bscscan.com" : "bscscan.com"
-									}/tx/${res.data.hash}`}
-								>
-									View Transaction
-								</a>
-							);
 							notification.info({
 								key: "removalProcessingNotification",
 								message: "Transaction is being processed. You can view the transaction here.",
-								btn: <Link />,
+								btn: <ExternalLink hash={res.data.hash}>View Transaction</ExternalLink>,
 								icon: (
 									<CircularProgress
 										size={25}
@@ -525,43 +468,37 @@ class RemoveLiquidityBNB extends Component {
 										if (percent === 100) {
 											let pools = fetchPoolData();
 											if (pools) {
-												const poolExists =
-													pools.data.filter(
+												const accountExists =
+													pools.data.filter((account) => account.address === walletAddress).length >
+													0;
+												if (accountExists) {
+													const accountIndex = pools.data.findIndex(
+														(account) => account.address === walletAddress
+													);
+													const poolExists =
+														pools.data[accountIndex].pools.filter(
+															(pool) =>
+																pool.tokenA === this.state.tokenA &&
+																pool.tokenB === this.state.tokenB
+														).length > 0;
+													const index = pools.data[accountIndex].pools.findIndex(
 														(pool) =>
 															pool.tokenA === this.state.tokenA && pool.tokenB === this.state.tokenB
-													).length > 0;
-												const index = pools.data.findIndex(
-													(pool) =>
-														pool.tokenA === this.state.tokenA && pool.tokenB === this.state.tokenB
-												);
-												if (poolExists && index !== -1) {
-													pools.data.splice(index, 1);
-													storePoolData(pools);
+													);
+													if (poolExists && index !== -1) {
+														pools.data[accountIndex].pools.splice(index, 1);
+														storePoolData(pools);
+													}
 												}
 											}
 										}
 										if (reciept) {
 											notification.close("removalProcessingNotification");
-											const Link = () => (
-												<a
-													style={{ textDecoration: "underline" }}
-													target="_blank"
-													rel="noreferrer noopener"
-													href={`https://${
-														process.env.NODE_ENV === "development"
-															? "testnet.bscscan.com"
-															: "bscscan.com"
-													}/tx/${res.data.hash}`}
-													onClick={() => notification.close("removalSuccessNotification")}
-												>
-													View Transaction
-												</a>
-											);
 											notification.success({
 												key: "removalSuccessNotification",
 												message:
 													"Liquidity removed successfully. You can view the transaction here.",
-												btn: <Link />,
+												btn: <ExternalLink hash={res.data.hash}>View Transaction</ExternalLink>,
 												duration: 0,
 											});
 											this.setState(

@@ -4,13 +4,15 @@ import { Container, Dialog, Fade } from "@material-ui/core";
 import PoolInfo from "./components/PoolInfo";
 import LiquidityDeposits from "./components/LiquidityDeposits";
 import Unclaimed from "./components/Unclaimed";
-import { PROVIDER } from "../utils/contracts";
+import { PROVIDER, STAKING_ABI, STAKING_ADDRESS, STAKING_ADDRESS_V1 } from "../utils/contracts";
 import { TOKEN } from "../utils/tokens";
 import { notification, Tag, Tooltip } from "antd";
 import Sidebar from "../components/Sidebar";
 import AppBar from "../components/AppBar";
 import { FiArrowLeft } from "react-icons/fi";
 import { withRouter } from "react-router";
+import ExternalLink from "../components/Transactions/ExternalLink";
+import { Close, Loading } from "../assets/icons/ReactIcons";
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Fade timeout={{ enter: 1000, exit: 2000 }} ref={ref} {...props} />;
 });
@@ -40,12 +42,16 @@ class StakeDeposit extends Component {
 	}
 
 	async componentDidMount() {
-		this.fetchBalance();
+		if (this.props.walletAddress) {
+			this.fetchBalance();
+			this.fetchUnclaimed();
+		}
 	}
 
 	async componentDidUpdate(prevProps) {
-		if (prevProps.walletAddress !== this.props.walletAddress) {
+		if (prevProps.walletAddress !== this.props.walletAddress && this.props.walletAddress) {
 			this.fetchBalance();
+			this.fetchUnclaimed();
 		}
 	}
 
@@ -73,6 +79,27 @@ class StakeDeposit extends Component {
 			}
 		}
 	}
+
+	fetchUnclaimed = () => {
+		let { version, address } = this.props.match.params;
+		let token = TOKEN.filter((data) => data.contractAddress === address);
+		let decimal = token[0].decimal;
+		let contract = new ethers.Contract(
+			version === "1" ? STAKING_ADDRESS_V1 : STAKING_ADDRESS,
+			STAKING_ABI,
+			PROVIDER
+		);
+		contract
+			.users(this.props.walletAddress, address)
+			.then((res) => {
+				let currentStake = ethers.utils.formatEther(res.currentStake) * 10 ** decimal;
+				currentStake = parseFloat(currentStake).toFixed(4);
+				this.setState({ liquidity: currentStake });
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
 
 	setAPY(apy) {
 		this.setState({ apy: apy });
@@ -103,41 +130,26 @@ class StakeDeposit extends Component {
 			parseFloat(this.state.depositAmount - 0.00000001),
 			this.state.currentToken
 		);
-		console.log("Staking result", result);
 		if (result.success) {
 			let intervalId = setInterval(async () => {
 				try {
 					let reciept = await PROVIDER.getTransaction(result.hash);
 					if (reciept) {
+						clearInterval(intervalId);
+						this.fetchUnclaimed();
 						notification.close("stakingProcessingNotification");
-						const Link = () => (
-							<a
-								style={{
-									color: "#DC2410",
-									textDecoration: "underline",
-								}}
-								target="_blank"
-								rel="noreferrer noopener"
-								href={`https://${
-									process.env.NODE_ENV === "development" ? "testnet.bscscan.com" : "bscscan.com"
-								}/tx/${result.hash}`}
-								onClick={() => notification.close("stakingSuccessNotification")}
-							>
-								View Transaction
-							</a>
-						);
 						notification.success({
 							key: "stakingSuccessNotification",
 							message: `${this.state.ticker} staking successful. You can view the transaction here`,
-							btn: <Link />,
+							btn: <ExternalLink hash={result.hash}>View Transaction</ExternalLink>,
 							duration: 0,
 						});
 						this.setState({
-							txSuccess: true,
-							txHash: result.hash,
+							txSuccess: false,
+							error: false,
 							depositAmount: "",
 						});
-						clearInterval(intervalId);
+						this.props.onResetStakeStatus();
 					}
 				} catch (e) {
 					console.log(e.message);
@@ -348,25 +360,7 @@ class StakeDeposit extends Component {
 											</button>
 										) : claiming ? (
 											<div className="transaction-status">
-												<svg
-													style={{
-														position: "relative",
-														right: "-13px",
-														width: "20px",
-														height: "20px",
-													}}
-													className="connection-loader"
-													viewBox="0 0 24 24"
-													fill="none"
-													xmlns="http://www.w3.org/2000/svg"
-												>
-													<path
-														d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 9.27455 20.9097 6.80375 19.1414 5"
-														stroke-width="2.5"
-														stroke-linecap="round"
-														stroke-linejoin="round"
-													></path>
-												</svg>
+												<Loading />
 												<span>Claiming</span>
 											</div>
 										) : this.state.version === "1" ? (
@@ -438,32 +432,18 @@ class StakeDeposit extends Component {
 						<div className="buy-modal-grid">
 							<div className="buy-modal-header">
 								<div className="buy-modal-title">Transaction Successful</div>
-								<svg
-									style={{ cursor: "pointer" }}
+								<Close
 									onClick={() =>
 										this.setState(
 											{
 												depositModalVisible: false,
-												txSuccess: false,
 												depositAmount: "",
 												error: false,
 											},
 											() => this.props.onResetStakeStatus()
 										)
 									}
-									xmlns="http://www.w3.org/2000/svg"
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-								>
-									<line x1="18" y1="6" x2="6" y2="18"></line>
-									<line x1="6" y1="6" x2="18" y2="18"></line>
-								</svg>
+								/>
 							</div>
 							<p
 								className="connected-wallet-footer-text"
@@ -489,8 +469,7 @@ class StakeDeposit extends Component {
 						<div className="buy-modal-grid">
 							<div className="buy-modal-header">
 								<div className="buy-modal-title">Deposit</div>
-								<svg
-									style={{ cursor: "pointer" }}
+								<Close
 									onClick={() =>
 										this.setState(
 											{
@@ -501,19 +480,7 @@ class StakeDeposit extends Component {
 											() => this.props.onResetStakeStatus()
 										)
 									}
-									xmlns="http://www.w3.org/2000/svg"
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-								>
-									<line x1="18" y1="6" x2="6" y2="18"></line>
-									<line x1="6" y1="6" x2="18" y2="18"></line>
-								</svg>
+								/>
 							</div>
 							{error ? (
 								<p className="connected-wallet-footer-text">
@@ -633,25 +600,7 @@ class StakeDeposit extends Component {
 								>
 									{this.props.sapproving ? (
 										<div className="transaction-status">
-											<svg
-												style={{
-													position: "relative",
-													right: "-13px",
-													width: "20px",
-													height: "20px",
-												}}
-												className="connection-loader"
-												viewBox="0 0 24 24"
-												fill="none"
-												xmlns="http://www.w3.org/2000/svg"
-											>
-												<path
-													d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 9.27455 20.9097 6.80375 19.1414 5"
-													stroke-width="2.5"
-													stroke-linecap="round"
-													stroke-linejoin="round"
-												></path>
-											</svg>
+											<Loading />
 											<span>Approving</span>
 										</div>
 									) : depositAmount ? (
@@ -675,25 +624,7 @@ class StakeDeposit extends Component {
 								>
 									{this.props.staking ? (
 										<div className="transaction-status">
-											<svg
-												style={{
-													position: "relative",
-													right: "-13px",
-													width: "20px",
-													height: "20px",
-												}}
-												className="connection-loader"
-												viewBox="0 0 24 24"
-												fill="none"
-												xmlns="http://www.w3.org/2000/svg"
-											>
-												<path
-													d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 9.27455 20.9097 6.80375 19.1414 5"
-													stroke-width="2.5"
-													stroke-linecap="round"
-													stroke-linejoin="round"
-												></path>
-											</svg>
+											<Loading />
 											<span>Staking</span>
 										</div>
 									) : (

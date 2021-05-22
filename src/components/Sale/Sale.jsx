@@ -1,14 +1,16 @@
+import React, { Component } from "react";
 import { Dialog, Fade } from "@material-ui/core";
-import { notification, Tooltip } from "antd";
+import { ethers } from "ethers";
+import { notification } from "antd";
 import ETH from "../../assets/images/eth.png";
 import BUSD from "../../assets/images/busd.png";
-import React, { Component } from "react";
 import Countdown from "react-countdown";
 import { PRESALE_ABI, PRESALE_ADDRESS, PROVIDER } from "../../utils/contracts";
+import ExternalLink from "../Transactions/ExternalLink";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Fade timeout={{ enter: 1000, exit: 2000 }} ref={ref} {...props} />;
 });
-const { ethers } = require("ethers");
 
 const SuccessIcon = (
 	<div style={{ color: "rgb(39, 174, 96)" }}>
@@ -103,11 +105,7 @@ export default class Sale extends Component {
 				message: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} BNB`,
 				duration: 0,
 				icon: SuccessIcon,
-				btn: (
-					<a href={`https://bscscan.com/tx/${status}`} target="_blank" rel="noreferrer noopener">
-						View on Explorer
-					</a>
-				),
+				btn: <ExternalLink hash={status}>View on Explorer</ExternalLink>,
 			});
 			this.setState({ txSuccess: true, txHash: status });
 		} else {
@@ -138,11 +136,7 @@ export default class Sale extends Component {
 				message: `Buy VRAP with ${parseFloat(this.state.depositAmount).toFixed(4)} BUSD`,
 				duration: 0,
 				icon: SuccessIcon,
-				btn: (
-					<a href={`https://bscscan.com/tx/${status}`} target="_blank" rel="noreferrer noopener">
-						View on Explorer
-					</a>
-				),
+				btn: <ExternalLink hash={status}>View on Explorer</ExternalLink>,
 			});
 			this.setState({ txSuccess: true, txHash: status });
 		} else {
@@ -764,35 +758,7 @@ export default class Sale extends Component {
 												display: "inline-block",
 												paddingTop: "5px",
 											}}
-										>
-											<Tooltip
-												overlayStyle={{ zIndex: 1500 }}
-												overlayClassName="tooltip-card"
-												arrowPointAtCenter
-												placement="bottom"
-												title={
-													"Find a token by searching for its name or symbol or by pasting its address below."
-												}
-											>
-												<div className="info-icon">
-													<svg
-														xmlns="http://www.w3.org/2000/svg"
-														width="16"
-														height="16"
-														viewBox="0 0 24 24"
-														fill="none"
-														stroke="currentColor"
-														stroke-width="2"
-														stroke-linecap="round"
-														stroke-linejoin="round"
-													>
-														<circle cx="12" cy="12" r="10"></circle>
-														<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-														<line x1="12" y1="17" x2="12.01" y2="17"></line>
-													</svg>
-												</div>
-											</Tooltip>
-										</div>
+										></div>
 									</span>
 								</div>
 								<svg

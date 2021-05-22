@@ -37,6 +37,7 @@ import {
 import "./App.css";
 import "./components/Navbar.css";
 import "./components/Sale/Sale.css";
+import ExternalLink from "./components/Transactions/ExternalLink";
 class App extends Component {
 	constructor() {
 		super();
@@ -157,25 +158,10 @@ class App extends Component {
 				try {
 					let tx = await contract.approve(STAKING_ADDRESS, value);
 					if (tx.hash) {
-						const Link = () => (
-							<a
-								style={{
-									color: "#DC2410",
-									textDecoration: "underline",
-								}}
-								target="_blank"
-								rel="noreferrer noopener"
-								href={`https://${
-									process.env.NODE_ENV === "development" ? "testnet.bscscan.com" : "bscscan.com"
-								}/tx/${tx.hash}`}
-							>
-								View Transaction
-							</a>
-						);
 						notification.info({
 							key: "approvalProcessingNotification",
 							message: `${info[0].ticker} approval is being processed. You can view the transaction here`,
-							btn: <Link />,
+							btn: <ExternalLink hash={tx.hash}>View Transaction</ExternalLink>,
 							icon: (
 								<CircularProgress
 									size={25}
@@ -194,28 +180,10 @@ class App extends Component {
 								try {
 									if (res && res.blockNumber) {
 										notification.close("approvalProcessingNotification");
-										const Link = () => (
-											<a
-												style={{
-													color: "#DC2410",
-													textDecoration: "underline",
-												}}
-												target="_blank"
-												rel="noreferrer noopener"
-												href={`https://${
-													process.env.NODE_ENV === "development"
-														? "testnet.bscscan.com"
-														: "bscscan.com"
-												}/tx/${tx.hash}`}
-												onClick={() => notification.close("approvalSuccessNotification")}
-											>
-												View Transaction
-											</a>
-										);
 										notification.success({
 											key: "approvalSuccessNotification",
 											message: `${info[0].ticker} approval successful. You can view the transaction here`,
-											btn: <Link />,
+											btn: <ExternalLink hash={tx.hash}>View Transaction</ExternalLink>,
 											duration: 0,
 										});
 										this.setState({ sapproved: true, sapproving: false });
@@ -247,6 +215,7 @@ class App extends Component {
 
 	async stakeToken(value, tokenAddress) {
 		if (value && tokenAddress) {
+			this.setState({ staking: true });
 			let info = TOKEN.filter((data) => data.contractAddress === tokenAddress);
 			if (info.length > 0) {
 				let contract = new ethers.Contract(STAKING_ADDRESS, STAKING_ABI, this.state.signer);
@@ -255,25 +224,10 @@ class App extends Component {
 						ethers.utils.parseUnits(String(value), info[0].decimalCorrection),
 						info[0].contractAddress
 					);
-					const Link = () => (
-						<a
-							style={{
-								color: "#DC2410",
-								textDecoration: "underline",
-							}}
-							target="_blank"
-							rel="noreferrer noopener"
-							href={`https://${
-								process.env.NODE_ENV === "development" ? "testnet.bscscan.com" : "bscscan.com"
-							}/tx/${tx.hash}`}
-						>
-							View Transaction
-						</a>
-					);
 					notification.info({
 						key: "stakingProcessingNotification",
 						message: `${info[0].ticker} staking is being processed. You can view the transaction here`,
-						btn: <Link />,
+						btn: <ExternalLink hash={tx.hash}>View Transaction</ExternalLink>,
 						icon: (
 							<CircularProgress
 								size={25}
@@ -293,6 +247,7 @@ class App extends Component {
 						hash: tx.hash,
 					};
 				} catch (e) {
+					this.setState({ staking: false });
 					console.log(e);
 					return {
 						success: false,

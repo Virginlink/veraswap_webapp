@@ -65,7 +65,7 @@ class AssetCard extends React.Component {
 					this.props.updateStaked(parseFloat(resJson[`${token[0].ids}`].usd) * parseFloat(balance));
 				})
 				.catch((err) => {
-					console.log(err);
+					// console.log(err);
 				});
 		}
 	}
