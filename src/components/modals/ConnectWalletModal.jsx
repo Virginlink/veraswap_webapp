@@ -343,7 +343,7 @@ const ConnectWalletModal = ({
 										target="_blank"
 										rel="noopener noreferrer"
 										href="https://ethereum.org/wallets/"
-										class="modal-footer-link"
+										className="modal-footer-link"
 									>
 										Learn more about wallets
 									</a>

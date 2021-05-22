@@ -46,8 +46,8 @@ export default class Transactions extends Component {
 								(clear all)
 							</a>
 						</div>
-						{transactions.map((tx) => (
-							<Transaction tx={tx} />
+						{transactions.map((tx, index) => (
+							<Transaction key={`${index}-${tx}`} tx={tx} />
 						))}
 					</div>
 				) : (

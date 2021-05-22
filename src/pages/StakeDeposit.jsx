@@ -37,25 +37,21 @@ class StakeDeposit extends Component {
 			claiming: false,
 			version: 2,
 		};
-		this.setAPY = this.setAPY.bind(this);
-		this.setLiquidity = this.setLiquidity.bind(this);
 	}
 
-	async componentDidMount() {
-		if (this.props.walletAddress) {
-			this.fetchBalance();
-			this.fetchUnclaimed();
-		}
+	componentDidMount() {
+		this.fetchBalance();
+		this.fetchUnclaimed();
 	}
 
-	async componentDidUpdate(prevProps) {
+	componentDidUpdate(prevProps) {
 		if (prevProps.walletAddress !== this.props.walletAddress && this.props.walletAddress) {
 			this.fetchBalance();
 			this.fetchUnclaimed();
 		}
 	}
 
-	async fetchBalance() {
+	fetchBalance = async () => {
 		this.setState({
 			currentToken: this.props.match.params.address,
 			txSuccess: this.props.stakeSuccess,
@@ -78,7 +74,7 @@ class StakeDeposit extends Component {
 				this.setState({ loading: false });
 			}
 		}
-	}
+	};
 
 	fetchUnclaimed = () => {
 		let { version, address } = this.props.match.params;
@@ -101,15 +97,15 @@ class StakeDeposit extends Component {
 			});
 	};
 
-	setAPY(apy) {
+	setAPY = (apy) => {
 		this.setState({ apy: apy });
-	}
+	};
 
-	setLiquidity(liquidity) {
+	setLiquidity = (liquidity) => {
 		this.setState({ liquidity: liquidity });
-	}
+	};
 
-	async handleClaim() {
+	handleClaim = async () => {
 		this.setState({ claiming: true });
 		let result = await this.props.claim(this.state.currentToken, this.state.version);
 		if (!result.error) {
@@ -123,9 +119,9 @@ class StakeDeposit extends Component {
 			});
 			this.setState({ claiming: false });
 		}
-	}
+	};
 
-	async handleStake() {
+	handleStake = async () => {
 		let result = await this.props.stakeToken(
 			parseFloat(this.state.depositAmount - 0.00000001),
 			this.state.currentToken
@@ -162,7 +158,7 @@ class StakeDeposit extends Component {
 				message: result.message,
 			});
 		}
-	}
+	};
 
 	render() {
 		const { depositModalVisible, txSuccess, txHash, error, depositAmount, claiming, version } =
@@ -178,6 +174,7 @@ class StakeDeposit extends Component {
 			vrapBalance,
 			history,
 		} = this.props;
+		console.log(this.state.icon);
 		return (this.state.ticker !== "" && this.state.icon !== "") || !this.state.loading ? (
 			<>
 				<Sidebar active="stake" theme={theme} onThemeToggle={onThemeToggle} />
@@ -255,9 +252,10 @@ class StakeDeposit extends Component {
 										}}
 									>
 										{!this.state.loading &&
-											this.state.icon.map((icon) => {
+											this.state.icon.map((icon, index) => {
 												return (
 													<img
+														key={`${index}-${icon.toString()}}`}
 														width="auto"
 														height="40px"
 														style={{
@@ -530,24 +528,31 @@ class StakeDeposit extends Component {
 													justifyContent: "space-between",
 												}}
 											>
-												<img
-													style={{
-														width: "24px",
-														height: "24px",
-														borderRadius: "24px",
-														boxShadow: "rgba(0, 0, 0, 0.075) 0px 6px 10px",
-													}}
-													alt="logo"
-													src={this.state.icon}
-												/>
-												<span
-													style={{
-														margin: "0px 0.25rem 0px 0.75rem",
-														fontSize: "20px",
-													}}
-												>
-													{this.state.ticker}
-												</span>
+												<div style={{ display: "flex", alignItems: "center" }}>
+													{this.state.icon.map((icon, index) => (
+														<img
+															key={`${index}-${icon.toString()}`}
+															style={{
+																width: "24px",
+																height: "24px",
+																borderRadius: "24px",
+																boxShadow: "rgba(0, 0, 0, 0.075) 0px 6px 10px",
+															}}
+															alt="logo"
+															src={icon}
+														/>
+													))}
+												</div>
+												<div style={{ marginTop: "-2px" }}>
+													<span
+														style={{
+															margin: "0px 0.25rem 0px 0.75rem",
+															fontSize: "20px",
+														}}
+													>
+														{this.state.ticker}
+													</span>
+												</div>
 											</span>
 										</button>
 									</div>

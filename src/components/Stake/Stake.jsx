@@ -84,10 +84,11 @@ class Stake extends Component {
 							paddingBottom: "3rem",
 						}}
 					>
-						{STAKED_TOKENS.map((data) => {
+						{STAKED_TOKENS.map((data, index) => {
 							return (
 								<AssetCard
 									{...this.props}
+									key={`${index}-${data.tokenContract}`}
 									data={data}
 									routeTo={this.routeTo}
 									updateStaked={this.updateStaked}

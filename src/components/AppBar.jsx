@@ -400,13 +400,13 @@ class AppBar extends Component {
 									<div className="details-dropdown">
 										<div className="category">Your VRAP Breakdown</div>
 										<div className="detail">
-											<p>
+											<>
 												{fetchingVrapPrice ? (
 													<CircularProgress size={16} thickness={5} />
 												) : (
-													`$${vrapPrice}`
+													<p>${vrapPrice}</p>
 												)}
-											</p>
+											</>
 											<span>VRAP Price</span>
 										</div>
 										<div className="detail">

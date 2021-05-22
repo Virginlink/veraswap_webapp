@@ -92,9 +92,10 @@ class AssetCard extends React.Component {
 							flexDirection: "row",
 						}}
 					>
-						{icons.map((icon) => {
+						{icons.map((icon, index) => {
 							return (
 								<img
+									key={`${index}-${icon.toString()}`}
 									width="auto"
 									height="40px"
 									style={{
@@ -173,7 +174,7 @@ class AssetCard extends React.Component {
 							}}
 						>
 							<AnimatedNumber
-								component="text"
+								component="span"
 								value={totalDeposit}
 								initialValue={0}
 								default={0}
