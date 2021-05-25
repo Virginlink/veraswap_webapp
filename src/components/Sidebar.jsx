@@ -15,6 +15,7 @@ import {
 import Logo from "../assets/images/vrap-red.svg";
 import "./Sidebar.css";
 import { ClickAwayListener } from "@material-ui/core";
+import { FiChevronDown } from "react-icons/fi";
 
 class Sidebar extends Component {
 	constructor(props) {
@@ -105,9 +106,11 @@ class Sidebar extends Component {
 									this.toggleSwapDropdown();
 								}}
 								className={active === "swap" ? "active" : ""}
+								data-hidden={!swapDropdownVisible}
 							>
 								<Swap />
 								Swap
+								<FiChevronDown size={16} className="down-arrow" />
 							</a>
 							<div className="sub-links" data-hidden={!swapDropdownVisible}>
 								<ul>

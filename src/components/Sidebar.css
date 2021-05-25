@@ -54,3 +54,14 @@
 .sub-links ul li:not(:last-child) {
 	margin-bottom: 20px;
 }
+
+.down-arrow {
+	margin-right: 0 !important;
+	fill: none !important;
+	margin-left: 6px;
+}
+
+[data-hidden="false"] .down-arrow {
+	transform: rotate(180deg);
+	transition: 0.1s all ease;
+}

@@ -3,6 +3,7 @@ import { CircularProgress, ClickAwayListener, Fade } from "@material-ui/core";
 import LogoWhite from "../assets/images/vrap-white.svg";
 import { ExpertModeModal } from "./modals";
 import { FaMedium, FaTelegramPlane, FaTwitter } from "react-icons/fa";
+import { FiChevronDown } from "react-icons/fi";
 import Logo from "../assets/images/vrap-red.svg";
 import {
 	Stake,
@@ -454,9 +455,11 @@ class AppBar extends Component {
 										this.toggleSwapDropdown();
 									}}
 									className={active === "swap" ? "active" : ""}
+									data-hidden={!swapDropdownVisible}
 								>
 									<Swap />
 									Swap
+									<FiChevronDown size={16} className="down-arrow" />
 								</a>
 								<div className="sub-links" data-hidden={!swapDropdownVisible}>
 									<ul>
