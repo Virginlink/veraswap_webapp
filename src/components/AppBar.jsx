@@ -40,6 +40,7 @@ class AppBar extends Component {
 			expertModeConfirmationModalVisible: false,
 			expertMode: false,
 			darkMode: false,
+			swapDropdownVisible: false,
 		};
 	}
 
@@ -194,6 +195,12 @@ class AppBar extends Component {
 		);
 	};
 
+	toggleSwapDropdown = () => {
+		this.setState((state) => ({
+			swapDropdownVisible: !state.swapDropdownVisible,
+		}));
+	};
+
 	render() {
 		const {
 			settingsMenuVisible,
@@ -208,6 +215,7 @@ class AppBar extends Component {
 			darkMode,
 			fetchingVrapPrice,
 			vrapPrice,
+			swapDropdownVisible,
 		} = this.state;
 		const { onModalToggle, walletAddress, walletConnected, ethBalance, home, history, active } =
 			this.props;
@@ -437,16 +445,43 @@ class AppBar extends Component {
 						</a>
 					</div>
 					<ul className="app-links">
-						<li>
-							<a
-								href="/swap"
-								onClick={(e) => this.navigateTo(e, "/swap")}
-								className={active === "swap" ? "active" : ""}
-							>
-								<Swap />
-								Swap
-							</a>
-						</li>
+						<ClickAwayListener onClickAway={() => this.setState({ swapDropdownVisible: false })}>
+							<li>
+								<a
+									href="##"
+									onClick={(e) => {
+										e.preventDefault();
+										this.toggleSwapDropdown();
+									}}
+									className={active === "swap" ? "active" : ""}
+								>
+									<Swap />
+									Swap
+								</a>
+								<div className="sub-links" data-hidden={!swapDropdownVisible}>
+									<ul>
+										<li>
+											<a
+												href="https://exchange.pancakeswap.finance/#/swap"
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												V1
+											</a>
+										</li>
+										<li>
+											<a
+												href="/swap"
+												onClick={(e) => this.navigateTo(e, "/swap")}
+												className={active === "swap" ? "active" : ""}
+											>
+												V2
+											</a>
+										</li>
+									</ul>
+								</div>
+							</li>
+						</ClickAwayListener>
 						<li>
 							<a
 								href="/pool"

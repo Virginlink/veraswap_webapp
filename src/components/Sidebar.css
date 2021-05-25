@@ -33,3 +33,24 @@
 	justify-content: space-between;
 	margin-bottom: 0.5rem;
 }
+
+.sub-links {
+	margin-top: 1.5rem;
+	transition: 0.3s all ease;
+	height: 70px;
+	overflow: hidden;
+}
+
+.sub-links[data-hidden="true"] {
+	margin-top: 0;
+	height: 0;
+}
+
+.sub-links ul {
+	list-style-type: none;
+	padding-inline-start: 3.25rem;
+}
+
+.sub-links ul li:not(:last-child) {
+	margin-bottom: 20px;
+}

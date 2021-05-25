@@ -14,6 +14,8 @@ import {
 } from "../assets/icons/ReactIcons";
 import Logo from "../assets/images/vrap-red.svg";
 import "./Sidebar.css";
+import { ClickAwayListener } from "@material-ui/core";
+
 class Sidebar extends Component {
 	constructor(props) {
 		super(props);
@@ -21,6 +23,7 @@ class Sidebar extends Component {
 			expertModeConfirmationModalVisible: false,
 			expertMode: false,
 			darkMode: false,
+			swapDropdownVisible: false,
 		};
 	}
 
@@ -75,8 +78,15 @@ class Sidebar extends Component {
 		);
 	};
 
+	toggleSwapDropdown = () => {
+		this.setState((state) => ({
+			swapDropdownVisible: !state.swapDropdownVisible,
+		}));
+	};
+
 	render() {
-		const { expertMode, expertModeConfirmationModalVisible, darkMode } = this.state;
+		const { expertMode, expertModeConfirmationModalVisible, darkMode, swapDropdownVisible } =
+			this.state;
 		const { active } = this.props;
 		return (
 			<aside className="app-sidebar">
@@ -86,16 +96,43 @@ class Sidebar extends Component {
 					</a>
 				</div>
 				<ul className="app-links">
-					<li>
-						<a
-							href="/swap"
-							onClick={(e) => this.navigateTo(e, "/swap")}
-							className={active === "swap" ? "active" : ""}
-						>
-							<Swap />
-							Swap
-						</a>
-					</li>
+					<ClickAwayListener onClickAway={() => this.setState({ swapDropdownVisible: false })}>
+						<li>
+							<a
+								href="##"
+								onClick={(e) => {
+									e.preventDefault();
+									this.toggleSwapDropdown();
+								}}
+								className={active === "swap" ? "active" : ""}
+							>
+								<Swap />
+								Swap
+							</a>
+							<div className="sub-links" data-hidden={!swapDropdownVisible}>
+								<ul>
+									<li>
+										<a
+											href="https://exchange.pancakeswap.finance/#/swap"
+											target="_blank"
+											rel="noopener noreferrer"
+										>
+											V1
+										</a>
+									</li>
+									<li>
+										<a
+											href="/swap"
+											onClick={(e) => this.navigateTo(e, "/swap")}
+											className={active === "swap" ? "active" : ""}
+										>
+											V2
+										</a>
+									</li>
+								</ul>
+							</div>
+						</li>
+					</ClickAwayListener>
 					<li>
 						<a
 							href="/pool"
