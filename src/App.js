@@ -30,6 +30,7 @@ import "./components/Navbar.css";
 import "./components/Sale/Sale.css";
 
 const Landing = lazy(() => import("./pages/landing/Landing"));
+const WhyVeraswap = lazy(() => import("./pages/why-veraswap/WhyVeraswap"));
 const Swap = lazy(() => import("./pages/ExchangeBNB"));
 const Stake = lazy(() => import("./pages/StakePage"));
 const StakeDeposit = lazy(() => import("./pages/StakeDeposit"));
@@ -587,6 +588,23 @@ class App extends Component {
 								path="/"
 								render={(props) => (
 									<Landing
+										{...props}
+										modalVisible={connectWalletModalVisible}
+										onModalToggle={this.toggleWalletConnectModal}
+										theme={theme}
+										onThemeToggle={this.toggleTheme}
+										walletConnected={walletConnected}
+										walletAddress={walletAddress}
+										ethBalance={ethBalance}
+										vrapBalance={vrapBalance}
+									/>
+								)}
+							/>
+							<Route
+								exact
+								path="/why-veraswap"
+								render={(props) => (
+									<WhyVeraswap
 										{...props}
 										modalVisible={connectWalletModalVisible}
 										onModalToggle={this.toggleWalletConnectModal}

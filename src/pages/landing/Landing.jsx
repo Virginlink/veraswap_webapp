@@ -60,7 +60,7 @@ class Landing extends Component {
 		return (
 			<>
 				<Sidebar theme={theme} onThemeToggle={onThemeToggle} />
-				<div className="app-container">
+				<div className="app-container plain-bg">
 					<AppBar
 						home
 						theme={theme}
@@ -138,6 +138,9 @@ class Landing extends Component {
 										Users can enjoy high performance decentralized trading experience with a very
 										little fee as low as 1 cent (depends upon the network traffic).
 									</p>
+									<button onClick={() => history.push("/why-veraswap")}>
+										Explore More <FiChevronRight size={26} />
+									</button>
 								</div>
 							</section>
 							<section className="landing-section-centered">

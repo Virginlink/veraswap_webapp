@@ -1,4 +1,8 @@
+import LightBG from "../assets/images/bg.png";
+import DarkBG from "../assets/images/black-bg.png";
+
 export const lightTheme = {
+	appBackground: LightBG,
 	primary: "#DE0102",
 	bodyBackgroundColor: "#FFF",
 	pageLinkTextPrimary: "#000",
@@ -123,9 +127,12 @@ export const lightTheme = {
 	appDrawerBackgroundColor: "#F8F9FA",
 	buyInputBackgroundColor: "#FFF",
 	mobileTabTextColor: "#00000033",
+	cardOpacity: 1,
+	backdropFilter: "none",
 };
 
 export const darkTheme = {
+	appBackground: DarkBG,
 	primary: "#DE0102",
 	bodyBackgroundColor: "#2B2A2A",
 	pageLinkText: "rgb(195, 197, 203)",
@@ -214,7 +221,7 @@ export const darkTheme = {
 	outlinedBoxBackgroundColor: "#2B2A2A",
 	shadedContainerBackgroundColor: "rgb(64, 68, 79)",
 	shadedTextColor: "rgb(195, 197, 203)",
-	exchangeCardBackgroundColor: "#383737",
+	exchangeCardBackgroundColor: "rgba(56, 55, 54, 0.7)",
 	formControlBackgroundColor: "rgb(33,36,41)",
 	swapFormControlBackgroundColor: "#2B2A2A",
 	swapFormControlBorderColor: "#2B2A2A",
@@ -239,7 +246,7 @@ export const darkTheme = {
 	landingHeading: "#FFF",
 	landingParagraph: "#FFF",
 	landingCardBackgroundColor: "#383737",
-	assetCardBackgroundColor: "#383737",
+	assetCardBackgroundColor: "rgba(56, 55, 54, 0.7)",
 	tabBackgroundColor: "#2B2A2A",
 	tabBorderColor: "transparent",
 	tabTextColor: "#FFF",
@@ -253,4 +260,6 @@ export const darkTheme = {
 	appDrawerBackgroundColor: "#383737",
 	buyInputBackgroundColor: "#2B2A2A",
 	mobileTabTextColor: "rgba(255,255,255,0.2)",
+	cardOpacity: 0.9,
+	backdropFilter: "blur(15px)",
 };

@@ -4,6 +4,7 @@ export const GlobalStyles = createGlobalStyle`
 			margin: 0;
 			-webkit-font-smoothing: antialiased;
 			-moz-osx-font-smoothing: grayscale;
+			background-color: ${({ theme }) => theme.bodyBackgroundColor} !important;
 			min-height: 100vh;
 		}
 
@@ -48,8 +49,16 @@ export const GlobalStyles = createGlobalStyle`
 			width: 100%;
 			padding-left: 230px;
 			background-color: ${({ theme }) => theme.bodyBackgroundColor};
+			background-image: url(${({ theme }) => theme.appBackground});
+			background-repeat: no-repeat;
+			background-size: cover;
 			min-height: 100vh;
 			transition: 0.3s all ease;
+		}
+
+		.plain-bg {
+			background-color: ${({ theme }) => theme.bodyBackgroundColor} !important;
+			background: none !important;
 		}
 
 		@media only screen and (max-width: 1200px) {
@@ -1307,6 +1316,8 @@ export const GlobalStyles = createGlobalStyle`
 		.stake-deposits-info-banner {
 			width: 100%;
 			background-color: ${({ theme }) => theme.assetCardBackgroundColor};
+			backdrop-filter: ${({ theme }) => theme.backdropFilter};
+			-webkit-backdrop-filter: ${({ theme }) => theme.backdropFilter};
 			padding: 30px 35px;
 			box-shadow: 4px 4px 25px #0000001F;
 			border: 1px solid #7070704D;
@@ -1504,6 +1515,8 @@ export const GlobalStyles = createGlobalStyle`
 				width: 100%;
 				border-radius: 20px;
 				background-color: ${({ theme }) => theme.exchangeCardBackgroundColor};
+				backdrop-filter: ${({ theme }) => theme.backdropFilter};
+				-webkit-backdrop-filter: ${({ theme }) => theme.backdropFilter};
 				border: 1px solid #7070704D;
 				box-shadow: 4px 4px 25px #0000001F;
 				padding: 31px 35px 56px;
@@ -2392,11 +2405,12 @@ export const GlobalStyles = createGlobalStyle`
 			width: 100%;
 			overflow: hidden;
 			position: relative;
-			opacity: 1;
 			background-color: ${({ theme }) => theme.assetCardBackgroundColor};
 			box-shadow: 4px 4px 25px #0000001F;
 			padding: 20px 20px 40px 50px;
 			border: 1px solid #7070704D;
+			backdrop-filter: ${({ theme }) => theme.backdropFilter};
+			-webkit-backdrop-filter: ${({ theme }) => theme.backdropFilter};
 			transition: 0.3s all ease;
 		}
 
@@ -2922,7 +2936,7 @@ export const GlobalStyles = createGlobalStyle`
 			opacity: 0.8;
 		}
 
-		.landing-section button {
+		.landing-section button, .landing-section-inverted button, .navigation-buttons button {
 			margin-top: 4rem;
 			border: none;
 			border-radius: 7px;
@@ -2939,14 +2953,38 @@ export const GlobalStyles = createGlobalStyle`
 			transition: 0.3s all ease;
 		}
 
-		.landing-section button svg {
+		.navigation-buttons button {
+			margin-top: 0;
+		}
+
+		.landing-section button svg, .landing-section-inverted button svg, .navigation-buttons .nav-right svg {
 			position: relative;
 			left: 1rem;
 			transition: 0.3s all ease;
 		}
 
-		.landing-section button:hover svg {
+		.landing-section button:hover svg, .landing-section-inverted button:hover svg, .navigation-buttons .nav-right:hover svg {
 			left: 1.45rem;
+		}
+
+		.navigation-buttons .nav-left svg {
+			position: relative;
+			left: -1rem;
+			transition: 0.3s all ease;
+		}
+
+		.navigation-buttons .nav-left:hover svg {
+			left: -1.45rem;
+		}
+
+		.feature-card {
+			background-color: ${({ theme }) => theme.landingCardBackgroundColor};
+			box-shadow: 4px 4px 20px #00000029;
+			border-radius: 10px;
+			padding: 24px 26px;
+			color: ${({ theme }) => theme.landingParagraph};
+			font-size: 1.1rem;
+			transition: 0.3s all ease;
 		}
 
 		.landing-card {
