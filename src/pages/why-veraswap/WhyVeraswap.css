@@ -1,0 +1,73 @@
+section.app-features {
+	max-width: 1600px;
+	width: 100%;
+	margin: auto;
+	background: transparent url(../../assets/images/landing/office.png) left center no-repeat;
+	background-size: 50%;
+	padding: 2rem 4rem;
+	display: flex;
+	justify-content: flex-end;
+	transition: 0.3s all ease;
+}
+
+.features-grid {
+	display: grid;
+	grid-auto-rows: auto;
+	row-gap: 26px;
+	width: 65%;
+	transition: 0.3s all ease;
+}
+
+.navigation-buttons {
+	max-width: 1600px;
+	width: 100%;
+	margin: auto;
+	display: flex;
+	align-items: center;
+	justify-content: space-evenly;
+	padding: 4rem 0;
+}
+
+@media only screen and (max-width: 960px) {
+	.why-veraswap-main .landing-section-inverted {
+		align-items: center !important;
+	}
+
+	.why-veraswap-main .landing-section-inverted p {
+		width: 100% !important;
+	}
+
+	section.app-features {
+		justify-content: center;
+		background-size: cover;
+		padding: 4rem;
+	}
+
+	.features-grid {
+		width: 100%;
+		max-width: 600px;
+	}
+}
+
+@media only screen and (max-width: 600px) {
+	section.app-features {
+		padding: 4rem 2rem;
+	}
+}
+
+@media only screen and (max-width: 425px) {
+	section.app-features {
+		padding: 4rem 1rem;
+	}
+}
+
+@media only screen and (max-width: 350px) {
+	.navigation-buttons {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.navigation-buttons button:not(:last-child) {
+		margin-bottom: 1.75rem;
+	}
+}

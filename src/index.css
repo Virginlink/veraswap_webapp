@@ -1,40 +1,56 @@
-@import url('https://fonts.googleapis.com/css?family=PT+Sans+Caption&display=swap');
-
-
-h1, h2, h3, h4, h5, h6 {
-  color: inherit !important;
+@font-face {
+	font-family: "normal";
+	src: url(../src/assets/fonts/MarkOT-Medium.ttf);
 }
 
-html, input, textarea, button, a {
-  font-size: 16px;
-  font-family: "PT Sans Caption" !important;
+@font-face {
+	font-family: "bold";
+	src: url(../src/assets/fonts/MarkOT-Heavy.ttf);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	color: inherit !important;
+}
+
+html,
+input,
+textarea,
+button,
+a {
+	font-size: 16px;
+	font-family: "normal" !important;
 }
 
 .flex-spaced-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 
 .MuiPaper-rounded {
-  border-radius: 20px !important;
+	border-radius: 20px !important;
 }
 
 .ant-notification {
-  z-index: 1301 !important;
+	z-index: 1301 !important;
 }
 
 @media only screen and (min-width: 370px) {
-  .app-modal .MuiDialog-paperWidthSm {
-    width: auto;
-    min-width: 360px;
-    max-width: 100%;
-  }
+	.app-modal .MuiDialog-paperWidthSm {
+		width: auto;
+		min-width: 360px;
+		max-width: 100%;
+	}
 }
 
 @media only screen and (max-width: 320px) {
-  .container {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
+	.container {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
 }

@@ -1,43 +1,67 @@
-import React, { Component } from 'react'
-import Navbar from '../components/Navbar'
-import Stake from '../components/Stake/Stake'
+import { Container } from "@material-ui/core";
+import React, { Component } from "react";
+import AppBar from "../components/AppBar";
+import Sidebar from "../components/Sidebar";
+import Stake from "../components/Stake/Stake";
 
 export default class StakePage extends Component {
-
-	routeTo(path){
+	routeTo(path) {
 		this.props.history.push(path);
 	}
 
-    render() {
-        return (
-            <div>
-                <Navbar
-                    active="stake"
-					modalVisible={this.props.modalVisible}
-					onModalToggle={this.props.onModalToggle}
-					theme={this.props.theme}
-					onThemeToggle={this.props.onThemeToggle}
-					walletConnected={this.props.walletConnected}
-					walletAddress = {this.props.walletAddress}
-					ethBalance = {this.props.ethBalance}
-					vrapBalance = {this.props.vrapBalance}
-				/>
-                <Stake
-					onModalOpenRequest={this.props.onModalOpenRequest} 
-					walletConnected={this.props.walletConnected} 
-					vrapBalance={this.props.vrapBalance}
-					ethBalance = {this.props.ethBalance}
-					usdtBalance = {this.props.usdtBalance}
-					address = {this.props.address}
-					fetchBalance={this.props.fetchBalance}
-					buyWithEther = {this.props.buyWithEther}
-					approved = {this.props.approved}
-					approving = {this.props.approving}
-					approveTether={this.props.approveTether}
-					buyWithTether = {this.props.buyWithTether}
-				/>
-            </div>
-        )
-    }
+	render() {
+		const {
+			theme,
+			onThemeToggle,
+			modalVisible,
+			onModalToggle,
+			walletAddress,
+			walletConnected,
+			ethBalance,
+			vrapBalance,
+			onModalOpenRequest,
+			usdtBalance,
+			address,
+			fetchBalance,
+			buyWithEther,
+			approved,
+			approving,
+			approveTether,
+			buyWithTether,
+		} = this.props;
+		return (
+			<>
+				<Sidebar active="stake" theme={theme} onThemeToggle={onThemeToggle} />
+				<div className="app-container">
+					<AppBar
+						active="stake"
+						theme={theme}
+						onThemeToggle={onThemeToggle}
+						modalVisible={modalVisible}
+						onModalToggle={onModalToggle}
+						walletAddress={walletAddress}
+						walletConnected={walletConnected}
+						ethBalance={ethBalance}
+						vrapBalance={vrapBalance}
+					/>
+					<Container maxWidth="md">
+						<Stake
+							onModalOpenRequest={onModalOpenRequest}
+							walletConnected={walletConnected}
+							vrapBalance={vrapBalance}
+							ethBalance={ethBalance}
+							usdtBalance={usdtBalance}
+							address={address}
+							fetchBalance={fetchBalance}
+							buyWithEther={buyWithEther}
+							approved={approved}
+							approving={approving}
+							approveTether={approveTether}
+							buyWithTether={buyWithTether}
+						/>
+					</Container>
+				</div>
+			</>
+		);
+	}
 }
-

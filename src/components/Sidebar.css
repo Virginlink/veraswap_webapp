@@ -1,0 +1,72 @@
+* {
+	font-family: "normal", sans-serif;
+}
+
+.sidebar-logo {
+	display: flex;
+	justify-content: center;
+}
+
+.app-links li {
+	position: relative;
+}
+
+.app-links li:not(:last-child) {
+	margin-bottom: 40px;
+}
+
+.app-links a img {
+	margin-right: 24px;
+}
+
+.interface-settings {
+	padding-top: 30px;
+}
+
+.sidebar-switch {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	margin-top: 0.5rem;
+	padding: 0 38px;
+}
+
+.sidebar-social-links {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 0.5rem;
+}
+
+.sub-links {
+	margin-top: 1.5rem;
+	transition: 0.3s all ease;
+	height: 70px;
+	overflow: hidden;
+}
+
+.sub-links[data-hidden="true"] {
+	margin-top: 0;
+	height: 0;
+}
+
+.sub-links ul {
+	list-style-type: none;
+	padding-inline-start: 2.5rem;
+}
+
+.sub-links ul li:not(:last-child) {
+	margin-bottom: 20px;
+}
+
+.down-arrow {
+	position: absolute;
+	right: -12px;
+	margin-right: 0 !important;
+	fill: none !important;
+}
+
+[data-hidden="false"] .down-arrow {
+	transform: rotate(180deg);
+	transition: 0.1s all ease;
+}
