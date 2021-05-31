@@ -473,7 +473,7 @@ class AppBar extends Component {
 									<ul>
 										<li>
 											<a
-												href="ttps://veraswap.app/#/swap?inputCurrency=0x271c418b045d05a1d52c6bf849d47b5b5b4d769e"
+												href="https://veraswap.app/#/swap?inputCurrency=0x271c418b045d05a1d52c6bf849d47b5b5b4d769e"
 												target="_blank"
 												rel="noopener noreferrer"
 											>
