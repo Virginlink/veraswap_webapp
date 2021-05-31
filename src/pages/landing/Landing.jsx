@@ -10,8 +10,8 @@ import DefiProtocols from "../../assets/images/landing/defi-protocols.svg";
 import Swap from "../../assets/icons/swap-white.svg";
 import Stake from "../../assets/icons/stake-white.svg";
 import Pool from "../../assets/icons/pool-white.svg";
-import "./Landing.css";
 import { getVRAPPrice } from "../../utils/helpers";
+import "./Landing.css";
 
 class Landing extends Component {
 	constructor(props) {

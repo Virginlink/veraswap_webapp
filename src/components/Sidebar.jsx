@@ -25,6 +25,7 @@ class Sidebar extends Component {
 			expertMode: false,
 			darkMode: false,
 			swapDropdownVisible: false,
+			auditDropdownVisible: false,
 		};
 	}
 
@@ -85,9 +86,20 @@ class Sidebar extends Component {
 		}));
 	};
 
+	toggleAuditDropdown = () => {
+		this.setState((state) => ({
+			auditDropdownVisible: !state.auditDropdownVisible,
+		}));
+	};
+
 	render() {
-		const { expertMode, expertModeConfirmationModalVisible, darkMode, swapDropdownVisible } =
-			this.state;
+		const {
+			expertMode,
+			expertModeConfirmationModalVisible,
+			darkMode,
+			swapDropdownVisible,
+			auditDropdownVisible,
+		} = this.state;
 		const { active } = this.props;
 		return (
 			<aside className="app-sidebar">
@@ -110,7 +122,7 @@ class Sidebar extends Component {
 							>
 								<Swap />
 								Swap
-								<FiChevronDown size={16} className="down-arrow" />
+								<FiChevronDown size={16} className="down-arrow" style={{ right: "-5px" }} />
 							</a>
 							<div className="sub-links" data-hidden={!swapDropdownVisible}>
 								<ul>
@@ -166,16 +178,46 @@ class Sidebar extends Component {
 							IDO
 						</a>
 					</li>
-					<li>
-						<a
-							href="https://solidity.finance/audits/Vera-Staking/"
-							target="_blank"
-							rel="noreferrer noopener"
-						>
-							<Audit />
-							Audits
-						</a>
-					</li>
+					<ClickAwayListener onClickAway={() => this.setState({ auditDropdownVisible: false })}>
+						<li>
+							<a
+								href="##"
+								onClick={(e) => {
+									e.preventDefault();
+									this.toggleAuditDropdown();
+								}}
+								target="_blank"
+								rel="noreferrer noopener"
+								data-hidden={!auditDropdownVisible}
+							>
+								<Audit />
+								Audits
+								<FiChevronDown size={16} className="down-arrow" />
+							</a>
+							<div className="sub-links" data-hidden={!auditDropdownVisible}>
+								<ul>
+									<li>
+										<a
+											href="https://solidity.finance/audits/Vera-Staking/"
+											target="_blank"
+											rel="noopener noreferrer"
+										>
+											Staking
+										</a>
+									</li>
+									<li>
+										<a
+											href="https://solidity.finance/audits/Vera/"
+											target="_blank"
+											rel="noopener noreferrer"
+										>
+											General
+										</a>
+									</li>
+								</ul>
+							</div>
+						</li>
+					</ClickAwayListener>
 					<li>
 						<a href="##" onClick={(e) => e.preventDefault()}>
 							<Analytics style={{ transform: "scale(1.2)", position: "relative", left: "3px" }} />

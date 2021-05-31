@@ -3031,7 +3031,7 @@ export const GlobalStyles = createGlobalStyle`
 			align-items: center;
 			justify-content: space-between;
 			padding: 1rem 2rem;
-			background-color: ${({ theme }) => theme.bodyBackgroundColor};
+			background-color: ${({ theme }) => theme.assetCardBackgroundColor};
 		}
 
 		.app-footer > div:nth-child(1) {

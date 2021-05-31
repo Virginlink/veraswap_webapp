@@ -111,6 +111,8 @@ class StakeDeposit extends Component {
 		if (!result.error) {
 			notification["success"]({
 				message: result.message,
+				btn: <ExternalLink hash={result.hash}>View Transaction</ExternalLink>,
+				duration: 0,
 			});
 			this.setState({ claiming: false, liquidity: 0.0 });
 		} else {

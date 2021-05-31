@@ -41,7 +41,7 @@ export const getTokenBalance = (walletAddress, contractAddress, contractABI, dec
 				balance: balance,
 			});
 		} catch (err) {
-			console.log(err);
+			// console.log(err);
 			reject({
 				error: true,
 				message: err.message,
@@ -60,7 +60,7 @@ export const getBNBBalance = (walletAddress) => {
 				balance: balance,
 			});
 		} catch (err) {
-			console.log(err);
+			// console.log(err);
 			reject({
 				error: true,
 				message: err.message,
@@ -96,7 +96,7 @@ export const getTokenApproval = (walletAddress, contractAddress, decimals) => {
 			allowance = ethers.utils.formatUnits(allowance, decimals);
 			resolve(allowance);
 		} catch (err) {
-			console.log(err);
+			// console.log(err);
 			reject(0);
 		}
 	});
@@ -185,7 +185,7 @@ export const getLPInfo = (pairAddress, walletAddress, tokenAAddress, tokenBAddre
 				},
 			});
 		} catch (err) {
-			console.log(err);
+			// console.log(err);
 			reject({
 				error: true,
 				message: err.message,
@@ -244,7 +244,7 @@ export const addLiquidity = ({
 				data: result,
 			});
 		} catch (err) {
-			console.log(err);
+			// console.log(err);
 			reject({
 				error: true,
 				message: err.message,
@@ -284,7 +284,7 @@ export const addLiquidityWithBNB = ({
 				data: result,
 			});
 		} catch (err) {
-			console.log(err);
+			// console.log(err);
 			reject({
 				error: true,
 				message: err.message,
@@ -320,7 +320,7 @@ export const removeLiquidity = ({
 				data: result,
 			});
 		} catch (err) {
-			console.log(err);
+			// console.log(err);
 			reject({
 				error: true,
 				message: err.message,
@@ -354,7 +354,7 @@ export const removeLiquidityWithBNB = ({
 				data: result,
 			});
 		} catch (err) {
-			console.log(err);
+			// console.log(err);
 			reject({
 				error: true,
 				message: err.message,
@@ -454,7 +454,7 @@ export const swapTokens = ({
 				data: result,
 			});
 		} catch (err) {
-			console.log(err);
+			// console.log(err);
 			reject({
 				error: true,
 				message: err.message,
@@ -490,7 +490,7 @@ export const swapBNBForTokens = ({
 				data: result,
 			});
 		} catch (err) {
-			console.log(err);
+			// console.log(err);
 			reject({
 				error: true,
 				message: err.message,
@@ -524,7 +524,7 @@ export const swapTokensForBNB = ({
 				data: result,
 			});
 		} catch (err) {
-			console.log(err);
+			// console.log(err);
 			reject({
 				error: true,
 				message: err.message,

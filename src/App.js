@@ -520,7 +520,8 @@ class App extends Component {
 			let result = await contract.claim(contractAddress);
 			return {
 				error: false,
-				message: `Claim Successful ${result.hash}`,
+				message: `Claim Successful`,
+				hash: result.hash,
 			};
 		} catch (e) {
 			return {

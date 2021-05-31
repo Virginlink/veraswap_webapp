@@ -7,6 +7,10 @@
 	justify-content: center;
 }
 
+.app-links li {
+	position: relative;
+}
+
 .app-links li:not(:last-child) {
 	margin-bottom: 40px;
 }
@@ -48,7 +52,7 @@
 
 .sub-links ul {
 	list-style-type: none;
-	padding-inline-start: 3.25rem;
+	padding-inline-start: 2.5rem;
 }
 
 .sub-links ul li:not(:last-child) {
@@ -56,9 +60,10 @@
 }
 
 .down-arrow {
+	position: absolute;
+	right: -12px;
 	margin-right: 0 !important;
 	fill: none !important;
-	margin-left: 6px;
 }
 
 [data-hidden="false"] .down-arrow {

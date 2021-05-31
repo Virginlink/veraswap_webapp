@@ -320,7 +320,7 @@ class ExchangeBNB extends Component {
 				}
 			})
 			.catch((err) => {
-				console.log("Unable to fetch balance", err.message);
+				// console.log("Unable to fetch balance", err.message);
 			});
 	};
 
@@ -335,7 +335,7 @@ class ExchangeBNB extends Component {
 				}
 			})
 			.catch((err) => {
-				console.log("Unable to fetch balance", err.message);
+				// console.log("Unable to fetch balance", err.message);
 			});
 	};
 
@@ -344,7 +344,7 @@ class ExchangeBNB extends Component {
 			getTokenApproval(walletAddress, contractAddress, decimals)
 				.then((allowance) => {
 					this.setState({ loading: false }, () => {
-						// console.log(token, allowance)
+						// console.log(token, allowance);
 						if (parseFloat(allowance) > 0) {
 							this.setState({
 								[token === "A" ? "tokenAApproved" : "tokenBApproved"]: true,
@@ -408,7 +408,7 @@ class ExchangeBNB extends Component {
 											multipathToken: "",
 										},
 										() => {
-											console.log(err.message);
+											// console.log(err.message);
 										}
 									);
 								});
@@ -423,7 +423,7 @@ class ExchangeBNB extends Component {
 								multipathToken: "",
 							},
 							() => {
-								console.log(err);
+								// console.log(err);
 							}
 						);
 					});
@@ -1005,17 +1005,22 @@ class ExchangeBNB extends Component {
 													btn: <ExternalLink hash={res.data.hash}>View Transaction</ExternalLink>,
 													duration: 0,
 												});
-												this.setState({
-													approving: false,
-													[token === "A" ? "approvingTokenA" : "approvingTokenB"]: false,
-													[token === "A" ? "tokenAApproved" : "tokenBApproved"]: true,
-													approvalModalVisible: false,
-													approvalAmount: "",
-												});
+												this.setState(
+													{
+														approving: false,
+														[token === "A" ? "tokenAAllowance" : "tokenBAllowance"]: approvalAmount,
+														[token === "A" ? "approvingTokenA" : "approvingTokenB"]: false,
+														[token === "A" ? "tokenAApproved" : "tokenBApproved"]: true,
+														approvalModalVisible: false,
+													},
+													() => {
+														setTimeout(() => this.setState({ approvalAmount: "" }), 500);
+													}
+												);
 												clearInterval(intervalId);
 											}
 										} catch (e) {
-											console.log(e.message);
+											// console.log(e.message);
 										}
 									}, 5000);
 								} catch (e) {
@@ -1023,7 +1028,7 @@ class ExchangeBNB extends Component {
 										[token === "A" ? "approvingTokenA" : "approvingTokenB"]: false,
 										approving: false,
 									});
-									console.log(e);
+									// console.log(e);
 								}
 							}
 						}
@@ -1198,12 +1203,12 @@ class ExchangeBNB extends Component {
 											clearInterval(intervalId);
 										}
 									} catch (e) {
-										console.log(e.message);
+										// console.log(e.message);
 									}
 								}, 5000);
 							} catch (e) {
 								this.setState({ swapping: false });
-								console.log(e.message);
+								// console.log(e.message);
 							}
 						}
 					}
@@ -1342,12 +1347,12 @@ class ExchangeBNB extends Component {
 											clearInterval(intervalId);
 										}
 									} catch (e) {
-										console.log(e.message);
+										// console.log(e.message);
 									}
 								}, 5000);
 							} catch (e) {
 								this.setState({ swapping: false });
-								console.log(e.message);
+								// console.log(e.message);
 							}
 						}
 					}
@@ -1497,12 +1502,12 @@ class ExchangeBNB extends Component {
 											clearInterval(intervalId);
 										}
 									} catch (e) {
-										console.log(e.message);
+										// console.log(e.message);
 									}
 								}, 5000);
 							} catch (e) {
 								this.setState({ swapping: false });
-								console.log(e.message);
+								// console.log(e.message);
 							}
 						}
 					}

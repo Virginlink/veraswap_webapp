@@ -4,9 +4,9 @@ import { withRouter } from "react-router";
 import AppBar from "../../components/AppBar";
 import Sidebar from "../../components/Sidebar";
 import Interface from "../../assets/images/landing/interface.svg";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import "../landing/Landing.css";
 import "./WhyVeraswap.css";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 class WhyVeraswap extends Component {
 	render() {

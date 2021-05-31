@@ -96,10 +96,15 @@
 		align-items: center;
 	}
 
-	.landing-section > div {
+	.landing-section > div,
+	.landing-section-inverted > div {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+	}
+
+	.landing-section-inverted > img {
+		margin-top: 2.5rem;
 	}
 
 	.landing-cards-container {
