@@ -13,6 +13,8 @@ import {
 	VRAPBlog,
 } from "../assets/icons/ReactIcons";
 import Logo from "../assets/images/vrap-red.svg";
+import CMC from "../assets/icons/cmc.svg";
+import CMCW from "../assets/icons/cmc-white.svg";
 import "./Sidebar.css";
 import { ClickAwayListener } from "@material-ui/core";
 import { FiChevronDown } from "react-icons/fi";
@@ -128,11 +130,11 @@ class Sidebar extends Component {
 								<ul>
 									<li>
 										<a
-											href="https://exchange.pancakeswap.finance/#/swap"
+											href="https://veraswap.app/#/swap?inputCurrency=0x271c418b045d05a1d52c6bf849d47b5b5b4d769e"
 											target="_blank"
 											rel="noopener noreferrer"
 										>
-											V1
+										 V1
 										</a>
 									</li>
 									<li>
@@ -269,6 +271,11 @@ class Sidebar extends Component {
 						</a>
 						<a href="https://veraswap.medium.com/about" target="_blank" rel="noopener noreferrer">
 							<FaMedium size={24} />
+						</a>
+					</div>
+					<div className="sidebar-social-links" style={{marginTop: "1rem",marginBottom: "1.5rem"}}>
+						<a href="https://coinmarketcap.com/currencies/veraswap/" target="_blank" rel="noopener noreferrer">
+							{darkMode ? <img src={CMCW} style={{maxWidth:"100%"}} alt="coinmarketcap" /> : <img src={CMC} style={{maxWidth:"100%"}} alt="coinmarketcap" /> }
 						</a>
 					</div>
 					<div className="sidebar-copyrights">&copy; 2021 Veraswap</div>
