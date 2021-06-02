@@ -1,72 +1,71 @@
-# Getting Started with Create React App
+## Veraswap Interface
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Table of contents
 
-## Available Scripts
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Project structure](#project-structure)
+  - [Misc](#misc)
 
-In the project directory, you can run:
+---
 
-### `npm start`
+### Description
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Interface for Veraswap built with [Create React App](https://github.com/facebook/create-react-app)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Built with
 
-### `npm test`
+- [React](https://reactjs.org/) - JavaScript library for building user interfaces
+- [Material UI](https://material-ui.com/) - React UI framework
+- [Ant Design for React](https://ant.design/docs/react/introduce) - React UI library that contains a set of high quality components and demos for building rich, interactive user interfaces
+- [Styled Components](https://styled-components.com/) - CSS in JS tool used for theming the interface
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Getting Started
 
-### `npm run build`
+### Prerequisites
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+To run this project on your machine, the following need to have installed:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- [Node.Js](https://nodejs.org/) - JavaScript runtime built on Chrome's V8 JavaScript engine
+- npm - Default package manager for Node.Js
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Installation
 
-### `npm run eject`
+Step by step instructions on setting up the project and running it
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+1. Clone the repo
+   ```
+   git clone https://github.com/Virginlink/veraswap_webapp.git
+   ```
+2. Install dependencies
+   ```
+   npm install
+   ```
+3. Start development server
+   ```
+   npm start
+   ```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Project structure
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+1. Project's static assets (Fonts, Icons, Images) can be found at [src/assets](./src/assets)
+2. JSX components are created page specific as well as based on functionality under [src/components](./src/components). Page specific components are found under [src/pages/components](./src/pages/components)
+3. Pages are located under [src/pages](./src/pages).
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+   > Note: Each new component that is created has to be added to the exports in index.js at the root of each component sub directory if an index file is present ([src/pages/index.js](./src/pages/index.js) incase of new page). These exports will be imported throughout the codebase.
 
-## Learn More
+4. Global styles are declared in [globalStyles.js](./src/components/globalStyles.js). CSS that requires dynamic theming can be found here. Other static css files can be found along with the respective component's JSX file.
+5. Theme specific css variables can be updated at [Themes.js](./src/components/Themes.js)
+6. Certain parts of the app's state are maintained through React Context named as AppContext. Global state's initial values can be updated [here](./src/state/AppContext.js)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+7. Smart contract declarations (addresses and ABI), helper functions and global API calls are located under [src/utils](./src/utils). More definitive information on files under [src/utils](./src/utils) as follows,
+   - [appTokens.js](./src/utils/appTokens.js) - Contains the default tokens available for swap and pool on the interface
+   - [contracts.js](./src/utils/contracts.js) - Contains essential smart contract addresses and ABI declarations (Presale, Factory, and Router contracts)
+   - [helpers.js](./src/utils/helpers.js) - Core smart contract calls related to swap and pool exported as global functions
+   - [staked.js](./src/utils/staked.js) - Contains the available staking pools on the interface
+   - [tokens.js](./src/utils/tokens.js) - Contains tokens required for the staking page
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Misc
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
-# veraswap_webapp
+1. Prettier configuration can be updated at .prettierrc at project root directory (Prettier VS code extension is required. Extension id - esbenp.prettier-vscode)

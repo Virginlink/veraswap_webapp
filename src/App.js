@@ -25,8 +25,7 @@ import Footer from "./components/Footer";
 import ExternalLink from "./components/Transactions/ExternalLink";
 import AppLoader from "./components/AppLoader";
 import SuspenseWithChunkError from "./components/SuspenseWithChunkError";
-import "./App.css";
-import "./components/Navbar.css";
+import "./components/Navbar(deprecated).css";
 import "./components/Sale/Sale.css";
 
 const Landing = lazy(() => import("./pages/landing/Landing"));

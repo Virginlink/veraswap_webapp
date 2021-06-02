@@ -1,68 +1,6 @@
-// import {
-// 	TBLK_ABI,
-// 	TBLK_ADDRESS,
-// 	DONUT_ABI,
-// 	DONUT_ADDRESS,
-// 	WBNB_ADDRESS,
-// 	WBNB_ABI,
-// 	BUSD_ADDRESS,
-// 	BUSD_ABI,
-// } from "./contracts";
-// import Empty from "../assets/icons/Empty.png";
 import BNB from "../assets/images/bnb.png";
 import VRAP from "../assets/images/vrap-red.svg";
 import LIT from "../assets/images/lit.webp";
-
-// const TESTNET_TOKENS = [
-// 	{
-// 		name: "Binance Coin",
-// 		symbol: "BNB",
-// 		contractAddress: WBNB_ADDRESS,
-// 		contractABI: WBNB_ABI,
-// 		icon: BNB,
-// 		decimals: 18,
-// 	},
-// 	{
-// 		name: "Test DonutSwap Token",
-// 		symbol: "tDonut",
-// 		contractAddress: DONUT_ADDRESS,
-// 		contractABI: DONUT_ABI,
-// 		icon: Empty,
-// 		decimals: 18,
-// 	},
-// 	{
-// 		name: "Test BlockSwap Token",
-// 		symbol: "tBLK",
-// 		contractAddress: TBLK_ADDRESS,
-// 		contractABI: TBLK_ABI,
-// 		icon: Empty,
-// 		decimals: 18,
-// 	},
-// 	{
-// 		name: "Wrapped BNB",
-// 		symbol: "WBNB",
-// 		contractAddress: WBNB_ADDRESS,
-// 		contractABI: WBNB_ABI,
-// 		icon: Empty,
-// 		decimals: 18,
-// 	},
-// 	{
-// 		name: "BUSD",
-// 		symbol: "BUSD",
-// 		contractAddress: BUSD_ADDRESS,
-// 		contractABI: BUSD_ABI,
-// 		icon: Empty,
-// 		decimals: 18,
-// 	},
-// 	{
-// 		name: "Veraswap",
-// 		symbol: "VRAP",
-// 		contractAddress: "0xf2891542863986a3fd8f735a5dababa706bcf25e",
-// 		contractABI: DONUT_ABI,
-// 		icon: VRAP,
-// 		decimals: 18,
-// 	},
-// ];
 
 const MAINNET_TOKENS = [
 	{
