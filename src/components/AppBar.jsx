@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { CircularProgress, ClickAwayListener, Fade } from "@material-ui/core";
 import LogoWhite from "../assets/images/vrap-white.svg";
 import { ExpertModeModal } from "./modals";
-import { FaMedium, FaTelegramPlane, FaTwitter } from "react-icons/fa";
+import { FaHardHat, FaMedium, FaTelegramPlane, FaTwitter } from "react-icons/fa";
 import { FiChevronDown } from "react-icons/fi";
 import Logo from "../assets/images/vrap-red.svg";
 import {
@@ -511,6 +511,16 @@ class AppBar extends Component {
 							>
 								<Stake />
 								Stake
+							</a>
+						</li>
+						<li>
+							<a
+								href="/liquidity-mining"
+								onClick={(e) => this.navigateTo(e, "/liquidity-mining")}
+								className={active === "liquidity" ? "active" : ""}
+							>
+								<FaHardHat />
+								Mining
 							</a>
 						</li>
 						<li>
