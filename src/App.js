@@ -32,6 +32,7 @@ const Landing = lazy(() => import("./pages/landing/Landing"));
 const WhyVeraswap = lazy(() => import("./pages/why-veraswap/WhyVeraswap"));
 const Swap = lazy(() => import("./pages/ExchangeBNB"));
 const Stake = lazy(() => import("./pages/StakePage"));
+const Liquidity = lazy(() => import("./pages/LiquidityPage"));
 const StakeDeposit = lazy(() => import("./pages/StakeDeposit"));
 const Pool = lazy(() => import("./pages/LiquidityBNB"));
 const ImportLiquidity = lazy(() => import("./pages/ImportLiquidity"));
@@ -683,6 +684,32 @@ class App extends Component {
 								path="/stake"
 								render={(props) => (
 									<Stake
+										{...props}
+										modalVisible={connectWalletModalVisible}
+										onModalToggle={this.toggleWalletConnectModal}
+										theme={theme}
+										onThemeToggle={this.toggleTheme}
+										walletConnected={walletConnected}
+										walletAddress={walletAddress}
+										ethBalance={ethBalance}
+										vrapBalance={vrapBalance}
+										onModalOpenRequest={this.toggleWalletConnectModal}
+										usdtBalance={usdtBalance}
+										address={address}
+										fetchBalance={this.fetchBalance}
+										buyWithEther={this.buyWithEther}
+										approved={approved}
+										approving={approving}
+										approveTether={this.approveTether}
+										buyWithTether={this.buyWithTether}
+									/>
+								)}
+							/>
+							<Route
+								exact
+								path="/liquidity-mining"
+								render={(props) => (
+									<Liquidity
 										{...props}
 										modalVisible={connectWalletModalVisible}
 										onModalToggle={this.toggleWalletConnectModal}

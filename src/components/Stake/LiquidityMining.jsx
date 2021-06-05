@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import AssetCard from "./components/assetCard";
-import { STAKED_TOKENS } from "../../utils/staked";
+import { LIQUIDITY_TOKENS } from "../../utils/liquidity";
 
 const formatter = new Intl.NumberFormat("en-US", {
 	style: "currency",
@@ -9,7 +9,7 @@ const formatter = new Intl.NumberFormat("en-US", {
 	minimumFractionDigits: 2,
 });
 
-class Stake extends Component {
+class LiquidityMining extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -35,11 +35,11 @@ class Stake extends Component {
 							<div className="sale-block-inner-grid-wrapper">
 								<div className="sale-block-inner-grid">
 									<div className="sale-block-title-container">
-										<div className="sale-block-title">Veraswap Staking</div>
+										<div className="sale-block-title">Veraswap Liquidity Mining</div>
 									</div>
 									<div className="sale-block-content-container">
 										<div className="sale-block-content">
-											Deposit tokens to receive VRAP governance tokens{" "}
+											Deposit liquidity pool tokens to receive VRAP governance tokens{" "}
 										</div>
 									</div>
 									<a
@@ -61,7 +61,7 @@ class Stake extends Component {
 				</div>
 				<div className="grid" style={{ width: "100%" }}>
 					<div className="header-lp">
-						<p className="heading">Participating pools</p>
+						{/* <p className="heading">Participating pools</p>
 						<p
 							className="total-liquidity"
 							style={{
@@ -72,7 +72,7 @@ class Stake extends Component {
 							<span style={{ color: "#E60000", fontFamily: "bold" }}>
 								{formatter.format(totalStakedValue + totalStakedValue)}
 							</span>
-						</p>
+						</p> */}
 					</div>
 					<div
 						style={{
@@ -84,7 +84,7 @@ class Stake extends Component {
 							paddingBottom: "3rem",
 						}}
 					>
-						{STAKED_TOKENS.map((data, index) => {
+						{LIQUIDITY_TOKENS.map((data, index) => {
 							return (
 								<AssetCard
 									{...this.props}
@@ -102,4 +102,4 @@ class Stake extends Component {
 	}
 }
 
-export default withRouter(Stake);
+export default withRouter(LiquidityMining);

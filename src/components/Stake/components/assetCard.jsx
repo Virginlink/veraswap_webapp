@@ -71,7 +71,7 @@ class AssetCard extends React.Component {
 	}
 
 	render() {
-		const { icons, ticker } = this.props.data;
+		const { icons, ticker, exchange } = this.props.data;
 		let { totalDeposit, poolRate } = this.state;
 		return (
 			<div className="asset-card">
@@ -220,6 +220,38 @@ class AssetCard extends React.Component {
 							{poolRate} % APY
 						</div>
 					</div>
+					{exchange ? (
+						<div
+							style={{
+								width: "100%",
+								minWidth: 0,
+								margin: 0,
+								padding: 0,
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "space-between",
+							}}
+						>
+							<div
+								style={{
+									fontSize: "16px",
+									color: "#333",
+									fontWeight: 500,
+								}}
+							>
+								Exhange
+							</div>
+							<div
+								style={{
+									fontSize: "16px",
+									color: "#333",
+									fontWeight: 500,
+								}}
+							>
+								{exchange}
+							</div>
+						</div>
+					) : null}
 				</div>
 			</div>
 		);

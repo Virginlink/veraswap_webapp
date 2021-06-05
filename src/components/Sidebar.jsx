@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router";
 import { ExpertModeModal } from "./modals";
-import { FaMedium, FaTelegramPlane, FaTwitter } from "react-icons/fa";
+import { FaMedium, FaTelegramPlane, FaTwitter, FaHardHat } from "react-icons/fa";
 import {
 	Stake,
 	Swap,
@@ -134,7 +134,7 @@ class Sidebar extends Component {
 											target="_blank"
 											rel="noopener noreferrer"
 										>
-										 V1
+											V1
 										</a>
 									</li>
 									<li>
@@ -168,6 +168,16 @@ class Sidebar extends Component {
 						>
 							<Stake />
 							Stake
+						</a>
+					</li>
+					<li>
+						<a
+							href="/liquidity-mining"
+							onClick={(e) => this.navigateTo(e, "/liquidity-mining")}
+							className={active === "liquidity" ? "active" : ""}
+						>
+							<FaHardHat />
+							Mining
 						</a>
 					</li>
 					<li>
@@ -273,9 +283,20 @@ class Sidebar extends Component {
 							<FaMedium size={24} />
 						</a>
 					</div>
-					<div className="sidebar-social-links" style={{marginTop: "1rem",marginBottom: "1.5rem"}}>
-						<a href="https://coinmarketcap.com/currencies/veraswap/" target="_blank" rel="noopener noreferrer">
-							{darkMode ? <img src={CMCW} style={{maxWidth:"100%"}} alt="coinmarketcap" /> : <img src={CMC} style={{maxWidth:"100%"}} alt="coinmarketcap" /> }
+					<div
+						className="sidebar-social-links"
+						style={{ marginTop: "1rem", marginBottom: "1.5rem" }}
+					>
+						<a
+							href="https://coinmarketcap.com/currencies/veraswap/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							{darkMode ? (
+								<img src={CMCW} style={{ maxWidth: "100%" }} alt="coinmarketcap" />
+							) : (
+								<img src={CMC} style={{ maxWidth: "100%" }} alt="coinmarketcap" />
+							)}
 						</a>
 					</div>
 					<div className="sidebar-copyrights">&copy; 2021 Veraswap</div>
