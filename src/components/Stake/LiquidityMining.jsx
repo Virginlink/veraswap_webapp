@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import AssetCard from "./components/assetCard";
+import AssetCard from "./components/liquidityCard";
 import { LIQUIDITY_TOKENS } from "../../utils/liquidity";
 
 const formatter = new Intl.NumberFormat("en-US", {
@@ -61,7 +61,7 @@ class LiquidityMining extends Component {
 				</div>
 				<div className="grid" style={{ width: "100%" }}>
 					<div className="header-lp">
-						{/* <p className="heading">Participating pools</p>
+						<p className="heading">Available Liquidity pools</p>
 						<p
 							className="total-liquidity"
 							style={{
@@ -72,7 +72,7 @@ class LiquidityMining extends Component {
 							<span style={{ color: "#E60000", fontFamily: "bold" }}>
 								{formatter.format(totalStakedValue + totalStakedValue)}
 							</span>
-						</p> */}
+						</p>
 					</div>
 					<div
 						style={{

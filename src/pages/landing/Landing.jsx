@@ -148,9 +148,9 @@ class Landing extends Component {
 									Several <span>Decentralized Finance</span> protocols under one platform
 								</h1>
 								<p>
-									The public sale commenced on 1st March 2021 by 2:00 PM UTC. We've raised 1500 BNB
-									so far in the first 2 phases of the sale. Phase 3 Starts on 5th March at 12 PM UTC
-									and will last for only one hour.
+									From AMM to Yield Farming, the veraswap is a hybrid decentralized protocol
+									supporting various financial operations. Our motive is to create an open financial
+									model that brings the power of banks to every individual.
 								</p>
 								<img
 									width="500px"

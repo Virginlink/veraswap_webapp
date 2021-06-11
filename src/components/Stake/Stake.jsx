@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import AssetCard from "./components/assetCard";
+import AssetCard from "./components/stakeCard";
 import { STAKED_TOKENS } from "../../utils/staked";
 
 const formatter = new Intl.NumberFormat("en-US", {
