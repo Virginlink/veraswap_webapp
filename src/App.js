@@ -27,6 +27,7 @@ import AppLoader from "./components/AppLoader";
 import SuspenseWithChunkError from "./components/SuspenseWithChunkError";
 import "./components/Navbar(deprecated).css";
 import "./components/Sale/Sale.css";
+import { IdoPage, ComingSoon, LaunchPad, MyProject } from "./pages/index";
 
 const Landing = lazy(() => import("./pages/landing/Landing"));
 const WhyVeraswap = lazy(() => import("./pages/why-veraswap/WhyVeraswap"));
@@ -833,6 +834,74 @@ class App extends Component {
 										onModalToggle={this.toggleWalletConnectModal}
 										modalVisible={connectWalletModalVisible}
 										signer={signer}
+										ethBalance={ethBalance}
+										vrapBalance={vrapBalance}
+									/>
+								)}
+							/>
+							<Route
+								exact
+								path="/ido"
+								render={(props) => (
+									<IdoPage
+										{...props}
+										modalVisible={connectWalletModalVisible}
+										onModalToggle={this.toggleWalletConnectModal}
+										theme={theme}
+										onThemeToggle={this.toggleTheme}
+										walletConnected={walletConnected}
+										walletAddress={walletAddress}
+										ethBalance={ethBalance}
+										vrapBalance={vrapBalance}
+									/>
+								)}
+							/>
+							<Route
+								exact
+								path="/coming-soon"
+								render={(props) => (
+									<ComingSoon
+										{...props}
+										modalVisible={connectWalletModalVisible}
+										onModalToggle={this.toggleWalletConnectModal}
+										theme={theme}
+										onThemeToggle={this.toggleTheme}
+										walletConnected={walletConnected}
+										walletAddress={walletAddress}
+										ethBalance={ethBalance}
+										vrapBalance={vrapBalance}
+									/>
+								)}
+							/>
+							<Route
+								exact
+								path="/launch-pad"
+								render={(props) => (
+									<LaunchPad
+										{...props}
+										modalVisible={connectWalletModalVisible}
+										onModalToggle={this.toggleWalletConnectModal}
+										theme={theme}
+										onThemeToggle={this.toggleTheme}
+										walletConnected={walletConnected}
+										walletAddress={walletAddress}
+										ethBalance={ethBalance}
+										vrapBalance={vrapBalance}
+									/>
+								)}
+							/>
+							<Route
+								exact
+								path="/my-projects"
+								render={(props) => (
+									<MyProject
+										{...props}
+										modalVisible={connectWalletModalVisible}
+										onModalToggle={this.toggleWalletConnectModal}
+										theme={theme}
+										onThemeToggle={this.toggleTheme}
+										walletConnected={walletConnected}
+										walletAddress={walletAddress}
 										ethBalance={ethBalance}
 										vrapBalance={vrapBalance}
 									/>

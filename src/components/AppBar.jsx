@@ -525,8 +525,8 @@ class AppBar extends Component {
 						</li>
 						<li>
 							<a
-								href="##"
-								onClick={(e) => e.preventDefault()}
+								href="/ido"
+								onClick={(e) => this.navigateTo(e, "/ido")}
 								className={active === "ico" ? "active" : ""}
 							>
 								<ICO />
@@ -574,13 +574,21 @@ class AppBar extends Component {
 							</li>
 						</ClickAwayListener>
 						<li>
-							<a href="##" onClick={(e) => e.preventDefault()}>
+							<a
+								href="/coming-soon"
+								onClick={(e) => this.navigateTo(e, "/coming-soon")}
+								className={active === "coming-soon" ? "active" : ""}
+							>
 								<Analytics style={{ transform: "scale(1.2)", position: "relative", left: "3px" }} />
 								<span style={{ position: "relative", left: "5px" }}>Analytics</span>
 							</a>
 						</li>
 						<li>
-							<a href="##" onClick={(e) => e.preventDefault()}>
+							<a
+								href="/launch-pad"
+								onClick={(e) => this.navigateTo(e, "/launch-pad")}
+								className={active === "launch-pad" ? "active" : ""}
+							>
 								<VRAPDocs />
 								Listings
 							</a>

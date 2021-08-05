@@ -7,6 +7,10 @@ import StakeDeposit from "./StakeDeposit";
 import Pool from "./LiquidityBNB";
 import ImportLiquidity from "./ImportLiquidity";
 import RemoveLiquidity from "./RemoveLiquidityBNB";
+import IdoPage from "./ido-page/IdoPage";
+import ComingSoon from "./coming-soon/ComingSoon";
+import LaunchPad from "./launch-pad/LaunchPad";
+import MyProject from "./my-project/MyProject";
 
 export {
 	Landing,
@@ -18,4 +22,8 @@ export {
 	Pool,
 	ImportLiquidity,
 	RemoveLiquidity,
+	IdoPage,
+	ComingSoon,
+	LaunchPad,
+	MyProject,
 };

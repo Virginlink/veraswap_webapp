@@ -1,0 +1,39 @@
+.launchpad-banner-container {
+	padding: 30px 50px;
+	background: transparent linear-gradient(180deg, #e60000 0%, #62181a 100%) 0% 0% no-repeat
+		padding-box;
+	box-shadow: 4px 4px 25px #0000001f;
+	border-radius: 20px;
+	width: 100%;
+}
+
+.banner-header span {
+	font-size: 32px;
+	font-family: "bold";
+	color: #fff;
+}
+
+.banner-desc {
+	color: #fff;
+	font-size: 1rem;
+}
+
+.banner-btn {
+	border: none;
+	outline: none;
+	cursor: pointer;
+	font-size: 16px;
+	font-family: "bold" !important;
+	color: #333;
+	border-radius: 7px;
+	padding: 10px 1.5rem;
+	transition: all 0.5s ease-in-out;
+	white-space: nowrap;
+}
+
+.banner-btn:hover,
+.banner-btn:focus {
+	background-color: #333;
+	color: #fff;
+	box-shadow: 4px 4px 25px #0000001f;
+}
