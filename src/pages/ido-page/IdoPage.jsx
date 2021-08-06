@@ -16,6 +16,7 @@ export default class IdoPage extends Component {
 			walletConnected,
 			ethBalance,
 			vrapBalance,
+			history,
 		} = this.props;
 		return (
 			<>
@@ -43,7 +44,12 @@ export default class IdoPage extends Component {
 										<div className="ido-image-container">
 											<img src={IdoImg} alt="ido" />
 										</div>
-										<button className="new-app-btn">New Application</button>
+										<button
+											className="new-app-btn"
+											onClick={() => history.push("/application-form")}
+										>
+											New Application
+										</button>
 									</section>
 									<section className="ido-desc">
 										<p>

@@ -34,6 +34,7 @@ import {
 	MyProject,
 	ProjectDetail,
 	ProjectFund,
+	ApplicationForm,
 } from "./pages/index";
 
 const Landing = lazy(() => import("./pages/landing/Landing"));
@@ -936,6 +937,23 @@ class App extends Component {
 								path="/project-fund"
 								render={(props) => (
 									<ProjectFund
+										{...props}
+										modalVisible={connectWalletModalVisible}
+										onModalToggle={this.toggleWalletConnectModal}
+										theme={theme}
+										onThemeToggle={this.toggleTheme}
+										walletConnected={walletConnected}
+										walletAddress={walletAddress}
+										ethBalance={ethBalance}
+										vrapBalance={vrapBalance}
+									/>
+								)}
+							/>
+							<Route
+								exact
+								path="/application-form"
+								render={(props) => (
+									<ApplicationForm
 										{...props}
 										modalVisible={connectWalletModalVisible}
 										onModalToggle={this.toggleWalletConnectModal}

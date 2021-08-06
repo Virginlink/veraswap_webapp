@@ -13,6 +13,7 @@ import LaunchPad from "./launch-pad/LaunchPad";
 import MyProject from "./my-project/MyProject";
 import ProjectDetail from "./project-detail/ProjectDetail";
 import ProjectFund from "./project-fund/ProjectFund";
+import ApplicationForm from "./application-form/ApplicationForm";
 
 export {
 	Landing,
@@ -30,4 +31,5 @@ export {
 	MyProject,
 	ProjectDetail,
 	ProjectFund,
+	ApplicationForm,
 };
