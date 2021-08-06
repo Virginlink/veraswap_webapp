@@ -11,6 +11,8 @@ import IdoPage from "./ido-page/IdoPage";
 import ComingSoon from "./coming-soon/ComingSoon";
 import LaunchPad from "./launch-pad/LaunchPad";
 import MyProject from "./my-project/MyProject";
+import ProjectDetail from "./project-detail/ProjectDetail";
+import ProjectFund from "./project-fund/ProjectFund";
 
 export {
 	Landing,
@@ -26,4 +28,6 @@ export {
 	ComingSoon,
 	LaunchPad,
 	MyProject,
+	ProjectDetail,
+	ProjectFund,
 };

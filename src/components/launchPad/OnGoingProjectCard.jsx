@@ -3,11 +3,16 @@ import { Progress } from "antd";
 import "./UpComingProjectCard.css";
 import "./OnGoingProjectCard.css";
 import cardImg from "../../assets/images/card-img.jpg";
+import { withRouter } from "react-router-dom";
 
-export default class UpComingProjectCard extends Component {
+class OnGoingProjectCard extends Component {
 	render() {
+		const { history } = this.props;
 		return (
-			<div className="upcoming-card-container ongoing-hg">
+			<div
+				className="upcoming-card-container ongoing-hg"
+				onClick={() => history.push("/project-detail")}
+			>
 				<div className="project-img-container">
 					<img width="378" height="219" src={cardImg} alt="Project" />
 					<div className="project-status status-bg">Ongoing</div>
@@ -57,3 +62,5 @@ export default class UpComingProjectCard extends Component {
 		);
 	}
 }
+
+export default withRouter(OnGoingProjectCard);

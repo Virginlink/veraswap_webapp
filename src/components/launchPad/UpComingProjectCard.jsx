@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 import "./UpComingProjectCard.css";
 import cardImg from "../../assets/images/card-img.jpg";
+import { withRouter } from "react-router-dom";
 
-export default class UpComingProjectCard extends Component {
+class UpComingProjectCard extends Component {
 	render() {
+		const { history } = this.props;
+
 		return (
-			<div className="upcoming-card-container">
+			<div className="upcoming-card-container" onClick={() => history.push("/project-fund")}>
 				<div className="project-img-container">
 					<img width="378" height="219" src={cardImg} alt="Project" />
 					<div className="project-status">Upcoming</div>
@@ -47,3 +50,5 @@ export default class UpComingProjectCard extends Component {
 		);
 	}
 }
+
+export default withRouter(UpComingProjectCard);

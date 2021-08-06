@@ -3183,6 +3183,7 @@ export const GlobalStyles = createGlobalStyle`
 			border-radius: 20px;
 			border: 1px solid #7070704d;
 			padding: 10px;
+			cursor: pointer;
 		}
 
 		@media only screen and (max-width: 420px) {
@@ -3204,7 +3205,7 @@ export const GlobalStyles = createGlobalStyle`
 			color: ${({ theme }) => theme.landingHeading} !important;
 		}
 
-		.tba-desc, .sale-text {
+		.tba-desc, .sale-text, .back-arrow, .info-column-right {
 			color: ${({ theme }) => theme.landingParagraph};
 		}
 
@@ -3227,5 +3228,38 @@ export const GlobalStyles = createGlobalStyle`
 
 		.ant-dropdown-menu-item a{
 			color: ${({ theme }) => theme.landingHeading} !important;
+		}
+
+		.info-header {
+			margin-top: 0;
+			margin-bottom: 4rem;
+			padding-bottom: 1rem;
+			text-align: center;
+			font-family: "normal";
+			font-size: 20px;
+			border-bottom: 1px solid #c9c9c9;
+		}
+
+		.info-card {
+			border: 1px solid #c9c9c9;
+			border-radius: 10px;
+			padding: 2rem 2rem 0 2rem;
+			width: 100%;
+			max-height: 650px;
+			height: auto;
+			background-color: ${({ theme }) => theme.exchangeCardBackgroundColor};
+		}
+
+		@media only screen and (max-width: 930px) {
+			.info-card {
+			   max-height: 100%;
+			}
+		}
+
+		.bar-chart-container {
+			background-color: ${({ theme }) => theme.exchangeCardBackgroundColor};
+			border: 1px solid #C9C9C9;
+			border-radius: 10px;
+			padding: 1.5rem;
 		}
 `;

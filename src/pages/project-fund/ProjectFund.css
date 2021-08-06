@@ -1,0 +1,25 @@
+.data-sec-wrapper {
+	padding: 2rem 4rem;
+}
+
+.img-data-container {
+	box-shadow: 4px 4px 25px #0000001f;
+	border: 1px solid #7070704d;
+	border-radius: 20px;
+	background-color: #000;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	list-style: none;
+	padding: 2rem;
+}
+
+.img-data-box:not(:last-child) {
+	border-right: 2px solid #f3f1f14d;
+	padding-right: 3rem;
+}
+
+.img-data-box {
+	flex: 1;
+	text-align: center;
+}
