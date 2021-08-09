@@ -3076,4 +3076,190 @@ export const GlobalStyles = createGlobalStyle`
 				margin-right: 2.25rem;
 			}
 		} 
+
+		.ido-container {
+			width: 100%;
+			padding: 30px 10px;
+			box-shadow: 4px 4px 25px #0000001f;
+			border: 1px solid #7070704d;
+			border-radius: 20px;
+			opacity: 1;
+			background-color: ${({ theme }) => theme.exchangeCardBackgroundColor};
+			backdrop-filter: ${({ theme }) => theme.backdropFilter};
+			-webkit-backdrop-filter: ${({ theme }) => theme.backdropFilter};
+		}
+
+		.ido-header {
+			text-align: center;
+			font-family: bold;
+			font-size: 30px;
+			color: ${({ theme }) => theme.landingHeading} !important;
+		}
+
+		.ido-desc p {
+			line-height: 1.6;
+			color: ${({ theme }) => theme.landingParagraph};
+		}
+
+		.new-app-btn {
+			margin-top: 70px;
+			border-radius: 10px;
+			border: 2px ${({ theme }) => theme.landingParagraph} solid;
+			padding: 10px 1rem;
+			outline: none;
+			font-family: bold;
+			background-color: transparent;
+			color: ${({ theme }) => theme.landingParagraph};
+		}
+
+		.new-app-btn:hover,
+		.new-app-btn:focus {
+			cursor: pointer;
+			background-color: ${({ theme }) => theme.activeTabBackgroundColor};
+			color: ${({ theme }) => theme.buttonText};
+		}
+
+		@media only screen and (max-width: 850px) {
+			.new-app-btn {
+				margin-top: 30px;
+			}
+		}
+
+		.timer-box h1 {
+			text-align: left;
+			letter-spacing: 1.54px;
+			font-size: 41px;
+			margin: 0;
+			color: ${({ theme }) => theme.landingHeading} !important;
+		}
+
+		@media only screen and (max-width: 470px) {
+			.coming-soon-header span {
+				font-size: 30px;
+			}
+
+			.timer-box h1 {
+				font-size: 28px;
+			}
+
+			.timer-box p {
+				font-size: 12px;
+			}
+		}
+
+		.back-home-btn {
+			width: 200px;
+			margin-top: 4rem;
+			border: none;
+			border-radius: 10px;
+			background-color: ${({ theme }) => theme.buttonBackgroundColor};
+			background: ${({ theme }) => theme.buttonBackground};
+			color: #fff;
+			box-shadow: none;
+			cursor: pointer;
+			font-size: 18px;
+			font-family: "bold", sans-serif !important;
+			padding: 0.75rem 1rem;
+			display: flex;
+			align-items: center;
+			transition: 0.3s all ease;
+		}
+		
+		.back-home-btn svg {
+			position: relative;
+			transition: 0.3s all ease;
+			left: 1rem;
+		}
+		
+		.back-home-btn:hover svg,
+		.back-home-btn:focus svg {
+			left: 1.45rem;
+		}
+
+		.upcoming-card-container {
+			width: 400px;
+			height: 577px;
+			background-color: ${({ theme }) => theme.exchangeCardBackgroundColor};
+			border-radius: 20px;
+			border: 1px solid #7070704d;
+			padding: 10px;
+			cursor: pointer;
+		}
+
+		@media only screen and (max-width: 420px) {
+			width: 100%;
+		}
+
+		.team-review {
+			margin-top: 60px;
+			font-family: "bold";
+			font-size: 18px;
+			color: ${({ theme }) => theme.landingHeading} !important;
+		}
+
+		.project-name {
+			margin: 0;
+			font-family: "bold";
+			font-size: 18px;
+			padding-top: 12px;
+			color: ${({ theme }) => theme.landingHeading} !important;
+		}
+
+		.tba-desc, .sale-text, .back-arrow, .info-column-right {
+			color: ${({ theme }) => theme.landingParagraph};
+		}
+
+		@media only screen and (max-width: 355px) {
+			.tba-desc {
+				font-size: 12px;
+			}
+		}
+
+		.apply-header span {
+			font-family: "bold";
+			font-size: 28px;
+			color: ${({ theme }) => theme.landingHeading} !important;
+		}
+
+		.apply-desc {
+			font-size: 18px;
+			color: ${({ theme }) => theme.landingParagraph};
+		}
+
+		.ant-dropdown-menu-item a{
+			color: ${({ theme }) => theme.landingHeading} !important;
+		}
+
+		.info-header {
+			margin-top: 0;
+			margin-bottom: 4rem;
+			padding-bottom: 1rem;
+			text-align: center;
+			font-family: "normal";
+			font-size: 20px;
+			border-bottom: 1px solid #c9c9c9;
+		}
+
+		.info-card {
+			border: 1px solid #c9c9c9;
+			border-radius: 10px;
+			padding: 2rem 2rem 0 2rem;
+			width: 100%;
+			max-height: 650px;
+			height: auto;
+			background-color: ${({ theme }) => theme.exchangeCardBackgroundColor};
+		}
+
+		@media only screen and (max-width: 930px) {
+			.info-card {
+			   max-height: 100%;
+			}
+		}
+
+		.bar-chart-container {
+			background-color: ${({ theme }) => theme.exchangeCardBackgroundColor};
+			border: 1px solid #C9C9C9;
+			border-radius: 10px;
+			padding: 1.5rem;
+		}
 `;

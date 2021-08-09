@@ -1,0 +1,68 @@
+.upcoming-card-parent {
+	display: flex;
+	gap: 15px;
+	flex-wrap: wrap;
+}
+
+.apply-sec {
+	margin: 100px 0;
+	display: flex;
+	gap: 150px;
+	align-items: center;
+}
+
+.apply-btn-container button {
+	border-radius: 10px;
+	padding: 7px 2rem;
+	background: transparent linear-gradient(180deg, #e60000 0%, #62181a 100%) 0% 0% no-repeat
+		padding-box;
+	box-shadow: 4px 4px 25px #0000001f;
+	color: #fff;
+	font-size: 18px;
+	font-family: "bold";
+	border: none;
+	outline: none;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.featured {
+	display: flex;
+	align-items: center;
+	gap: 30px;
+	margin-bottom: 30px;
+}
+
+.dropdown-btn {
+	border: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 6px;
+	box-shadow: 0px 3px 5px #0000001c;
+	border-radius: 7px;
+	background-color: #fff;
+	cursor: pointer;
+}
+
+.dropdown-active {
+	border-left: 3px solid #e60000;
+}
+
+.lpbanner-bottom {
+	margin-top: 100px;
+	text-align: center;
+}
+
+@media only screen and (max-width: 860px) {
+	.upcoming-card-parent {
+		justify-content: center;
+	}
+}
+
+@media only screen and (max-width: 615px) {
+	.apply-sec {
+		flex-direction: column;
+		gap: 30px;
+	}
+}

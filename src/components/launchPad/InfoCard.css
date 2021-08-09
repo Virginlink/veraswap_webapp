@@ -1,0 +1,23 @@
+.info-column {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid #c9c9c9;
+	margin-bottom: 3rem;
+}
+
+.info-column-left {
+	color: #7d7d7d;
+	margin-right: 7px;
+}
+
+.info-column-right {
+	font-family: "bold";
+	text-align: right;
+}
+
+@media only screen and (max-width: 407px) {
+	.info-column-break {
+		word-break: break-all;
+	}
+}
