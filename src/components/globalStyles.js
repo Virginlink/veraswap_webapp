@@ -3262,4 +3262,58 @@ export const GlobalStyles = createGlobalStyle`
 			border-radius: 10px;
 			padding: 1.5rem;
 		}
+
+		.application-desc {
+			font-size: 18px;
+			opacity: 0.8;
+			margin: 0;
+			color: ${({ theme }) => theme.landingParagraph};
+		}
+
+		.remove-opacity {
+			opacity: unset;
+			flex: 1;
+		}
+
+		.create-btn {
+			width: unset;
+			padding: 10px 2rem;
+		}
+
+		.token-desc {
+			margin: 0;
+			color: ${({ theme }) => theme.landingParagraph};
+		}
+
+		.token-title {
+			margin: 0;
+			color: ${({ theme }) => theme.landingHeading} !important;
+			font-family: "bold";
+			text-transform: uppercase;
+			letter-spacing: 0.6px;
+		}
+
+		.modal-input-container input {
+			width: 100%;
+			border: 1px solid ${({ theme }) => theme.tokenBorderColor};
+			border-radius: 20px;
+			padding: 10px 1rem;
+			outline: none;
+		}
+		
+		.select-token-wrapper {
+			max-height: 340px;
+			overflow-y: scroll;
+			overflow-x: hidden;
+			border: 1px solid ${({ theme }) => theme.tokenBorderColor};
+			border-radius: 20px;
+			padding: 10px 10px 10px 1.5rem;
+		}
+
+		.listed-project-text {
+			color: ${({ theme }) => theme.landingHeading} !important;
+			font-size: 30px;
+			margin: 0;
+		}
+
 `;

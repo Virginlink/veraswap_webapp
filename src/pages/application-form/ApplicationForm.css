@@ -1,0 +1,84 @@
+.choose-plan {
+	margin-top: 40px;
+	margin-bottom: 100px;
+	display: flex;
+	align-items: center;
+	gap: 100px;
+}
+
+.form-container {
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+}
+
+.input-box {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	gap: 30px;
+}
+
+.input-box p {
+	max-width: 200px;
+}
+
+.input-box .input-div {
+	flex: 1;
+	max-width: 650px;
+}
+
+.project-desc-input {
+	height: 175px;
+}
+
+.input-box align-desc {
+	align-self: flex-start;
+}
+
+.binance {
+	width: 200px;
+	padding: 10px 1.5rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 20px;
+	background: #ffffff 0% 0% no-repeat padding-box;
+	box-shadow: 0px 2px 48px #0000000f;
+	border-radius: 4px;
+}
+
+.binance img {
+	width: 30px;
+	height: 30px;
+}
+
+.binance p {
+	margin: 0;
+}
+
+.create-project-container {
+	margin-top: 60px;
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.listed-container {
+	padding: 1rem 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	text-align: center;
+	gap: 30px;
+}
+
+.listed-container img {
+	width: 100px;
+	height: 100px;
+}
+
+.review-container-pd {
+	padding: 1rem 3rem;
+}

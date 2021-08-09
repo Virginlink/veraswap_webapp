@@ -86,15 +86,13 @@
 	color: #fff;
 }
 
-.btn-solid:hover,
-.btn-solid:focus {
+.btn-solid:hover {
 	background-color: transparent;
 	border: 2px solid #ffbdbd;
 	color: #fff;
 }
 
-.btn-border:hover,
-.btn-border:focus {
+.btn-border:hover {
 	background-color: #fff;
 	color: #333;
 	border: 2px solid #fff;

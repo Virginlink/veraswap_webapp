@@ -6,8 +6,12 @@ import Sidebar from "../../components/Sidebar";
 import { PoolInfoCard, ProjectHeaderTab, TokenInfoCard } from "../../components/launchPad";
 import "./ProjectDetail.css";
 import powerRed from "../../assets/images/power-red.png";
+import { BuyTokenModal } from "../../components/modals/";
 
 export default class ProjectDetail extends Component {
+	state = {
+		isBuyTokenVisible: false,
+	};
 	render() {
 		const {
 			theme,
@@ -20,6 +24,12 @@ export default class ProjectDetail extends Component {
 			vrapBalance,
 			history,
 		} = this.props;
+
+		const toggleBuyToken = () => {
+			this.setState((state) => ({
+				isBuyTokenVisible: !state.isBuyTokenVisible,
+			}));
+		};
 
 		return (
 			<>
@@ -57,6 +67,7 @@ export default class ProjectDetail extends Component {
 								liveStatus="Sale Live Now"
 								solidBtn="Buy Token"
 								borderBtn="View BscScan"
+								toggleBuyToken={toggleBuyToken}
 							/>
 							<div className="about-project-container">
 								<div className="about-project-img-wrapper">
@@ -101,6 +112,11 @@ export default class ProjectDetail extends Component {
 								</div>
 							</div>
 						</div>
+						<BuyTokenModal
+							open={this.state.isBuyTokenVisible}
+							onClose={toggleBuyToken}
+							onBackdropClick={toggleBuyToken}
+						/>
 					</Container>
 				</div>
 			</>
