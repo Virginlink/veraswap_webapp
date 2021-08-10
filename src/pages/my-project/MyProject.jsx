@@ -9,8 +9,12 @@ import {
 	UpComingProjectCard,
 	OnGoingProjectCard,
 } from "../../components/launchPad";
+import { ProjectReviewModal } from "../../components/modals";
 
 export default class MyProject extends Component {
+	state = {
+		projectReviewVisible: false,
+	};
 	render() {
 		const {
 			theme,
@@ -33,6 +37,14 @@ export default class MyProject extends Component {
 				</Menu.Item>
 			</Menu>
 		);
+
+		const toggleProjectReview = () => {
+			this.setState((state) => ({
+				projectReviewVisible: !state.projectReviewVisible,
+			}));
+		};
+
+		const { projectReviewVisible } = this.state;
 
 		return (
 			<>
@@ -57,9 +69,9 @@ export default class MyProject extends Component {
 								buttonText="Back to Launchpad"
 							/>
 							<h3 className="team-review">Projects under Team Review</h3>
-							<div className="upcoming-card-parent" style={{marginBottom: "100px"}}>
-								<UpComingProjectCard />
-								<UpComingProjectCard />
+							<div className="upcoming-card-parent" style={{ marginBottom: "100px" }}>
+								<UpComingProjectCard toggleProjectReview={toggleProjectReview} />
+								<UpComingProjectCard toggleProjectReview={toggleProjectReview} />
 							</div>
 							<div className="featured">
 								<h3 className="project-name">Featured Pools</h3>
@@ -69,7 +81,7 @@ export default class MyProject extends Component {
 									</button>
 								</Dropdown>
 							</div>
-							<div className="upcoming-card-parent" style={{marginBottom: "50px"}}>
+							<div className="upcoming-card-parent" style={{ marginBottom: "50px" }}>
 								<OnGoingProjectCard />
 								<OnGoingProjectCard />
 								<OnGoingProjectCard />
@@ -78,6 +90,7 @@ export default class MyProject extends Component {
 								<OnGoingProjectCard />
 							</div>
 						</div>
+						<ProjectReviewModal open={projectReviewVisible} onClose={toggleProjectReview} />
 					</Container>
 				</div>
 			</>

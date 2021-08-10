@@ -127,3 +127,9 @@
 		font-size: 12px;
 	}
 }
+
+@media only screen and (max-width: 365px) {
+	.btn-common {
+		padding: 10px;
+	}
+}

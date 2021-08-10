@@ -3177,17 +3177,13 @@ export const GlobalStyles = createGlobalStyle`
 		}
 
 		.upcoming-card-container {
-			width: 400px;
+			width: 350px;
 			height: 577px;
 			background-color: ${({ theme }) => theme.exchangeCardBackgroundColor};
 			border-radius: 20px;
 			border: 1px solid #7070704d;
 			padding: 10px;
 			cursor: pointer;
-		}
-
-		@media only screen and (max-width: 420px) {
-			width: 100%;
 		}
 
 		.team-review {

@@ -7,12 +7,11 @@ import AppBar from "../../components/AppBar";
 import Sidebar from "../../components/Sidebar";
 import "./ApplicationForm.css";
 import binance from "../../assets/images/binance.svg";
-import { ProjectListedModal, ProjectReviewModal } from "../../components/modals";
+import { ProjectListedModal } from "../../components/modals";
 
 export default class ProjectFund extends Component {
 	state = {
 		projectListedVisible: false,
-		projectReviewVisible: false,
 		selectedItems: [],
 	};
 
@@ -26,7 +25,6 @@ export default class ProjectFund extends Component {
 			walletConnected,
 			ethBalance,
 			vrapBalance,
-			// history,
 		} = this.props;
 
 		const { Option } = Select;
@@ -45,13 +43,7 @@ export default class ProjectFund extends Component {
 			}));
 		};
 
-		const toggleProjectReview = () => {
-			this.setState((state) => ({
-				projectReviewVisible: !state.projectReviewVisible,
-			}));
-		};
-
-		const { selectedItems, projectReviewVisible, projectListedVisible } = this.state;
+		const { selectedItems, projectListedVisible } = this.state;
 		const filteredOptions = dropdownItems.filter((o) => !selectedItems.includes(o));
 
 		const generateArrayOfYears = () => {
@@ -119,7 +111,11 @@ export default class ProjectFund extends Component {
 									{selectedItems.length === 0 ? (
 										<Option value="Premium">Premium</Option>
 									) : (
-										filteredOptions.map((item) => <Option value={item}>{item}</Option>)
+										filteredOptions.map((item) => (
+											<Option key={item} value={item}>
+												{item}
+											</Option>
+										))
 									)}
 								</Select>
 							</div>
@@ -225,7 +221,7 @@ export default class ProjectFund extends Component {
 								<div className="input-box">
 									<p className="application-desc remove-opacity">Cost per Token</p>
 									<div className="input-div">
-										<div className="binance" onClick={toggleProjectListed}>
+										<div className="binance">
 											<img src={binance} alt="binance" />
 											<p>Binance</p>
 										</div>
@@ -233,13 +229,12 @@ export default class ProjectFund extends Component {
 								</div>
 							</div>
 							<div className="create-project-container">
-								<button onClick={toggleProjectReview} className="buy-action-button create-btn">
+								<button className="buy-action-button create-btn" onClick={toggleProjectListed}>
 									Create Project
 								</button>
 							</div>
 						</div>
 						<ProjectListedModal open={projectListedVisible} onClose={toggleProjectListed} />
-						<ProjectReviewModal open={projectReviewVisible} onClose={toggleProjectReview} />
 					</Container>
 				</div>
 			</>
