@@ -14,7 +14,6 @@ export default class ProjectHeaderTab extends Component {
 			liveStatus,
 			solidBtn,
 			borderBtn,
-			toggleBuyToken,
 		} = this.props;
 
 		return (
@@ -43,9 +42,7 @@ export default class ProjectHeaderTab extends Component {
 					/>
 					<p className="numbnb live-comp">{BNBNum}</p>
 					<div className="header-tab-btn-container">
-						<button className="btn-solid btn-common" onClick={toggleBuyToken}>
-							{solidBtn}
-						</button>
+						<button className="btn-solid btn-common">{solidBtn}</button>
 						<button className="btn-border btn-common">{borderBtn}</button>
 					</div>
 				</div>

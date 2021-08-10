@@ -2,6 +2,7 @@ import { Container } from "@material-ui/core";
 import React, { Component } from "react";
 import { Select } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
+import moment from "moment";
 import AppBar from "../../components/AppBar";
 import Sidebar from "../../components/Sidebar";
 import "./ApplicationForm.css";
@@ -14,6 +15,7 @@ export default class ProjectFund extends Component {
 		projectReviewVisible: false,
 		selectedItems: [],
 	};
+
 	render() {
 		const {
 			theme,
@@ -51,6 +53,32 @@ export default class ProjectFund extends Component {
 
 		const { selectedItems, projectReviewVisible, projectListedVisible } = this.state;
 		const filteredOptions = dropdownItems.filter((o) => !selectedItems.includes(o));
+
+		const generateArrayOfYears = () => {
+			var max = new Date().getFullYear();
+			var min = max - 99;
+			var years = [];
+
+			for (var i = max; i >= min; i--) {
+				years.push(i);
+			}
+			return years;
+		};
+
+		const generateArrayOfMonths = Array.from({ length: 12 }, (e, i) => {
+			return new Date(null, i + 1, null).toLocaleDateString("en", { month: "long" });
+		});
+
+		const generateArrayOfDays = () => {
+			const days = [];
+			const dateStart = moment();
+			const dateEnd = moment().add(30, "days");
+			while (dateEnd.diff(dateStart, "days") >= 0) {
+				days.push(dateStart.format("D"));
+				dateStart.add(1, "days");
+			}
+			return days;
+		};
 
 		return (
 			<>
@@ -139,10 +167,68 @@ export default class ProjectFund extends Component {
 									</div>
 								</div>
 								<div className="input-box">
+									<p className="application-desc remove-opacity">Start Date</p>
+									<div className="date-container input-div">
+										<Select suffixIcon={<CaretDownOutlined />} defaultValue="July" bordered={false}>
+											{generateArrayOfMonths.map((month) => (
+												<Option key={month} value={month}>
+													{month}
+												</Option>
+											))}
+										</Select>
+										<Select suffixIcon={<CaretDownOutlined />} defaultValue={12} bordered={false}>
+											{generateArrayOfDays().map((day) => (
+												<Option key={day} value={day}>
+													{day}
+												</Option>
+											))}
+										</Select>
+										<Select suffixIcon={<CaretDownOutlined />} defaultValue={2021} bordered={false}>
+											{generateArrayOfYears().map((year) => (
+												<Option key={year} value={year}>
+													{year}
+												</Option>
+											))}
+										</Select>
+									</div>
+								</div>
+								<div className="input-box">
+									<p className="application-desc remove-opacity">End Date</p>
+									<div className="date-container input-div">
+										<Select
+											suffixIcon={<CaretDownOutlined />}
+											defaultValue="December"
+											bordered={false}
+										>
+											{generateArrayOfMonths.map((month) => (
+												<Option key={month} value={month}>
+													{month}
+												</Option>
+											))}
+										</Select>
+										<Select suffixIcon={<CaretDownOutlined />} defaultValue={12} bordered={false}>
+											{generateArrayOfDays().map((day) => (
+												<Option key={day} value={day}>
+													{day}
+												</Option>
+											))}
+										</Select>
+										<Select suffixIcon={<CaretDownOutlined />} defaultValue={2021} bordered={false}>
+											{generateArrayOfYears().map((year) => (
+												<Option key={year} value={year}>
+													{year}
+												</Option>
+											))}
+										</Select>
+									</div>
+								</div>
+								<div className="input-box">
 									<p className="application-desc remove-opacity">Cost per Token</p>
-									<div className="binance" onClick={toggleProjectListed}>
-										<img src={binance} alt="binance" />
-										<p>Binance</p>
+									<div className="input-div">
+										<div className="binance" onClick={toggleProjectListed}>
+											<img src={binance} alt="binance" />
+											<p>Binance</p>
+										</div>
 									</div>
 								</div>
 							</div>

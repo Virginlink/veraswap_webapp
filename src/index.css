@@ -116,3 +116,19 @@ a {
 .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
 	background-color: unset !important;
 }
+
+.date-container .ant-select {
+	width: 184px;
+	background: #fff !important;
+	color: #333 !important;
+}
+
+.date-container .ant-select-arrow {
+	color: #000 !important;
+}
+
+@media only screen and (max-width: 610px) {
+	.date-container .ant-select {
+		width: 100%;
+	}
+}
