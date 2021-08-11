@@ -8,11 +8,16 @@ import { withRouter } from "react-router-dom";
 class OnGoingProjectCard extends Component {
 	render() {
 		const { history } = this.props;
+
+		const cardRoute = () => {
+			if (history.location.pathname === "/launch-pad") {
+				history.push("/project-detail");
+			} else if (history.location.pathname === "/my-projects") {
+				history.push("/project-fund");
+			}
+		};
 		return (
-			<div
-				className="upcoming-card-container ongoing-hg"
-				onClick={() => history.push("/project-detail")}
-			>
+			<div className="upcoming-card-container ongoing-hg" onClick={cardRoute}>
 				<div className="project-img-container">
 					<img width="378" height="219" src={cardImg} alt="Project" />
 					<div className="project-status status-bg">Ongoing</div>

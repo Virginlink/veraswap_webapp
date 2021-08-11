@@ -4,7 +4,7 @@ import { FiArrowLeft } from "react-icons/fi";
 import Chart from "react-apexcharts";
 import AppBar from "../../components/AppBar";
 import Sidebar from "../../components/Sidebar";
-import { ProjectHeaderTab } from "../../components/launchPad";
+import { PoolInfoCard, ProjectHeaderTab, TokenInfoCard } from "../../components/launchPad";
 import "./ProjectFund.css";
 import powerRed from "../../assets/images/power-red.png";
 
@@ -18,15 +18,16 @@ export default class ProjectFund extends Component {
 				},
 			},
 			fill: {
-				colors: "#e60000",
+				colors: "#E60000",
 				type: "gradient",
 				gradient: {
-					type: "verticle",
-					shadeIntensity: 1,
-					gradientToColors: "#62181a",
+					shade: "light",
+					type: "diagonal2",
+					gradientToColors: "#62181A",
+					shadeIntensity: 0,
 					opacityFrom: 0.7,
-					opacityTo: 1,
-					stops: [0, 50, 100],
+					opacityTo: 0.9,
+					stops: [0, 90, 100],
 				},
 			},
 			dataLabels: {
@@ -45,7 +46,7 @@ export default class ProjectFund extends Component {
 				},
 				axisBorder: {
 					show: true,
-					color: "#333333",
+					color: "#4B5563",
 				},
 			},
 			yaxis: {
@@ -56,12 +57,23 @@ export default class ProjectFund extends Component {
 			plotOptions: {
 				bar: {
 					columnWidth: "50%",
-					colors: {
-						ranges: [
-							{
-								color: "linear-gradient(180deg, #E60000 0%, #62181A 100%)",
-							},
-						],
+				},
+			},
+			tooltip: {
+				enabled: false,
+			},
+			states: {
+				hover: {
+					filter: {
+						type: "none",
+						value: 0,
+					},
+				},
+				active: {
+					allowMultipleDataPointsSelection: false,
+					filter: {
+						type: "none",
+						value: 0,
 					},
 				},
 			},
@@ -85,25 +97,6 @@ export default class ProjectFund extends Component {
 			vrapBalance,
 			history,
 		} = this.props;
-
-		const fundDatas = [
-			{
-				title: "Total Funds Raised",
-				data: "224 BNB",
-			},
-			{
-				title: "Max BNB",
-				data: "100 BNB",
-			},
-			{
-				title: "Participants",
-				data: "600",
-			},
-			{
-				title: "Published On",
-				data: "Jul 14, 2021",
-			},
-		];
 
 		return (
 			<>
@@ -145,16 +138,36 @@ export default class ProjectFund extends Component {
 							<div className="about-project-container">
 								<div className="about-project-img-wrapper">
 									<div className="data-sec-wrapper">
-										<ul className="img-data-container">
-											{fundDatas.map((fundData) => (
-												<li key={fundData.title} className="img-data-box">
+										<div className="img-data-container">
+											<div className="img-data-sec">
+												<div className="img-data-box bd-right">
 													<h1 className="tba">
-														<span>{fundData.data}</span>
+														<span>224 BNB</span>
 													</h1>
-													<p className="project-id">{fundData.title}</p>
-												</li>
-											))}
-										</ul>
+													<p className="project-id">Total Funds Raised</p>
+												</div>
+												<div className="img-data-box bd-right">
+													<h1 className="tba">
+														<span>100 BNB</span>
+													</h1>
+													<p className="project-id">Max BNB</p>
+												</div>
+											</div>
+											<div className="img-data-sec">
+												<div className="img-data-box bd-right remove-bd">
+													<h1 className="tba">
+														<span>600</span>
+													</h1>
+													<p className="project-id">Participants</p>
+												</div>
+												<div className="img-data-box">
+													<h1 className="tba">
+														<span>Jul 14, 2021</span>
+													</h1>
+													<p className="project-id">Jul 14, 2021</p>
+												</div>
+											</div>
+										</div>
 									</div>
 									<img className="power-red" src={powerRed} alt="powerRed" />
 								</div>
@@ -169,6 +182,27 @@ export default class ProjectFund extends Component {
 											type="bar"
 											width="100%"
 											height="500"
+										/>
+									</div>
+									<h3 className="team-review" style={{ fontSize: "20px" }}>
+										Pool Details
+									</h3>
+									<div className="info-container">
+										<PoolInfoCard
+											TokenDistribution="22/05/2021, 3:59 AM UTC"
+											AuditStatus="Passed"
+											TotalSaleAmount="$50,000.00"
+											AvialablePurchase="200,000.00 NAME"
+											MarketCap="$50,000"
+											Kyc="No"
+										/>
+										<TokenInfoCard
+											Name="Name"
+											Symbol="SYM"
+											Address="0x163f182c32d24a09090090"
+											Blockchain="Binance Smart Chain"
+											InitialSupply="400,000.0"
+											TotalSupply="1,000,000.0"
 										/>
 									</div>
 								</div>

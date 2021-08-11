@@ -5,10 +5,16 @@ import { withRouter } from "react-router-dom";
 
 class UpComingProjectCard extends Component {
 	render() {
-		const { history } = this.props;
+		const { history, toggleProjectReview } = this.props;
+
+		const modalActivator = () => {
+			if (history.location.pathname === "/my-projects") {
+				toggleProjectReview();
+			}
+		};
 
 		return (
-			<div className="upcoming-card-container" onClick={() => history.push("/project-fund")}>
+			<div className="upcoming-card-container" onClick={modalActivator}>
 				<div className="project-img-container">
 					<img width="378" height="219" src={cardImg} alt="Project" />
 					<div className="project-status">Upcoming</div>
