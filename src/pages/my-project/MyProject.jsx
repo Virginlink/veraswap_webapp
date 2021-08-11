@@ -4,11 +4,7 @@ import { Menu, Dropdown } from "antd";
 import { BiMenuAltRight } from "react-icons/bi";
 import AppBar from "../../components/AppBar";
 import Sidebar from "../../components/Sidebar";
-import {
-	LaunchPadBanner,
-	UpComingProjectCard,
-	OnGoingProjectCard,
-} from "../../components/launchPad";
+import { LaunchPadBanner, ProjectListCard } from "../../components/launchPad";
 import { ProjectReviewModal } from "../../components/modals";
 
 export default class MyProject extends Component {
@@ -30,10 +26,10 @@ export default class MyProject extends Component {
 		const menu = (
 			<Menu>
 				<Menu.Item key="0" className="dropdown-active">
-					<a href="https://www.antgroup.com">Ongoing Pools</a>
+					<a href="!#">Ongoing Pools</a>
 				</Menu.Item>
 				<Menu.Item key="1">
-					<a href="https://www.aliyun.com">Completed Pools</a>
+					<a href="!#">Completed Pools</a>
 				</Menu.Item>
 			</Menu>
 		);
@@ -70,8 +66,26 @@ export default class MyProject extends Component {
 							/>
 							<h3 className="team-review">Projects under Team Review</h3>
 							<div className="upcoming-card-parent" style={{ marginBottom: "100px" }}>
-								<UpComingProjectCard toggleProjectReview={toggleProjectReview} />
-								<UpComingProjectCard toggleProjectReview={toggleProjectReview} />
+								<ProjectListCard
+									ProjectStatus="Upcomming"
+									ProjectName="Project name"
+									TotalRaise="TBA"
+									MinAlloc="TBA"
+									MaxAlloc="TBA"
+									Access="TBA"
+									SaleCompletion={false}
+									toggleProjectReview={toggleProjectReview}
+								/>
+								<ProjectListCard
+									ProjectStatus="Upcomming"
+									ProjectName="Project name"
+									TotalRaise="TBA"
+									MinAlloc="TBA"
+									MaxAlloc="TBA"
+									Access="TBA"
+									SaleCompletion={false}
+									toggleProjectReview={toggleProjectReview}
+								/>
 							</div>
 							<div className="featured">
 								<h3 className="project-name">Featured Pools</h3>
@@ -82,12 +96,21 @@ export default class MyProject extends Component {
 								</Dropdown>
 							</div>
 							<div className="upcoming-card-parent" style={{ marginBottom: "50px" }}>
-								<OnGoingProjectCard />
-								<OnGoingProjectCard />
-								<OnGoingProjectCard />
-								<OnGoingProjectCard />
-								<OnGoingProjectCard />
-								<OnGoingProjectCard />
+								{[...Array(6)].map((x, i) => (
+									<ProjectListCard
+										key={i}
+										ProjectStatus="Ongoing"
+										ProjectName="Project name"
+										BNBname="1BNB=0.1145 name"
+										TotalRaise="2025 BNB"
+										Percentage={95}
+										BNBno="222.1698694303834 / 234.BNB"
+										Participants={600}
+										MaxBNB={3.5}
+										Access="Private"
+										SaleCompletion={true}
+									/>
+								))}
 							</div>
 						</div>
 						<ProjectReviewModal open={projectReviewVisible} onClose={toggleProjectReview} />

@@ -1,15 +1,6 @@
 import LaunchPadBanner from "./LaunchPadBanner";
-import UpComingProjectCard from "./UpComingProjectCard";
-import OnGoingProjectCard from "./OnGoingProjectCard";
+import ProjectListCard from "./ProjectListCard";
 import ProjectHeaderTab from "./ProjectHeaderTab";
-import PoolInfoCard from "./PoolInfoCard";
-import TokenInfoCard from "./TokenInfoCard";
+import InfoCard from "./InfoCard";
 
-export {
-	LaunchPadBanner,
-	UpComingProjectCard,
-	OnGoingProjectCard,
-	ProjectHeaderTab,
-	PoolInfoCard,
-	TokenInfoCard,
-};
+export { LaunchPadBanner, ProjectListCard, ProjectHeaderTab, InfoCard };

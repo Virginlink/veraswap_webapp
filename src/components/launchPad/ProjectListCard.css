@@ -1,3 +1,5 @@
+/* UpCommingProjectCard css */
+
 .project-img-container {
 	position: relative;
 }
@@ -58,4 +60,35 @@
 	.tba span {
 		font-size: 18px;
 	}
+}
+
+/* OnGoingProjectCard css */
+
+.status-bg {
+	background-color: green;
+}
+
+.ongoing-hg {
+	height: 660px !important;
+}
+
+.sale-comp {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.sale-text {
+	font-size: 12px;
+	margin: 0;
+}
+
+.sale-percentage {
+	margin: 0;
+	color: #e60000;
+	font-family: "bold";
+}
+
+.numbnb {
+	text-align: right;
 }

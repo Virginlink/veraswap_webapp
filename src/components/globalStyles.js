@@ -3289,27 +3289,9 @@ export const GlobalStyles = createGlobalStyle`
 			letter-spacing: 0.6px;
 		}
 
-		.modal-input-container input {
-			width: 100%;
-			border: 1px solid ${({ theme }) => theme.tokenBorderColor};
-			border-radius: 20px;
-			padding: 10px 1rem;
-			outline: none;
-		}
-		
-		.select-token-wrapper {
-			max-height: 340px;
-			overflow-y: scroll;
-			overflow-x: hidden;
-			border: 1px solid ${({ theme }) => theme.tokenBorderColor};
-			border-radius: 20px;
-			padding: 10px 10px 10px 1.5rem;
-		}
-
 		.listed-project-text {
 			color: ${({ theme }) => theme.landingHeading} !important;
 			font-size: 30px;
 			margin: 0;
 		}
-
 `;

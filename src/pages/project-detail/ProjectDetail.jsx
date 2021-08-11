@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import AppBar from "../../components/AppBar";
 import Sidebar from "../../components/Sidebar";
-import { PoolInfoCard, ProjectHeaderTab, TokenInfoCard } from "../../components/launchPad";
+import { InfoCard, ProjectHeaderTab } from "../../components/launchPad";
 import "./ProjectDetail.css";
 import powerRed from "../../assets/images/power-red.png";
 
@@ -81,7 +81,8 @@ export default class ProjectDetail extends Component {
 										Pool Details
 									</h3>
 									<div className="info-container">
-										<PoolInfoCard
+										<InfoCard
+											CardTitle="Pool information"
 											TokenDistribution="22/05/2021, 3:59 AM UTC"
 											AuditStatus="Passed"
 											TotalSaleAmount="$50,000.00"
@@ -89,7 +90,8 @@ export default class ProjectDetail extends Component {
 											MarketCap="$50,000"
 											Kyc="No"
 										/>
-										<TokenInfoCard
+										<InfoCard
+											CardTitle="Token information"
 											Name="Name"
 											Symbol="SYM"
 											Address="0x163f182c32d24a09090090"

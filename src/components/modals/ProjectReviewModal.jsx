@@ -51,7 +51,7 @@ const ProjectListedModal = ({ open, onClose, history }) => {
 								width: "100%",
 							}}
 							className="back-home-btn"
-							onClick={() => history.push("/")}
+							onClick={() => history.push("/launch-pad")}
 						>
 							<span>Back to Launchpad</span> <FiChevronRight size={26} />
 						</button>
