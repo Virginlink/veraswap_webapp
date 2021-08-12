@@ -51,9 +51,9 @@ export default class ProjectDetail extends Component {
 							<ProjectHeaderTab
 								projectName="Project Name"
 								projectAddress="0x0ced9271F49719997787D21DA466Deb94e60d9d6"
-								projectBNB="1BNB=0.1145 name"
+								projectBnb="1BNB=0.1145 name"
 								salePercentage="95"
-								BNBNum="222.1698694303834 / 234.BNB"
+								bnbNum="222.1698694303834 / 234.BNB"
 								liveStatus="Sale Live Now"
 								solidBtn="Buy Token"
 								borderBtn="View BscScan"
@@ -82,22 +82,22 @@ export default class ProjectDetail extends Component {
 									</h3>
 									<div className="info-container">
 										<InfoCard
-											CardTitle="Pool information"
-											TokenDistribution="22/05/2021, 3:59 AM UTC"
-											AuditStatus="Passed"
-											TotalSaleAmount="$50,000.00"
-											AvialablePurchase="200,000.00 NAME"
-											MarketCap="$50,000"
-											Kyc="No"
+											cardTitle="Pool information"
+											tokenDistribution="22/05/2021, 3:59 AM UTC"
+											auditStatus="Passed"
+											totalSaleAmount="$50,000.00"
+											avialablePurchase="200,000.00 NAME"
+											marketCap="$50,000"
+											kyc="No"
 										/>
 										<InfoCard
-											CardTitle="Token information"
-											Name="Name"
-											Symbol="SYM"
-											Address="0x163f182c32d24a09090090"
-											Blockchain="Binance Smart Chain"
-											InitialSupply="400,000.0"
-											TotalSupply="1,000,000.0"
+											cardTitle="Token information"
+											name="Name"
+											symbol="SYM"
+											address="0x163f182c32d24a09090090"
+											blockchain="Binance Smart Chain"
+											initialSupply="400,000.0"
+											totalSupply="1,000,000.0"
 										/>
 									</div>
 								</div>

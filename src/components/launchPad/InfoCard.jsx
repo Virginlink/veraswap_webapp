@@ -5,76 +5,76 @@ import "./InfoCard.css";
 export default class InfoCard extends Component {
 	render() {
 		const {
-			TokenDistribution,
-			AuditStatus,
-			TotalSaleAmount,
-			AvialablePurchase,
-			MarketCap,
-			Kyc,
-			Name,
-			Symbol,
-			Address,
-			Blockchain,
-			InitialSupply,
-			TotalSupply,
-			CardTitle,
+			tokenDistribution,
+			auditStatus,
+			totalSaleAmount,
+			avialablePurchase,
+			marketCap,
+			kyc,
+			name,
+			symbol,
+			address,
+			blockchain,
+			initialSupply,
+			totalSupply,
+			cardTitle,
 		} = this.props;
 
 		return (
 			<div className="info-card">
-				<h3 className="team-review info-header">{CardTitle}</h3>
+				<h3 className="team-review info-header">{cardTitle}</h3>
 				<div className="info-column">
 					<p className="info-column-left">
-						{TokenDistribution ? "Token Distribution" : Name ? "Name" : null}
+						{tokenDistribution ? "Token Distribution" : name ? "Name" : null}
 					</p>
 					<p className="info-column-right">
-						{TokenDistribution}
-						{Name}
+						{tokenDistribution}
+						{name}
 					</p>
 				</div>
 				<div className="info-column">
 					<p className="info-column-left">
-						{AuditStatus ? "Audit Status" : Symbol ? "Symbol" : null}
+						{auditStatus ? "Audit Status" : symbol ? "Symbol" : null}
 					</p>
 					<p className="info-column-right">
-						{AuditStatus}
-						{Symbol}
+						{auditStatus}
+						{symbol}
 					</p>
 				</div>
 				<div className="info-column">
 					<p className="info-column-left">
-						{TotalSaleAmount ? "Total Sale Amount" : Address ? "Address" : null}
+						{totalSaleAmount ? "Total Sale Amount" : address ? "Address" : null}
 					</p>
-					<p className={`info-column-right ${Address ? "info-column-break" : null}`}>
-						{TotalSaleAmount}
-						{Address && Address.substring(0, 15) + "..."} {Address ? <MdContentCopy /> : null}
-					</p>
-				</div>
-				<div className="info-column">
-					<p className="info-column-left">
-						{AvialablePurchase ? "Available for Purchase" : Blockchain ? "Blockchain" : null}
-					</p>
-					<p className="info-column-right">
-						{AvialablePurchase}
-						{Blockchain}
+					<p className={`info-column-right ${address ? "info-column-break" : null}`}>
+						{totalSaleAmount}
+						{address && address.substring(0, 15) + "..."} {address ? <MdContentCopy /> : null}
 					</p>
 				</div>
 				<div className="info-column">
 					<p className="info-column-left">
-						{MarketCap ? "Initial Market Cap" : InitialSupply ? "Initial suply" : null}
+						{avialablePurchase ? "Available for Purchase" : blockchain ? "Blockchain" : null}
 					</p>
 					<p className="info-column-right">
-						{MarketCap}
-						{InitialSupply}
+						{avialablePurchase}
+						{blockchain}
 					</p>
 				</div>
 				<div className="info-column">
 					<p className="info-column-left">
-						{Kyc ? "KYC Required" : TotalSupply ? "Total supply" : null}
+						{marketCap ? "Initial Market Cap" : initialSupply ? "Initial suply" : null}
 					</p>
 					<p className="info-column-right">
-						{Kyc}
-						{TotalSupply}
+						{marketCap}
+						{initialSupply}
+					</p>
+				</div>
+				<div className="info-column">
+					<p className="info-column-left">
+						{kyc ? "KYC Required" : totalSupply ? "Total supply" : null}
+					</p>
+					<p className="info-column-right">
+						{kyc}
+						{totalSupply}
 					</p>
 				</div>
 			</div>

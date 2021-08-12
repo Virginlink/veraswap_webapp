@@ -8,23 +8,23 @@ class ProjectListCard extends Component {
 	render() {
 		const {
 			history,
-			ProjectStatus,
-			ProjectName,
-			TotalRaise,
-			MinAlloc,
-			MaxAlloc,
-			Access,
-			SaleCompletion,
-			BNBname,
-			Percentage,
-			BNBno,
-			Participants,
-			MaxBNB,
+			projectStatus,
+			projectName,
+			totalRaise,
+			minAlloc,
+			maxAlloc,
+			access,
+			saleCompletion,
+			bnbName,
+			percentage,
+			bnbNo,
+			participants,
+			maxBnb,
 			toggleProjectReview,
 		} = this.props;
 
 		const cardRoute = () => {
-			if (SaleCompletion && history.location.pathname === "/launch-pad") {
+			if (saleCompletion && history.location.pathname === "/launch-pad") {
 				history.push("/project-detail");
 			} else if (history.location.pathname === "/my-projects") {
 				history.push("/project-fund");
@@ -33,68 +33,68 @@ class ProjectListCard extends Component {
 
 		return (
 			<div
-				className={`upcoming-card-container ${SaleCompletion ? "ongoing-hg" : null}`}
+				className={`upcoming-card-container ${saleCompletion ? "ongoing-hg" : null}`}
 				onClick={toggleProjectReview ? toggleProjectReview : cardRoute}
 			>
 				<div className="project-img-container">
 					<img width="378" height="219" src={cardImg} alt="Project" />
-					<div className={`project-status ${SaleCompletion ? "status-bg" : null}`}>
-						{ProjectStatus}
+					<div className={`project-status ${saleCompletion ? "status-bg" : null}`}>
+						{projectStatus}
 					</div>
 				</div>
 				<div className="project-data">
 					<div className="project-name-container">
 						<div className="project-avatar"></div>
 						<div>
-							<h3 className="project-name">{ProjectName}</h3>
-							{BNBname ? <p className="tba-desc">{BNBname}</p> : null}
+							<h3 className="project-name">{projectName}</h3>
+							{bnbName ? <p className="tba-desc">{bnbName}</p> : null}
 						</div>
 					</div>
 					<div className="tba-raise-box">
 						<h1 className="tba">
-							<span>{TotalRaise}</span>
+							<span>{totalRaise}</span>
 						</h1>
 						<p className="tba-desc">Total raise</p>
 					</div>
-					{SaleCompletion ? (
+					{saleCompletion ? (
 						<>
 							<div className="sale-comp">
 								<p className="sale-text">Sale Completion</p>
-								<p className="sale-percentage">{Percentage}%</p>
+								<p className="sale-percentage">{percentage}%</p>
 							</div>
 							<Progress
 								strokeColor={"#e60000"}
 								trailColor={"#E5E7EB"}
-								percent={Percentage}
+								percent={percentage}
 								showInfo={false}
 							/>
-							<p className="numbnb sale-text">{BNBno}</p>
+							<p className="numbnb sale-text">{bnbNo}</p>
 						</>
 					) : null}
 					<div className="tba-bottom-container">
 						<div className="tba-bottom-box">
 							<h1 className="tba">
 								<span>
-									{Participants}
-									{MinAlloc}
+									{participants}
+									{minAlloc}
 								</span>
 							</h1>
 							<p className="tba-desc">
-								{Participants ? "Participants" : MinAlloc ? "Min alloc." : null}
+								{participants ? "Participants" : minAlloc ? "Min alloc." : null}
 							</p>
 						</div>
 						<div className="tba-bottom-box">
 							<h1 className="tba">
 								<span>
-									{MaxBNB}
-									{MaxAlloc}
+									{maxBnb}
+									{maxAlloc}
 								</span>
 							</h1>
-							<p className="tba-desc">{MaxBNB ? "Max BNB" : MaxAlloc ? "Max alloc." : null}</p>
+							<p className="tba-desc">{maxBnb ? "Max BNB" : maxAlloc ? "Max alloc." : null}</p>
 						</div>
 						<div className="tba-bottom-box">
 							<h1 className="tba">
-								<span>{Access}</span>
+								<span>{access}</span>
 							</h1>
 							<p className="tba-desc">Access</p>
 						</div>

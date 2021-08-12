@@ -67,23 +67,23 @@ export default class MyProject extends Component {
 							<h3 className="team-review">Projects under Team Review</h3>
 							<div className="upcoming-card-parent" style={{ marginBottom: "100px" }}>
 								<ProjectListCard
-									ProjectStatus="Upcomming"
-									ProjectName="Project name"
-									TotalRaise="TBA"
-									MinAlloc="TBA"
-									MaxAlloc="TBA"
-									Access="TBA"
-									SaleCompletion={false}
+									projectStatus="Upcomming"
+									projectName="Project name"
+									totalRaise="TBA"
+									minAlloc="TBA"
+									maxAlloc="TBA"
+									access="TBA"
+									saleCompletion={false}
 									toggleProjectReview={toggleProjectReview}
 								/>
 								<ProjectListCard
-									ProjectStatus="Upcomming"
-									ProjectName="Project name"
-									TotalRaise="TBA"
-									MinAlloc="TBA"
-									MaxAlloc="TBA"
-									Access="TBA"
-									SaleCompletion={false}
+									projectStatus="Upcomming"
+									projectName="Project name"
+									totalRaise="TBA"
+									minAlloc="TBA"
+									maxAlloc="TBA"
+									access="TBA"
+									saleCompletion={false}
 									toggleProjectReview={toggleProjectReview}
 								/>
 							</div>
@@ -99,16 +99,16 @@ export default class MyProject extends Component {
 								{[...Array(6)].map((x, i) => (
 									<ProjectListCard
 										key={i}
-										ProjectStatus="Ongoing"
-										ProjectName="Project name"
-										BNBname="1BNB=0.1145 name"
-										TotalRaise="2025 BNB"
-										Percentage={95}
-										BNBno="222.1698694303834 / 234.BNB"
-										Participants={600}
-										MaxBNB={3.5}
-										Access="Private"
-										SaleCompletion={true}
+										projectStatus="Ongoing"
+										projectName="Project name"
+										bnbName="1BNB=0.1145 name"
+										totalRaise="2025 BNB"
+										percentage={95}
+										bnbNo="222.1698694303834 / 234.BNB"
+										participants={600}
+										maxBnb={3.5}
+										access="Private"
+										saleCompletion={true}
 									/>
 								))}
 							</div>
