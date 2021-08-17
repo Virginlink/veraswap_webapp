@@ -33,6 +33,7 @@ const ConnectWalletModal = ({
 	walletAddress,
 	selectedWallet,
 	onConnect,
+	isTestnet,
 }) => {
 	const [copied, setCopied] = useState(false);
 
@@ -292,28 +293,30 @@ const ConnectWalletModal = ({
 											</div>
 										</button>
 									) : null}
-									<button
-										className={`modal-content-button ${
-											activeWallet === "walletConnect" && "active-wallet-button"
-										}`}
-										onClick={() => onConnect("walletConnect")}
-										style={{
-											display: "flex",
-											flexDirection: activeWallet === "walletConnect" && "row",
-										}}
-									>
-										<div className="modal-content-button-title">
-											{activeWallet === "walletConnect" && (
-												<div className="wallet-active-dot">
-													<div />
-												</div>
-											)}
-											WalletConnect
-										</div>
-										<div className="modal-content-button-icon">
-											<img src={WalletConnect} alt="icon" />
-										</div>
-									</button>
+									{!isTestnet && (
+										<button
+											className={`modal-content-button ${
+												activeWallet === "walletConnect" && "active-wallet-button"
+											}`}
+											onClick={() => onConnect("walletConnect")}
+											style={{
+												display: "flex",
+												flexDirection: activeWallet === "walletConnect" && "row",
+											}}
+										>
+											<div className="modal-content-button-title">
+												{activeWallet === "walletConnect" && (
+													<div className="wallet-active-dot">
+														<div />
+													</div>
+												)}
+												WalletConnect
+											</div>
+											<div className="modal-content-button-icon">
+												<img src={WalletConnect} alt="icon" />
+											</div>
+										</button>
+									)}
 									<button
 										className={`modal-content-button ${
 											activeWallet === "trustwallet" && "active-wallet-button"

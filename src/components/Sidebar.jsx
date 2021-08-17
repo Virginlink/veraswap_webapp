@@ -242,8 +242,8 @@ class Sidebar extends Component {
 					</li>
 					<li>
 						<a
-							href="/launch-pad"
-							onClick={(e) => this.navigateTo(e, "/launch-pad")}
+							href="/launchpad"
+							onClick={(e) => this.navigateTo(e, "/launchpad")}
 							className={active === "launch-pad" ? "active" : ""}
 						>
 							<VRAPDocs />

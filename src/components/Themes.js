@@ -130,6 +130,7 @@ export const lightTheme = {
 	cardOpacity: 1,
 	backdropFilter: "none",
 	tokenBorderColor: "#3333334D",
+	formErrorMessage: "#e60000",
 };
 
 export const darkTheme = {
@@ -264,4 +265,5 @@ export const darkTheme = {
 	cardOpacity: 0.9,
 	backdropFilter: "blur(15px)",
 	tokenBorderColor: "#DE0102",
+	formErrorMessage: "#F3B92E",
 };

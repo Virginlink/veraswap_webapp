@@ -7,6 +7,7 @@ import CreatePoolModal from "./CreatePoolModal";
 import ConfirmSwapModal from "./ConfirmSwapModal";
 import ProjectListedModal from "./ProjectListedModal";
 import ProjectReviewModal from "./ProjectReviewModal";
+import ProjectCheckoutModal from "./ProjectCheckoutModal";
 
 export {
 	ClaimVRAPModal,
@@ -18,4 +19,5 @@ export {
 	ConfirmSwapModal,
 	ProjectListedModal,
 	ProjectReviewModal,
+	ProjectCheckoutModal,
 };

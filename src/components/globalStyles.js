@@ -142,6 +142,7 @@ export const GlobalStyles = createGlobalStyle`
 		}
 
 		.modal-header {
+				position: relative;
 				font-family: 'normal', sans-serif;
 				display: flex;
 				flex-flow: row nowrap;
@@ -2280,6 +2281,12 @@ export const GlobalStyles = createGlobalStyle`
 					color: ${({ theme }) => theme.formControlText};
 			}
 
+			.close-modal-button.checkout {
+				position: absolute;
+				right: 0;
+				top: 4px;
+			}
+
 			.new-pool-details h1 {
 				font-family: "normal", sans-serif;
 				color: ${({ theme }) => theme.formControlText} !important;
@@ -3312,4 +3319,98 @@ export const GlobalStyles = createGlobalStyle`
 			margin: 0;
 		}
 
+		.ido-parent-container .error-message {
+			color: ${({ theme }) => theme.formErrorMessage};
+			text-align: right;
+			margin: -1.5rem 0 0;
+			font-size: 16px;
+			transition: color 0.3s ease;
+		}
+
+		.project-review-table-container {
+			margin-top: 1rem;
+			padding: 0 1rem;
+		}
+
+		.project-review-table-container::-webkit-scrollbar {
+			-webkit-appearance: none;
+			width: 6px;
+		}
+		
+		.project-review-table-container::-webkit-scrollbar-thumb {
+			border-radius: 4px;
+			background-color: ${({ theme }) => theme.shadedTextColor};
+			-webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+		}
+
+		.project-review-table {
+			font-size: 16px;
+			color: ${({ theme }) => theme.formControlText};
+			width: 100%;
+		}
+
+		.project-review-table td {
+			padding: 16px 6px;
+		}
+
+		.project-review-table tr:not(:last-child) {
+			padding-bottom: 4px;
+			border-bottom: 1px solid ${({ theme }) => theme.shadedTextColor};
+		}
+
+		.project-review-table tr td:first-child {
+			text-align: left;
+		}
+		
+		.project-review-table tr td:last-child {
+			text-align: right;
+		}
+
+		.project-review-table ul {
+			list-style-type: none;
+		}
+
+		.project-review-table .social-handles a {
+			color: ${({ theme }) => theme.formControlText};
+		}
+
+		.project-review-table .social-handles a:hover {
+			color: #1890ff;
+		}
+
+		.project-review-table .social-handles a:not(:last-child) {
+			margin-right: 16px;
+		}
+
+		.project-review-actions button {
+			cursor: pointer;
+			min-width: 140px;
+			border: none;
+			margin: 8px;
+			border-radius: 10px;
+			background-color: ${({ theme }) => theme.buttonBackgroundColor};
+			background: ${({ theme }) => theme.buttonBackground};
+			color: #fff;
+			box-shadow: none;
+			cursor: pointer;
+			font-size: 16px;
+			font-family: "bold", sans-serif !important;
+			padding: 0.5rem 0.75rem;
+			transition: 0.3s all ease;
+			text-align: center;
+		}
+
+		.project-review-actions button:first-child {
+			border: 1px solid #e60000;
+			background-color: transparent;
+			background: transparent;
+			color: #e60000;
+		}
+
+		.project-review-approval {
+			font-size: 18px;
+			margin: 1rem auto;
+			text-align: center;
+			color: ${({ theme }) => theme.formControlText};
+		}
 `;

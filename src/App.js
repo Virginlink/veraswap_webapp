@@ -15,6 +15,7 @@ import {
 	STAKING_ADDRESS,
 	STAKING_ABI,
 	STAKING_ADDRESS_V1,
+	KOVAN_PROVIDER,
 } from "./utils/contracts";
 import { ethers } from "ethers";
 import WalletConnectProvider from "@walletconnect/web3-provider";
@@ -75,6 +76,7 @@ class App extends Component {
 			sapproved: false,
 			sapproving: false,
 			claiming: false,
+			isTestnet: false,
 		};
 		this.fetchBalance = this.fetchBalance.bind(this);
 		this.buyWithEther = this.buyWithEther.bind(this);
@@ -115,18 +117,20 @@ class App extends Component {
 		}
 	};
 
-	toggleWalletConnectModal = () => {
-		if (this.state.walletConnected) {
-			this.setState({
-				showWalletConnection: true,
-				connectWalletModalVisible: !this.state.connectWalletModalVisible,
-			});
-		} else {
-			this.setState({
-				connectWalletModalVisible: !this.state.connectWalletModalVisible,
-				showWalletConnection: false,
-			});
-		}
+	toggleWalletConnectModal = (isTestnet) => {
+		this.setState({ isTestnet: isTestnet || false }, () => {
+			if (this.state.walletConnected) {
+				this.setState({
+					showWalletConnection: true,
+					connectWalletModalVisible: !this.state.connectWalletModalVisible,
+				});
+			} else {
+				this.setState({
+					connectWalletModalVisible: !this.state.connectWalletModalVisible,
+					showWalletConnection: false,
+				});
+			}
+		});
 	};
 
 	connectToWallet = (type) => {
@@ -347,10 +351,12 @@ class App extends Component {
 				const address = await provider.listAccounts();
 				let network = await provider.getNetwork();
 				// const chainId = process.env.NODE_ENV === 'development' ? 97 : 56
-				const chainId = 56;
+				const chainId = this.state.isTestnet ? 42 : 56;
 				if (network.chainId !== chainId) {
 					notification["error"]({
-						message: "Wrong Network Detected. Please connect to Binance Smart Chain",
+						message: `Wrong Network Detected. Please connect to ${
+							this.state.isTestnet ? "Kovan test network" : "Binance Smart Chain"
+						}`,
 					});
 					this.setState({ connectWalletModalVisible: false });
 				} else {
@@ -478,7 +484,8 @@ class App extends Component {
 	}
 
 	async fetchEthBalance(address) {
-		let balance = await PROVIDER.getBalance(address);
+		const provider = this.state.isTestnet ? KOVAN_PROVIDER : PROVIDER;
+		let balance = await provider.getBalance(address);
 		balance = ethers.utils.formatEther(balance);
 		this.setState({ ethBalance: balance });
 	}
@@ -586,6 +593,7 @@ class App extends Component {
 			staking,
 			stakeSuccess,
 			web3Provider,
+			isTestnet,
 		} = this.state;
 		return (
 			<>
@@ -883,7 +891,7 @@ class App extends Component {
 							/>
 							<Route
 								exact
-								path="/launch-pad"
+								path="/launchpad"
 								render={(props) => (
 									<LaunchPad
 										{...props}
@@ -951,10 +959,11 @@ class App extends Component {
 							/>
 							<Route
 								exact
-								path="/application-form"
+								path="/ido/new-application"
 								render={(props) => (
 									<ApplicationForm
 										{...props}
+										signer={signer}
 										modalVisible={connectWalletModalVisible}
 										onModalToggle={this.toggleWalletConnectModal}
 										theme={theme}
@@ -971,6 +980,7 @@ class App extends Component {
 						<Footer />
 					</SuspenseWithChunkError>
 					<ConnectWalletModal
+						isTestnet={isTestnet}
 						open={connectWalletModalVisible}
 						onClose={() =>
 							this.setState({ connectWalletModalVisible: false }, () => this.cancelWithTimeout())

@@ -21,6 +21,7 @@
 
 .input-box .input-div {
 	flex: 3;
+	position: relative;
 }
 
 .input-div input {
@@ -28,10 +29,11 @@
 }
 
 .project-desc-input {
-	height: 175px;
+	border-radius: 10px !important;
+	min-height: 54px;
 }
 
-.input-box align-desc {
+.input-box .align-desc {
 	align-self: flex-start;
 }
 
@@ -85,6 +87,68 @@
 .date-container {
 	display: flex;
 	justify-content: space-between;
+}
+
+.input-div .with-prefix {
+	display: flex;
+	align-items: stretch;
+	position: relative;
+}
+
+.with-prefix .ant-select {
+	width: 220px !important;
+	padding: 0 !important;
+}
+
+.with-prefix .ant-select-single.ant-select-show-arrow .ant-select-selection-item,
+.ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder {
+	padding-right: 0;
+}
+
+.with-prefix .remove-handle {
+	position: absolute;
+	right: 0.5rem;
+	top: 4px;
+}
+
+.with-prefix .ant-select-selector {
+	padding: 0 1rem !important;
+}
+
+.input-div .tooltip-icon {
+	position: absolute;
+	right: 1rem;
+	top: 1rem;
+}
+
+.input-div .with-prefix div:first-child {
+	padding: 0 1.5rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	background-color: #474747;
+	color: #fff;
+	border-radius: 10px 0 0 10px;
+	font-size: 16px;
+	text-transform: capitalize;
+}
+
+.input-div .with-prefix input {
+	border-radius: 0 10px 10px 0;
+}
+
+.ant-select-dropdown.social-dropdown {
+	position: relative;
+	width: 162px !important;
+}
+
+.input-box .ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+	color: #fff;
+}
+
+.input-div input[data-with-suffix="true"] {
+	padding-right: 3.75rem;
 }
 
 @media only screen and (max-width: 850px) {

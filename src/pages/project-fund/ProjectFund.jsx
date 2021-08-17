@@ -12,7 +12,6 @@ export default class ProjectFund extends Component {
 	state = {
 		options: {
 			chart: {
-				id: "basic-bar",
 				toolbar: {
 					show: false,
 				},
@@ -59,9 +58,7 @@ export default class ProjectFund extends Component {
 					columnWidth: "50%",
 				},
 			},
-			tooltip: {
-				enabled: false,
-			},
+
 			states: {
 				hover: {
 					filter: {
@@ -80,7 +77,7 @@ export default class ProjectFund extends Component {
 		},
 		series: [
 			{
-				name: "series-1",
+				name: "Tokens sold",
 				data: [30, 40, 45, 50, 49, 60, 70, 91],
 			},
 		],

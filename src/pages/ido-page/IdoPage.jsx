@@ -48,7 +48,7 @@ export default class IdoPage extends Component {
 											</div>
 											<button
 												className="new-app-btn"
-												onClick={() => history.push("/application-form")}
+												onClick={() => history.push("/ido/new-application")}
 											>
 												New Application
 											</button>

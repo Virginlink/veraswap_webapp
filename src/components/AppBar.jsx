@@ -226,8 +226,16 @@ class AppBar extends Component {
 			swapDropdownVisible,
 			auditDropdownVisible,
 		} = this.state;
-		const { onModalToggle, walletAddress, walletConnected, ethBalance, home, history, active } =
-			this.props;
+		const {
+			onModalToggle,
+			walletAddress,
+			walletConnected,
+			ethBalance,
+			home,
+			history,
+			active,
+			isTestnet,
+		} = this.props;
 		return (
 			<nav className="app-bar">
 				<div>
@@ -368,19 +376,22 @@ class AppBar extends Component {
 					)}
 					{walletConnected ? (
 						<>
-							<button className="wallet-mobile-button" onClick={onModalToggle}>
+							<button
+								className="wallet-mobile-button"
+								onClick={isTestnet ? () => onModalToggle(true) : () => onModalToggle()}
+							>
 								<RiWallet3Fill size={24} />
 							</button>
 							<div className="wallet-details-container">
 								<div className="wallet-balance" style={{ flexShrink: 0 }}>
-									{ethBalance === "" ? 0.0 : parseFloat(ethBalance).toFixed(5)} BNB
+									{ethBalance === "" ? 0.0 : parseFloat(ethBalance).toFixed(5)}{" "}
+									{isTestnet ? "ETH" : "BNB"}
 								</div>
-								<button className="wallet-address-button" onClick={onModalToggle}>
-									<p>
-										{`${walletAddress}`.substring(0, 6) +
-											"..." +
-											`${walletAddress}`.substring(37, 42)}
-									</p>
+								<button
+									className="wallet-address-button"
+									onClick={isTestnet ? () => onModalToggle(true) : () => onModalToggle()}
+								>
+									<p>{walletAddress.substring(0, 6) + "..." + walletAddress.substring(37, 42)}</p>
 									<div
 										style={{
 											borderRadius: "50px",
@@ -399,10 +410,16 @@ class AppBar extends Component {
 						</>
 					) : (
 						<>
-							<button className="wallet-mobile-button" onClick={onModalToggle}>
+							<button
+								className="wallet-mobile-button"
+								onClick={isTestnet ? () => onModalToggle(true) : () => onModalToggle()}
+							>
 								<RiWallet3Fill size={24} />
 							</button>
-							<button className="connect-wallet-button" onClick={onModalToggle}>
+							<button
+								className="connect-wallet-button"
+								onClick={isTestnet ? () => onModalToggle(true) : () => onModalToggle()}
+							>
 								Connect to a wallet
 							</button>
 						</>

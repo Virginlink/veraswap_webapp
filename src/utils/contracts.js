@@ -636,6 +636,8 @@ export const TOKEN_ABI = [
 ];
 export const TOKEN_ADDRESS = "0x271C418B045d05A1D52c6bF849d47b5B5B4d769e";
 
+export const TEST_TOKEN_ADDRESS = "0xf842c6441a874866d1567760df82c61c80d0f242";
+
 export const TETHER_ABI = [
 	{
 		inputs: [],
@@ -1299,6 +1301,11 @@ const MAIN_PROVIDER = new ethers.providers.JsonRpcProvider("https://bsc-dataseed
 
 // export const PROVIDER = process.env.NODE_ENV === 'development' ? TEST_PROVIDER : MAIN_PROVIDER
 export const PROVIDER = MAIN_PROVIDER;
+
+export const KOVAN_PROVIDER = new ethers.providers.InfuraProvider(
+	"kovan",
+	"857fdaf932a740ffbe04a50c51aaee8e"
+);
 
 // export const FACTORY_ADDRESS = process.env.NODE_ENV === 'development' ? "0x58f7B69BC50ef5A499b8A95181A9Ae59A9275bd9" : "0x353766381b757Ee64ce6fa50E584362DE315a03a";
 
@@ -2866,3 +2873,226 @@ export const BUSD_ABI = [
 ];
 
 export const BUSD_ADDRESS = "0x8301F2213c0eeD49a7E28Ae4c3e91722919B8B47";
+
+export const ERC20_ABI = [
+	{
+		constant: true,
+		inputs: [],
+		name: "name",
+		outputs: [
+			{
+				name: "",
+				type: "string",
+			},
+		],
+		payable: false,
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		constant: false,
+		inputs: [
+			{
+				name: "_spender",
+				type: "address",
+			},
+			{
+				name: "_value",
+				type: "uint256",
+			},
+		],
+		name: "approve",
+		outputs: [
+			{
+				name: "",
+				type: "bool",
+			},
+		],
+		payable: false,
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		constant: true,
+		inputs: [],
+		name: "totalSupply",
+		outputs: [
+			{
+				name: "",
+				type: "uint256",
+			},
+		],
+		payable: false,
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		constant: false,
+		inputs: [
+			{
+				name: "_from",
+				type: "address",
+			},
+			{
+				name: "_to",
+				type: "address",
+			},
+			{
+				name: "_value",
+				type: "uint256",
+			},
+		],
+		name: "transferFrom",
+		outputs: [
+			{
+				name: "",
+				type: "bool",
+			},
+		],
+		payable: false,
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		constant: true,
+		inputs: [],
+		name: "decimals",
+		outputs: [
+			{
+				name: "",
+				type: "uint8",
+			},
+		],
+		payable: false,
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		constant: true,
+		inputs: [
+			{
+				name: "_owner",
+				type: "address",
+			},
+		],
+		name: "balanceOf",
+		outputs: [
+			{
+				name: "balance",
+				type: "uint256",
+			},
+		],
+		payable: false,
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		constant: true,
+		inputs: [],
+		name: "symbol",
+		outputs: [
+			{
+				name: "",
+				type: "string",
+			},
+		],
+		payable: false,
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		constant: false,
+		inputs: [
+			{
+				name: "_to",
+				type: "address",
+			},
+			{
+				name: "_value",
+				type: "uint256",
+			},
+		],
+		name: "transfer",
+		outputs: [
+			{
+				name: "",
+				type: "bool",
+			},
+		],
+		payable: false,
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		constant: true,
+		inputs: [
+			{
+				name: "_owner",
+				type: "address",
+			},
+			{
+				name: "_spender",
+				type: "address",
+			},
+		],
+		name: "allowance",
+		outputs: [
+			{
+				name: "",
+				type: "uint256",
+			},
+		],
+		payable: false,
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		payable: true,
+		stateMutability: "payable",
+		type: "fallback",
+	},
+	{
+		anonymous: false,
+		inputs: [
+			{
+				indexed: true,
+				name: "owner",
+				type: "address",
+			},
+			{
+				indexed: true,
+				name: "spender",
+				type: "address",
+			},
+			{
+				indexed: false,
+				name: "value",
+				type: "uint256",
+			},
+		],
+		name: "Approval",
+		type: "event",
+	},
+	{
+		anonymous: false,
+		inputs: [
+			{
+				indexed: true,
+				name: "from",
+				type: "address",
+			},
+			{
+				indexed: true,
+				name: "to",
+				type: "address",
+			},
+			{
+				indexed: false,
+				name: "value",
+				type: "uint256",
+			},
+		],
+		name: "Transfer",
+		type: "event",
+	},
+];
