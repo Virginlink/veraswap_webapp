@@ -8,9 +8,9 @@ export default class ProjectHeaderTab extends Component {
 		const {
 			projectName,
 			projectAddress,
-			projectBNB,
+			projectBnb,
 			salePercentage,
-			BNBNum,
+			bnbNum,
 			liveStatus,
 			solidBtn,
 			borderBtn,
@@ -24,7 +24,7 @@ export default class ProjectHeaderTab extends Component {
 						<span>{projectName}</span>
 					</h3>
 					<p className="project-id">{projectAddress}</p>
-					<div className="project-bnb">{projectBNB}</div>
+					<div className="project-bnb">{projectBnb}</div>
 				</div>
 				<div className="sale-card">
 					<p className="sale-live">{liveStatus}</p>
@@ -40,7 +40,7 @@ export default class ProjectHeaderTab extends Component {
 						percent={salePercentage}
 						showInfo={false}
 					/>
-					<p className="numbnb live-comp">{BNBNum}</p>
+					<p className="numbnb live-comp">{bnbNum}</p>
 					<div className="header-tab-btn-container">
 						<button className="btn-solid btn-common">{solidBtn}</button>
 						<button className="btn-border btn-common">{borderBtn}</button>
