@@ -129,7 +129,6 @@ export const lightTheme = {
 	mobileTabTextColor: "#00000033",
 	cardOpacity: 1,
 	backdropFilter: "none",
-	tokenBorderColor: "#3333334D",
 };
 
 export const darkTheme = {
@@ -263,5 +262,4 @@ export const darkTheme = {
 	mobileTabTextColor: "rgba(255,255,255,0.2)",
 	cardOpacity: 0.9,
 	backdropFilter: "blur(15px)",
-	tokenBorderColor: "#DE0102",
 };

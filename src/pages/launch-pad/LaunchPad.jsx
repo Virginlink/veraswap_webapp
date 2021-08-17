@@ -4,11 +4,7 @@ import { Menu, Dropdown } from "antd";
 import { BiMenuAltRight } from "react-icons/bi";
 import AppBar from "../../components/AppBar";
 import Sidebar from "../../components/Sidebar";
-import {
-	LaunchPadBanner,
-	UpComingProjectCard,
-	OnGoingProjectCard,
-} from "../../components/launchPad";
+import { LaunchPadBanner, ProjectListCard } from "../../components/launchPad";
 import "./LaunchPad.css";
 
 export default class LaunchPad extends Component {
@@ -34,7 +30,7 @@ export default class LaunchPad extends Component {
 				</Menu.Item>
 			</Menu>
 		);
-		
+
 		return (
 			<>
 				<Sidebar active="launch-pad" theme={theme} onThemeToggle={onThemeToggle} />
@@ -59,8 +55,24 @@ export default class LaunchPad extends Component {
 							/>
 							<h3 className="team-review">Upcoming Pools</h3>
 							<div className="upcoming-card-parent">
-								<UpComingProjectCard />
-								<UpComingProjectCard />
+								<ProjectListCard
+									projectStatus="Upcomming"
+									projectName="Project name"
+									totalRaise="TBA"
+									minAlloc="TBA"
+									maxAlloc="TBA"
+									access="TBA"
+									saleCompletion={false}
+								/>
+								<ProjectListCard
+									projectStatus="Upcomming"
+									projectName="Project name"
+									totalRaise="TBA"
+									minAlloc="TBA"
+									maxAlloc="TBA"
+									access="TBA"
+									saleCompletion={false}
+								/>
 							</div>
 							<section className="apply-sec">
 								<div className="apply-text-container">
@@ -84,12 +96,21 @@ export default class LaunchPad extends Component {
 								</Dropdown>
 							</div>
 							<div className="upcoming-card-parent">
-								<OnGoingProjectCard />
-								<OnGoingProjectCard />
-								<OnGoingProjectCard />
-								<OnGoingProjectCard />
-								<OnGoingProjectCard />
-								<OnGoingProjectCard />
+								{[...Array(6)].map((x, i) => (
+									<ProjectListCard
+										key={i}
+										projectStatus="Ongoing"
+										projectName="Project name"
+										bnbName="1BNB=0.1145 name"
+										totalRaise="2025 BNB"
+										percentage={95}
+										bnbNo="222.1698694303834 / 234.BNB"
+										participants={600}
+										maxBnb={3.5}
+										access="Private"
+										saleCompletion={true}
+									/>
+								))}
 							</div>
 							<div className="lpbanner-bottom">
 								<LaunchPadBanner
