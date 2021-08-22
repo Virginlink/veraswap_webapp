@@ -1,13 +1,141 @@
-import { Container } from "@material-ui/core";
 import React, { Component } from "react";
+import { Container, Fade } from "@material-ui/core";
 import { FiArrowLeft } from "react-icons/fi";
 import AppBar from "../../components/AppBar";
 import Sidebar from "../../components/Sidebar";
 import { InfoCard, ProjectHeaderTab } from "../../components/launchPad";
-import "./ProjectDetail.css";
 import powerRed from "../../assets/images/power-red.png";
+import { client } from "../../apollo/client";
+import { GET_PROJECT_BY_ID } from "../../apollo/queries";
+import { withRouter } from "react-router-dom/cjs/react-router-dom.min";
+import { getVRAPPrice } from "../../utils/helpers";
+import { ethers } from "ethers";
+import { Spin } from "antd";
+import { BuyTokenModal } from "../../components/modals";
+import "./ProjectDetail.css";
 
-export default class ProjectDetail extends Component {
+let projectPollId;
+class ProjectDetail extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			tokenRate: "0",
+			fetchingProject: true,
+			project: null,
+			purchaseModalVisible: false,
+		};
+	}
+
+	componentDidMount() {
+		const {
+			match: { params },
+		} = this.props;
+		const projectId = params.id;
+		this.fetchProject(projectId);
+	}
+
+	componentDidUpdate(prevProps) {
+		const { project } = this.state;
+		const { history } = this.props;
+		if (
+			prevProps.walletAddress !== this.props.walletAddress &&
+			this.props.walletAddress &&
+			project
+		) {
+			const ownerWallets = [project?.owner.toLowerCase(), project?.projectWallet.toLowerCase()];
+			if (ownerWallets.includes(this.props.walletAddress.toLowerCase())) {
+				history.replace(`/my-projects/${project?.id}`);
+			}
+		}
+	}
+
+	componentWillUnmount() {
+		clearTimeout(projectPollId);
+	}
+
+	fetchProject = (projectId) => {
+		const { walletAddress, history } = this.props;
+		client
+			.query({
+				query: GET_PROJECT_BY_ID,
+				variables: {
+					projectId,
+				},
+				fetchPolicy: "network-only",
+			})
+			.then(async (res) => {
+				// console.log(res.data.project);
+				if (res.data.project) {
+					const ownerWallets = [
+						res.data.project.owner.toLowerCase(),
+						res.data.project.projectWallet.toLowerCase(),
+					];
+					if (!ownerWallets.includes(walletAddress.toLowerCase())) {
+						const priceResult = await getVRAPPrice();
+						const price = priceResult.price;
+						const tokenRate =
+							price /
+							parseFloat(
+								ethers.utils.formatUnits(res.data.project.tokenCost, res.data.project.tokenDecimals)
+							);
+						const tokensSold = ethers.utils.formatUnits(
+							res.data.project.tokensSold,
+							res.data.project.tokenDecimals
+						);
+						const tokenCost = ethers.utils.formatUnits(
+							res.data.project.tokenCost,
+							res.data.project.tokenDecimals
+						);
+						const tokensWithdrawn = ethers.utils.formatUnits(
+							res.data.project.tokensWithdrawn,
+							res.data.project.tokenDecimals
+						);
+						const tokensDeposited = ethers.utils.formatUnits(
+							res.data.project.tokensDeposited,
+							res.data.project.tokenDecimals
+						);
+						this.setState({
+							project: {
+								...res.data.project,
+								tokensDeposited,
+								tokensSold,
+								tokenCost,
+								tokensWithdrawn,
+							},
+							tokenRate,
+						});
+					} else {
+						history.replace(`/my-projects/${res.data.project.id}`);
+					}
+				} else {
+					history.replace("/my-projects");
+				}
+			})
+			.catch((_) => history.replace("/my-projects"))
+			.finally(() =>
+				this.setState({ fetchingProject: false }, () => {
+					projectPollId = setTimeout(() => this.fetchProject(projectId), 30000);
+				})
+			);
+	};
+
+	handleProjectStatsUpdate = (updatedStats) => {
+		// console.log(updatedStats);
+		this.setState({ project: { ...this.state.project, ...updatedStats } });
+	};
+
+	togglePurchaseModal = () =>
+		this.setState((state) => ({ purchaseModalVisible: !state.purchaseModalVisible }));
+
+	handlePurchaseClick = () => {
+		const { walletConnected, onModalToggle } = this.props;
+		if (walletConnected) {
+			this.togglePurchaseModal();
+		} else {
+			onModalToggle(true);
+		}
+	};
+
 	render() {
 		const {
 			theme,
@@ -19,7 +147,9 @@ export default class ProjectDetail extends Component {
 			ethBalance,
 			vrapBalance,
 			history,
+			signer,
 		} = this.props;
+		const { project, tokenRate, fetchingProject, purchaseModalVisible } = this.state;
 
 		return (
 			<>
@@ -35,6 +165,7 @@ export default class ProjectDetail extends Component {
 						walletConnected={walletConnected}
 						ethBalance={ethBalance}
 						vrapBalance={vrapBalance}
+						isTestnet
 					/>
 					<Container>
 						<div className="ido-parent-container">
@@ -42,70 +173,120 @@ export default class ProjectDetail extends Component {
 								<FiArrowLeft
 									size={28}
 									className="back-arrow"
-									onClick={() => history.push("/launch-pad")}
+									onClick={() => history.push("/launchpad")}
 								/>
 								<h3 className="project-name" style={{ padding: "0" }}>
 									Back
 								</h3>
 							</div>
-							<ProjectHeaderTab
-								projectName="Project Name"
-								projectAddress="0x0ced9271F49719997787D21DA466Deb94e60d9d6"
-								projectBnb="1BNB=0.1145 name"
-								salePercentage="95"
-								bnbNum="222.1698694303834 / 234.BNB"
-								liveStatus="Sale Live Now"
-								solidBtn="Buy Token"
-								borderBtn="View BscScan"
-							/>
-							<div className="about-project-container">
-								<div className="about-project-img-wrapper">
-									<img className="power-red" src={powerRed} alt="powerRed" />
+							{fetchingProject ? (
+								<div className="project-loading-container">
+									<Spin size="large" />
+									Fetching project
 								</div>
-								<div className="project-detail-wrapper">
-									<div className="overview-container">
-										<h3 className="team-review" style={{ fontSize: "20px" }}>
-											Project Overview
-										</h3>
-										<p className="tba-desc" style={{ fontSize: "16px" }}>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-											incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-											nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-											Duis aute irure dolor in. Lorem ipsum dolor sit amet, consectetur adipiscing
-											elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-											enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-											aliquip ex ea commodo consequat. Duis aute irure dolor in
-										</p>
-									</div>
-									<h3 className="team-review" style={{ fontSize: "20px" }}>
-										Pool Details
-									</h3>
-									<div className="info-container">
-										<InfoCard
-											cardTitle="Pool information"
-											tokenDistribution="22/05/2021, 3:59 AM UTC"
-											auditStatus="Passed"
-											totalSaleAmount="$50,000.00"
-											avialablePurchase="200,000.00 NAME"
-											marketCap="$50,000"
-											kyc="No"
-										/>
-										<InfoCard
-											cardTitle="Token information"
-											name="Name"
-											symbol="SYM"
-											address="0x163f182c32d24a09090090"
-											blockchain="Binance Smart Chain"
-											initialSupply="400,000.0"
-											totalSupply="1,000,000.0"
-										/>
-									</div>
-								</div>
-							</div>
+							) : (
+								<>
+									<Fade in={!!project} timeout={{ enter: 500 }}>
+										<div>
+											<ProjectHeaderTab
+												projectName={project?.name}
+												projectAddress={project?.tokenAddress}
+												projectBnb={`1 VRAP = ${parseFloat(tokenRate).toFixed(4)} ${
+													project?.tokenSymbol
+												}`}
+												salePercentage={Math.ceil(
+													(parseFloat(project?.tokensSold) /
+														(parseFloat(project?.tokensDeposited) -
+															parseFloat(project?.tokensWithdrawn))) *
+														100
+												)}
+												bnbNum={`${project?.tokensSold} / ${
+													parseFloat(project?.tokensDeposited) -
+													parseFloat(project?.tokensWithdrawn)
+												} ${project?.tokenSymbol}`}
+												liveStatus="Sale Live Now"
+												solidBtn="Buy Token"
+												borderBtn="View on Etherscan"
+												onSolidButtonClick={this.handlePurchaseClick}
+												onBorderedButtonClick={() =>
+													window.open(
+														`https://kovan.etherscan.io/address/${project?.tokenAddress}`,
+														"_blank"
+													)
+												}
+											/>
+											<div className="about-project-container">
+												<div className="about-project-img-wrapper">
+													<img className="power-red" src={powerRed} alt="powerRed" />
+												</div>
+												<div className="project-detail-wrapper">
+													<div className="overview-container">
+														<h3 className="team-review" style={{ fontSize: "20px" }}>
+															Project Overview
+														</h3>
+														<p className="tba-desc" style={{ fontSize: "16px" }}>
+															{project?.description}
+														</p>
+													</div>
+													<h3 className="team-review" style={{ fontSize: "20px" }}>
+														Pool Details
+													</h3>
+													<div className="info-container">
+														<InfoCard
+															cardTitle="Pool information"
+															tokenDistribution={new Date(
+																project?.startDate * 1000
+															).toLocaleString()}
+															// auditStatus="Passed"
+															totalSaleAmount={`$ ${
+																parseFloat(project?.tokensAllocated) *
+																parseFloat(project?.tokenCost)
+															}`}
+															avialablePurchase={`${
+																parseFloat(project?.tokensDeposited) -
+																parseFloat(project?.tokensWithdrawn)
+															} ${project?.tokenSymbol}`}
+															// marketCap="$50,000"
+															// kyc="No"
+														/>
+														<InfoCard
+															cardTitle="Token information"
+															name={project?.tokenName}
+															symbol={project?.tokenSymbol}
+															address={project?.tokenAddress}
+															blockchain="Ethereum"
+															// initialSupply="400,000.0"
+															// totalSupply="1,000,000.0"
+														/>
+													</div>
+												</div>
+											</div>
+										</div>
+									</Fade>
+								</>
+							)}
 						</div>
 					</Container>
 				</div>
+				<BuyTokenModal
+					visible={purchaseModalVisible}
+					theme={theme}
+					onClose={this.togglePurchaseModal}
+					walletAddress={walletAddress}
+					signer={signer}
+					projectId={project?.id}
+					token={{
+						address: project?.tokenAddress,
+						symbol: project?.tokenSymbol,
+						decimals: project?.tokenDecimals,
+						cost: project?.tokenCost,
+					}}
+					onProjectStatsUpdate={this.handleProjectStatsUpdate}
+					onPurchaseSuccess={() => this.fetchProject(project?.id)}
+				/>
 			</>
 		);
 	}
 }
+
+export default withRouter(ProjectDetail);

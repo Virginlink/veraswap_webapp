@@ -8,12 +8,13 @@ import moment from "moment";
 
 import Web3 from "web3";
 import { createProject } from "../../utils/idoHelpers";
-import { uploadJSONToIPFS } from "../../utils/ipfs";
+import { getFileFromIPFS, uploadJSONToIPFS } from "../../utils/ipfs";
 import AppBar from "../../components/AppBar";
 import Sidebar from "../../components/Sidebar";
 import { ProjectCheckoutModal, ProjectListedModal } from "../../components/modals";
 import Logo from "../../assets/images/vrap-red.svg";
 import "./ApplicationForm.css";
+import ExternalLink from "../../components/Transactions/ExternalLink";
 
 export default class ProjectFund extends Component {
 	state = {
@@ -54,10 +55,10 @@ export default class ProjectFund extends Component {
 		endDate: new Date(moment().add(2, "days").format()),
 	};
 
-	// async componentDidMount() {
-	// 	const project = await getFileFromIPFS("QmfWPfiDkPrxwf3a2GB7Vtyrhd2PvbRUFaFbqPSYAFHZxr");
-	// 	console.log("Retrieved file from hash", project);
-	// }
+	async componentDidMount() {
+		const project = await getFileFromIPFS("Qmd27TMbkojuNkHsZ3uhzHLYn3oUXhfH6vbVX9FLE75BGL");
+		console.log("Retrieved file from hash", project);
+	}
 
 	setProjectPlan = (plan) => this.setState({ selectedPlan: plan, plan });
 
@@ -246,7 +247,7 @@ export default class ProjectFund extends Component {
 			maxCapInVrap,
 			startDate:
 				startDate.toLocaleDateString() === new Date().toLocaleDateString()
-					? moment(startDate).add(5, "minutes")
+					? moment(startDate).add(30, "minutes").unix()
 					: moment(startDate).unix(),
 			endDate: moment(endDate).unix(),
 		};
@@ -269,38 +270,80 @@ export default class ProjectFund extends Component {
 			this.setState({ creatingProject: true, confirmationModalVisible: false }, async () => {
 				const web3 = new Web3();
 				let ipfsHash = await uploadJSONToIPFS(project);
-				ipfsHash = web3.utils.toHex(ipfsHash);
-				const projectData = {
-					settlementAddress,
-					contractAddress,
-					projectWallet: projectWalletAddress,
-					costPerToken: tokenCost,
-					ipfsHash,
-					isPremium: selectedPlan === "premium",
-					startDate: moment(startDate).unix(),
-					endDate: moment(endDate).unix(),
-					signer,
-				};
-				createProject(projectData)
-					.then((res) => {
-						const stateVariables = Object.keys(this.state);
-						const formVariables = stateVariables.slice(18, stateVariables.length - 2);
-						formVariables.map((field) => this.setState({ [field]: "" }));
-						this.setState({
-							isProjectListed: true,
-							startDate: new Date(),
-							endDate: new Date(moment().add(2, "days").format()),
+				if (ipfsHash) {
+					ipfsHash = web3.utils.toHex(ipfsHash);
+					const projectData = {
+						settlementAddress,
+						contractAddress,
+						projectWallet: projectWalletAddress,
+						costPerToken: tokenCost,
+						ipfsHash,
+						isPremium: selectedPlan === "premium",
+						startDate:
+							startDate.toLocaleDateString() === new Date().toLocaleDateString()
+								? moment(startDate).add(30, "minutes").unix()
+								: moment(startDate).unix(),
+						endDate: moment(endDate).unix(),
+						signer,
+					};
+					createProject(projectData)
+						.then(async (res) => {
+							notification.info({
+								key: "projectCreationProcessingNotification",
+								message: "Creating project. You can view the transaction here.",
+								btn: <ExternalLink hash={res.data.hash}>View Transaction</ExternalLink>,
+								icon: (
+									<CircularProgress
+										size={25}
+										thickness={5}
+										style={{
+											color: "#DE0102",
+											position: "relative",
+											top: "6px",
+										}}
+									/>
+								),
+								duration: 0,
+							});
+							await res.data.wait();
+							notification.close("projectCreationProcessingNotification");
+							notification.success({
+								key: "projectCreationSuccessNotification",
+								message: `${this.state.name} created successfully. You can view the transaction here`,
+								btn: <ExternalLink hash={res.data.hash}>View Transaction</ExternalLink>,
+								duration: 3,
+							});
+							const stateVariables = Object.keys(this.state);
+							const formVariables = stateVariables.slice(18, stateVariables.length - 2);
+							formVariables.map((field) => this.setState({ [field]: "" }));
+							const updatedSocialHandles = this.state.socialHandles.map((social) => ({
+								...social,
+								link: "",
+							}));
+							this.setState({
+								isProjectListed: true,
+								socialHandles: updatedSocialHandles,
+								startDate: new Date(),
+								endDate: new Date(moment().add(2, "days").format()),
+							});
+						})
+						.catch((err) => {
+							notification["error"]({
+								message: "Couldn't create project",
+								description: err.message,
+							});
+						})
+						.finally(() => {
+							this.setState({ creatingProject: false });
 						});
-					})
-					.catch((err) => {
+				} else {
+					this.setState({ creatingProject: false }, () => {
 						notification["error"]({
 							message: "Couldn't create project",
-							description: "Something went wrong. Please try again later",
+							description: "Something went wrong. Please try again",
 						});
-					})
-					.finally(() => {
-						this.setState({ creatingProject: false });
 					});
+				}
 			});
 		}
 	};

@@ -1,4 +1,4 @@
-export const IDO_ADDRESS = "0xe878b8ba18c2300a094602F1170270F188745917";
+export const IDO_ADDRESS = "0x2814Ec44f209CE9DFD9B849c962d5A815C3C6655";
 
 export const IDO_ABI = [
 	{
@@ -37,6 +37,7 @@ export const IDO_ABI = [
 			{ indexed: false, internalType: "uint256", name: "projectId", type: "uint256" },
 			{ indexed: true, internalType: "address", name: "contractAddress", type: "address" },
 			{ indexed: false, internalType: "bytes", name: "ipfsHash", type: "bytes" },
+			{ indexed: true, internalType: "address", name: "createdBy", type: "address" },
 		],
 		name: "ProjectCreated",
 		type: "event",

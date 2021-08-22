@@ -7,7 +7,7 @@ const ExternalLink = ({ hash, children }) => {
 			target="_blank"
 			rel="noreferrer noopener"
 			href={`https://${
-				process.env.NODE_ENV === "development" ? "testnet.bscscan.com" : "bscscan.com"
+				process.env.NODE_ENV === "development" ? "kovan.etherscan.io" : "bscscan.com"
 			}/tx/${hash}`}
 		>
 			{children}

@@ -1,16 +1,120 @@
 import { Container } from "@material-ui/core";
 import React, { Component } from "react";
-import { Menu, Dropdown } from "antd";
+import { Menu, Dropdown, Empty, Spin } from "antd";
 import { BiMenuAltRight } from "react-icons/bi";
 import AppBar from "../../components/AppBar";
 import Sidebar from "../../components/Sidebar";
 import { LaunchPadBanner, ProjectListCard } from "../../components/launchPad";
 import { ProjectReviewModal } from "../../components/modals";
-
+import { client } from "../../apollo/client";
+import {
+	GET_COMPLETED_PROJECTS_BY_USER,
+	GET_ONGOING_PROJECTS_BY_USER,
+	GET_PROJECTS_BY_USER_UNDER_REVIEW,
+	GET_UPCOMING_PROJECTS_BY_USER,
+} from "../../apollo/queries";
+import moment from "moment";
+import { ethers } from "ethers";
 export default class MyProject extends Component {
-	state = {
-		projectReviewVisible: false,
+	constructor(props) {
+		super(props);
+		this.state = {
+			projectReviewVisible: false,
+			fetchingProjectsUnderReview: true,
+			projectsUnderReview: [],
+			fetchingProjects: true,
+			projects: [],
+			tab: "upcoming",
+		};
+	}
+
+	componentDidMount() {
+		const { walletConnected } = this.props;
+		if (walletConnected) {
+			this.fetchProjectsUnderReview();
+			this.fetchAllProjects();
+		}
+	}
+
+	componentDidUpdate(prevProps) {
+		if (
+			(this.props.walletConnected !== prevProps.walletConnected && this.props.walletConnected) ||
+			(this.props.walletAddress !== prevProps.walletAddress && this.props.walletAddress)
+		) {
+			this.fetchProjectsUnderReview();
+			this.fetchAllProjects(this.state.tab);
+		}
+	}
+
+	fetchProjectsUnderReview = (skip = 0) => {
+		const { walletAddress } = this.props;
+		client
+			.query({
+				query: GET_PROJECTS_BY_USER_UNDER_REVIEW,
+				variables: {
+					userAddress: walletAddress.toLowerCase(),
+					skip,
+				},
+			})
+			.then((res) => {
+				this.setState({
+					projectsUnderReview:
+						skip === 0
+							? res.data.projects
+							: [...this.state.projectsUnderReview, ...res.data.projects],
+				});
+			})
+			.catch((err) => console.log(err))
+			.finally(() => skip === 0 && this.setState({ fetchingProjectsUnderReview: false }));
 	};
+
+	fetchAllProjects = (type = "upcoming", skip = 0) => {
+		const { walletAddress } = this.props;
+		const query =
+			type === "upcoming"
+				? GET_UPCOMING_PROJECTS_BY_USER
+				: type === "ongoing"
+				? GET_ONGOING_PROJECTS_BY_USER
+				: GET_COMPLETED_PROJECTS_BY_USER;
+		client
+			.query({
+				query: query,
+				variables: {
+					userAddress: walletAddress.toLowerCase(),
+					skip,
+					date: moment().unix(),
+				},
+			})
+			.then((res) => {
+				this.setState({
+					projects: skip === 0 ? res.data.projects : [...this.state.projects, ...res.data.projects],
+				});
+			})
+			.catch((err) => console.log(err))
+			.finally(() => skip === 0 && this.setState({ fetchingProjects: false }));
+	};
+
+	handleProjectsShowMore = () => {
+		const { projects, tab } = this.state;
+		this.fetchAllProjects(tab, projects.length);
+	};
+
+	handleReviewProjectsShowMore = () => {
+		const { projectsUnderReview } = this.state;
+		this.fetchProjectsUnderReview(projectsUnderReview.length);
+	};
+
+	handleTabChange = (e, type = "upcoming") => {
+		e.preventDefault();
+		this.setState({ tab: type, fetchingProjects: true }, () => this.fetchAllProjects(type));
+	};
+
+	toggleProjectReview = () => {
+		this.setState((state) => ({
+			projectReviewVisible: !state.projectReviewVisible,
+		}));
+	};
+
 	render() {
 		const {
 			theme,
@@ -23,24 +127,34 @@ export default class MyProject extends Component {
 			vrapBalance,
 		} = this.props;
 
+		const {
+			projectReviewVisible,
+			fetchingProjects,
+			projects,
+			fetchingProjectsUnderReview,
+			projectsUnderReview,
+			tab,
+		} = this.state;
+
 		const menu = (
 			<Menu>
-				<Menu.Item key="0" className="dropdown-active">
-					<a href="!#">Ongoing Pools</a>
+				<Menu.Item key="upcoming" className={tab === "upcoming" ? "dropdown-active" : ""}>
+					<a href="##" onClick={(e) => this.handleTabChange(e, "upcoming")}>
+						Upcoming Pools
+					</a>
 				</Menu.Item>
-				<Menu.Item key="1">
-					<a href="!#">Completed Pools</a>
+				<Menu.Item key="ongoing" className={tab === "ongoing" ? "dropdown-active" : ""}>
+					<a href="##" onClick={(e) => this.handleTabChange(e, "ongoing")}>
+						Ongoing Pools
+					</a>
+				</Menu.Item>
+				<Menu.Item key="completed" className={tab === "completed" ? "dropdown-active" : ""}>
+					<a href="##" onClick={(e) => this.handleTabChange(e, "completed")}>
+						Completed Pools
+					</a>
 				</Menu.Item>
 			</Menu>
 		);
-
-		const toggleProjectReview = () => {
-			this.setState((state) => ({
-				projectReviewVisible: !state.projectReviewVisible,
-			}));
-		};
-
-		const { projectReviewVisible } = this.state;
 
 		return (
 			<>
@@ -56,6 +170,7 @@ export default class MyProject extends Component {
 						walletConnected={walletConnected}
 						ethBalance={ethBalance}
 						vrapBalance={vrapBalance}
+						isTestnet
 					/>
 					<Container>
 						<div className="ido-parent-container">
@@ -66,29 +181,49 @@ export default class MyProject extends Component {
 							/>
 							<h3 className="team-review">Projects under Team Review</h3>
 							<div className="upcoming-card-parent" style={{ marginBottom: "100px" }}>
-								<ProjectListCard
-									projectStatus="Upcomming"
-									projectName="Project name"
-									totalRaise="TBA"
-									minAlloc="TBA"
-									maxAlloc="TBA"
-									access="TBA"
-									saleCompletion={false}
-									toggleProjectReview={toggleProjectReview}
-								/>
-								<ProjectListCard
-									projectStatus="Upcomming"
-									projectName="Project name"
-									totalRaise="TBA"
-									minAlloc="TBA"
-									maxAlloc="TBA"
-									access="TBA"
-									saleCompletion={false}
-									toggleProjectReview={toggleProjectReview}
-								/>
+								{walletConnected ? (
+									fetchingProjectsUnderReview ? (
+										<Spin size="large" className="projects-loader" />
+									) : projectsUnderReview.length > 0 ? (
+										<>
+											{projectsUnderReview.map((project) => (
+												<ProjectListCard
+													owner
+													key={project.id}
+													projectStatus="Upcoming"
+													projectName={project.name}
+													totalRaise="TBA"
+													minAlloc="TBA"
+													maxAlloc={project.tokensAllocated}
+													tokenSymbol={project.tokenSymbol}
+													access="TBA"
+													saleCompletion={false}
+													toggleProjectReview={this.toggleProjectReview}
+												/>
+											))}
+										</>
+									) : (
+										<Empty
+											className="projects-empty-status"
+											description="Currently there are no projects under review"
+										/>
+									)
+								) : (
+									<Empty
+										className="projects-empty-status"
+										description="Connect your wallet to view your projects"
+									/>
+								)}
 							</div>
+							{projectsUnderReview.length >= 3 && projectsUnderReview.length % 6 > 0 && (
+								<div className="show-more-section" style={{ marginTop: "-5rem" }}>
+									<button onClick={this.handleReviewProjectsShowMore}>Show more</button>
+								</div>
+							)}
 							<div className="featured">
-								<h3 className="project-name">Featured Pools</h3>
+								<h3 className="project-name" style={{ paddingTop: 0 }}>
+									Featured Pools
+								</h3>
 								<Dropdown placement={"bottomRight"} overlay={menu} trigger={["click"]}>
 									<button className="dropdown-btn">
 										<BiMenuAltRight size={20} />
@@ -96,24 +231,88 @@ export default class MyProject extends Component {
 								</Dropdown>
 							</div>
 							<div className="upcoming-card-parent" style={{ marginBottom: "50px" }}>
-								{[...Array(6)].map((x, i) => (
-									<ProjectListCard
-										key={i}
-										projectStatus="Ongoing"
-										projectName="Project name"
-										bnbName="1BNB=0.1145 name"
-										totalRaise="2025 BNB"
-										percentage={95}
-										bnbNo="222.1698694303834 / 234.BNB"
-										participants={600}
-										maxBnb={3.5}
-										access="Private"
-										saleCompletion={true}
+								{walletConnected ? (
+									fetchingProjects ? (
+										<Spin size="large" className="projects-loader" />
+									) : projects.length > 0 ? (
+										projects.map((project) => (
+											<ProjectListCard
+												key={project.id}
+												id={project.id}
+												projectStatus={tab}
+												projectName={project.name}
+												bnbName
+												totalRaise={`${parseFloat(
+													ethers.utils.formatUnits(project.totalVrapRaised, 18)
+												).toPrecision(4)} VRAP`}
+												percentage={
+													parseFloat(
+														ethers.utils.formatUnits(project.tokensDeposited, project.tokenDecimals)
+													) > 0
+														? Math.ceil(
+																(parseFloat(
+																	ethers.utils.formatUnits(
+																		project.tokensSold,
+																		project.tokenDecimals
+																	)
+																) /
+																	(parseFloat(
+																		ethers.utils.formatUnits(
+																			project.tokensDeposited,
+																			project.tokenDecimals
+																		)
+																	) -
+																		parseFloat(
+																			ethers.utils.formatUnits(
+																				project.tokensWithdrawn,
+																				project.tokenDecimals
+																			)
+																		))) *
+																	100
+														  )
+														: 0
+												}
+												bnbNo={`${ethers.utils.formatUnits(
+													project.tokensSold,
+													project.tokenDecimals
+												)} / ${
+													parseFloat(
+														ethers.utils.formatUnits(project.tokensDeposited, project.tokenDecimals)
+													) -
+													parseFloat(
+														ethers.utils.formatUnits(project.tokensWithdrawn, project.tokenDecimals)
+													)
+												} ${project.tokenSymbol}`}
+												participants
+												maxBnb={project.maxCapInVrap}
+												access="Private"
+												saleCompletion={true}
+												owner
+												tokenCost={project.tokenCost}
+												tokenSymbol={project.tokenSymbol}
+												tokenDecimals={project.tokenDecimals}
+											/>
+										))
+									) : (
+										<Empty
+											className="projects-empty-status"
+											description={`There are no ${tab} projects`}
+										/>
+									)
+								) : (
+									<Empty
+										className="projects-empty-status"
+										description="Connect your wallet to view your projects"
 									/>
-								))}
+								)}
 							</div>
+							{projects.length >= 3 && projects.length % 6 > 0 && (
+								<div className="show-more-section" style={{ marginTop: "-1.5rem" }}>
+									<button onClick={this.handleProjectsShowMore}>Show more</button>
+								</div>
+							)}
 						</div>
-						<ProjectReviewModal open={projectReviewVisible} onClose={toggleProjectReview} />
+						<ProjectReviewModal open={projectReviewVisible} onClose={this.toggleProjectReview} />
 					</Container>
 				</div>
 			</>

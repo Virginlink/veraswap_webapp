@@ -52,6 +52,7 @@ export const GlobalStyles = createGlobalStyle`
 			background-image: url(${({ theme }) => theme.appBackground});
 			background-repeat: no-repeat;
 			background-size: cover;
+			background-attachment: fixed;
 			min-height: 100vh;
 			transition: 0.3s all ease;
 		}
@@ -3190,7 +3191,6 @@ export const GlobalStyles = createGlobalStyle`
 			border-radius: 20px;
 			border: 1px solid #7070704d;
 			padding: 10px;
-			cursor: pointer;
 		}
 
 		.team-review {
@@ -3395,5 +3395,57 @@ export const GlobalStyles = createGlobalStyle`
 			margin: 1rem auto;
 			text-align: center;
 			color: ${({ theme }) => theme.formControlText};
+		}
+
+		.projects-empty-status {
+			color: ${({ theme }) => theme.formControlText};
+			margin: 2rem auto -2rem;
+		}
+
+		.admin-connect-notice {
+			color: ${({ theme }) => theme.formControlText};
+			font-size: 16px;
+		}
+
+		.project-loading-container {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			height: calc(65vh - 97px);
+			color: ${({ theme }) => theme.formControlText};
+			font-size: 16px;
+		}
+
+		.project-loading-container .ant-spin-dot {
+			margin-bottom: 8px;
+		}
+
+		.show-more-section {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.show-more-section button {
+			cursor: pointer;
+			min-width: 140px;
+			border: none;
+			margin: 8px;
+			border-radius: 10px;
+			background-color: ${({ theme }) => theme.buttonBackgroundColor};
+			background: ${({ theme }) => theme.buttonBackground};
+			color: #fff;
+			box-shadow: none;
+			cursor: pointer;
+			font-size: 16px;
+			font-family: "bold", sans-serif !important;
+			padding: 0.5rem 0.75rem;
+			transition: 0.3s all ease;
+			text-align: center;
+		}
+
+		.show-more-section button:hover, .show-more-section button:focus {
+			opacity: 0.8;
 		}
 `;

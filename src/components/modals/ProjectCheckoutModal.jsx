@@ -13,6 +13,8 @@ import { approveIDO, getPlanFee } from "../../utils/idoHelpers";
 import { ERC20_ABI, KOVAN_PROVIDER, TEST_TOKEN_ADDRESS } from "../../utils/contracts";
 import { ethers } from "ethers";
 import { notification } from "antd";
+import { IDO_ADDRESS } from "../../utils/idoContracts";
+import ExternalLink from "../Transactions/ExternalLink";
 
 const socialIcons = {
 	facebook: <FaFacebook size={20} />,
@@ -24,6 +26,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Fade timeout={{ enter: 1000, exit: 2000 }} ref={ref} {...props} />;
 });
 
+const contract = new ethers.Contract(TEST_TOKEN_ADDRESS, ERC20_ABI, KOVAN_PROVIDER);
+
 class ProjectCheckoutModal extends Component {
 	constructor(props) {
 		super(props);
@@ -34,6 +38,7 @@ class ProjectCheckoutModal extends Component {
 			fee: "0",
 			vrapBalance: "0",
 			approving: false,
+			approved: false,
 		};
 	}
 
@@ -54,11 +59,23 @@ class ProjectCheckoutModal extends Component {
 	}
 
 	fetchPlanFee = () => {
-		const { project } = this.props;
+		const { project, walletAddress } = this.props;
 		this.setState({ fetchingFee: true }, () => {
 			getPlanFee(project?.plan)
 				.then((res) => {
-					this.setState({ fee: res.fee });
+					this.setState({ fee: res.fee }, async () => {
+						try {
+							if (walletAddress) {
+								let allowance = await contract.allowance(walletAddress, IDO_ADDRESS);
+								allowance = ethers.utils.formatUnits(allowance, 18);
+								if (parseFloat(allowance) >= parseFloat(this.state.fee)) {
+									this.setState({ approved: true });
+								}
+							}
+						} catch (err) {
+							console.log(err);
+						}
+					});
 				})
 				.catch((err) => console.log(err))
 				.finally(() => this.setState({ fetchingFee: false }));
@@ -69,7 +86,6 @@ class ProjectCheckoutModal extends Component {
 		const { walletConnected, walletAddress } = this.props;
 		if (walletConnected) {
 			this.setState({ fetchingVrapBalance: true }, () => {
-				const contract = new ethers.Contract(TEST_TOKEN_ADDRESS, ERC20_ABI, KOVAN_PROVIDER);
 				contract
 					.balanceOf(walletAddress)
 					.then((res) => {
@@ -83,17 +99,23 @@ class ProjectCheckoutModal extends Component {
 	};
 
 	handleConfirmation = () => {
-		const { fee, vrapBalance } = this.state;
+		const { fee, vrapBalance, approved } = this.state;
+		const { onConfirm } = this.props;
 		if (parseFloat(vrapBalance) < parseFloat(fee)) {
 			notification["error"]({
 				message: "Insufficient VRAP balance",
 			});
 		} else {
-			this.setState({ step: 2 });
+			if (approved) {
+				onConfirm();
+				this.handleClose();
+			} else {
+				this.setState({ step: 2 });
+			}
 		}
 	};
 
-	handleClose = () => this.setState({ step: 1 }, () => this.props.onClose());
+	handleClose = () => this.setState({ step: 1, approving: false }, () => this.props.onClose());
 
 	handleApproval = () => {
 		const { fee } = this.state;
@@ -101,8 +123,31 @@ class ProjectCheckoutModal extends Component {
 		this.setState({ approving: true }, () => {
 			approveIDO({ amount: fee, signer })
 				.then(async (res) => {
-					console.log(res.data);
+					notification.info({
+						key: "approvalProcessingNotification",
+						message: "VRAP approval is being processed. You can view the transaction here.",
+						btn: <ExternalLink hash={res.data.hash}>View Transaction</ExternalLink>,
+						icon: (
+							<CircularProgress
+								size={25}
+								thickness={5}
+								style={{
+									color: "#DE0102",
+									position: "relative",
+									top: "6px",
+								}}
+							/>
+						),
+						duration: 0,
+					});
 					await res.data.wait();
+					notification.close("approvalProcessingNotification");
+					notification.success({
+						key: "approvalSuccessNotification",
+						message: "VRAP approval successful. You can view the transaction here",
+						btn: <ExternalLink hash={res.data.hash}>View Transaction</ExternalLink>,
+						duration: 3,
+					});
 					this.setState({ approving: false });
 					onConfirm();
 					this.handleClose();

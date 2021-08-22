@@ -925,13 +925,14 @@ class App extends Component {
 							/>
 							<Route
 								exact
-								path="/project-detail"
+								path="/launchpad/:id"
 								render={(props) => (
 									<ProjectDetail
 										{...props}
 										modalVisible={connectWalletModalVisible}
 										onModalToggle={this.toggleWalletConnectModal}
 										theme={theme}
+										signer={signer}
 										onThemeToggle={this.toggleTheme}
 										walletConnected={walletConnected}
 										walletAddress={walletAddress}
@@ -942,13 +943,14 @@ class App extends Component {
 							/>
 							<Route
 								exact
-								path="/project-fund"
+								path="/my-projects/:id"
 								render={(props) => (
 									<ProjectFund
 										{...props}
 										modalVisible={connectWalletModalVisible}
 										onModalToggle={this.toggleWalletConnectModal}
 										theme={theme}
+										signer={signer}
 										onThemeToggle={this.toggleTheme}
 										walletConnected={walletConnected}
 										walletAddress={walletAddress}

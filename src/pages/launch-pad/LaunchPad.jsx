@@ -1,13 +1,86 @@
 import { Container } from "@material-ui/core";
 import React, { Component } from "react";
-import { Menu, Dropdown } from "antd";
+import { Menu, Dropdown, Spin, Empty } from "antd";
 import { BiMenuAltRight } from "react-icons/bi";
 import AppBar from "../../components/AppBar";
 import Sidebar from "../../components/Sidebar";
 import { LaunchPadBanner, ProjectListCard } from "../../components/launchPad";
 import "./LaunchPad.css";
+import { client } from "../../apollo/client";
+import {
+	GET_ALL_COMPLETED_PROJECTS,
+	GET_ALL_ONGOING_PROJECTS,
+	GET_ALL_UPCOMING_PROJECTS,
+} from "../../apollo/queries";
+import moment from "moment";
+import { withRouter } from "react-router-dom/cjs/react-router-dom.min";
+import { ethers } from "ethers";
 
-export default class LaunchPad extends Component {
+class LaunchPad extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			fetchingUpcomingProjects: true,
+			upcomingProjects: [],
+			fetchingProjects: true,
+			projects: [],
+			tab: "ongoing",
+		};
+	}
+
+	componentDidMount() {
+		this.fetchAllProjects("upcoming");
+		this.fetchAllProjects();
+	}
+
+	fetchAllProjects = (type = "ongoing", skip = 0) => {
+		const query =
+			type === "upcoming"
+				? GET_ALL_UPCOMING_PROJECTS
+				: type === "ongoing"
+				? GET_ALL_ONGOING_PROJECTS
+				: GET_ALL_COMPLETED_PROJECTS;
+		client
+			.query({
+				query: query,
+				variables: {
+					skip,
+					date: moment().unix(),
+				},
+			})
+			.then((res) => {
+				// console.log(`All ${type} projects`, res.data.projects);
+				const projects = type === "upcoming" ? this.state.upcomingProjects : this.state.projects;
+				this.setState({
+					[type === "upcoming" ? "upcomingProjects" : "projects"]:
+						skip === 0 ? res.data.projects : [...projects, ...res.data.projects],
+				});
+			})
+			.catch((err) => console.log(err))
+			.finally(
+				() =>
+					skip === 0 &&
+					this.setState({
+						[type === "upcoming" ? "fetchingUpcomingProjects" : "fetchingProjects"]: false,
+					})
+			);
+	};
+
+	handleShowMore = () => {
+		const { tab, projects } = this.state;
+		this.fetchAllProjects(tab, projects.length);
+	};
+
+	handleUpcomingShowMore = () => {
+		const { upcomingProjects } = this.state;
+		this.fetchAllProjects("upcoming", upcomingProjects.length);
+	};
+
+	handleTabChange = (e, type = "upcoming") => {
+		e.preventDefault();
+		this.setState({ tab: type, fetchingProjects: true }, () => this.fetchAllProjects(type));
+	};
+
 	render() {
 		const {
 			theme,
@@ -20,13 +93,20 @@ export default class LaunchPad extends Component {
 			vrapBalance,
 		} = this.props;
 
+		const { tab, fetchingUpcomingProjects, upcomingProjects, fetchingProjects, projects } =
+			this.state;
+
 		const menu = (
 			<Menu>
-				<Menu.Item key="0" className="dropdown-active">
-					<a href="https://www.antgroup.com">Ongoing Pools</a>
+				<Menu.Item key="ongoing" className={tab === "ongoing" ? "dropdown-active" : ""}>
+					<a href="##" onClick={(e) => this.handleTabChange(e, "ongoing")}>
+						Ongoing Pools
+					</a>
 				</Menu.Item>
-				<Menu.Item key="1">
-					<a href="https://www.aliyun.com">Completed Pools</a>
+				<Menu.Item key="completed" className={tab === "completed" ? "dropdown-active" : ""}>
+					<a href="##" onClick={(e) => this.handleTabChange(e, "completed")}>
+						Completed Pools
+					</a>
 				</Menu.Item>
 			</Menu>
 		);
@@ -45,6 +125,7 @@ export default class LaunchPad extends Component {
 						walletConnected={walletConnected}
 						ethBalance={ethBalance}
 						vrapBalance={vrapBalance}
+						isTestnet
 					/>
 					<Container>
 						<div className="ido-parent-container">
@@ -55,25 +136,36 @@ export default class LaunchPad extends Component {
 							/>
 							<h3 className="team-review">Upcoming Pools</h3>
 							<div className="upcoming-card-parent">
-								<ProjectListCard
-									projectStatus="Upcomming"
-									projectName="Project name"
-									totalRaise="TBA"
-									minAlloc="TBA"
-									maxAlloc="TBA"
-									access="TBA"
-									saleCompletion={false}
-								/>
-								<ProjectListCard
-									projectStatus="Upcomming"
-									projectName="Project name"
-									totalRaise="TBA"
-									minAlloc="TBA"
-									maxAlloc="TBA"
-									access="TBA"
-									saleCompletion={false}
-								/>
+								{fetchingUpcomingProjects ? (
+									<Spin size="large" className="projects-loader" />
+								) : upcomingProjects.length > 0 ? (
+									<>
+										{upcomingProjects.map((project) => (
+											<ProjectListCard
+												key={project.id}
+												projectStatus="Upcoming"
+												projectName={project.name}
+												totalRaise="TBA"
+												minAlloc="TBA"
+												maxAlloc={project.tokensAllocated}
+												tokenSymbol={project.tokenSymbol}
+												access="TBA"
+												saleCompletion={false}
+											/>
+										))}
+									</>
+								) : (
+									<Empty
+										className="projects-empty-status"
+										description="There are no upcoming projects right now"
+									/>
+								)}
 							</div>
+							{upcomingProjects.length >= 3 && upcomingProjects.length % 6 > 0 && (
+								<div className="show-more-section" style={{ marginTop: "1.5rem" }}>
+									<button onClick={this.handleUpcomingShowMore}>Show more</button>
+								</div>
+							)}
 							<section className="apply-sec">
 								<div className="apply-text-container">
 									<h1 className="apply-header">
@@ -84,11 +176,15 @@ export default class LaunchPad extends Component {
 									</p>
 								</div>
 								<div className="apply-btn-container">
-									<button>Apply for IDO</button>
+									<button onClick={() => this.props.history.push("/ido/new-application")}>
+										Apply for IDO
+									</button>
 								</div>
 							</section>
 							<div className="featured">
-								<h3 className="project-name">Featured Pools</h3>
+								<h3 className="project-name" style={{ paddingTop: 0 }}>
+									Featured Pools
+								</h3>
 								<Dropdown placement={"bottomRight"} overlay={menu} trigger={["click"]}>
 									<button className="dropdown-btn">
 										<BiMenuAltRight size={20} />
@@ -96,22 +192,75 @@ export default class LaunchPad extends Component {
 								</Dropdown>
 							</div>
 							<div className="upcoming-card-parent">
-								{[...Array(6)].map((x, i) => (
-									<ProjectListCard
-										key={i}
-										projectStatus="Ongoing"
-										projectName="Project name"
-										bnbName="1BNB=0.1145 name"
-										totalRaise="2025 BNB"
-										percentage={95}
-										bnbNo="222.1698694303834 / 234.BNB"
-										participants={600}
-										maxBnb={3.5}
-										access="Private"
-										saleCompletion={true}
+								{fetchingProjects ? (
+									<Spin size="large" className="projects-loader" />
+								) : projects.length > 0 ? (
+									projects.map((project) => (
+										<ProjectListCard
+											key={project.id}
+											id={project.id}
+											projectStatus={tab}
+											projectName={project.name}
+											bnbName
+											totalRaise={`${parseFloat(
+												ethers.utils.formatUnits(project.totalVrapRaised, 18)
+											).toPrecision(4)} VRAP`}
+											percentage={
+												parseFloat(
+													ethers.utils.formatUnits(project.tokensDeposited, project.tokenDecimals)
+												) > 0
+													? Math.ceil(
+															(parseFloat(
+																ethers.utils.formatUnits(project.tokensSold, project.tokenDecimals)
+															) /
+																(parseFloat(
+																	ethers.utils.formatUnits(
+																		project.tokensDeposited,
+																		project.tokenDecimals
+																	)
+																) -
+																	parseFloat(
+																		ethers.utils.formatUnits(
+																			project.tokensWithdrawn,
+																			project.tokenDecimals
+																		)
+																	))) *
+																100
+													  )
+													: 0
+											}
+											bnbNo={`${ethers.utils.formatUnits(
+												project.tokensSold,
+												project.tokenDecimals
+											)} / ${
+												parseFloat(
+													ethers.utils.formatUnits(project.tokensDeposited, project.tokenDecimals)
+												) -
+												parseFloat(
+													ethers.utils.formatUnits(project.tokensWithdrawn, project.tokenDecimals)
+												)
+											} ${project.tokenSymbol}`}
+											participants
+											maxBnb={project.maxCapInVrap}
+											access="Private"
+											saleCompletion={true}
+											tokenCost={project.tokenCost}
+											tokenSymbol={project.tokenSymbol}
+											tokenDecimals={project.tokenDecimals}
+										/>
+									))
+								) : (
+									<Empty
+										className="projects-empty-status"
+										description={`There are no ${tab} projects`}
 									/>
-								))}
+								)}
 							</div>
+							{projects.length >= 3 && projects.length % 6 > 0 && (
+								<div className="show-more-section" style={{ marginTop: "1.5rem" }}>
+									<button onClick={this.handleShowMore}>Show more</button>
+								</div>
+							)}
 							<div className="lpbanner-bottom">
 								<LaunchPadBanner
 									header="Get Alerts For New Pools"
@@ -126,3 +275,5 @@ export default class LaunchPad extends Component {
 		);
 	}
 }
+
+export default withRouter(LaunchPad);

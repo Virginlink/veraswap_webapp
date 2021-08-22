@@ -12,26 +12,20 @@ class LaunchPadBanner extends Component {
 					<span>{header}</span>
 				</h1>
 				<p className="banner-desc">{desc}</p>
-				{buttonText === "My Projects" ? (
+				{buttonText === "My Projects" && (
 					<button className="banner-btn" onClick={() => history.push("/my-projects")}>
 						{buttonText}
 					</button>
-				) : (
-					""
 				)}
-				{buttonText === "Back to Launchpad" ? (
-					<button className="banner-btn" onClick={() => history.push("/launch-pad")}>
+				{buttonText === "Back to Launchpad" && (
+					<button className="banner-btn" onClick={() => history.push("/launchpad")}>
 						{buttonText}
 					</button>
-				) : (
-					""
 				)}
-				{buttonText === "Subscribe" ? (
+				{buttonText === "Subscribe" && (
 					<button className="banner-btn" style={{ padding: "10px 3.5rem" }}>
 						{buttonText}
 					</button>
-				) : (
-					""
 				)}
 			</div>
 		);

@@ -39,7 +39,7 @@ const ProjectListedModal = ({ open, onClose, history }) => {
 						<button
 							style={{ marginTop: "0", justifyContent: "center" }}
 							className="back-home-btn"
-							onClick={() => history.push("/project-detail")}
+							onClick={() => history.push(`/my-projects`)}
 						>
 							<span>View Project</span> <FiChevronRight size={26} />
 						</button>

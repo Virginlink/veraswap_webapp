@@ -8,6 +8,9 @@ import ConfirmSwapModal from "./ConfirmSwapModal";
 import ProjectListedModal from "./ProjectListedModal";
 import ProjectReviewModal from "./ProjectReviewModal";
 import ProjectCheckoutModal from "./ProjectCheckoutModal";
+import DepositTokenModal from "./DepositTokenModal";
+import BuyTokenModal from "./BuyTokenModal";
+import WithdrawTokensModal from "./WithdrawTokensModal";
 
 export {
 	ClaimVRAPModal,
@@ -20,4 +23,7 @@ export {
 	ProjectListedModal,
 	ProjectReviewModal,
 	ProjectCheckoutModal,
+	DepositTokenModal,
+	BuyTokenModal,
+	WithdrawTokensModal,
 };

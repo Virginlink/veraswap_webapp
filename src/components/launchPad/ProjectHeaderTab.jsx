@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Progress } from "antd";
 import "./ProjectHeaderTab.css";
 import powerWhite from "../../assets/images/power-white.png";
+import { FiExternalLink } from "react-icons/fi";
 
 export default class ProjectHeaderTab extends Component {
 	render() {
@@ -14,6 +15,11 @@ export default class ProjectHeaderTab extends Component {
 			liveStatus,
 			solidBtn,
 			borderBtn,
+			owner,
+			onSolidButtonClick,
+			onBorderedButtonClick,
+			adminAddress,
+			settlementAddress,
 		} = this.props;
 
 		return (
@@ -23,8 +29,48 @@ export default class ProjectHeaderTab extends Component {
 					<h3 className="header-project">
 						<span>{projectName}</span>
 					</h3>
-					<p className="project-id">{projectAddress}</p>
-					<div className="project-bnb">{projectBnb}</div>
+					{owner ? (
+						<a
+							href={`https://kovan.etherscan.io/address/${projectAddress}`}
+							target="_blank"
+							rel="noreferrer noopener"
+							className="project-id"
+						>
+							{projectAddress} <FiExternalLink />
+						</a>
+					) : (
+						<p className="project-id">{projectAddress}</p>
+					)}
+					<div className="project-bnb" style={owner ? { marginTop: "0.75rem" } : {}}>
+						{projectBnb}
+					</div>
+					{owner && (
+						<div style={{ marginTop: "1.5rem" }}>
+							<p className="project-id">
+								Project Wallet:{" "}
+								<a
+									href={`https://kovan.etherscan.io/address/${adminAddress}`}
+									target="_blank"
+									rel="noreferrer noopener"
+									className="project-id"
+								>
+									{adminAddress?.slice(0, 5)}....{adminAddress?.slice(-5)} <FiExternalLink />
+								</a>
+							</p>
+							<p className="project-id">
+								Settlement Wallet:{" "}
+								<a
+									href={`https://kovan.etherscan.io/address/${settlementAddress}`}
+									target="_blank"
+									rel="noreferrer noopener"
+									className="project-id"
+								>
+									{settlementAddress?.slice(0, 5)}....{settlementAddress?.slice(-5)}{" "}
+									<FiExternalLink />
+								</a>
+							</p>
+						</div>
+					)}
 				</div>
 				<div className="sale-card">
 					<p className="sale-live">{liveStatus}</p>
@@ -42,8 +88,12 @@ export default class ProjectHeaderTab extends Component {
 					/>
 					<p className="numbnb live-comp">{bnbNum}</p>
 					<div className="header-tab-btn-container">
-						<button className="btn-solid btn-common">{solidBtn}</button>
-						<button className="btn-border btn-common">{borderBtn}</button>
+						<button className="btn-solid btn-common" onClick={onSolidButtonClick}>
+							{solidBtn}
+						</button>
+						<button className="btn-border btn-common" onClick={onBorderedButtonClick}>
+							{borderBtn}
+						</button>
 					</div>
 				</div>
 			</div>

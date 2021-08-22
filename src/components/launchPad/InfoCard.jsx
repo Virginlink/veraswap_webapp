@@ -6,17 +6,17 @@ export default class InfoCard extends Component {
 	render() {
 		const {
 			tokenDistribution,
-			auditStatus,
+			// auditStatus,
 			totalSaleAmount,
 			avialablePurchase,
-			marketCap,
-			kyc,
+			// marketCap,
+			// kyc,
 			name,
 			symbol,
 			address,
 			blockchain,
-			initialSupply,
-			totalSupply,
+			// initialSupply,
+			// totalSupply,
 			cardTitle,
 		} = this.props;
 
@@ -29,25 +29,27 @@ export default class InfoCard extends Component {
 					</p>
 					<p className="info-column-right">
 						{tokenDistribution}
-						{name}
+						{name} {name && `(${symbol})`}
 					</p>
 				</div>
-				<div className="info-column">
-					<p className="info-column-left">
-						{auditStatus ? "Audit Status" : symbol ? "Symbol" : null}
-					</p>
-					<p className="info-column-right">
-						{auditStatus}
-						{symbol}
-					</p>
-				</div>
+				{/* <div className="info-column">
+						<p className="info-column-left">
+							{auditStatus ? "Audit Status" : symbol ? "Symbol" : null}
+						</p>
+						<p className="info-column-right">
+							{auditStatus}
+							{symbol}
+						</p>
+					</div>
+				 */}
 				<div className="info-column">
 					<p className="info-column-left">
 						{totalSaleAmount ? "Total Sale Amount" : address ? "Address" : null}
 					</p>
 					<p className={`info-column-right ${address ? "info-column-break" : null}`}>
 						{totalSaleAmount}
-						{address && address.substring(0, 15) + "..."} {address ? <MdContentCopy /> : null}
+						{address && address.slice(0, 6) + "..." + address.slice(-6)}{" "}
+						{address ? <MdContentCopy /> : null}
 					</p>
 				</div>
 				<div className="info-column">
@@ -59,7 +61,7 @@ export default class InfoCard extends Component {
 						{blockchain}
 					</p>
 				</div>
-				<div className="info-column">
+				{/* <div className="info-column">
 					<p className="info-column-left">
 						{marketCap ? "Initial Market Cap" : initialSupply ? "Initial suply" : null}
 					</p>
@@ -67,16 +69,16 @@ export default class InfoCard extends Component {
 						{marketCap}
 						{initialSupply}
 					</p>
-				</div>
-				<div className="info-column">
-					<p className="info-column-left">
-						{kyc ? "KYC Required" : totalSupply ? "Total supply" : null}
-					</p>
-					<p className="info-column-right">
-						{kyc}
-						{totalSupply}
-					</p>
-				</div>
+				</div> */}
+				{/* <div className="info-column">
+						<p className="info-column-left">
+							{kyc ? "KYC Required" : totalSupply ? "Total supply" : null}
+						</p>
+						<p className="info-column-right">
+							{kyc}
+							{totalSupply}
+						</p>
+					</div> */}
 			</div>
 		);
 	}

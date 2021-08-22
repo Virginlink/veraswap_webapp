@@ -1,6 +1,5 @@
 import React from "react";
 import { Dialog, Fade } from "@material-ui/core";
-import { withRouter } from "react-router-dom";
 import { FiChevronRight } from "react-icons/fi";
 import { Spin, Space } from "antd";
 
@@ -8,7 +7,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Fade timeout={{ enter: 1000, exit: 2000 }} ref={ref} {...props} />;
 });
 
-const ProjectListedModal = ({ open, onClose, history }) => {
+const ProjectListedModal = ({ open, onClose }) => {
 	return (
 		<Dialog
 			open={open}
@@ -51,7 +50,7 @@ const ProjectListedModal = ({ open, onClose, history }) => {
 								width: "100%",
 							}}
 							className="back-home-btn"
-							onClick={() => history.push("/launch-pad")}
+							onClick={onClose}
 						>
 							<span>Back to Launchpad</span> <FiChevronRight size={26} />
 						</button>
@@ -62,4 +61,4 @@ const ProjectListedModal = ({ open, onClose, history }) => {
 	);
 };
 
-export default withRouter(ProjectListedModal);
+export default ProjectListedModal;
