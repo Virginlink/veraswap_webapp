@@ -179,7 +179,7 @@ export default class MyProject extends Component {
 								desc="Collection of your priceless projects that raised capital on our decentralized and interoperable environment based on Binance."
 								buttonText="Back to Launchpad"
 							/>
-							<h3 className="team-review">Projects under Team Review</h3>
+							<h3 className="team-review">Projects paused for Team Review</h3>
 							<div className="upcoming-card-parent" style={{ marginBottom: "100px" }}>
 								{walletConnected ? (
 									fetchingProjectsUnderReview ? (
@@ -190,9 +190,13 @@ export default class MyProject extends Component {
 												<ProjectListCard
 													owner
 													key={project.id}
-													projectStatus="Upcoming"
+													projectStatus="Paused"
 													projectName={project.name}
-													totalRaise="TBA"
+													totalRaise={
+														parseFloat(ethers.utils.formatUnits(project.totalVrapRaised, 18)) > 0
+															? parseFloat(ethers.utils.formatUnits(project.totalVrapRaised, 18))
+															: "TBA"
+													}
 													minAlloc="TBA"
 													maxAlloc={project.tokensAllocated}
 													tokenSymbol={project.tokenSymbol}
@@ -272,17 +276,16 @@ export default class MyProject extends Component {
 														  )
 														: 0
 												}
-												bnbNo={`${ethers.utils.formatUnits(
-													project.tokensSold,
-													project.tokenDecimals
-												)} / ${
+												bnbNo={`${parseFloat(
+													ethers.utils.formatUnits(project.tokensSold, project.tokenDecimals)
+												).toFixed(4)} / ${(
 													parseFloat(
 														ethers.utils.formatUnits(project.tokensDeposited, project.tokenDecimals)
 													) -
 													parseFloat(
 														ethers.utils.formatUnits(project.tokensWithdrawn, project.tokenDecimals)
 													)
-												} ${project.tokenSymbol}`}
+												).toFixed(4)} ${project.tokenSymbol}`}
 												participants
 												maxBnb={project.maxCapInVrap}
 												access="Private"

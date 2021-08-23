@@ -64,7 +64,7 @@ class ProjectDetail extends Component {
 				fetchPolicy: "network-only",
 			})
 			.then(async (res) => {
-				// console.log(res.data.project);
+				process.env.NODE_ENV === "development" && console.log(res.data.project);
 				if (res.data.project) {
 					const ownerWallets = [
 						res.data.project.owner.toLowerCase(),
@@ -200,10 +200,10 @@ class ProjectDetail extends Component {
 															parseFloat(project?.tokensWithdrawn))) *
 														100
 												)}
-												bnbNum={`${project?.tokensSold} / ${
+												bnbNum={`${parseFloat(project?.tokensSold).toFixed(4)} / ${(
 													parseFloat(project?.tokensDeposited) -
 													parseFloat(project?.tokensWithdrawn)
-												} ${project?.tokenSymbol}`}
+												).toFixed(4)} ${project?.tokenSymbol}`}
 												liveStatus="Sale Live Now"
 												solidBtn={`Buy ${project?.tokenSymbol}`}
 												borderBtn="View on Etherscan"

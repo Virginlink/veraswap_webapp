@@ -11,6 +11,7 @@ import ProjectCheckoutModal from "./ProjectCheckoutModal";
 import DepositTokenModal from "./DepositTokenModal";
 import BuyTokenModal from "./BuyTokenModal";
 import WithdrawTokensModal from "./WithdrawTokensModal";
+import RemoveProjectModal from "./RemoveProjectModal";
 
 export {
 	ClaimVRAPModal,
@@ -26,4 +27,5 @@ export {
 	DepositTokenModal,
 	BuyTokenModal,
 	WithdrawTokensModal,
+	RemoveProjectModal,
 };

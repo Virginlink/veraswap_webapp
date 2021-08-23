@@ -78,7 +78,7 @@ export const createProject = ({
 			const tokenContract = new ethers.Contract(contractAddress, ERC20_ABI, KOVAN_PROVIDER);
 			tokenContract
 				.decimals()
-				.then(async (decimals) => {
+				.then(async () => {
 					const result = await idoContract.createProject(
 						settlementAddress,
 						ipfsHash,
@@ -86,7 +86,7 @@ export const createProject = ({
 						endDate,
 						isPremium,
 						contractAddress,
-						ethers.utils.parseUnits(costPerToken.toString(), decimals),
+						ethers.utils.parseUnits(costPerToken.toString(), 18),
 						projectWallet
 					);
 					resolve({
@@ -153,13 +153,32 @@ export const purchaseTokens = ({ projectId, amount, decimals, signer }) =>
 
 export const withdrawTokens = ({ projectId, amount, decimals, signer }) =>
 	new Promise(async (resolve, reject) => {
-		console.log(projectId, amount);
+		// console.log(projectId, amount, decimals);
 		try {
 			const idoContract = new ethers.Contract(IDO_ADDRESS, IDO_ABI, signer);
 			const result = await idoContract.emergencyWithdraw(
 				projectId,
 				ethers.utils.parseUnits(amount, decimals)
 			);
+			resolve({
+				error: false,
+				data: result,
+			});
+		} catch (err) {
+			console.log(err);
+			reject({
+				error: true,
+				message: "Something went wrong. Please try again",
+			});
+		}
+	});
+
+export const removeProject = ({ projectId, signer }) =>
+	new Promise(async (resolve, reject) => {
+		console.log(projectId, signer);
+		try {
+			const idoContract = new ethers.Contract(IDO_ADDRESS, IDO_ABI, signer);
+			const result = await idoContract.removeProject(projectId);
 			resolve({
 				error: false,
 				data: result,

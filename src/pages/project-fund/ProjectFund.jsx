@@ -9,9 +9,17 @@ import PurchaseHistoryChart from "./PurchaseHistoryChart";
 import { withRouter } from "react-router-dom/cjs/react-router-dom.min";
 import NoConnection from "./NoConnection";
 import { client } from "../../apollo/client";
-import { GET_PROJECT_BY_ID, GET_PURCHASE_HISTORY_BY_PROJECT } from "../../apollo/queries";
+import {
+	GET_PROJECT_BY_ID,
+	GET_PURCHASE_HISTORY_BY_PROJECT,
+	GET_RECENT_PURCHASES_BY_PROJECT,
+} from "../../apollo/queries";
 import moment from "moment";
-import { WithdrawTokensModal, DepositTokenModal } from "../../components/modals";
+import {
+	WithdrawTokensModal,
+	DepositTokenModal,
+	RemoveProjectModal,
+} from "../../components/modals";
 import { Spin } from "antd";
 import { getVRAPPrice } from "../../utils/helpers";
 import { ethers } from "ethers";
@@ -19,6 +27,8 @@ import "./ProjectFund.css";
 
 let projectPollId;
 let purchaseHistoryPollId;
+let recentPurchasesPollId;
+
 class ProjectFund extends Component {
 	constructor(props) {
 		super(props);
@@ -30,6 +40,9 @@ class ProjectFund extends Component {
 			purchaseHistory: [],
 			depositModalVisible: false,
 			withdrawModalVisible: false,
+			removeProjectModalVisible: false,
+			fetchingRecentPurchases: true,
+			recentPurchases: [],
 		};
 	}
 
@@ -42,6 +55,7 @@ class ProjectFund extends Component {
 		if (walletConnected) {
 			this.fetchProject(projectId);
 			this.fetchPurchaseHistory(projectId);
+			this.fetchRecentPurchases(projectId);
 		}
 	}
 
@@ -58,12 +72,14 @@ class ProjectFund extends Component {
 		) {
 			this.fetchProject(projectId);
 			this.fetchPurchaseHistory(projectId);
+			this.fetchRecentPurchases(projectId);
 		}
 	}
 
 	componentWillUnmount() {
 		clearTimeout(projectPollId);
 		clearTimeout(purchaseHistoryPollId);
+		clearTimeout(recentPurchasesPollId);
 	}
 
 	fetchProject = (projectId, updatedDepositAmount = "0") => {
@@ -165,7 +181,6 @@ class ProjectFund extends Component {
 				fetchPolicy: "network-only",
 			})
 			.then((res) => {
-				// console.log(res.data.purchaseActivities);
 				this.setState({ purchaseHistory: res.data.purchaseActivities });
 			})
 			.catch((_) => history.replace("/my-projects"))
@@ -176,11 +191,68 @@ class ProjectFund extends Component {
 			);
 	};
 
+	fetchRecentPurchases = (projectId) => {
+		const { history } = this.props;
+		client
+			.query({
+				query: GET_RECENT_PURCHASES_BY_PROJECT,
+				variables: {
+					projectId,
+				},
+				fetchPolicy: "network-only",
+			})
+			.then((res) => {
+				// console.log("Purchases", res.data.purchaseHistories);
+				const purchasesWithISOString = res.data.purchaseHistories.map((purchase) => ({
+					...purchase,
+					timestamp: new Date(parseFloat(purchase.timestamp) * 1000).toISOString(),
+				}));
+				const purchasesByDate = purchasesWithISOString.reduce((groups, purchase) => {
+					const date = purchase.timestamp.split("T")[0];
+					if (!groups[date]) {
+						groups[date] = [];
+					}
+					groups[date].push(purchase);
+					return groups;
+				}, {});
+				let purchasesByDateArray = Object.keys(purchasesByDate).map((date) => {
+					return {
+						date: new Date(date).toISOString(),
+						purchases: purchasesByDate[date],
+					};
+				});
+				purchasesByDateArray = purchasesByDateArray.map((item) => ({
+					x: moment(item.date).format("MMMM D, YYYY"),
+					y: item.purchases
+						.map((item) => ethers.utils.formatUnits(item.amount, item.decimals))
+						.reduce((a, b) => parseFloat(a) + parseFloat(b), 0),
+				}));
+				this.setState(
+					{
+						recentPurchases: [...purchasesByDateArray],
+					}
+					// () => console.log(this.state.recentPurchases)
+				);
+			})
+			.catch((_) => {
+				// console.log(err);
+				history.replace("/my-projects");
+			})
+			.finally(() =>
+				this.setState({ fetchingRecentPurchases: false }, () => {
+					recentPurchasesPollId = setTimeout(() => this.fetchRecentPurchases(projectId), 30000);
+				})
+			);
+	};
+
 	toggleDepositModal = () =>
 		this.setState((state) => ({ depositModalVisible: !state.depositModalVisible }));
 
 	toggleWithdrawModal = () =>
 		this.setState((state) => ({ withdrawModalVisible: !state.withdrawModalVisible }));
+
+	toggleProjectRemovalModal = () =>
+		this.setState((state) => ({ removeProjectModalVisible: !state.removeProjectModalVisible }));
 
 	render() {
 		const {
@@ -203,6 +275,8 @@ class ProjectFund extends Component {
 			tokenRate,
 			purchaseHistory,
 			withdrawModalVisible,
+			removeProjectModalVisible,
+			recentPurchases,
 		} = this.state;
 
 		const loading = fetchingProject || fetchingPurchaseHistory;
@@ -264,15 +338,16 @@ class ProjectFund extends Component {
 															  )
 															: 0
 													}
-													bnbNum={`${project?.tokensSold} / ${
+													bnbNum={`${parseFloat(project?.tokensSold).toFixed(4)} / ${(
 														parseFloat(project?.tokensDeposited) -
 														parseFloat(project?.tokensWithdrawn)
-													} ${project?.tokenSymbol}`}
+													).toFixed(4)} ${project?.tokenSymbol}`}
 													liveStatus="Live Now"
 													solidBtn="Withdraw tokens"
 													borderBtn="Deposit tokens"
 													onSolidButtonClick={this.toggleWithdrawModal}
 													onBorderedButtonClick={this.toggleDepositModal}
+													onRemoveProject={this.toggleProjectRemovalModal}
 												/>
 											</div>
 										</Fade>
@@ -326,10 +401,17 @@ class ProjectFund extends Component {
 											</Fade>
 											<div className="project-detail-wrapper">
 												<div className="bar-chart-container">
-													<h3 className="team-review" style={{ fontSize: "20px", margin: "0" }}>
-														Funds Raised by this Project Month-wise
+													<h3
+														className="team-review"
+														style={{ fontSize: "20px", margin: "0.75rem 0 0 1.25rem" }}
+													>
+														Recent purchases
 													</h3>
-													<PurchaseHistoryChart />
+													<PurchaseHistoryChart
+														theme={theme}
+														tokenSymbol={project?.tokenSymbol}
+														series={recentPurchases}
+													/>
 												</div>
 												<h3 className="team-review" style={{ fontSize: "20px" }}>
 													Pool Details
@@ -402,9 +484,36 @@ class ProjectFund extends Component {
 								decimals: project?.tokenDecimals,
 							}}
 							deposited={
-								parseFloat(project?.tokensDeposited) - parseFloat(project?.tokensWithdrawn)
+								parseFloat(project?.tokensDeposited) -
+								(parseFloat(project?.tokensWithdrawn) + parseFloat(project?.tokensSold))
 							}
 							onWithdraw={() => this.fetchProject(project?.id)}
+						/>
+						<RemoveProjectModal
+							visible={removeProjectModalVisible}
+							theme={theme}
+							onClose={this.toggleProjectRemovalModal}
+							projectWalletAddress={project?.owner}
+							walletAddress={walletAddress}
+							signer={signer}
+							projectId={project?.id}
+							token={{
+								address: project?.tokenAddress,
+								symbol: project?.tokenSymbol,
+								decimals: project?.tokenDecimals,
+							}}
+							deposited={
+								parseFloat(project?.tokensDeposited) -
+								(parseFloat(project?.tokensWithdrawn) + parseFloat(project?.tokensSold))
+							}
+							onWithdraw={() => {
+								this.toggleProjectRemovalModal();
+								this.toggleWithdrawModal();
+							}}
+							onRemove={() => {
+								this.toggleProjectRemovalModal();
+								history.replace("/my-projects");
+							}}
 						/>
 					</>
 				)}

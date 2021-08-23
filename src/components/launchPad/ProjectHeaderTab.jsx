@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { Progress } from "antd";
-import "./ProjectHeaderTab.css";
-import powerWhite from "../../assets/images/power-white.png";
 import { FiExternalLink } from "react-icons/fi";
+import powerWhite from "../../assets/images/power-white.png";
+import "./ProjectHeaderTab.css";
+// import { IconButton } from "@material-ui/core";
+// import { MdDelete } from "react-icons/md";
 
 export default class ProjectHeaderTab extends Component {
 	render() {
@@ -20,6 +22,7 @@ export default class ProjectHeaderTab extends Component {
 			onBorderedButtonClick,
 			adminAddress,
 			settlementAddress,
+			// onRemoveProject,
 		} = this.props;
 
 		return (
@@ -73,7 +76,24 @@ export default class ProjectHeaderTab extends Component {
 					)}
 				</div>
 				<div className="sale-card">
+					{/* {owner ? (
+						<div
+							className="flex-spaced-container"
+							style={{ marginBottom: "1rem", alignItems: "center" }}
+						>
+							<p className="sale-live" style={{ margin: 0 }}>
+								{liveStatus}
+							</p>
+							<IconButton
+								style={{ position: "relative", right: "-15px" }}
+								onClick={onRemoveProject}
+							>
+								<MdDelete color="#FFF" />
+							</IconButton>
+						</div>
+					) : ( */}
 					<p className="sale-live">{liveStatus}</p>
+					{/* )} */}
 					<div className="sale-comp">
 						<p className="live-comp">Sale Completion</p>
 						<p className="sale-percentage" style={{ color: "#fff" }}>

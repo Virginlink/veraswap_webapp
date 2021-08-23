@@ -195,7 +195,7 @@ export default class BuyTokenModal extends Component {
 			const { vrapPrice } = this.state;
 			const purchaseAmount =
 				(parseFloat(this.state.amount) * parseFloat(vrapPrice)) / parseFloat(cost);
-			this.setState({ purchaseAmount });
+			this.setState({ purchaseAmount: purchaseAmount.toString() });
 		});
 
 	toggleInversion = () =>

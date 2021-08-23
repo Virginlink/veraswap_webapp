@@ -229,17 +229,16 @@ class LaunchPad extends Component {
 													  )
 													: 0
 											}
-											bnbNo={`${ethers.utils.formatUnits(
-												project.tokensSold,
-												project.tokenDecimals
-											)} / ${
+											bnbNo={`${parseFloat(
+												ethers.utils.formatUnits(project.tokensSold, project.tokenDecimals)
+											).toFixed(4)} / ${(
 												parseFloat(
 													ethers.utils.formatUnits(project.tokensDeposited, project.tokenDecimals)
 												) -
 												parseFloat(
 													ethers.utils.formatUnits(project.tokensWithdrawn, project.tokenDecimals)
 												)
-											} ${project.tokenSymbol}`}
+											).toFixed(4)} ${project.tokenSymbol}`}
 											participants
 											maxBnb={project.maxCapInVrap}
 											access="Private"

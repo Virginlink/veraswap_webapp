@@ -33,14 +33,14 @@ const ProjectListedModal = ({ open, onClose }) => {
 						<Space size="large">
 							<Spin size="large" />
 						</Space>
-						<h3 className="listed-project-text">Your Project is under Team Review</h3>
+						<h3 className="listed-project-text">Your Project is paused for Team Review</h3>
 						<p className="apply-desc token-desc">
-							Your application is now under review by our team of researchers.
+							Your project is now under review by our team of researchers.
 							<br />
 							<br />
 							<br />
 							<br />
-							We'll notify you shortly
+							We'll notify you shortly via email
 						</p>
 						<button
 							style={{

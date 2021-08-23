@@ -215,6 +215,7 @@ export const GET_PROJECT_BY_ID = gql`
 	query GetProject($projectId: ID!) {
 		project(id: $projectId) {
 			id
+			ipfsHash
 			tokenAddress
 			tokenName
 			tokenDecimals
@@ -266,6 +267,21 @@ export const GET_PROJECT_PARTICIPANT_COUNT = gql`
 	query GetProjectParticipantCount($projectId: ID!) {
 		purchaseActivities(first: 8, where: { projectId: $projectId }) {
 			id
+		}
+	}
+`;
+
+export const GET_RECENT_PURCHASES_BY_PROJECT = gql`
+	query GetRecentPurchasesByProject($projectId: ID!) {
+		purchaseHistories(
+			first: 20
+			where: { projectId: $projectId }
+			orderBy: timestamp
+			orderDirection: asc
+		) {
+			amount
+			timestamp
+			tokenDecimals
 		}
 	}
 `;

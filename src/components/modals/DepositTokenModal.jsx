@@ -93,7 +93,7 @@ export default class DepositTokenModal extends Component {
 	onAmountChange = (e) =>
 		e.target.value.match(/^(\d+)?([.]?\d{0,18})?$/) && this.setState({ amount: e.target.value });
 
-	handleMax = () => this.setState({ amount: parseFloat(this.state.balance) });
+	handleMax = () => this.setState({ amount: parseFloat(this.state.balance).toString() });
 
 	handleApproval = () => {
 		const { amount } = this.state;

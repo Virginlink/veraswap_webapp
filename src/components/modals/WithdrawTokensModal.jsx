@@ -24,7 +24,7 @@ export default class WithdrawTokensModal extends Component {
 		e.target.value.match(/^(\d+)?([.]?\d{0,18})?$/) && this.setState({ amount: e.target.value });
 
 	handleMax = () => {
-		this.setState({ amount: parseFloat(this.props.deposited) });
+		this.setState({ amount: parseFloat(this.props.deposited).toString() });
 	};
 
 	handleWithdraw = () => {
