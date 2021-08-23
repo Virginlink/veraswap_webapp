@@ -326,6 +326,7 @@ export default class BuyTokenModal extends Component {
 			theme,
 			visible,
 			token: { symbol },
+			maxCapInVrap,
 		} = this.props;
 		const {
 			amount,
@@ -397,6 +398,13 @@ export default class BuyTokenModal extends Component {
 										<div>
 											balance:{" "}
 											<span style={{ fontFamily: "normal" }}>{parseFloat(balance).toFixed(6)}</span>{" "}
+											<span style={{ textTransform: "none" }}>VRAP</span>
+										</div>
+										<div>
+											max cap:{" "}
+											<span style={{ fontFamily: "normal" }}>
+												{parseFloat(maxCapInVrap).toFixed(6)}
+											</span>{" "}
 											<span style={{ textTransform: "none" }}>VRAP</span>
 										</div>
 									</div>
@@ -491,6 +499,7 @@ export default class BuyTokenModal extends Component {
 										approving ||
 										parseFloat(amount) > parseFloat(balance) ||
 										parseFloat(purchaseAmount) > parseFloat(availableTokens) ||
+										parseFloat(amount) > parseFloat(maxCapInVrap) ||
 										parseFloat(amount) <= parseFloat(allowance)
 									}
 									onClick={this.handleApproval}
@@ -499,14 +508,18 @@ export default class BuyTokenModal extends Component {
 										amount ? (
 											parseFloat(amount) > 0 ? (
 												parseFloat(amount) <= parseFloat(balance) ? (
-													parseFloat(purchaseAmount) <= parseFloat(availableTokens) ? (
-														parseFloat(amount) <= parseFloat(allowance) ? (
-															"Approved"
+													parseFloat(amount) <= parseFloat(maxCapInVrap) ? (
+														parseFloat(purchaseAmount) <= parseFloat(availableTokens) ? (
+															parseFloat(amount) <= parseFloat(allowance) ? (
+																"Approved"
+															) : (
+																"Approve"
+															)
 														) : (
-															"Approve"
+															"Purchase limit exceeded"
 														)
 													) : (
-														"Purchase limit exceeded"
+														"VRAP max cap exceeded"
 													)
 												) : (
 													`Insufficient ${symbol} balance`
@@ -534,6 +547,7 @@ export default class BuyTokenModal extends Component {
 										parseFloat(amount) === 0 ||
 										parseFloat(amount) > parseFloat(allowance) ||
 										parseFloat(purchaseAmount) > parseFloat(availableTokens) ||
+										parseFloat(amount) > parseFloat(maxCapInVrap) ||
 										parseFloat(amount) > parseFloat(balance) ||
 										approving ||
 										purchasing

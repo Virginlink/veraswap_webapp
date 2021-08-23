@@ -64,7 +64,7 @@ class ProjectDetail extends Component {
 				fetchPolicy: "network-only",
 			})
 			.then(async (res) => {
-				// console.log(res.data.project);
+				console.log(res.data.project);
 				if (res.data.project) {
 					const ownerWallets = [
 						res.data.project.owner.toLowerCase(),
@@ -281,6 +281,7 @@ class ProjectDetail extends Component {
 						decimals: project?.tokenDecimals,
 						cost: project?.tokenCost,
 					}}
+					maxCapInVrap={project?.maxCapInVrap}
 					onProjectStatsUpdate={this.handleProjectStatsUpdate}
 					onPurchaseSuccess={() => this.fetchProject(project?.id)}
 				/>
