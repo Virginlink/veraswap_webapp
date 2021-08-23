@@ -205,7 +205,7 @@ class ProjectDetail extends Component {
 													parseFloat(project?.tokensWithdrawn)
 												} ${project?.tokenSymbol}`}
 												liveStatus="Sale Live Now"
-												solidBtn="Buy Token"
+												solidBtn={`Buy ${project?.tokenSymbol}`}
 												borderBtn="View on Etherscan"
 												onSolidButtonClick={this.handlePurchaseClick}
 												onBorderedButtonClick={() =>

@@ -1,8 +1,24 @@
 import React, { Component } from "react";
 import { MdContentCopy } from "react-icons/md";
+import { BiCheckCircle } from "react-icons/bi";
 import "./InfoCard.css";
 
 export default class InfoCard extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			copied: false,
+		};
+	}
+
+	copyAddress = (address) =>
+		this.setState({ copied: true }, () =>
+			navigator.clipboard
+				.writeText(address)
+				.catch((err) => console.log(err))
+				.finally(() => setTimeout(() => this.setState({ copied: false }), 1500))
+		);
+
 	render() {
 		const {
 			tokenDistribution,
@@ -19,6 +35,7 @@ export default class InfoCard extends Component {
 			// totalSupply,
 			cardTitle,
 		} = this.props;
+		const { copied } = this.state;
 
 		return (
 			<div className="info-card">
@@ -49,7 +66,15 @@ export default class InfoCard extends Component {
 					<p className={`info-column-right ${address ? "info-column-break" : null}`}>
 						{totalSaleAmount}
 						{address && address.slice(0, 6) + "..." + address.slice(-6)}{" "}
-						{address ? <MdContentCopy /> : null}
+						{address &&
+							(!copied ? (
+								<MdContentCopy
+									style={{ cursor: "pointer" }}
+									onClick={() => this.copyAddress(address)}
+								/>
+							) : (
+								<BiCheckCircle />
+							))}
 					</p>
 				</div>
 				<div className="info-column">
