@@ -215,23 +215,21 @@ class ProjectFund extends Component {
 					groups[date].push(purchase);
 					return groups;
 				}, {});
-				let purchasesByDateArray = Object.keys(purchasesByDate).map((date) => {
-					return {
-						date: new Date(date).toISOString(),
-						purchases: purchasesByDate[date],
-					};
-				});
+				let purchasesByDateArray = Object.keys(purchasesByDate).map((date) => ({
+					date: new Date(date).toISOString(),
+					purchases: purchasesByDate[date],
+				}));
 				purchasesByDateArray = purchasesByDateArray.map((item) => ({
 					x: moment(item.date).format("MMMM D, YYYY"),
 					y: item.purchases
-						.map((item) => ethers.utils.formatUnits(item.amount, item.decimals))
+						.map((item) => ethers.utils.formatUnits(item.amount, item.tokenDecimals))
 						.reduce((a, b) => parseFloat(a) + parseFloat(b), 0),
 				}));
 				this.setState(
 					{
 						recentPurchases: [...purchasesByDateArray],
-					}
-					// () => console.log(this.state.recentPurchases)
+					},
+					() => process.env.NODE_ENV === "development" && console.log(this.state.recentPurchases)
 				);
 			})
 			.catch((_) => {
@@ -424,10 +422,10 @@ class ProjectFund extends Component {
 														totalSaleAmount={`$ ${
 															parseFloat(project?.tokensAllocated) * parseFloat(project?.tokenCost)
 														}`}
-														avialablePurchase={`${
+														avialablePurchase={`${(
 															parseFloat(project?.tokensDeposited) -
 															parseFloat(project?.tokensWithdrawn)
-														} ${project?.tokenSymbol}`}
+														).toFixed(4)} ${project?.tokenSymbol}`}
 														marketCap="$50,000"
 														kyc="No"
 													/>

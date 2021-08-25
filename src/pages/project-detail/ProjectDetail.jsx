@@ -242,10 +242,10 @@ class ProjectDetail extends Component {
 																parseFloat(project?.tokensAllocated) *
 																parseFloat(project?.tokenCost)
 															}`}
-															avialablePurchase={`${
+															avialablePurchase={`${(
 																parseFloat(project?.tokensDeposited) -
 																parseFloat(project?.tokensWithdrawn)
-															} ${project?.tokenSymbol}`}
+															).toFixed(4)} ${project?.tokenSymbol}`}
 															// marketCap="$50,000"
 															// kyc="No"
 														/>
