@@ -278,6 +278,15 @@ class ProjectFund extends Component {
 		} = this.state;
 
 		const loading = fetchingProject || fetchingPurchaseHistory;
+		const projectStarted = project
+			? moment(project?.startDate * 1000).isSameOrBefore(moment())
+			: false;
+		const projectEnded = project ? moment(project?.endDate * 1000).isBefore(moment()) : false;
+		const salePercentage = Math.ceil(
+			(parseFloat(project?.tokensSold) /
+				(parseFloat(project?.tokensDeposited) - parseFloat(project?.tokensWithdrawn))) *
+				100
+		);
 
 		return (
 			<>
@@ -327,22 +336,23 @@ class ProjectFund extends Component {
 														project?.tokenSymbol
 													}`}
 													salePercentage={
-														parseFloat(project?.tokensDeposited) > 0
-															? Math.ceil(
-																	(parseFloat(project?.tokensSold) /
-																		(parseFloat(project?.tokensDeposited) -
-																			parseFloat(project?.tokensWithdrawn))) *
-																		100
-															  )
+														projectStarted && parseFloat(project?.tokensDeposited)
+															? salePercentage
 															: 0
 													}
 													bnbNum={`${parseFloat(project?.tokensSold).toFixed(4)} / ${(
 														parseFloat(project?.tokensDeposited) -
 														parseFloat(project?.tokensWithdrawn)
 													).toFixed(4)} ${project?.tokenSymbol}`}
-													liveStatus="Live Now"
-													solidBtn="Withdraw tokens"
-													borderBtn="Deposit tokens"
+													liveStatus={
+														projectEnded || salePercentage === 100
+															? "Sale has ended"
+															: projectStarted
+															? "Live Now"
+															: "Sale not started yet"
+													}
+													solidBtn={salePercentage < 100 && "Withdraw tokens"}
+													borderBtn={salePercentage < 100 && "Deposit tokens"}
 													onSolidButtonClick={this.toggleWithdrawModal}
 													onBorderedButtonClick={this.toggleDepositModal}
 													onRemoveProject={this.toggleProjectRemovalModal}

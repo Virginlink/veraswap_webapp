@@ -142,8 +142,9 @@ class LaunchPad extends Component {
 									<>
 										{upcomingProjects.map((project) => (
 											<ProjectListCard
+												id={project.id}
 												key={project.id}
-												projectStatus="Upcoming"
+												projectStatus="upcoming"
 												projectName={project.name}
 												totalRaise="TBA"
 												minAlloc="TBA"

@@ -13,6 +13,7 @@ import { ethers } from "ethers";
 import { Spin } from "antd";
 import { BuyTokenModal } from "../../components/modals";
 import "./ProjectDetail.css";
+import moment from "moment";
 
 let projectPollId;
 class ProjectDetail extends Component {
@@ -150,7 +151,15 @@ class ProjectDetail extends Component {
 			signer,
 		} = this.props;
 		const { project, tokenRate, fetchingProject, purchaseModalVisible } = this.state;
-
+		const projectStarted = project
+			? moment(project?.startDate * 1000).isSameOrBefore(moment())
+			: false;
+		const projectEnded = project ? moment(project?.endDate * 1000).isBefore(moment()) : false;
+		const salePercentage = Math.ceil(
+			(parseFloat(project?.tokensSold) /
+				(parseFloat(project?.tokensDeposited) - parseFloat(project?.tokensWithdrawn))) *
+				100
+		);
 		return (
 			<>
 				<Sidebar active="launch-pad" theme={theme} onThemeToggle={onThemeToggle} />
@@ -194,20 +203,30 @@ class ProjectDetail extends Component {
 												projectBnb={`1 VRAP = ${parseFloat(tokenRate).toFixed(4)} ${
 													project?.tokenSymbol
 												}`}
-												salePercentage={Math.ceil(
-													(parseFloat(project?.tokensSold) /
-														(parseFloat(project?.tokensDeposited) -
-															parseFloat(project?.tokensWithdrawn))) *
-														100
-												)}
+												salePercentage={
+													projectStarted && parseFloat(project?.tokensDeposited)
+														? salePercentage
+														: 0
+												}
 												bnbNum={`${parseFloat(project?.tokensSold).toFixed(4)} / ${(
 													parseFloat(project?.tokensDeposited) -
 													parseFloat(project?.tokensWithdrawn)
 												).toFixed(4)} ${project?.tokenSymbol}`}
-												liveStatus="Sale Live Now"
-												solidBtn={`Buy ${project?.tokenSymbol}`}
+												liveStatus={
+													projectEnded || salePercentage === 100
+														? "Sale has ended"
+														: projectStarted
+														? "Sale Live Now"
+														: "Sale not started yet"
+												}
+												solidBtn={
+													projectStarted &&
+													!projectEnded &&
+													salePercentage < 100 &&
+													`Buy ${project?.tokenSymbol}`
+												}
 												borderBtn="View on Etherscan"
-												onSolidButtonClick={this.handlePurchaseClick}
+												onSolidButtonClick={projectStarted ? this.handlePurchaseClick : () => false}
 												onBorderedButtonClick={() =>
 													window.open(
 														`https://kovan.etherscan.io/address/${project?.tokenAddress}`,

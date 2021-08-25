@@ -62,7 +62,7 @@ class ProjectListCard extends Component {
 
 	navigateToProject = () => {
 		const { owner, id, history, projectStatus } = this.props;
-		if (projectStatus === "ongoing") {
+		if (projectStatus === "ongoing" || projectStatus === "upcoming") {
 			if (!owner) {
 				history.push(`/launchpad/${id}`);
 			} else {
@@ -99,7 +99,11 @@ class ProjectListCard extends Component {
 					}`}
 					onClick={toggleProjectReview ? toggleProjectReview : this.navigateToProject}
 					style={
-						owner ? { cursor: "pointer" } : projectStatus === "ongoing" ? { cursor: "pointer" } : {}
+						owner
+							? { cursor: "pointer" }
+							: projectStatus === "ongoing" || projectStatus === "upcoming"
+							? { cursor: "pointer" }
+							: {}
 					}
 				>
 					{loading ? (

@@ -189,6 +189,7 @@ export default class MyProject extends Component {
 											{projectsUnderReview.map((project) => (
 												<ProjectListCard
 													owner
+													id={project.id}
 													key={project.id}
 													projectStatus="Paused"
 													projectName={project.name}
