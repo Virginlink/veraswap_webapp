@@ -1,4 +1,4 @@
-import { Container, Fade } from "@material-ui/core";
+import { Container, Fade, IconButton } from "@material-ui/core";
 import React, { Component } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import AppBar from "../../components/AppBar";
@@ -24,6 +24,7 @@ import { Spin } from "antd";
 import { getVRAPPrice } from "../../utils/helpers";
 import { ethers } from "ethers";
 import "./ProjectFund.css";
+import { MdRefresh } from "react-icons/md";
 
 let projectPollId;
 let purchaseHistoryPollId;
@@ -202,7 +203,8 @@ class ProjectFund extends Component {
 				fetchPolicy: "network-only",
 			})
 			.then((res) => {
-				// console.log("Purchases", res.data.purchaseHistories);
+				process.env.NODE_ENV === "development" &&
+					console.log("Purchases", res.data.purchaseHistories);
 				const purchasesWithISOString = res.data.purchaseHistories.map((purchase) => ({
 					...purchase,
 					timestamp: new Date(parseFloat(purchase.timestamp) * 1000).toISOString(),
@@ -392,13 +394,21 @@ class ProjectFund extends Component {
 																<div className="img-data-box">
 																	<h1 className="tba">
 																		<span>
-																			{moment(parseFloat(project?.endDate) * 1000).format(
+																			{moment(parseFloat(project?.startDate) * 1000).format(
 																				"MMM D, YYYY"
 																			)}
 																		</span>
 																	</h1>
+																	<div
+																		style={{
+																			color: theme === "light" ? "#000" : "#FFF",
+																			marginBottom: "4px",
+																		}}
+																	>
+																		To
+																	</div>
 																	<p className="project-id">
-																		{moment(parseFloat(project?.startDate) * 1000).format(
+																		{moment(parseFloat(project?.endDate) * 1000).format(
 																			"MMM D, YYYY"
 																		)}
 																	</p>
@@ -411,12 +421,17 @@ class ProjectFund extends Component {
 											</Fade>
 											<div className="project-detail-wrapper">
 												<div className="bar-chart-container">
-													<h3
-														className="team-review"
-														style={{ fontSize: "20px", margin: "0.75rem 0 0 1.25rem" }}
+													<div
+														className="flex-spaced-container"
+														style={{ margin: "0.75rem 0 0 1.25rem" }}
 													>
-														Recent purchases
-													</h3>
+														<h3 className="team-review" style={{ fontSize: "20px", margin: 0 }}>
+															Recent purchases
+														</h3>
+														<IconButton onClick={() => this.fetchRecentPurchases(project?.id)}>
+															<MdRefresh color={theme === "light" ? "#000" : "#FFF"} />
+														</IconButton>
+													</div>
 													<PurchaseHistoryChart
 														theme={theme}
 														tokenSymbol={project?.tokenSymbol}

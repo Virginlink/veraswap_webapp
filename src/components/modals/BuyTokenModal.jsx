@@ -265,7 +265,7 @@ export default class BuyTokenModal extends Component {
 		this.setState({ purchasing: true }, () => {
 			purchaseTokens({
 				projectId,
-				amount: parseFloat(purchaseAmount).toString(),
+				amount: parseFloat(purchaseAmount).toFixed(10),
 				decimals,
 				signer,
 				walletAddress,

@@ -70,7 +70,7 @@ class ProjectCheckoutModal extends Component {
 			getVRAPPrice()
 				.then((res) => {
 					const price = res.price;
-					const tokenRate = price / parseFloat(tokenCost);
+					const tokenRate = parseFloat(tokenCost) / price;
 					this.setState({ tokenRate });
 				})
 				.catch((err) => console.log(err))
@@ -335,7 +335,7 @@ class ProjectCheckoutModal extends Component {
 												style={{ color: "#e60000", position: "relative", top: "3px" }}
 											/>
 										) : (
-											`1 VRAP ~ ${parseFloat(tokenRate).toFixed(4)} ${tokenSymbol}`
+											`1 ${tokenSymbol} ~ ${parseFloat(tokenRate).toFixed(4)} VRAP`
 										)}
 									</td>
 								</tr>

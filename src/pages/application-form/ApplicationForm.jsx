@@ -138,6 +138,7 @@ export default class ProjectFund extends Component {
 			});
 		} catch (_) {
 			this.setState({
+				contractAddressError: "Invalid token address. Please check whether the token is listed",
 				tokenDecimals: "",
 				tokenSymbol: "",
 			});

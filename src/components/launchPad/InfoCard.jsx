@@ -42,7 +42,7 @@ export default class InfoCard extends Component {
 				<h3 className="team-review info-header">{cardTitle}</h3>
 				<div className="info-column">
 					<p className="info-column-left">
-						{tokenDistribution ? "Token Distribution" : name ? "Name" : null}
+						{tokenDistribution ? "Sale commencement" : name ? "Name" : null}
 					</p>
 					<p className="info-column-right">
 						{tokenDistribution}

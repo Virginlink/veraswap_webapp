@@ -1,3 +1,4 @@
+import { Empty } from "antd";
 import React, { Component } from "react";
 import Chart from "react-apexcharts";
 
@@ -99,14 +100,26 @@ export default class PurchaseHistoryChart extends Component {
 	}
 
 	render() {
-		return (
-			<Chart
-				options={this.state.options}
-				series={this.state.series}
-				type="area"
-				width="100%"
-				height="500"
-			/>
-		);
+		const { theme } = this.props;
+		const { options, series } = this.state;
+
+		if (series.length === 0) {
+			return (
+				<div
+					style={{
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "center",
+						height: "500px",
+						width: "100%",
+						color: theme === "light" ? "#000" : "#FFF",
+					}}
+				>
+					<Empty description="No recent purchases" />
+				</div>
+			);
+		}
+
+		return <Chart options={options} series={series} type="area" width="100%" height="500" />;
 	}
 }
