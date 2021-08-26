@@ -95,7 +95,6 @@ export default class ProjectFund extends Component {
 		const max = new Date().getFullYear() + 5;
 		const min = max - 99;
 		let years = [];
-
 		for (var i = max; i >= min; i--) {
 			years.push(i);
 		}
@@ -103,27 +102,30 @@ export default class ProjectFund extends Component {
 	};
 
 	handleInputChange = (e) => {
+		const {
+			target: { name: field, value },
+		} = e;
 		const numberFields = ["tokensAllocated", "tokenCost", "maxCapInVrap"];
 		const addresses = ["contractAddress", "projectWalletAddress", "settlementAddress"];
-		if (e.target.value) {
-			if (e.target.name === "contractAddress") {
-				this.searchToken(e.target.value);
+		if (value) {
+			if (field === "contractAddress") {
+				this.searchToken(value);
 			}
-			if (numberFields.includes(e.target.name)) {
-				e.target.value.match(/^(\d*)?([.]?\d{0,18})?$/) &&
-					this.setState({ [e.target.name]: e.target.value, [`${e.target.name}Error`]: "" });
-			} else if (e.target.name === "tokenDecimals") {
-				e.target.value.match(/^[1-9]\d{0,1}$/) &&
-					this.setState({ tokenDecimals: e.target.value, tokenDecimalsError: "" });
+			if (numberFields.includes(field)) {
+				value.match(/^(\d*)?([.]?\d{0,18})?$/) &&
+					this.setState({ [field]: value, [`${field}Error`]: "" });
+			} else if (field === "tokenDecimals") {
+				value.match(/^[1-9]\d{0,1}$/) &&
+					this.setState({ tokenDecimals: value, tokenDecimalsError: "" });
 			} else {
-				if (addresses.includes(e.target.name)) {
-					this.verifyAddress(e.target.name, e.target.value);
+				if (addresses.includes(field)) {
+					this.verifyAddress(field, value);
 				} else {
-					this.setState({ [e.target.name]: e.target.value, [`${e.target.name}Error`]: "" });
+					this.setState({ [field]: value, [`${field}Error`]: "" });
 				}
 			}
 		} else {
-			this.setState({ [e.target.name]: "", [`${e.target.name}Error`]: "" });
+			this.setState({ [field]: "", [`${field}Error`]: "" });
 		}
 	};
 

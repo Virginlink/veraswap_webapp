@@ -282,12 +282,14 @@ class ProjectFund extends Component {
 			? moment(project?.startDate * 1000).isSameOrBefore(moment())
 			: false;
 		const projectEnded = project ? moment(project?.endDate * 1000).isBefore(moment()) : false;
-		const salePercentage = Math.ceil(
-			(parseFloat(project?.tokensSold) /
-				(parseFloat(project?.tokensDeposited) - parseFloat(project?.tokensWithdrawn))) *
-				100
-		);
-
+		const salePercentage =
+			parseFloat(project?.tokensDeposited) > 0
+				? Math.ceil(
+						(parseFloat(project?.tokensSold) /
+							(parseFloat(project?.tokensDeposited) - parseFloat(project?.tokensWithdrawn))) *
+							100
+				  )
+				: 0;
 		return (
 			<>
 				<Sidebar active="launch-pad" theme={theme} onThemeToggle={onThemeToggle} />
@@ -391,13 +393,13 @@ class ProjectFund extends Component {
 																	<h1 className="tba">
 																		<span>
 																			{moment(parseFloat(project?.endDate) * 1000).format(
-																				"MMMM D, YYYY"
+																				"MMM D, YYYY"
 																			)}
 																		</span>
 																	</h1>
 																	<p className="project-id">
 																		{moment(parseFloat(project?.startDate) * 1000).format(
-																			"MMMM D, YYYY"
+																			"MMM D, YYYY"
 																		)}
 																	</p>
 																</div>

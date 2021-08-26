@@ -12,8 +12,8 @@ import { getVRAPPrice } from "../../utils/helpers";
 import { ethers } from "ethers";
 import { Spin } from "antd";
 import { BuyTokenModal } from "../../components/modals";
-import "./ProjectDetail.css";
 import moment from "moment";
+import "./ProjectDetail.css";
 
 let projectPollId;
 class ProjectDetail extends Component {
@@ -155,11 +155,14 @@ class ProjectDetail extends Component {
 			? moment(project?.startDate * 1000).isSameOrBefore(moment())
 			: false;
 		const projectEnded = project ? moment(project?.endDate * 1000).isBefore(moment()) : false;
-		const salePercentage = Math.ceil(
-			(parseFloat(project?.tokensSold) /
-				(parseFloat(project?.tokensDeposited) - parseFloat(project?.tokensWithdrawn))) *
-				100
-		);
+		const salePercentage =
+			parseFloat(project?.tokensDeposited) > 0
+				? Math.ceil(
+						(parseFloat(project?.tokensSold) /
+							(parseFloat(project?.tokensDeposited) - parseFloat(project?.tokensWithdrawn))) *
+							100
+				  )
+				: 0;
 		return (
 			<>
 				<Sidebar active="launch-pad" theme={theme} onThemeToggle={onThemeToggle} />
