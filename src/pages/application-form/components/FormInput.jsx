@@ -11,6 +11,7 @@ const FormInput = ({
 	error,
 	multiline = false,
 	tooltipText,
+	maxLength,
 }) => {
 	return (
 		<>
@@ -38,6 +39,7 @@ const FormInput = ({
 							required
 							type={type}
 							name={name}
+							maxLength={maxLength}
 							placeholder={placeholder}
 							value={value}
 							onChange={onChange}

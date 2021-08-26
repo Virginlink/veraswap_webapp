@@ -110,10 +110,10 @@ export default class ProjectFund extends Component {
 				this.searchToken(e.target.value);
 			}
 			if (numberFields.includes(e.target.name)) {
-				e.target.value.match(/^(\d+)?([.]?\d{0,18})?$/) &&
+				e.target.value.match(/^(\d*)?([.]?\d{0,18})?$/) &&
 					this.setState({ [e.target.name]: e.target.value, [`${e.target.name}Error`]: "" });
 			} else if (e.target.name === "tokenDecimals") {
-				e.target.value.match(/^[1-9]\d*$/) &&
+				e.target.value.match(/^[1-9]\d{0,1}$/) &&
 					this.setState({ tokenDecimals: e.target.value, tokenDecimalsError: "" });
 			} else {
 				if (addresses.includes(e.target.name)) {
@@ -675,6 +675,7 @@ export default class ProjectFund extends Component {
 									label="Tokens allocated"
 									name="tokensAllocated"
 									placeholder={10}
+									maxLength={8}
 									value={tokensAllocated}
 									onChange={this.handleInputChange}
 									error={tokensAllocatedError}
@@ -683,6 +684,7 @@ export default class ProjectFund extends Component {
 									label="Cost per Token ($)"
 									name="tokenCost"
 									placeholder={2}
+									maxLength={8}
 									value={tokenCost}
 									onChange={this.handleInputChange}
 									error={tokenCostError}
@@ -691,6 +693,7 @@ export default class ProjectFund extends Component {
 									label="Max cap (VRAP)"
 									name="maxCapInVrap"
 									placeholder={200}
+									maxLength={8}
 									value={maxCapInVrap}
 									onChange={this.handleInputChange}
 									error={maxCapInVrapError}
