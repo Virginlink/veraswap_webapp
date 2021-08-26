@@ -50,7 +50,7 @@ export default class ProjectHeaderTab extends Component {
 					{owner && (
 						<div style={{ marginTop: "1.5rem" }}>
 							<p className="project-id">
-								Project Wallet:{" "}
+								Controller Wallet:{" "}
 								<a
 									href={`https://kovan.etherscan.io/address/${adminAddress}`}
 									target="_blank"
@@ -71,6 +71,10 @@ export default class ProjectHeaderTab extends Component {
 									{settlementAddress?.slice(0, 5)}....{settlementAddress?.slice(-5)}{" "}
 									<FiExternalLink />
 								</a>
+							</p>
+							<p className="project-id" style={{ width: "85%", wordBreak: "break-word" }}>
+								Note: You cannot participate in the sale using the wallet that is used to list the
+								project or using the controller wallet of the project.
 							</p>
 						</div>
 					)}
