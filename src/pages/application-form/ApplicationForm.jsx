@@ -138,7 +138,8 @@ export default class ProjectFund extends Component {
 			});
 		} catch (_) {
 			this.setState({
-				contractAddressError: "Invalid token address. Please check whether the token is listed",
+				contractAddressError:
+					"Invalid token address. Please verify if the token address is correct",
 				tokenDecimals: "",
 				tokenSymbol: "",
 			});
@@ -550,9 +551,7 @@ export default class ProjectFund extends Component {
 									multiline
 								/>
 								<div className="input-box" style={{ alignItems: "flex-start" }}>
-									<p className="application-desc remove-opacity" style={{ paddingTop: "16px" }}>
-										Social Media Handles
-									</p>
+									<p className="application-desc remove-opacity">Social Media Handles</p>
 									<div className="coming-soon-input-container input-div">
 										<div
 											style={{

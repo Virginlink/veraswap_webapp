@@ -24,31 +24,36 @@ const FormInput = ({
 						</Tooltip>
 					)}
 					{multiline ? (
-						<textarea
-							required
-							rows="5"
-							name={name}
-							placeholder={placeholder}
-							className="project-desc-input"
-							type={type}
-							value={value}
-							onChange={onChange}
-						/>
+						<div>
+							<textarea
+								required
+								rows="5"
+								name={name}
+								placeholder={placeholder}
+								className="project-desc-input"
+								type={type}
+								value={value}
+								onChange={onChange}
+							/>
+							<p className="error-message">{error}</p>
+						</div>
 					) : (
-						<input
-							required
-							type={type}
-							name={name}
-							maxLength={maxLength}
-							placeholder={placeholder}
-							value={value}
-							onChange={onChange}
-							data-with-suffix={tooltipText}
-						/>
+						<div>
+							<input
+								required
+								type={type}
+								name={name}
+								maxLength={maxLength}
+								placeholder={placeholder}
+								value={value}
+								onChange={onChange}
+								data-with-suffix={tooltipText}
+							/>
+							<p className="error-message">{error}</p>
+						</div>
 					)}
 				</div>
 			</div>
-			<p className="error-message">{error}</p>
 		</>
 	);
 };

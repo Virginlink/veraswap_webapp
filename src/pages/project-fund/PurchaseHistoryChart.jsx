@@ -103,7 +103,7 @@ export default class PurchaseHistoryChart extends Component {
 		const { theme } = this.props;
 		const { options, series } = this.state;
 
-		if (series.length === 0) {
+		if (series[0].data.length === 0) {
 			return (
 				<div
 					style={{

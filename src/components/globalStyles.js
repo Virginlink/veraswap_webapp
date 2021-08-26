@@ -3269,7 +3269,7 @@ export const GlobalStyles = createGlobalStyle`
 		.application-desc {
 			font-size: 18px;
 			opacity: 0.8;
-			margin: 0;
+			margin: 0.75rem 0 0;
 			color: ${({ theme }) => theme.landingParagraph};
 		}
 
@@ -3304,8 +3304,8 @@ export const GlobalStyles = createGlobalStyle`
 
 		.ido-parent-container .error-message {
 			color: ${({ theme }) => theme.formErrorMessage};
-			text-align: right;
-			margin: -1.5rem 0 0;
+			text-align: left;
+			margin: 0.5rem 0 0;
 			font-size: 16px;
 			transition: color 0.3s ease;
 		}
