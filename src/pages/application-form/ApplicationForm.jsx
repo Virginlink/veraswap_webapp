@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Container, IconButton, CircularProgress } from "@material-ui/core";
-import { notification, Select, Tooltip } from "antd";
+import { notification, Select } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
-import { AiFillPlusCircle, AiOutlineInfoCircle } from "react-icons/ai";
+import { AiFillPlusCircle } from "react-icons/ai";
 import { MdDeleteSweep } from "react-icons/md";
 import moment from "moment";
 
@@ -12,8 +12,11 @@ import { uploadJSONToIPFS } from "../../utils/ipfs";
 import AppBar from "../../components/AppBar";
 import Sidebar from "../../components/Sidebar";
 import { ProjectCheckoutModal, ProjectListedModal } from "../../components/modals";
-import Logo from "../../assets/images/vrap-red.svg";
+// import Logo from "../../assets/images/vrap-red.svg";
 import ExternalLink from "../../components/Transactions/ExternalLink";
+import { FormInput } from "./components";
+import { searchEthereumToken } from "../../utils/helpers";
+import { ethers } from "ethers";
 import "./ApplicationForm.css";
 
 export default class ProjectFund extends Component {
@@ -35,6 +38,8 @@ export default class ProjectFund extends Component {
 		projectWalletAddressError: "",
 		settlementAddressError: "",
 		contractAddressError: "",
+		tokenSymbolError: "",
+		tokenDecimalsError: "",
 		tokensAllocatedError: "",
 		tokenCostError: "",
 		maxCapInVrapError: "",
@@ -47,6 +52,8 @@ export default class ProjectFund extends Component {
 		description: "",
 		projectWalletAddress: "",
 		contractAddress: "",
+		tokenSymbol: "",
+		tokenDecimals: "",
 		settlementAddress: "",
 		tokensAllocated: "",
 		tokenCost: "",
@@ -97,11 +104,63 @@ export default class ProjectFund extends Component {
 
 	handleInputChange = (e) => {
 		const numberFields = ["tokensAllocated", "tokenCost", "maxCapInVrap"];
-		if (numberFields.includes(e.target.name)) {
-			e.target.value.match(/^(\d+)?([.]?\d{0,18})?$/) &&
-				this.setState({ [e.target.name]: e.target.value, [`${e.target.name}Error`]: "" });
+		const addresses = ["contractAddress", "projectWalletAddress", "settlementAddress"];
+		if (e.target.value) {
+			if (e.target.name === "contractAddress") {
+				this.searchToken(e.target.value);
+			}
+			if (numberFields.includes(e.target.name)) {
+				e.target.value.match(/^(\d+)?([.]?\d{0,18})?$/) &&
+					this.setState({ [e.target.name]: e.target.value, [`${e.target.name}Error`]: "" });
+			} else if (e.target.name === "tokenDecimals") {
+				e.target.value.match(/^[1-9]\d*$/) &&
+					this.setState({ tokenDecimals: e.target.value, tokenDecimalsError: "" });
+			} else {
+				if (addresses.includes(e.target.name)) {
+					this.verifyAddress(e.target.name, e.target.value);
+				} else {
+					this.setState({ [e.target.name]: e.target.value, [`${e.target.name}Error`]: "" });
+				}
+			}
 		} else {
-			this.setState({ [e.target.name]: e.target.value, [`${e.target.name}Error`]: "" });
+			this.setState({ [e.target.name]: "", [`${e.target.name}Error`]: "" });
+		}
+	};
+
+	searchToken = async (address) => {
+		try {
+			const result = await searchEthereumToken(address);
+			this.setState({
+				tokenDecimals: result.data.decimals,
+				tokenSymbol: result.data.symbol,
+			});
+		} catch (_) {
+			this.setState({
+				tokenDecimals: "",
+				tokenSymbol: "",
+			});
+		} finally {
+			this.setState({
+				tokenDecimalsError: "",
+				tokenSymbolError: "",
+			});
+		}
+	};
+
+	verifyAddress = (field, address) => {
+		try {
+			ethers.utils.getAddress(address);
+			this.setState({
+				[`${field}Error`]: "",
+			});
+		} catch (err) {
+			this.setState({
+				[`${field}Error`]: "Invalid address",
+			});
+		} finally {
+			this.setState({
+				[field]: address,
+			});
 		}
 	};
 
@@ -173,7 +232,6 @@ export default class ProjectFund extends Component {
 
 	handleSubmit = () => {
 		const { walletConnected, onModalToggle } = this.props;
-
 		const {
 			selectedPlan,
 			name,
@@ -183,14 +241,19 @@ export default class ProjectFund extends Component {
 			projectWalletAddress,
 			settlementAddress,
 			contractAddress,
+			tokenSymbol,
+			tokenDecimals,
 			tokensAllocated,
 			maxCapInVrap,
 			tokenCost,
 			startDate,
 			endDate,
+			projectWalletAddressError,
+			contractAddressError,
+			settlementAddressError,
 		} = this.state;
 		const stateVariables = Object.keys(this.state);
-		const formVariables = stateVariables.slice(18, stateVariables.length - 2);
+		const formVariables = stateVariables.slice(20, stateVariables.length - 2);
 		const unfilledFormFields = formVariables.filter((field) => !this.state[field]);
 		const unfilledSocialIndices = socials
 			.map((social, index) => !social.link && index)
@@ -220,6 +283,9 @@ export default class ProjectFund extends Component {
 			);
 			return;
 		}
+		if (!!projectWalletAddressError || !!settlementAddressError || !!contractAddressError) {
+			return;
+		}
 		if (moment(startDate).isBefore(new Date().toDateString())) {
 			this.setState({ startDateError: "Start date cannot be in the past" });
 			return;
@@ -242,6 +308,8 @@ export default class ProjectFund extends Component {
 			projectWalletAddress,
 			settlementAddress,
 			contractAddress,
+			tokenSymbol,
+			tokenDecimals,
 			tokensAllocated,
 			tokenCost,
 			maxCapInVrap,
@@ -309,12 +377,12 @@ export default class ProjectFund extends Component {
 							notification.close("projectCreationProcessingNotification");
 							notification.success({
 								key: "projectCreationSuccessNotification",
-								message: `${this.state.name} created successfully. You can view the transaction here`,
+								message: `${this.state.name} listed successfully. You can view the transaction here`,
 								btn: <ExternalLink hash={res.data.hash}>View Transaction</ExternalLink>,
 								duration: 3,
 							});
 							const stateVariables = Object.keys(this.state);
-							const formVariables = stateVariables.slice(18, stateVariables.length - 2);
+							const formVariables = stateVariables.slice(20, stateVariables.length - 2);
 							formVariables.map((field) => this.setState({ [field]: "" }));
 							const updatedSocialHandles = this.state.socialHandles.map((social) => ({
 								...social,
@@ -381,6 +449,10 @@ export default class ProjectFund extends Component {
 			settlementAddress,
 			settlementAddressError,
 			contractAddress,
+			tokenSymbol,
+			tokenSymbolError,
+			tokenDecimals,
+			tokenDecimalsError,
 			contractAddressError,
 			tokensAllocated,
 			tokensAllocatedError,
@@ -397,6 +469,7 @@ export default class ProjectFund extends Component {
 			projectData,
 		} = this.state;
 		const filteredOptions = plans.filter((o) => !plan.includes(o));
+
 		return (
 			<>
 				<Sidebar active="ico" theme={theme} onThemeToggle={onThemeToggle} />
@@ -447,47 +520,32 @@ export default class ProjectFund extends Component {
 								</Select>
 							</div>
 							<div className="form-container">
-								<div className="input-box">
-									<p className="application-desc remove-opacity">Project Name</p>
-									<div className="coming-soon-input-container input-div">
-										<input
-											required
-											name="name"
-											type="text"
-											value={name}
-											onChange={this.handleInputChange}
-										/>
-									</div>
-								</div>
-								<p className="error-message">{nameError}</p>
-								<div className="input-box">
-									<p className="application-desc remove-opacity">Project Website</p>
-									<div className="coming-soon-input-container input-div">
-										<input
-											required
-											name="website"
-											type="url"
-											value={website}
-											onChange={this.handleInputChange}
-										/>
-									</div>
-								</div>
-								<p className="error-message">{websiteError}</p>
-								<div className="input-box">
-									<p className="application-desc remove-opacity align-desc">Project Description</p>
-									<div className="coming-soon-input-container input-div">
-										<textarea
-											required
-											rows="5"
-											name="description"
-											className="project-desc-input"
-											type="text"
-											value={description}
-											onChange={this.handleInputChange}
-										/>
-									</div>
-								</div>
-								<p className="error-message">{descriptionError}</p>
+								<FormInput
+									label="Project Name"
+									placeholder="Name of the project"
+									name="name"
+									value={name}
+									onChange={this.handleInputChange}
+									error={nameError}
+								/>
+								<FormInput
+									label="Project Website"
+									placeholder="https://sampleproject.com"
+									name="website"
+									type="url"
+									value={website}
+									onChange={this.handleInputChange}
+									error={websiteError}
+								/>
+								<FormInput
+									label="Project Description"
+									placeholder="Describe the project in a few lines"
+									name="description"
+									value={description}
+									onChange={this.handleInputChange}
+									error={descriptionError}
+									multiline
+								/>
 								<div className="input-box" style={{ alignItems: "flex-start" }}>
 									<p className="application-desc remove-opacity" style={{ paddingTop: "16px" }}>
 										Social Media Handles
@@ -532,6 +590,9 @@ export default class ProjectFund extends Component {
 														</Select>
 														<input
 															required
+															placeholder={`https://${name}.${
+																name === "telegram" ? "org" : "com"
+															}/project-handle`}
 															name={name}
 															type="url"
 															value={link}
@@ -568,95 +629,72 @@ export default class ProjectFund extends Component {
 										)}
 									</div>
 								</div>
-								<div className="input-box">
-									<p className="application-desc remove-opacity">Project Wallet Address</p>
-									<div className="coming-soon-input-container input-div">
-										<Tooltip
-											placement="left"
-											title="For deposits and withdrawals of tokens to be sold"
-										>
-											<AiOutlineInfoCircle className="tooltip-icon" size={20} />
-										</Tooltip>
-										<input
-											required
-											name="projectWalletAddress"
-											type="text"
-											value={projectWalletAddress}
-											onChange={this.handleInputChange}
-											data-with-suffix
-										/>
-									</div>
-								</div>
-								<p className="error-message">{projectWalletAddressError}</p>
-								<div className="input-box">
-									<p className="application-desc remove-opacity">Settlement Address</p>
-									<div className="coming-soon-input-container input-div">
-										<Tooltip placement="left" title="Address to which VRAP will be settled to">
-											<AiOutlineInfoCircle className="tooltip-icon" size={20} />
-										</Tooltip>
-										<input
-											required
-											name="settlementAddress"
-											type="text"
-											value={settlementAddress}
-											onChange={this.handleInputChange}
-											data-with-suffix
-										/>
-									</div>
-								</div>
-								<p className="error-message">{settlementAddressError}</p>
-								<div className="input-box">
-									<p className="application-desc remove-opacity">Smart Contract Address</p>
-									<div className="coming-soon-input-container input-div">
-										<input
-											required
-											name="contractAddress"
-											type="text"
-											value={contractAddress}
-											onChange={this.handleInputChange}
-										/>
-									</div>
-								</div>
-								<p className="error-message">{contractAddressError}</p>
-								<div className="input-box">
-									<p className="application-desc remove-opacity">Tokens allocated</p>
-									<div className="coming-soon-input-container input-div">
-										<input
-											required
-											name="tokensAllocated"
-											type="text"
-											value={tokensAllocated}
-											onChange={this.handleInputChange}
-										/>
-									</div>
-								</div>
-								<p className="error-message">{tokensAllocatedError}</p>
-								<div className="input-box">
-									<p className="application-desc remove-opacity">Cost per Token ($)</p>
-									<div className="coming-soon-input-container input-div">
-										<input
-											required
-											name="tokenCost"
-											type="text"
-											value={tokenCost}
-											onChange={this.handleInputChange}
-										/>
-									</div>
-								</div>
-								<p className="error-message">{tokenCostError}</p>
-								<div className="input-box">
-									<p className="application-desc remove-opacity">Max cap (VRAP)</p>
-									<div className="coming-soon-input-container input-div">
-										<input
-											required
-											name="maxCapInVrap"
-											type="text"
-											value={maxCapInVrap}
-											onChange={this.handleInputChange}
-										/>
-									</div>
-								</div>
-								<p className="error-message">{maxCapInVrapError}</p>
+								<FormInput
+									label="Controller Wallet Address"
+									name="projectWalletAddress"
+									placeholder="Valid ethereum address (0x0....)"
+									value={projectWalletAddress}
+									onChange={this.handleInputChange}
+									error={projectWalletAddressError}
+									tooltipText="Only this wallet will be allowed to deposit and withdraw the project tokens"
+								/>
+								<FormInput
+									label="Settlement Address"
+									name="settlementAddress"
+									placeholder="Valid ethereum address (0x0....)"
+									value={settlementAddress}
+									onChange={this.handleInputChange}
+									error={settlementAddressError}
+									tooltipText="Address to which VRAP will be transferred on every purchase"
+								/>
+								<FormInput
+									label="Token Address"
+									name="contractAddress"
+									placeholder="Valid ethereum address (0x0....)"
+									value={contractAddress}
+									onChange={this.handleInputChange}
+									error={contractAddressError}
+								/>
+								<FormInput
+									label="Token Symbol"
+									name="tokenSymbol"
+									placeholder="DAI"
+									value={tokenSymbol}
+									onChange={this.handleInputChange}
+									error={tokenSymbolError}
+								/>
+								<FormInput
+									label="Token Decimals"
+									name="tokenDecimals"
+									placeholder={18}
+									value={tokenDecimals}
+									onChange={this.handleInputChange}
+									error={tokenDecimalsError}
+								/>
+								<FormInput
+									label="Tokens allocated"
+									name="tokensAllocated"
+									placeholder={10}
+									value={tokensAllocated}
+									onChange={this.handleInputChange}
+									error={tokensAllocatedError}
+								/>
+								<FormInput
+									label="Cost per Token ($)"
+									name="tokenCost"
+									placeholder={2}
+									value={tokenCost}
+									onChange={this.handleInputChange}
+									error={tokenCostError}
+								/>
+								<FormInput
+									label="Max cap (VRAP)"
+									name="maxCapInVrap"
+									placeholder={200}
+									value={maxCapInVrap}
+									onChange={this.handleInputChange}
+									error={maxCapInVrapError}
+								/>
 								<div className="input-box">
 									<p className="application-desc remove-opacity">Start Date</p>
 									<div className="date-container input-div">
@@ -742,7 +780,7 @@ export default class ProjectFund extends Component {
 										</Select>
 									</div>
 								</div>
-								<div className="input-box">
+								{/* <div className="input-box">
 									<p className="application-desc remove-opacity">Cost per Token</p>
 									<div className="input-div">
 										<div className="binance">
@@ -750,7 +788,7 @@ export default class ProjectFund extends Component {
 											<p>VRAP</p>
 										</div>
 									</div>
-								</div>
+								</div> */}
 							</div>
 							<div className="create-project-container">
 								<button
@@ -779,6 +817,8 @@ export default class ProjectFund extends Component {
 							visible={confirmationModalVisible}
 							walletConnected={walletConnected}
 							walletAddress={walletAddress}
+							tokenCost={tokenCost}
+							tokenSymbol={tokenSymbol}
 							signer={signer}
 							project={projectData}
 							onClose={() => this.setState({ confirmationModalVisible: false, projectData: null })}

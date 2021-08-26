@@ -7,6 +7,8 @@ import {
 	ROUTER_ADDRESS,
 	TOKEN_ABI,
 	PROVIDER,
+	ERC20_ABI,
+	KOVAN_PROVIDER,
 } from "./contracts";
 
 // const ABI = process.env.NODE_ENV === 'development' ? DONUT_ABI : TOKEN_ABI
@@ -576,6 +578,34 @@ export const searchToken = (address) => {
 		try {
 			const checkSummedAddress = ethers.utils.getAddress(address);
 			const contract = new ethers.Contract(address, ABI, PROVIDER);
+			const symbol = await contract.symbol();
+			const name = await contract.name();
+			const decimals = await contract.decimals();
+			resolve({
+				success: true,
+				data: {
+					name: name,
+					symbol: symbol,
+					contractAddress: address,
+					icon: `https://github.com/trustwallet/assets/blob/master/blockchains/smartchain/assets/${checkSummedAddress}/logo.png?raw=true`,
+					decimals: decimals,
+					contractABI: ABI,
+				},
+			});
+		} catch (err) {
+			reject({
+				error: true,
+				message: err.message,
+			});
+		}
+	});
+};
+
+export const searchEthereumToken = (address) => {
+	return new Promise(async (resolve, reject) => {
+		try {
+			const checkSummedAddress = ethers.utils.getAddress(address);
+			const contract = new ethers.Contract(address, ERC20_ABI, KOVAN_PROVIDER);
 			const symbol = await contract.symbol();
 			const name = await contract.name();
 			const decimals = await contract.decimals();

@@ -145,7 +145,7 @@ class ProjectListCard extends Component {
 										<h1 className="tba">
 											<span>{totalRaise}</span>
 										</h1>
-										<p className="tba-desc">Total raise</p>
+										<p className="tba-desc">Total raised</p>
 									</div>
 									{saleCompletion && projectStatus === "ongoing" ? (
 										<>

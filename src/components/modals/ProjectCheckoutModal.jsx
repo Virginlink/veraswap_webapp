@@ -15,6 +15,7 @@ import { ethers } from "ethers";
 import { notification } from "antd";
 import { IDO_ADDRESS } from "../../utils/idoContracts";
 import ExternalLink from "../Transactions/ExternalLink";
+import { getVRAPPrice } from "../../utils/helpers";
 
 const socialIcons = {
 	facebook: <FaFacebook size={20} />,
@@ -33,8 +34,10 @@ class ProjectCheckoutModal extends Component {
 		super(props);
 		this.state = {
 			step: 1,
+			fetchingPrice: false,
 			fetchingVrapBalance: false,
 			fetchingFee: false,
+			tokenRate: "0",
 			fee: "0",
 			vrapBalance: "0",
 			approving: false,
@@ -43,20 +46,37 @@ class ProjectCheckoutModal extends Component {
 	}
 
 	componentDidMount() {
+		this.fetchPrice();
 		this.fetchPlanFee();
 		this.fetchVrapBalance();
 	}
 
 	componentDidUpdate(prevProps) {
 		if (this.props.visible !== prevProps.visible && this.props.visible) {
+			this.fetchPrice();
 			this.fetchPlanFee();
 			this.fetchVrapBalance();
 		}
 		if (this.props.walletAddress !== prevProps.walletAddress) {
+			this.fetchPrice();
 			this.fetchPlanFee();
 			this.fetchVrapBalance();
 		}
 	}
+
+	fetchPrice = () => {
+		const { tokenCost } = this.props;
+		this.setState({ fetchingPrice: true }, () => {
+			getVRAPPrice()
+				.then((res) => {
+					const price = res.price;
+					const tokenRate = price / parseFloat(tokenCost);
+					this.setState({ tokenRate });
+				})
+				.catch((err) => console.log(err))
+				.finally(() => this.setState({ fetchingPrice: false }));
+		});
+	};
 
 	fetchPlanFee = () => {
 		const { project, walletAddress } = this.props;
@@ -164,8 +184,17 @@ class ProjectCheckoutModal extends Component {
 	};
 
 	render() {
-		const { theme, visible, project } = this.props;
-		const { fetchingFee, fetchingVrapBalance, fee, vrapBalance, step, approving } = this.state;
+		const { theme, visible, project, tokenSymbol } = this.props;
+		const {
+			fetchingFee,
+			fetchingVrapBalance,
+			fee,
+			vrapBalance,
+			step,
+			approving,
+			tokenRate,
+			fetchingPrice,
+		} = this.state;
 		return (
 			<Dialog
 				open={visible}
@@ -285,12 +314,30 @@ class ProjectCheckoutModal extends Component {
 									</td>
 								</tr>
 								<tr>
+									<td>Allocated token symbol</td>
+									<td>{tokenSymbol}</td>
+								</tr>
+								<tr>
 									<td>Allocated tokens</td>
 									<td>{project?.tokensAllocated}</td>
 								</tr>
 								<tr>
 									<td>Cost per token</td>
-									<td>${project?.tokenCost}</td>
+									<td>${project?.tokenCost} </td>
+								</tr>
+								<tr>
+									<td>Exchange rate</td>
+									<td>
+										{fetchingPrice ? (
+											<CircularProgress
+												size={22}
+												thickness={5}
+												style={{ color: "#e60000", position: "relative", top: "3px" }}
+											/>
+										) : (
+											`1 VRAP ~ ${parseFloat(tokenRate).toFixed(4)} ${tokenSymbol}`
+										)}
+									</td>
 								</tr>
 								<tr>
 									<td>Max cap</td>

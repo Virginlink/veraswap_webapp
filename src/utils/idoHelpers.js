@@ -131,7 +131,7 @@ export const depositToken = ({ projectId, amount, decimals, signer }) =>
 
 export const purchaseTokens = ({ projectId, amount, decimals, signer }) =>
 	new Promise(async (resolve, reject) => {
-		console.log(amount, decimals);
+		process.env.NODE_ENV === "development" && console.log(amount, decimals);
 		try {
 			const idoContract = new ethers.Contract(IDO_ADDRESS, IDO_ABI, signer);
 			const result = await idoContract.buyTokens(

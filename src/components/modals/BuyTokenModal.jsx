@@ -317,7 +317,7 @@ export default class BuyTokenModal extends Component {
 
 	handleClose = () => {
 		const { onClose } = this.props;
-		this.setState({ approving: false, purchasing: false });
+		this.setState({ approving: false, purchasing: false, amount: "", purchaseAmount: "" });
 		onClose();
 	};
 
@@ -393,7 +393,7 @@ export default class BuyTokenModal extends Component {
 						<div className="modal-content">
 							<div className="form-control">
 								<div className="flex-spaced-container">
-									<div>You spend</div>
+									<div>You spend ~</div>
 									<div style={{ textAlign: "right" }}>
 										<div>
 											balance:{" "}
@@ -433,7 +433,7 @@ export default class BuyTokenModal extends Component {
 							</div>
 							<div className="form-control" style={{ margin: "1rem 0" }}>
 								<div className="flex-spaced-container">
-									<div>You get</div>
+									<div>You get ~</div>
 									<div style={{ textAlign: "right" }}>
 										<div>
 											available to purchase:{" "}
