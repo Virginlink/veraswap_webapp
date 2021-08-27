@@ -8,7 +8,7 @@ import moment from "moment";
 
 import Web3 from "web3";
 import { createProject } from "../../utils/idoHelpers";
-import { uploadJSONToIPFS } from "../../utils/ipfs";
+import { getFileFromIPFS, uploadJSONToIPFS } from "../../utils/ipfs";
 import AppBar from "../../components/AppBar";
 import Sidebar from "../../components/Sidebar";
 import { ProjectCheckoutModal, ProjectListedModal } from "../../components/modals";
@@ -62,10 +62,10 @@ export default class ProjectFund extends Component {
 		endDate: new Date(moment().add(2, "days").format()),
 	};
 
-	// async componentDidMount() {
-	// 	const project = await getFileFromIPFS("Qmd27TMbkojuNkHsZ3uhzHLYn3oUXhfH6vbVX9FLE75BGL");
-	// 	console.log("Retrieved file from hash", project);
-	// }
+	async componentDidMount() {
+		const project = await getFileFromIPFS("QmcgTaP3uvTNJo1XjAaW64L76Zz2uQqBp98tfTSLi6CFHc");
+		console.log("Retrieved file from hash", project);
+	}
 
 	setProjectPlan = (plan) => this.setState({ selectedPlan: plan, plan });
 

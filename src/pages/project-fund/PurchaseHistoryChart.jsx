@@ -36,7 +36,6 @@ export default class PurchaseHistoryChart extends Component {
 					show: false,
 				},
 				tooltip: {
-					theme: props.theme,
 					style: {
 						fontFamily: "bold",
 					},
@@ -99,6 +98,16 @@ export default class PurchaseHistoryChart extends Component {
 		};
 	}
 
+	componentDidMount() {
+		this.setState({ series: [{ name: "Tokens Sold", data: this.props.series }] });
+	}
+
+	componentDidUpdate(prevProps) {
+		if (prevProps.series.length !== this.props.series.length) {
+			this.setState({ series: [{ name: "Tokens Sold", data: this.props.series }] });
+		}
+	}
+
 	render() {
 		const { theme } = this.props;
 		const { options, series } = this.state;
@@ -120,6 +129,14 @@ export default class PurchaseHistoryChart extends Component {
 			);
 		}
 
-		return <Chart options={options} series={series} type="area" width="100%" height="500" />;
+		return (
+			<Chart
+				options={{ ...options, tooltip: { ...options.tooltip, theme } }}
+				series={series}
+				type="area"
+				width="100%"
+				height="500"
+			/>
+		);
 	}
 }
