@@ -62,10 +62,10 @@ export default class ProjectFund extends Component {
 		endDate: new Date(moment().add(2, "days").format()),
 	};
 
-	async componentDidMount() {
-		const project = await getFileFromIPFS("QmcgTaP3uvTNJo1XjAaW64L76Zz2uQqBp98tfTSLi6CFHc");
-		console.log("Retrieved file from hash", project);
-	}
+	// async componentDidMount() {
+	// 	const project = await getFileFromIPFS("QmcgTaP3uvTNJo1XjAaW64L76Zz2uQqBp98tfTSLi6CFHc");
+	// 	console.log("Retrieved file from hash", project);
+	// }
 
 	setProjectPlan = (plan) => this.setState({ selectedPlan: plan, plan });
 
