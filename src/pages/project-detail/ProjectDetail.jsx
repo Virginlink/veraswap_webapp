@@ -66,7 +66,7 @@ class ProjectDetail extends Component {
 			})
 			.then(async (res) => {
 				process.env.NODE_ENV === "development" && console.log(res.data.project);
-				if (res.data.project) {
+				if (res.data.project && res.data.project.isApproved) {
 					const ownerWallets = [
 						res.data.project.owner.toLowerCase(),
 						res.data.project.projectWallet.toLowerCase(),
@@ -109,10 +109,10 @@ class ProjectDetail extends Component {
 						history.replace(`/my-projects/${res.data.project.id}`);
 					}
 				} else {
-					history.replace("/my-projects");
+					history.replace("/launchpad");
 				}
 			})
-			.catch((_) => history.replace("/my-projects"))
+			.catch((_) => history.replace("/launchpad"))
 			.finally(() =>
 				this.setState({ fetchingProject: false }, () => {
 					projectPollId = setTimeout(() => this.fetchProject(projectId), 30000);

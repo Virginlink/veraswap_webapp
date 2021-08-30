@@ -95,7 +95,7 @@ class ProjectFund extends Component {
 			})
 			.then(async (res) => {
 				// console.log(res.data.project);
-				if (res.data.project) {
+				if (res.data.project && res.data.project.isApproved) {
 					const allowedWallets = [
 						res.data.project.owner.toLowerCase(),
 						res.data.project.projectWallet.toLowerCase(),
