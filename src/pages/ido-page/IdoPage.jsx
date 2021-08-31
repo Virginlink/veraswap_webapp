@@ -21,10 +21,10 @@ export default class IdoPage extends Component {
 
 		return (
 			<>
-				<Sidebar active="ico" theme={theme} onThemeToggle={onThemeToggle} />
+				<Sidebar active="ido" theme={theme} onThemeToggle={onThemeToggle} />
 				<div className="app-container">
 					<AppBar
-						active="stake"
+						active="ido"
 						theme={theme}
 						onThemeToggle={onThemeToggle}
 						modalVisible={modalVisible}

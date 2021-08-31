@@ -544,7 +544,7 @@ class AppBar extends Component {
 							<a
 								href="/ido"
 								onClick={(e) => this.navigateTo(e, "/ido")}
-								className={active === "ico" ? "active" : ""}
+								className={active === "ido" ? "active" : ""}
 							>
 								<ICO />
 								IDO
@@ -602,8 +602,8 @@ class AppBar extends Component {
 						</li>
 						<li>
 							<a
-								href="/launch-pad"
-								onClick={(e) => this.navigateTo(e, "/launch-pad")}
+								href="/launchpad"
+								onClick={(e) => this.navigateTo(e, "/launchpad")}
 								className={active === "launch-pad" ? "active" : ""}
 							>
 								<VRAPDocs />

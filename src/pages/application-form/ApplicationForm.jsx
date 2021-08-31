@@ -8,7 +8,7 @@ import moment from "moment";
 
 import Web3 from "web3";
 import { createProject } from "../../utils/idoHelpers";
-import { getFileFromIPFS, uploadJSONToIPFS } from "../../utils/ipfs";
+import { uploadJSONToIPFS } from "../../utils/ipfs";
 import AppBar from "../../components/AppBar";
 import Sidebar from "../../components/Sidebar";
 import { ProjectCheckoutModal, ProjectListedModal } from "../../components/modals";
@@ -476,10 +476,10 @@ export default class ProjectFund extends Component {
 
 		return (
 			<>
-				<Sidebar active="ico" theme={theme} onThemeToggle={onThemeToggle} />
+				<Sidebar active="ido" theme={theme} onThemeToggle={onThemeToggle} />
 				<div className="app-container">
 					<AppBar
-						active="stake"
+						active="ido"
 						theme={theme}
 						onThemeToggle={onThemeToggle}
 						modalVisible={modalVisible}

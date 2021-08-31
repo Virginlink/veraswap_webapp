@@ -184,7 +184,7 @@ class Sidebar extends Component {
 						<a
 							href="/ido"
 							onClick={(e) => this.navigateTo(e, "/ido")}
-							className={active === "ico" ? "active" : ""}
+							className={active === "ido" ? "active" : ""}
 						>
 							<ICO />
 							IDO

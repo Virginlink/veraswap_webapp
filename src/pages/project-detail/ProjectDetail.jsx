@@ -168,7 +168,7 @@ class ProjectDetail extends Component {
 				<Sidebar active="launch-pad" theme={theme} onThemeToggle={onThemeToggle} />
 				<div className="app-container">
 					<AppBar
-						active="stake"
+						active="launch-pad"
 						theme={theme}
 						onThemeToggle={onThemeToggle}
 						modalVisible={modalVisible}
