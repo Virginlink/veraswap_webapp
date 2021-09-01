@@ -131,7 +131,7 @@ class LaunchPad extends Component {
 						<div className="ido-parent-container">
 							<LaunchPadBanner
 								header="Welcome to VRAP LaunchPad"
-								desc="Enabling projects to raise capital on a decentralized and interoperable environment based on Binance. Not a member already? Sign up today! And Become A Member of World's Best Decentralized Fund Raising Community"
+								desc="Enabling projects to raise capital on a decentralized and interoperable environment based on Binance Smart Chain. Hold VRAP and participate in the world's best Decentralized Fund Raising Community."
 								buttonText="My Projects"
 							/>
 							<h3 className="team-review">Upcoming Pools</h3>

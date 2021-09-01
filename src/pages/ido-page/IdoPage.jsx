@@ -55,25 +55,35 @@ export default class IdoPage extends Component {
 										</section>
 										<section className="ido-desc">
 											<p>
-												Welcome to the future of decentralised fundraising on Veraswap. Our mission
-												is to bring the highest quality projects together with investors to enable
-												the launch of innovative startups and technology. With this goal, it is the
-												responsibility of the Veraswap to act as a governance board to ensure
-												quality and due diligence for the projects we launch.
+												Welcome to the future of decentralized fundraising on Verapad. Our mission
+												is to bring the best quality projects and enthused investors to support the
+												launch of innovative startups and technology. With this goal, it is the
+												responsibility of the Verapad to act as a governance board perform quality
+												and due diligence for the projects we launch.
 												<br />
 												<br />
-												The Council will review and vote on your application for launch on Veraswap.
-												Each application is submitted to a thorough and rigorous review during the
-												due diligence process, and then evaluated based on objective merits. Each of
-												the Council members will cast their vote, and projects having greater than
-												60% of the Council's vote are approved for launch. If approved, projects
-												will be provided with detailed instructions on how to prepare for and
-												execute their launch on Polkastarter.
+												The Council can review and vote on your application for launch on Verapad.
+												every application is submitted to a radical and rigorous review throughout
+												the due diligence process, and so evaluated based on objective merits. Every
+												of the Council members will cast their vote, and projects having greater
+												than 70% of the Council's vote are approved for launch. If approved,
+												projects are provided with instructions on the execution of their launch on
+												Verapad. Interested projects should create and submit an application. A
+												member of the Verapad review team will contact you with further
+												instructions.
 												<br />
 												<br />
-												Interested projects should create a profile using this website, and create
-												and submit an application. A member of the Veraswap review team will contact
-												you with further instructions.
+												On the Application page, Projects applicants can choose between the
+												“Standard” or “Premium” application type.
+												<br />
+												<br />
+												Standard: This allows you to submit an application and list your project
+												without passing Our team review and due diligence.
+												<br />
+												<br />
+												Premium: This type of application sends applicants data to our council for a
+												review and approval. Projects that passed through our council review will be
+												given more priority and possibly be promoted by Verapad Team
 												<br />
 												<br />
 												Thank you for your interest.

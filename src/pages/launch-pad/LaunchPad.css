@@ -9,6 +9,7 @@
 	display: flex;
 	gap: 150px;
 	align-items: center;
+	justify-content: space-between;
 }
 
 .apply-btn-container button {
