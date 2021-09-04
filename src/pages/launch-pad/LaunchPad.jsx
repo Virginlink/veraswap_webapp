@@ -203,9 +203,9 @@ class LaunchPad extends Component {
 											projectStatus={tab}
 											projectName={project.name}
 											bnbName
-											totalRaise={`${parseFloat(
-												ethers.utils.formatUnits(project.totalVrapRaised, 18)
-											).toPrecision(4)} VRAP`}
+											totalRaise={`$${parseFloat(
+												ethers.utils.formatUnits(project.totalUSDRaised, 18)
+											).toPrecision(4)}`}
 											percentage={
 												parseFloat(
 													ethers.utils.formatUnits(project.tokensDeposited, project.tokenDecimals)

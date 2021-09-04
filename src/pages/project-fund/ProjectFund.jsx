@@ -116,7 +116,7 @@ class ProjectFund extends Component {
 							res.data.project.tokenCost,
 							res.data.project.tokenDecimals
 						);
-						const totalVrapRaised = ethers.utils.formatEther(res.data.project.totalVrapRaised);
+						const totalUSDRaised = ethers.utils.formatEther(res.data.project.totalUSDRaised);
 						const tokensWithdrawn = ethers.utils.formatUnits(
 							res.data.project.tokensWithdrawn,
 							res.data.project.tokenDecimals
@@ -135,7 +135,7 @@ class ProjectFund extends Component {
 								tokensDeposited,
 								tokensSold,
 								tokenCost,
-								totalVrapRaised,
+								totalUSDRaised,
 								tokensWithdrawn,
 							};
 							this.setState({ project, tokenRate });
@@ -150,7 +150,7 @@ class ProjectFund extends Component {
 									tokensDeposited,
 									tokensSold,
 									tokenCost,
-									totalVrapRaised,
+									totalUSDRaised,
 									tokensWithdrawn,
 								},
 								tokenRate,
@@ -371,9 +371,7 @@ class ProjectFund extends Component {
 															<div className="img-data-sec">
 																<div className="img-data-box bd-right">
 																	<h1 className="tba">
-																		<span>
-																			{parseFloat(project?.totalVrapRaised).toFixed(4)} VRAP
-																		</span>
+																		<span>${parseFloat(project?.totalUSDRaised).toFixed(4)}</span>
 																	</h1>
 																	<p className="project-id">Total Funds Raised</p>
 																</div>
