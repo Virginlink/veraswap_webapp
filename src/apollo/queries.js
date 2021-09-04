@@ -21,7 +21,7 @@ export const GET_ALL_UPCOMING_PROJECTS = gql`
 			name
 			description
 			website
-			totalVrapRaised
+			totalUSDRaised
 			socialHandles
 			tokensSold
 		}
@@ -53,7 +53,7 @@ export const GET_ALL_ONGOING_PROJECTS = gql`
 			name
 			description
 			website
-			totalVrapRaised
+			totalUSDRaised
 			socialHandles
 			tokensSold
 		}
@@ -81,7 +81,7 @@ export const GET_ALL_COMPLETED_PROJECTS = gql`
 			name
 			description
 			website
-			totalVrapRaised
+			totalUSDRaised
 			socialHandles
 			tokensSold
 		}
@@ -109,7 +109,7 @@ export const GET_PROJECTS_BY_USER_UNDER_REVIEW = gql`
 			name
 			description
 			website
-			totalVrapRaised
+			totalUSDRaised
 			socialHandles
 		}
 	}
@@ -140,7 +140,7 @@ export const GET_UPCOMING_PROJECTS_BY_USER = gql`
 			name
 			description
 			website
-			totalVrapRaised
+			totalUSDRaised
 			socialHandles
 			tokensSold
 		}
@@ -172,7 +172,7 @@ export const GET_ONGOING_PROJECTS_BY_USER = gql`
 			name
 			description
 			website
-			totalVrapRaised
+			totalUSDRaised
 			socialHandles
 			tokensSold
 		}
@@ -204,7 +204,7 @@ export const GET_COMPLETED_PROJECTS_BY_USER = gql`
 			name
 			description
 			website
-			totalVrapRaised
+			totalUSDRaised
 			socialHandles
 			tokensSold
 		}
@@ -233,7 +233,7 @@ export const GET_PROJECT_BY_ID = gql`
 			name
 			description
 			website
-			totalVrapRaised
+			totalUSDRaised
 			socialHandles
 			projectWallet
 			settlementAddress
