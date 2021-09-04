@@ -3448,4 +3448,42 @@ export const GlobalStyles = createGlobalStyle`
 		.show-more-section button:hover, .show-more-section button:focus {
 			opacity: 0.8;
 		}
+
+		.purchase-dropdown {
+			z-index: 1300 !important;
+		}
+
+		.purchase-dropdown .ant-dropdown-menu {
+			background-color: ${({ theme }) => theme.assetSelectBackgroundColor};
+		}
+
+		.purchase-dropdown .ant-dropdown-menu img {
+			width: 20px;
+			height: 20px;
+			margin-right: 8px;
+			border-radius: 50%;
+		}
+
+		.purchase-dropdown .ant-dropdown-menu-item, .purchase-dropdown .ant-dropdown-menu-submenu-title {
+			color: #FFF;
+		}
+
+		.purchase-token-row {
+			display: flex;
+			align-items: center;
+		}
+
+		.purchase-dropdown .ant-dropdown-menu-item:hover {
+			background-color: ${({ theme }) => theme.swapFormControlBackgroundColor} !important;
+			color: ${({ theme }) => theme.formControlText} !important;
+		}
+
+		.purchase-dropdown .ant-dropdown-menu-item-disabled {
+			opacity: 0.4;
+		}
+
+		.purchase-dropdown .ant-dropdown-menu-item-disabled:hover {
+			background-color: transparent !important;
+			color: #FFF !important;
+		}
 `;

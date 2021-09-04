@@ -748,6 +748,26 @@ export const getVRAPPrice = () => {
 	});
 };
 
+export const getTokenPrice = (tokenId) => {
+	return new Promise(async (resolve, reject) => {
+		try {
+			const result = await fetch(
+				`https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=usd`
+			);
+			let responseJson = await result.json();
+			resolve({
+				error: false,
+				price: responseJson[tokenId].usd,
+			});
+		} catch (err) {
+			reject({
+				error: true,
+				message: err.message,
+			});
+		}
+	});
+};
+
 export const storeValue = (key, value) => {
 	const encryptedValue = CryptoJS.AES.encrypt(value, "DvqPNNRhQZq").toString();
 	localStorage.setItem(key, encryptedValue);

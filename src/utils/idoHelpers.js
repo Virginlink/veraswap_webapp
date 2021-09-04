@@ -1,6 +1,29 @@
 import { ethers } from "ethers";
 import { ERC20_ABI, KOVAN_PROVIDER, TEST_TOKEN_ADDRESS } from "./contracts";
 import { IDO_ABI, IDO_ADDRESS } from "./idoContracts";
+import Empty from "../assets/icons/Empty.png";
+import BUSD from "../assets/images/busd.png";
+
+export const IDO_PURCHASE_TOKENS = [
+	{
+		id: "veraswap",
+		ticker: "VRAP",
+		icon: Empty,
+		address: TEST_TOKEN_ADDRESS,
+	},
+	{
+		id: "binancecoin",
+		ticker: "ETH",
+		icon: Empty,
+		address: "",
+	},
+	{
+		id: "busd",
+		ticker: "BUSD",
+		icon: BUSD,
+		address: "0x5F11885107AA0d6aF62D8B32ab6D416bc41764ae",
+	},
+];
 
 const idoContract = new ethers.Contract(IDO_ADDRESS, IDO_ABI, KOVAN_PROVIDER);
 
