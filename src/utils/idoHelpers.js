@@ -152,25 +152,81 @@ export const depositToken = ({ projectId, amount, decimals, signer }) =>
 		}
 	});
 
-export const purchaseTokens = ({ projectId, amount, decimals, signer }) =>
+export const purchaseTokens = ({
+	from = "VRAP",
+	projectId,
+	purchaseAmount,
+	amount,
+	decimals,
+	signer,
+}) =>
 	new Promise(async (resolve, reject) => {
-		process.env.NODE_ENV === "development" && console.log(amount, decimals);
-		try {
-			const idoContract = new ethers.Contract(IDO_ADDRESS, IDO_ABI, signer);
-			const result = await idoContract.buyTokens(
-				projectId,
-				ethers.utils.parseUnits(amount, decimals)
-			);
-			resolve({
-				error: false,
-				data: result,
-			});
-		} catch (err) {
-			console.log(err);
-			reject({
-				error: true,
-				message: "Something went wrong. Please try again",
-			});
+		process.env.NODE_ENV === "development" &&
+			console.log({ from, projectId, purchaseAmount, amount, decimals });
+		const idoContract = new ethers.Contract(IDO_ADDRESS, IDO_ABI, signer);
+		switch (from) {
+			case "VRAP":
+				idoContract
+					.buyTokensWithVrap(projectId, ethers.utils.parseUnits(amount, decimals))
+					.then((result) => {
+						resolve({
+							error: false,
+							data: result,
+						});
+					})
+					.catch((err) => {
+						console.log(err);
+						reject({
+							error: true,
+							message: "Something went wrong. Please try again",
+						});
+					});
+				break;
+
+			case "BUSD":
+				idoContract
+					.buyTokensWithBUSD(projectId, ethers.utils.parseUnits(amount, decimals))
+					.then((result) => {
+						resolve({
+							error: false,
+							data: result,
+						});
+					})
+					.catch((err) => {
+						console.log(err);
+						reject({
+							error: true,
+							message: "Something went wrong. Please try again",
+						});
+					});
+				break;
+
+			case "ETH":
+				idoContract
+					.buyTokensWithBNB(projectId, ethers.utils.parseUnits(amount, decimals), {
+						value: ethers.utils.parseEther(purchaseAmount.toString()),
+					})
+					.then((result) => {
+						resolve({
+							error: false,
+							data: result,
+						});
+					})
+					.catch((err) => {
+						console.log(err);
+						reject({
+							error: true,
+							message: "Something went wrong. Please try again",
+						});
+					});
+				break;
+
+			default:
+				reject({
+					error: true,
+					message: "Invalid purchase token",
+				});
+				break;
 		}
 	});
 

@@ -285,3 +285,11 @@ export const GET_RECENT_PURCHASES_BY_PROJECT = gql`
 		}
 	}
 `;
+
+export const GET_VRAP_PRICE = gql`
+	query GetVRAPPrice {
+		price(id: "price-data") {
+			vrapPrice
+		}
+	}
+`;

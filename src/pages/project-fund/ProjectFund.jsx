@@ -94,7 +94,7 @@ class ProjectFund extends Component {
 				fetchPolicy: "network-only",
 			})
 			.then(async (res) => {
-				// console.log(res.data.project);
+				console.log(res.data.project);
 				if (res.data.project && res.data.project.isApproved) {
 					const allowedWallets = [
 						res.data.project.owner.toLowerCase(),
@@ -227,6 +227,13 @@ class ProjectFund extends Component {
 						.map((item) => ethers.utils.formatUnits(item.amount, item.tokenDecimals))
 						.reduce((a, b) => parseFloat(a) + parseFloat(b), 0),
 				}));
+				if (purchasesByDateArray.length === 1) {
+					const placeholderDataPoint = {
+						x: moment(purchasesByDateArray[0].x).subtract(1, "day").format("MMMM D, YYYY"),
+						y: 0,
+					};
+					purchasesByDateArray = [placeholderDataPoint, ...purchasesByDateArray];
+				}
 				this.setState(
 					{
 						recentPurchases: [...purchasesByDateArray],
@@ -442,7 +449,9 @@ class ProjectFund extends Component {
 												<div className="info-container">
 													<InfoCard
 														cardTitle="Pool information"
-														tokenDistribution={new Date(project?.startDate * 1000).toLocaleString()}
+														tokenDistribution={moment(new Date(project?.startDate * 1000)).format(
+															"MMM Do YYYY, h:mm A"
+														)}
 														auditStatus="Passed"
 														totalSaleAmount={`$ ${
 															parseFloat(project?.tokensAllocated) * parseFloat(project?.tokenCost)

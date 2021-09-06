@@ -4,7 +4,7 @@ import { CircularProgress, Dialog, Fade } from "@material-ui/core";
 import { RiCloseFill } from "react-icons/ri";
 
 import Empty from "../../assets/icons/Empty.png";
-import { ERC20_ABI, KOVAN_PROVIDER, TEST_TOKEN_ADDRESS } from "../../utils/contracts";
+import { ERC20_ABI, KOVAN_PROVIDER } from "../../utils/contracts";
 import { IDO_ADDRESS } from "../../utils/idoContracts";
 import { Dropdown, Menu, notification, Spin } from "antd";
 import { IDO_PURCHASE_TOKENS, purchaseTokens } from "../../utils/idoHelpers";
@@ -13,6 +13,7 @@ import { GrPowerCycle } from "react-icons/gr";
 import { getTokenPrice } from "../../utils/helpers";
 import { client } from "../../apollo/client";
 import { GET_AVAILABLE_TOKEN_AMOUNT } from "../../apollo/queries";
+import { AiOutlineCaretDown } from "react-icons/ai";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Fade timeout={{ enter: 1000, exit: 2000 }} ref={ref} {...props} />;
@@ -112,7 +113,7 @@ export default class BuyTokenModal extends Component {
 						.allowance(walletAddress, IDO_ADDRESS)
 						.then((res) => {
 							const allowance = ethers.utils.formatUnits(res, 18);
-							// console.log(`${purchaseToken} allowance`, allowance);
+							console.log(`${purchaseToken} allowance`, allowance);
 							this.setState({ allowance });
 						})
 						.catch((err) => console.log(err))
@@ -241,51 +242,55 @@ export default class BuyTokenModal extends Component {
 	};
 
 	handleApproval = () => {
-		const { amount } = this.state;
+		const { amount, purchaseToken } = this.state;
 		const { signer } = this.props;
-		const tokenContract = new ethers.Contract(TEST_TOKEN_ADDRESS, ERC20_ABI, signer);
-		this.setState({ approving: true }, () => {
-			tokenContract
-				.approve(IDO_ADDRESS, ethers.utils.parseUnits(parseFloat(amount).toString(), 18))
-				.then(async (tx) => {
-					notification.info({
-						key: "approvalProcessingNotification",
-						message: "VRAP approval is being processed. You can view the transaction here.",
-						btn: <ExternalLink hash={tx.hash}>View Transaction</ExternalLink>,
-						icon: (
-							<CircularProgress
-								size={25}
-								thickness={5}
-								style={{
-									color: "#DE0102",
-									position: "relative",
-									top: "6px",
-								}}
-							/>
-						),
-						duration: 0,
+		const tokenAddress = IDO_PURCHASE_TOKENS.filter((token) => token.ticker === purchaseToken)[0]
+			?.address;
+		if (tokenAddress) {
+			const tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, signer);
+			this.setState({ approving: true }, () => {
+				tokenContract
+					.approve(IDO_ADDRESS, ethers.utils.parseUnits(parseFloat(amount).toString(), 18))
+					.then(async (tx) => {
+						notification.info({
+							key: "approvalProcessingNotification",
+							message: `${purchaseToken} approval is being processed. You can view the transaction here.`,
+							btn: <ExternalLink hash={tx.hash}>View Transaction</ExternalLink>,
+							icon: (
+								<CircularProgress
+									size={25}
+									thickness={5}
+									style={{
+										color: "#DE0102",
+										position: "relative",
+										top: "6px",
+									}}
+								/>
+							),
+							duration: 0,
+						});
+						await tx.wait();
+						notification.close("approvalProcessingNotification");
+						notification.success({
+							key: "approvalSuccessNotification",
+							message: `${purchaseToken} approval successful. You can view the transaction here`,
+							btn: <ExternalLink hash={tx.hash}>View Transaction</ExternalLink>,
+							duration: 3,
+						});
+						this.setState({ allowance: amount }, () => this.fetchTokenAllowance());
+					})
+					.catch((err) => {
+						console.log(err);
+						notification["error"]({
+							message: "Couldn't approve VRAP",
+							description: "Something went wrong. Please try again later",
+						});
+					})
+					.finally(() => {
+						this.setState({ approving: false });
 					});
-					await tx.wait();
-					notification.close("approvalProcessingNotification");
-					notification.success({
-						key: "approvalSuccessNotification",
-						message: "VRAP approval successful. You can view the transaction here",
-						btn: <ExternalLink hash={tx.hash}>View Transaction</ExternalLink>,
-						duration: 3,
-					});
-					this.setState({ allowance: amount }, () => this.fetchTokenAllowance());
-				})
-				.catch((err) => {
-					console.log(err);
-					notification["error"]({
-						message: "Couldn't approve VRAP",
-						description: "Something went wrong. Please try again later",
-					});
-				})
-				.finally(() => {
-					this.setState({ approving: false });
-				});
-		});
+			});
+		}
 	};
 
 	handlePurchase = () => {
@@ -297,9 +302,11 @@ export default class BuyTokenModal extends Component {
 			walletAddress,
 			onPurchaseSuccess,
 		} = this.props;
-		const { purchaseAmount } = this.state;
+		const { purchaseToken, purchaseAmount, amount } = this.state;
 		this.setState({ purchasing: true }, () => {
 			purchaseTokens({
+				from: purchaseToken,
+				purchaseAmount: parseFloat(amount).toFixed(10),
 				projectId,
 				amount: parseFloat(purchaseAmount).toFixed(10),
 				decimals,
@@ -353,7 +360,13 @@ export default class BuyTokenModal extends Component {
 
 	handleClose = () => {
 		const { onClose } = this.props;
-		this.setState({ approving: false, purchasing: false, amount: "", purchaseAmount: "" });
+		this.setState({
+			purchaseToken: "VRAP",
+			approving: false,
+			purchasing: false,
+			amount: "",
+			purchaseAmount: "",
+		});
 		onClose();
 	};
 
@@ -457,7 +470,9 @@ export default class BuyTokenModal extends Component {
 											max cap:{" "}
 											<span style={{ fontFamily: "normal" }}>
 												{purchaseToken !== "VRAP"
-													? (parseFloat(maxCapInVrap) / parseFloat(rate)).toFixed(6)
+													? (
+															parseFloat(maxCapInVrap) / parseFloat(inverted ? 1 / rate : rate)
+													  ).toFixed(6)
 													: parseFloat(maxCapInVrap).toFixed(6)}
 											</span>{" "}
 											<span style={{ textTransform: "none" }}>{purchaseToken}</span>
@@ -488,6 +503,7 @@ export default class BuyTokenModal extends Component {
 											<button className="asset-select-button">
 												<img src={Empty} alt="token-logo" />
 												<span style={{ color: "#FFF" }}>{purchaseToken}</span>
+												<AiOutlineCaretDown color="#FFF" />
 											</button>
 										</Dropdown>
 									</div>
@@ -574,9 +590,9 @@ export default class BuyTokenModal extends Component {
 														parseFloat(amount) <= parseFloat(maxCapInVrap) ? (
 															parseFloat(purchaseAmount) <= parseFloat(availableTokens) ? (
 																parseFloat(amount) <= parseFloat(allowance) ? (
-																	"Approved"
+																	`${purchaseToken} Approved`
 																) : (
-																	"Approve"
+																	`Approve ${purchaseToken}`
 																)
 															) : (
 																"Purchase limit exceeded"
@@ -595,7 +611,7 @@ export default class BuyTokenModal extends Component {
 											)
 										) : (
 											<>
-												Approving{" "}
+												Approving {purchaseToken}{" "}
 												<CircularProgress
 													size={16}
 													thickness={5}

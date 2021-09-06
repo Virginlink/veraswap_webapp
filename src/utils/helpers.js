@@ -10,6 +10,9 @@ import {
 	ERC20_ABI,
 	KOVAN_PROVIDER,
 } from "./contracts";
+import { IDO_ABI, IDO_ADDRESS } from "./idoContracts";
+import { client } from "../apollo/client";
+import { GET_VRAP_PRICE } from "../apollo/queries";
 
 // const ABI = process.env.NODE_ENV === 'development' ? DONUT_ABI : TOKEN_ABI
 
@@ -751,14 +754,64 @@ export const getVRAPPrice = () => {
 export const getTokenPrice = (tokenId) => {
 	return new Promise(async (resolve, reject) => {
 		try {
-			const result = await fetch(
-				`https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=usd`
-			);
-			let responseJson = await result.json();
-			resolve({
-				error: false,
-				price: responseJson[tokenId].usd,
-			});
+			switch (tokenId) {
+				case "binancecoin":
+					const idoContract = new ethers.Contract(IDO_ADDRESS, IDO_ABI, KOVAN_PROVIDER);
+					idoContract
+						.bnbPrice()
+						.then((result) => {
+							const price = ethers.utils.formatEther(result);
+							resolve({
+								error: false,
+								price: parseFloat(price),
+							});
+						})
+						.catch((err) => {
+							reject({
+								error: true,
+								message: err.message,
+							});
+						});
+					break;
+
+				case "veraswap":
+					client
+						.query({
+							query: GET_VRAP_PRICE,
+							fetchPolicy: "network-only",
+						})
+						.then((response) => {
+							const price = ethers.utils.formatEther(response.data.price.vrapPrice);
+							resolve({
+								error: false,
+								price: parseFloat(price),
+							});
+						})
+						.catch((err) => {
+							reject({
+								error: true,
+								message: err.message,
+							});
+						});
+					break;
+
+				default:
+					fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=usd`)
+						.then((response) => response.json())
+						.then((responseJson) => {
+							resolve({
+								error: false,
+								price: responseJson[tokenId].usd,
+							});
+						})
+						.catch((err) => {
+							reject({
+								error: true,
+								message: err.message,
+							});
+						});
+					break;
+			}
 		} catch (err) {
 			reject({
 				error: true,

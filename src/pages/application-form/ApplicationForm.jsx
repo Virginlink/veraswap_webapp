@@ -75,15 +75,14 @@ export default class ProjectFund extends Component {
 		}));
 	};
 
-	generateArrayOfDays = () => {
-		const days = [];
-		const dateStart = moment();
-		const dateEnd = moment().add(30, "days");
-		while (dateEnd.diff(dateStart, "days") >= 0) {
-			days.push(dateStart.format("D"));
-			dateStart.add(1, "days");
+	generateArrayOfDays = (year, month) => {
+		let date = new Date(year, month, 1);
+		let days = [];
+		while (date.getMonth() === month) {
+			days.push(new Date(date).getDate());
+			date.setDate(date.getDate() + 1);
 		}
-		return days.sort((a, b) => a - b);
+		return days;
 	};
 
 	generateArrayOfMonths = () =>
@@ -721,7 +720,10 @@ export default class ProjectFund extends Component {
 											bordered={false}
 											onChange={(e) => this.updateDate("start", "date", e)}
 										>
-											{this.generateArrayOfDays().map((day) => (
+											{this.generateArrayOfDays(
+												new Date(startDate).getFullYear(),
+												new Date(startDate).getMonth()
+											).map((day) => (
 												<Option key={day} value={day}>
 													{day}
 												</Option>
@@ -765,7 +767,10 @@ export default class ProjectFund extends Component {
 											bordered={false}
 											onChange={(e) => this.updateDate("end", "date", e)}
 										>
-											{this.generateArrayOfDays().map((day) => (
+											{this.generateArrayOfDays(
+												new Date(endDate).getFullYear(),
+												new Date(endDate).getMonth()
+											).map((day) => (
 												<Option key={day} value={day}>
 													{day}
 												</Option>
