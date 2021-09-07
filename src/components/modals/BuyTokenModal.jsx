@@ -33,7 +33,9 @@ export default class BuyTokenModal extends Component {
 			purchasing: false,
 			inverted: false,
 			fetchingPrice: true,
+			fetchingVrapPrice: true,
 			vrapPrice: "0",
+			tokenPrice: "0",
 			rate: "0",
 			purchaseAmount: "0",
 			fetchingAvailableTokens: true,
@@ -52,6 +54,7 @@ export default class BuyTokenModal extends Component {
 			this.fetchAvailableTokens();
 		}
 		this.fetchTokenRate();
+		this.fetchVrapPrice();
 	}
 
 	componentDidUpdate(prevProps) {
@@ -63,6 +66,7 @@ export default class BuyTokenModal extends Component {
 			this.fetchTokenBalance();
 			this.fetchTokenAllowance();
 			this.fetchTokenRate();
+			this.fetchVrapPrice();
 			this.fetchAvailableTokens();
 		}
 	}
@@ -139,10 +143,21 @@ export default class BuyTokenModal extends Component {
 				.then((res) => {
 					process.env.NODE_ENV === "development" &&
 						console.log(`${purchaseToken} price`, res.price);
-					this.setState({ vrapPrice: res.price }, () => this.calculateTokenRate());
+					this.setState({ tokenPrice: res.price }, () => this.calculateTokenRate());
 				})
 				.catch((err) => console.log(err))
 				.finally(() => this.setState({ fetchingPrice: false }));
+		});
+	};
+
+	fetchVrapPrice = () => {
+		this.setState({ fetchingVrapPrice: true }, () => {
+			getTokenPrice("veraswap")
+				.then((res) => {
+					this.setState({ vrapPrice: res.price }, () => this.calculateTokenRate());
+				})
+				.catch((err) => console.log(err))
+				.finally(() => this.setState({ fetchingVrapPrice: false }));
 		});
 	};
 
@@ -179,17 +194,17 @@ export default class BuyTokenModal extends Component {
 	};
 
 	calculateTokenRate = () => {
-		const { inverted, vrapPrice } = this.state;
+		const { inverted, tokenPrice } = this.state;
 		const {
 			token: { address, cost },
 			onProjectStatsUpdate,
 		} = this.props;
 		if (address) {
 			if (!inverted) {
-				const tokenRate = parseFloat(vrapPrice) / parseFloat(cost);
+				const tokenRate = parseFloat(tokenPrice) / parseFloat(cost);
 				this.setState({ rate: tokenRate }, () => onProjectStatsUpdate({ tokenRate }));
 			} else {
-				const tokenRate = parseFloat(cost) / parseFloat(vrapPrice);
+				const tokenRate = parseFloat(cost) / parseFloat(tokenPrice);
 				this.setState({ rate: tokenRate });
 			}
 		}
@@ -201,9 +216,9 @@ export default class BuyTokenModal extends Component {
 				const {
 					token: { cost },
 				} = this.props;
-				const { vrapPrice } = this.state;
+				const { tokenPrice } = this.state;
 				const purchaseAmount =
-					(parseFloat(e.target.value) * parseFloat(vrapPrice)) / parseFloat(cost);
+					(parseFloat(e.target.value) * parseFloat(tokenPrice)) / parseFloat(cost);
 				this.setState({ amount: e.target.value, purchaseAmount });
 			}
 		} else {
@@ -217,8 +232,8 @@ export default class BuyTokenModal extends Component {
 				const {
 					token: { cost },
 				} = this.props;
-				const { vrapPrice } = this.state;
-				const amount = (parseFloat(e.target.value) * parseFloat(cost)) / parseFloat(vrapPrice);
+				const { tokenPrice } = this.state;
+				const amount = (parseFloat(e.target.value) * parseFloat(cost)) / parseFloat(tokenPrice);
 				this.setState({ purchaseAmount: e.target.value, amount });
 			}
 		} else {
@@ -231,9 +246,9 @@ export default class BuyTokenModal extends Component {
 			const {
 				token: { cost },
 			} = this.props;
-			const { vrapPrice } = this.state;
+			const { tokenPrice } = this.state;
 			const purchaseAmount =
-				(parseFloat(this.state.amount) * parseFloat(vrapPrice)) / parseFloat(cost);
+				(parseFloat(this.state.amount) * parseFloat(tokenPrice)) / parseFloat(cost);
 			this.setState({ purchaseAmount: purchaseAmount.toString() });
 		});
 
@@ -248,6 +263,7 @@ export default class BuyTokenModal extends Component {
 			this.fetchTokenBalance();
 			this.fetchTokenAllowance();
 			this.fetchTokenRate();
+			this.fetchVrapPrice();
 		});
 	};
 
@@ -412,20 +428,30 @@ export default class BuyTokenModal extends Component {
 			purchasing,
 			inverted,
 			rate,
+			vrapPrice,
+			tokenPrice,
 			purchaseAmount,
 			fetchingBalance,
 			fetchingAllowance,
 			fetchingPrice,
+			fetchingVrapPrice,
 			fetchingAvailableTokens,
 			availableTokens,
 		} = this.state;
 
 		const loading =
-			fetchingBalance || fetchingAllowance || fetchingPrice || fetchingAvailableTokens;
+			fetchingBalance ||
+			fetchingAllowance ||
+			fetchingVrapPrice ||
+			fetchingPrice ||
+			fetchingAvailableTokens;
 		const maxCap =
 			purchaseToken !== "VRAP"
-				? parseFloat(maxCapInVrap) / parseFloat(inverted ? 1 / rate : rate)
+				? (parseFloat(maxCapInVrap) * parseFloat(vrapPrice)) / parseFloat(tokenPrice)
 				: parseFloat(maxCapInVrap);
+
+		console.log("Token rate in USD", parseFloat(tokenPrice));
+		console.log("Max cap", `${maxCap} ${purchaseToken}`);
 
 		const purchaseTokensMenu = (
 			<Menu>
