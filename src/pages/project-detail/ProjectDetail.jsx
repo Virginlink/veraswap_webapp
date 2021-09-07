@@ -115,7 +115,7 @@ class ProjectDetail extends Component {
 			.catch((_) => history.replace("/launchpad"))
 			.finally(() =>
 				this.setState({ fetchingProject: false }, () => {
-					projectPollId = setTimeout(() => this.fetchProject(projectId), 30000);
+					projectPollId = setTimeout(() => this.fetchProject(projectId), 15000);
 				})
 			);
 	};
@@ -256,9 +256,9 @@ class ProjectDetail extends Component {
 													<div className="info-container">
 														<InfoCard
 															cardTitle="Pool information"
-															tokenDistribution={new Date(
-																project?.startDate * 1000
-															).toLocaleString()}
+															tokenDistribution={moment(new Date(project?.startDate * 1000)).format(
+																"MMM Do YYYY, h:mm A"
+															)}
 															// auditStatus="Passed"
 															totalSaleAmount={`$ ${
 																parseFloat(project?.tokensAllocated) *
@@ -294,7 +294,7 @@ class ProjectDetail extends Component {
 				<BuyTokenModal
 					visible={purchaseModalVisible}
 					theme={theme}
-					onClose={this.togglePurchaseModal}
+					onClose={() => this.setState({ purchaseModalVisible: false })}
 					walletAddress={walletAddress}
 					signer={signer}
 					projectId={project?.id}

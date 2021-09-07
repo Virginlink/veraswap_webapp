@@ -1,4 +1,4 @@
-export const IDO_ADDRESS = "0x2814Ec44f209CE9DFD9B849c962d5A815C3C6655";
+export const IDO_ADDRESS = "0xeA43762f8Eb53Aaf4b5069Fe0b67E7fc7c2bE071";
 
 export const IDO_ABI = [
 	{
@@ -6,6 +6,7 @@ export const IDO_ABI = [
 			{ internalType: "address", name: "_vrapAddress", type: "address" },
 			{ internalType: "address", name: "_admin", type: "address" },
 			{ internalType: "address", name: "_oracle", type: "address" },
+			{ internalType: "address", name: "_busdToken", type: "address" },
 		],
 		stateMutability: "nonpayable",
 		type: "constructor",
@@ -59,8 +60,10 @@ export const IDO_ABI = [
 		inputs: [
 			{ indexed: false, internalType: "uint256", name: "projectId", type: "uint256" },
 			{ indexed: false, internalType: "uint256", name: "amount", type: "uint256" },
-			{ indexed: false, internalType: "uint256", name: "totalCostInVrap", type: "uint256" },
+			{ indexed: false, internalType: "uint256", name: "totalCost", type: "uint256" },
 			{ indexed: true, internalType: "address", name: "buyer", type: "address" },
+			{ indexed: false, internalType: "uint256", name: "usdValue", type: "uint256" },
+			{ indexed: false, internalType: "uint256", name: "purchasedUsing", type: "uint256" },
 		],
 		name: "TokensBought",
 		type: "event",
@@ -91,6 +94,13 @@ export const IDO_ABI = [
 		type: "event",
 	},
 	{
+		inputs: [{ internalType: "address", name: "_orcale", type: "address" }],
+		name: "_setOracle",
+		outputs: [{ internalType: "bool", name: "", type: "bool" }],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
 		inputs: [{ internalType: "uint256", name: "_premiumFee", type: "uint256" }],
 		name: "_setPremiumFee",
 		outputs: [{ internalType: "bool", name: "", type: "bool" }],
@@ -100,7 +110,7 @@ export const IDO_ABI = [
 	{
 		inputs: [
 			{ internalType: "uint256", name: "projectId", type: "uint256" },
-			{ internalType: "address", name: "newAddress", type: "address" },
+			{ internalType: "address payable", name: "newAddress", type: "address" },
 		],
 		name: "_setSettlementAddress",
 		outputs: [{ internalType: "bool", name: "", type: "bool" }],
@@ -129,18 +139,52 @@ export const IDO_ABI = [
 		type: "function",
 	},
 	{
+		inputs: [],
+		name: "bnbPrice",
+		outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [],
+		name: "busdToken",
+		outputs: [{ internalType: "address", name: "", type: "address" }],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
 		inputs: [
 			{ internalType: "uint256", name: "projectId", type: "uint256" },
 			{ internalType: "uint256", name: "amount", type: "uint256" },
 		],
-		name: "buyTokens",
+		name: "buyTokensWithBNB",
+		outputs: [{ internalType: "bool", name: "", type: "bool" }],
+		stateMutability: "payable",
+		type: "function",
+	},
+	{
+		inputs: [
+			{ internalType: "uint256", name: "projectId", type: "uint256" },
+			{ internalType: "uint256", name: "amount", type: "uint256" },
+		],
+		name: "buyTokensWithBUSD",
 		outputs: [{ internalType: "bool", name: "", type: "bool" }],
 		stateMutability: "nonpayable",
 		type: "function",
 	},
 	{
 		inputs: [
-			{ internalType: "address", name: "settlementAddress", type: "address" },
+			{ internalType: "uint256", name: "projectId", type: "uint256" },
+			{ internalType: "uint256", name: "amount", type: "uint256" },
+		],
+		name: "buyTokensWithVrap",
+		outputs: [{ internalType: "bool", name: "", type: "bool" }],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		inputs: [
+			{ internalType: "address payable", name: "settlementAddress", type: "address" },
 			{ internalType: "bytes", name: "ipfsHash", type: "bytes" },
 			{ internalType: "uint256", name: "startDate", type: "uint256" },
 			{ internalType: "uint256", name: "endDate", type: "uint256" },
@@ -194,7 +238,7 @@ export const IDO_ABI = [
 		outputs: [
 			{ internalType: "uint256", name: "projectId", type: "uint256" },
 			{ internalType: "bytes", name: "ipfsHash", type: "bytes" },
-			{ internalType: "address", name: "settlementAddress", type: "address" },
+			{ internalType: "address payable", name: "settlementAddress", type: "address" },
 			{ internalType: "uint256", name: "startDate", type: "uint256" },
 			{ internalType: "uint256", name: "endDate", type: "uint256" },
 			{ internalType: "bool", name: "isPremium", type: "bool" },
@@ -232,6 +276,13 @@ export const IDO_ABI = [
 		name: "transferOwnership",
 		outputs: [],
 		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		inputs: [],
+		name: "vrapPrice",
+		outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+		stateMutability: "view",
 		type: "function",
 	},
 	{

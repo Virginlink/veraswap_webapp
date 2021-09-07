@@ -4,15 +4,16 @@ import { CircularProgress, Dialog, Fade } from "@material-ui/core";
 import { RiCloseFill } from "react-icons/ri";
 
 import Empty from "../../assets/icons/Empty.png";
-import { ERC20_ABI, KOVAN_PROVIDER, TEST_TOKEN_ADDRESS } from "../../utils/contracts";
+import { ERC20_ABI, KOVAN_PROVIDER } from "../../utils/contracts";
 import { IDO_ADDRESS } from "../../utils/idoContracts";
-import { notification, Spin } from "antd";
-import { purchaseTokens } from "../../utils/idoHelpers";
+import { Dropdown, Menu, notification, Spin } from "antd";
+import { IDO_PURCHASE_TOKENS, purchaseTokens } from "../../utils/idoHelpers";
 import ExternalLink from "../Transactions/ExternalLink";
 import { GrPowerCycle } from "react-icons/gr";
-import { getVRAPPrice } from "../../utils/helpers";
+import { getTokenPrice } from "../../utils/helpers";
 import { client } from "../../apollo/client";
 import { GET_AVAILABLE_TOKEN_AMOUNT } from "../../apollo/queries";
+import { AiOutlineCaretDown } from "react-icons/ai";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Fade timeout={{ enter: 1000, exit: 2000 }} ref={ref} {...props} />;
@@ -22,6 +23,7 @@ export default class BuyTokenModal extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			purchaseToken: IDO_PURCHASE_TOKENS[0].ticker,
 			fetchingBalance: true,
 			fetchingAllowance: true,
 			balance: "0",
@@ -67,44 +69,81 @@ export default class BuyTokenModal extends Component {
 
 	fetchTokenBalance = () => {
 		const { walletAddress } = this.props;
+		const { purchaseToken } = this.state;
 		if (walletAddress) {
-			const tokenContract = new ethers.Contract(TEST_TOKEN_ADDRESS, ERC20_ABI, KOVAN_PROVIDER);
-			tokenContract
-				.balanceOf(walletAddress)
-				.then((res) => {
-					const balance = ethers.utils.formatUnits(res, 18);
-					// console.log("VRAP balance", balance);
-					this.setState({ balance });
-				})
-				.catch((err) => console.log(err))
-				.finally(() => this.setState({ fetchingBalance: false }));
+			this.setState({ fetchingBalance: true }, () => {
+				if (purchaseToken === "ETH") {
+					KOVAN_PROVIDER.getBalance(walletAddress)
+						.then((res) => {
+							const balance = ethers.utils.formatUnits(res, 18);
+							// console.log("ETH balance", balance);
+							this.setState({ balance });
+						})
+						.catch((err) => console.log(err))
+						.finally(() => this.setState({ fetchingBalance: false }));
+				} else {
+					const tokenAddress = IDO_PURCHASE_TOKENS.filter(
+						(token) => token.ticker === purchaseToken
+					)[0]?.address;
+					if (tokenAddress) {
+						const tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, KOVAN_PROVIDER);
+						tokenContract
+							.balanceOf(walletAddress)
+							.then((res) => {
+								const balance = ethers.utils.formatUnits(res, 18);
+								// console.log(`${purchaseToken} balance`, balance);
+								this.setState({ balance });
+							})
+							.catch((err) => console.log(err))
+							.finally(() => this.setState({ fetchingBalance: false }));
+					}
+				}
+			});
 		}
 	};
 
 	fetchTokenAllowance = () => {
 		const { walletAddress } = this.props;
+		const { purchaseToken } = this.state;
 		if (walletAddress) {
-			const tokenContract = new ethers.Contract(TEST_TOKEN_ADDRESS, ERC20_ABI, KOVAN_PROVIDER);
-			tokenContract
-				.allowance(walletAddress, IDO_ADDRESS)
-				.then((res) => {
-					const allowance = ethers.utils.formatUnits(res, 18);
-					// console.log("VRAP allowance", allowance);
-					this.setState({ allowance });
-				})
-				.catch((err) => console.log(err))
-				.finally(() => this.setState({ fetchingAllowance: false }));
+			this.setState({ fetchingAllowance: true }, () => {
+				if (purchaseToken === "ETH") {
+					this.setState({ allowance: "0", fetchingAllowance: false });
+				} else {
+					const tokenAddress = IDO_PURCHASE_TOKENS.filter(
+						(token) => token.ticker === purchaseToken
+					)[0]?.address;
+					if (tokenAddress) {
+						const tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, KOVAN_PROVIDER);
+						tokenContract
+							.allowance(walletAddress, IDO_ADDRESS)
+							.then((res) => {
+								const allowance = ethers.utils.formatUnits(res, 18);
+								console.log(`${purchaseToken} allowance`, allowance);
+								this.setState({ allowance });
+							})
+							.catch((err) => console.log(err))
+							.finally(() => this.setState({ fetchingAllowance: false }));
+					}
+				}
+			});
 		}
 	};
 
 	fetchTokenRate = () => {
-		getVRAPPrice()
-			.then((res) => {
-				// console.log("VRAP price", res.price);
-				this.setState({ vrapPrice: res.price }, () => this.calculateTokenRate());
-			})
-			.catch((err) => console.log(err))
-			.finally(() => this.setState({ fetchingPrice: false }));
+		const { purchaseToken } = this.state;
+		const tokenId =
+			IDO_PURCHASE_TOKENS.filter((token) => token.ticker === purchaseToken)[0]?.id || "veraswap";
+		this.setState({ fetchingPrice: true }, () => {
+			getTokenPrice(tokenId)
+				.then((res) => {
+					process.env.NODE_ENV === "development" &&
+						console.log(`${purchaseToken} price`, res.price);
+					this.setState({ vrapPrice: res.price }, () => this.calculateTokenRate());
+				})
+				.catch((err) => console.log(err))
+				.finally(() => this.setState({ fetchingPrice: false }));
+		});
 	};
 
 	fetchAvailableTokens = () => {
@@ -204,52 +243,64 @@ export default class BuyTokenModal extends Component {
 			() => this.calculateTokenRate()
 		);
 
-	handleApproval = () => {
-		const { amount } = this.state;
-		const { signer } = this.props;
-		const tokenContract = new ethers.Contract(TEST_TOKEN_ADDRESS, ERC20_ABI, signer);
-		this.setState({ approving: true }, () => {
-			tokenContract
-				.approve(IDO_ADDRESS, ethers.utils.parseUnits(parseFloat(amount).toString(), 18))
-				.then(async (tx) => {
-					notification.info({
-						key: "approvalProcessingNotification",
-						message: "VRAP approval is being processed. You can view the transaction here.",
-						btn: <ExternalLink hash={tx.hash}>View Transaction</ExternalLink>,
-						icon: (
-							<CircularProgress
-								size={25}
-								thickness={5}
-								style={{
-									color: "#DE0102",
-									position: "relative",
-									top: "6px",
-								}}
-							/>
-						),
-						duration: 0,
-					});
-					await tx.wait();
-					notification.close("approvalProcessingNotification");
-					notification.success({
-						key: "approvalSuccessNotification",
-						message: "VRAP approval successful. You can view the transaction here",
-						btn: <ExternalLink hash={tx.hash}>View Transaction</ExternalLink>,
-						duration: 3,
-					});
-					this.setState({ allowance: amount }, () => this.fetchTokenAllowance());
-				})
-				.catch((err) => {
-					console.log(err);
-					notification["error"]({
-						message: "Couldn't approve VRAP",
-						description: "Something went wrong. Please try again later",
-					});
-				})
-				.finally(() => {
-					this.setState({ approving: false });
-				});
+	handlePurchaseTokenChange = (ticker = "VRAP") => {
+		this.setState({ purchaseToken: ticker }, () => {
+			this.fetchTokenBalance();
+			this.fetchTokenAllowance();
+			this.fetchTokenRate();
 		});
+	};
+
+	handleApproval = () => {
+		const { amount, purchaseToken } = this.state;
+		const { signer } = this.props;
+		const tokenAddress = IDO_PURCHASE_TOKENS.filter((token) => token.ticker === purchaseToken)[0]
+			?.address;
+		if (tokenAddress) {
+			const tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, signer);
+			this.setState({ approving: true }, () => {
+				tokenContract
+					.approve(IDO_ADDRESS, ethers.utils.parseUnits(parseFloat(amount).toString(), 18))
+					.then(async (tx) => {
+						notification.info({
+							key: "approvalProcessingNotification",
+							message: `${purchaseToken} approval is being processed. You can view the transaction here.`,
+							btn: <ExternalLink hash={tx.hash}>View Transaction</ExternalLink>,
+							icon: (
+								<CircularProgress
+									size={25}
+									thickness={5}
+									style={{
+										color: "#DE0102",
+										position: "relative",
+										top: "6px",
+									}}
+								/>
+							),
+							duration: 0,
+						});
+						await tx.wait();
+						notification.close("approvalProcessingNotification");
+						notification.success({
+							key: "approvalSuccessNotification",
+							message: `${purchaseToken} approval successful. You can view the transaction here`,
+							btn: <ExternalLink hash={tx.hash}>View Transaction</ExternalLink>,
+							duration: 3,
+						});
+						this.setState({ allowance: amount }, () => this.fetchTokenAllowance());
+					})
+					.catch((err) => {
+						console.log(err);
+						notification["error"]({
+							message: "Couldn't approve VRAP",
+							description: "Something went wrong. Please try again later",
+						});
+					})
+					.finally(() => {
+						this.setState({ approving: false });
+					});
+			});
+		}
 	};
 
 	handlePurchase = () => {
@@ -261,9 +312,11 @@ export default class BuyTokenModal extends Component {
 			walletAddress,
 			onPurchaseSuccess,
 		} = this.props;
-		const { purchaseAmount } = this.state;
+		const { purchaseToken, purchaseAmount, amount } = this.state;
 		this.setState({ purchasing: true }, () => {
 			purchaseTokens({
+				from: purchaseToken,
+				purchaseAmount: parseFloat(amount).toFixed(10),
 				projectId,
 				amount: parseFloat(purchaseAmount).toFixed(10),
 				decimals,
@@ -296,7 +349,7 @@ export default class BuyTokenModal extends Component {
 						btn: <ExternalLink hash={res.data.hash}>View Transaction</ExternalLink>,
 						duration: 3,
 					});
-					this.setState({ amount: "" }, () => {
+					this.setState({ amount: "", purchaseAmount: "" }, () => {
 						this.fetchTokenBalance();
 						this.fetchTokenAllowance();
 						this.fetchAvailableTokens();
@@ -317,7 +370,13 @@ export default class BuyTokenModal extends Component {
 
 	handleClose = () => {
 		const { onClose } = this.props;
-		this.setState({ approving: false, purchasing: false, amount: "", purchaseAmount: "" });
+		this.setState({
+			purchaseToken: "VRAP",
+			approving: false,
+			purchasing: false,
+			amount: "",
+			purchaseAmount: "",
+		});
 		onClose();
 	};
 
@@ -329,6 +388,7 @@ export default class BuyTokenModal extends Component {
 			maxCapInVrap,
 		} = this.props;
 		const {
+			purchaseToken,
 			amount,
 			balance,
 			approving,
@@ -346,6 +406,22 @@ export default class BuyTokenModal extends Component {
 
 		const loading =
 			fetchingBalance || fetchingAllowance || fetchingPrice || fetchingAvailableTokens;
+
+		const purchaseTokensMenu = (
+			<Menu>
+				{IDO_PURCHASE_TOKENS.map((token) => (
+					<Menu.Item
+						key={token.ticker}
+						onClick={(e) => this.handlePurchaseTokenChange(e.key)}
+						disabled={purchaseToken === token.ticker}
+					>
+						<div className="purchase-token-row">
+							<img src={token.icon} alt="token-logo" /> {token.ticker}
+						</div>
+					</Menu.Item>
+				))}
+			</Menu>
+		);
 
 		return (
 			<Dialog
@@ -398,14 +474,18 @@ export default class BuyTokenModal extends Component {
 										<div>
 											balance:{" "}
 											<span style={{ fontFamily: "normal" }}>{parseFloat(balance).toFixed(6)}</span>{" "}
-											<span style={{ textTransform: "none" }}>VRAP</span>
+											<span style={{ textTransform: "none" }}>{purchaseToken}</span>
 										</div>
 										<div>
 											max cap:{" "}
 											<span style={{ fontFamily: "normal" }}>
-												{parseFloat(maxCapInVrap).toFixed(6)}
+												{purchaseToken !== "VRAP"
+													? (
+															parseFloat(maxCapInVrap) / parseFloat(inverted ? 1 / rate : rate)
+													  ).toFixed(6)
+													: parseFloat(maxCapInVrap).toFixed(6)}
 											</span>{" "}
-											<span style={{ textTransform: "none" }}>VRAP</span>
+											<span style={{ textTransform: "none" }}>{purchaseToken}</span>
 										</div>
 									</div>
 								</div>
@@ -424,10 +504,18 @@ export default class BuyTokenModal extends Component {
 										>
 											max
 										</button>
-										<button disabled className="asset-select-button" style={{ cursor: "default" }}>
-											<img src={Empty} alt="token-logo" />
-											<span style={{ color: "#FFF" }}>VRAP</span>
-										</button>
+										<Dropdown
+											overlayClassName="purchase-dropdown"
+											placement="bottomCenter"
+											overlay={purchaseTokensMenu}
+											trigger="click"
+										>
+											<button className="asset-select-button">
+												<img src={Empty} alt="token-logo" />
+												<span style={{ color: "#FFF" }}>{purchaseToken}</span>
+												<AiOutlineCaretDown color="#FFF" />
+											</button>
+										</Dropdown>
 									</div>
 								</div>
 							</div>
@@ -478,11 +566,11 @@ export default class BuyTokenModal extends Component {
 								>
 									{!inverted ? (
 										<div>
-											1 VRAP ~ {parseFloat(rate).toFixed(4)} {symbol}
+											1 {purchaseToken} ~ {parseFloat(rate).toFixed(8)} {symbol}
 										</div>
 									) : (
 										<div>
-											1 {symbol} ~ {parseFloat(rate).toFixed(4)} VRAP
+											1 {symbol} ~ {parseFloat(rate).toFixed(8)} {purchaseToken}
 										</div>
 									)}
 									<button className="invert-button" onClick={this.toggleInversion}>
@@ -491,61 +579,63 @@ export default class BuyTokenModal extends Component {
 								</div>
 							</div>
 							<div className="staking-modal-footer">
-								<button
-									className="staking-modal-button-primary"
-									disabled={
-										parseFloat(amount) === 0 ||
-										!amount ||
-										approving ||
-										parseFloat(amount) > parseFloat(balance) ||
-										parseFloat(purchaseAmount) > parseFloat(availableTokens) ||
-										parseFloat(amount) > parseFloat(maxCapInVrap) ||
-										parseFloat(amount) <= parseFloat(allowance)
-									}
-									onClick={this.handleApproval}
-								>
-									{!approving ? (
-										amount ? (
-											parseFloat(amount) > 0 ? (
-												parseFloat(amount) <= parseFloat(balance) ? (
-													parseFloat(amount) <= parseFloat(maxCapInVrap) ? (
-														parseFloat(purchaseAmount) <= parseFloat(availableTokens) ? (
-															parseFloat(amount) <= parseFloat(allowance) ? (
-																"Approved"
+								{purchaseToken !== "ETH" && (
+									<button
+										className="staking-modal-button-primary"
+										disabled={
+											parseFloat(amount) === 0 ||
+											!amount ||
+											approving ||
+											parseFloat(amount) > parseFloat(balance) ||
+											parseFloat(purchaseAmount) > parseFloat(availableTokens) ||
+											parseFloat(amount) > parseFloat(maxCapInVrap) ||
+											parseFloat(amount) <= parseFloat(allowance)
+										}
+										onClick={this.handleApproval}
+									>
+										{!approving ? (
+											amount ? (
+												parseFloat(amount) > 0 ? (
+													parseFloat(amount) <= parseFloat(balance) ? (
+														parseFloat(amount) <= parseFloat(maxCapInVrap) ? (
+															parseFloat(purchaseAmount) <= parseFloat(availableTokens) ? (
+																parseFloat(amount) <= parseFloat(allowance) ? (
+																	`${purchaseToken} Approved`
+																) : (
+																	`Approve ${purchaseToken}`
+																)
 															) : (
-																"Approve"
+																"Purchase limit exceeded"
 															)
 														) : (
-															"Purchase limit exceeded"
+															"VRAP max cap exceeded"
 														)
 													) : (
-														"VRAP max cap exceeded"
+														`Insufficient ${purchaseToken} balance`
 													)
 												) : (
-													`Insufficient ${symbol} balance`
+													"Invalid Amount"
 												)
 											) : (
-												"Invalid Amount"
+												"Enter Amount"
 											)
 										) : (
-											"Enter Amount"
-										)
-									) : (
-										<>
-											Approving{" "}
-											<CircularProgress
-												size={16}
-												thickness={5}
-												style={{ color: "#FFF", position: "relative", top: "3px" }}
-											/>
-										</>
-									)}
-								</button>
+											<>
+												Approving {purchaseToken}{" "}
+												<CircularProgress
+													size={16}
+													thickness={5}
+													style={{ color: "#FFF", position: "relative", top: "3px" }}
+												/>
+											</>
+										)}
+									</button>
+								)}
 								<button
 									disabled={
 										!amount ||
 										parseFloat(amount) === 0 ||
-										parseFloat(amount) > parseFloat(allowance) ||
+										(purchaseToken !== "ETH" && parseFloat(amount) > parseFloat(allowance)) ||
 										parseFloat(purchaseAmount) > parseFloat(availableTokens) ||
 										parseFloat(amount) > parseFloat(maxCapInVrap) ||
 										parseFloat(amount) > parseFloat(balance) ||
@@ -565,7 +655,7 @@ export default class BuyTokenModal extends Component {
 											/>
 										</>
 									) : (
-										"Purchase"
+										`Purchase with ${purchaseToken}`
 									)}
 								</button>
 							</div>

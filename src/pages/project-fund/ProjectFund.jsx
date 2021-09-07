@@ -94,7 +94,7 @@ class ProjectFund extends Component {
 				fetchPolicy: "network-only",
 			})
 			.then(async (res) => {
-				// console.log(res.data.project);
+				console.log(res.data.project);
 				if (res.data.project && res.data.project.isApproved) {
 					const allowedWallets = [
 						res.data.project.owner.toLowerCase(),
@@ -122,17 +122,21 @@ class ProjectFund extends Component {
 							res.data.project.tokenDecimals
 						);
 						if (parseFloat(updatedDepositAmount) > 0) {
+							const totalAllocated = parseFloat(res.data.project.tokensAllocated);
 							const totalTokensDeposited = parseFloat(
 								ethers.utils.formatUnits(
 									res.data.project.tokensDeposited,
 									res.data.project.tokenDecimals
 								)
 							);
-							const newTokensDeposited = parseFloat(updatedDepositAmount);
-							const tokensDeposited = totalTokensDeposited + newTokensDeposited;
+							const totalNewTokensDeposited =
+								totalTokensDeposited + parseFloat(updatedDepositAmount);
 							const project = {
 								...res.data.project,
-								tokensDeposited,
+								tokensDeposited:
+									totalNewTokensDeposited > totalAllocated
+										? totalAllocated
+										: totalNewTokensDeposited,
 								tokensSold,
 								tokenCost,
 								totalUSDRaised,
@@ -166,7 +170,7 @@ class ProjectFund extends Component {
 			.catch((_) => history.replace("/my-projects"))
 			.finally(() =>
 				this.setState({ fetchingProject: false }, () => {
-					projectPollId = setTimeout(() => this.fetchProject(projectId), 30000);
+					projectPollId = setTimeout(() => this.fetchProject(projectId), 15000);
 				})
 			);
 	};
@@ -187,7 +191,7 @@ class ProjectFund extends Component {
 			.catch((_) => history.replace("/my-projects"))
 			.finally(() =>
 				this.setState({ fetchingPurchaseHistory: false }, () => {
-					purchaseHistoryPollId = setTimeout(() => this.fetchPurchaseHistory(projectId), 30000);
+					purchaseHistoryPollId = setTimeout(() => this.fetchPurchaseHistory(projectId), 15000);
 				})
 			);
 	};
@@ -227,6 +231,13 @@ class ProjectFund extends Component {
 						.map((item) => ethers.utils.formatUnits(item.amount, item.tokenDecimals))
 						.reduce((a, b) => parseFloat(a) + parseFloat(b), 0),
 				}));
+				if (purchasesByDateArray.length === 1) {
+					const placeholderDataPoint = {
+						x: moment(purchasesByDateArray[0].x).subtract(1, "day").format("MMMM D, YYYY"),
+						y: 0,
+					};
+					purchasesByDateArray = [placeholderDataPoint, ...purchasesByDateArray];
+				}
 				this.setState(
 					{
 						recentPurchases: [...purchasesByDateArray],
@@ -240,7 +251,7 @@ class ProjectFund extends Component {
 			})
 			.finally(() =>
 				this.setState({ fetchingRecentPurchases: false }, () => {
-					recentPurchasesPollId = setTimeout(() => this.fetchRecentPurchases(projectId), 30000);
+					recentPurchasesPollId = setTimeout(() => this.fetchRecentPurchases(projectId), 15000);
 				})
 			);
 	};
@@ -387,7 +398,9 @@ class ProjectFund extends Component {
 																	<h1 className="tba">
 																		<span>{purchaseHistory.length}</span>
 																	</h1>
-																	<p className="project-id">Participants</p>
+																	<p className="project-id">
+																		Participant{purchaseHistory.length > 1 && "s"}
+																	</p>
 																</div>
 																<div className="img-data-box">
 																	<h1 className="tba">
@@ -442,7 +455,9 @@ class ProjectFund extends Component {
 												<div className="info-container">
 													<InfoCard
 														cardTitle="Pool information"
-														tokenDistribution={new Date(project?.startDate * 1000).toLocaleString()}
+														tokenDistribution={moment(new Date(project?.startDate * 1000)).format(
+															"MMM Do YYYY, h:mm A"
+														)}
 														auditStatus="Passed"
 														totalSaleAmount={`$ ${
 															parseFloat(project?.tokensAllocated) * parseFloat(project?.tokenCost)
