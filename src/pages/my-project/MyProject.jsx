@@ -24,7 +24,7 @@ export default class MyProject extends Component {
 			projectsUnderReview: [],
 			fetchingProjects: true,
 			projects: [],
-			tab: "upcoming",
+			tab: "ongoing",
 		};
 	}
 
@@ -68,7 +68,7 @@ export default class MyProject extends Component {
 			.finally(() => skip === 0 && this.setState({ fetchingProjectsUnderReview: false }));
 	};
 
-	fetchAllProjects = (type = "upcoming", skip = 0) => {
+	fetchAllProjects = (type = "ongoing", skip = 0) => {
 		const { walletAddress } = this.props;
 		const query =
 			type === "upcoming"
@@ -104,7 +104,7 @@ export default class MyProject extends Component {
 		this.fetchProjectsUnderReview(projectsUnderReview.length);
 	};
 
-	handleTabChange = (e, type = "upcoming") => {
+	handleTabChange = (e, type = "ongoing") => {
 		e.preventDefault();
 		this.setState({ tab: type, fetchingProjects: true }, () => this.fetchAllProjects(type));
 	};
@@ -138,14 +138,14 @@ export default class MyProject extends Component {
 
 		const menu = (
 			<Menu>
-				<Menu.Item key="upcoming" className={tab === "upcoming" ? "dropdown-active" : ""}>
-					<a href="##" onClick={(e) => this.handleTabChange(e, "upcoming")}>
-						Upcoming Pools
-					</a>
-				</Menu.Item>
 				<Menu.Item key="ongoing" className={tab === "ongoing" ? "dropdown-active" : ""}>
 					<a href="##" onClick={(e) => this.handleTabChange(e, "ongoing")}>
 						Ongoing Pools
+					</a>
+				</Menu.Item>
+				<Menu.Item key="upcoming" className={tab === "upcoming" ? "dropdown-active" : ""}>
+					<a href="##" onClick={(e) => this.handleTabChange(e, "upcoming")}>
+						Upcoming Pools
 					</a>
 				</Menu.Item>
 				<Menu.Item key="completed" className={tab === "completed" ? "dropdown-active" : ""}>
