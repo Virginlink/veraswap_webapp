@@ -450,9 +450,6 @@ export default class BuyTokenModal extends Component {
 				? (parseFloat(maxCapInVrap) * parseFloat(vrapPrice)) / parseFloat(tokenPrice)
 				: parseFloat(maxCapInVrap);
 
-		console.log("Token rate in USD", parseFloat(tokenPrice));
-		console.log("Max cap", `${maxCap} ${purchaseToken}`);
-
 		const purchaseTokensMenu = (
 			<Menu>
 				{IDO_PURCHASE_TOKENS.map((token) => (
