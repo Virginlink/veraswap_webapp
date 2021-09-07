@@ -122,17 +122,21 @@ class ProjectFund extends Component {
 							res.data.project.tokenDecimals
 						);
 						if (parseFloat(updatedDepositAmount) > 0) {
+							const totalAllocated = parseFloat(res.data.project.tokensAllocated);
 							const totalTokensDeposited = parseFloat(
 								ethers.utils.formatUnits(
 									res.data.project.tokensDeposited,
 									res.data.project.tokenDecimals
 								)
 							);
-							const newTokensDeposited = parseFloat(updatedDepositAmount);
-							const tokensDeposited = totalTokensDeposited + newTokensDeposited;
+							const totalNewTokensDeposited =
+								totalTokensDeposited + parseFloat(updatedDepositAmount);
 							const project = {
 								...res.data.project,
-								tokensDeposited,
+								tokensDeposited:
+									totalNewTokensDeposited > totalAllocated
+										? totalAllocated
+										: totalNewTokensDeposited,
 								tokensSold,
 								tokenCost,
 								totalUSDRaised,
@@ -166,7 +170,7 @@ class ProjectFund extends Component {
 			.catch((_) => history.replace("/my-projects"))
 			.finally(() =>
 				this.setState({ fetchingProject: false }, () => {
-					projectPollId = setTimeout(() => this.fetchProject(projectId), 30000);
+					projectPollId = setTimeout(() => this.fetchProject(projectId), 15000);
 				})
 			);
 	};
@@ -187,7 +191,7 @@ class ProjectFund extends Component {
 			.catch((_) => history.replace("/my-projects"))
 			.finally(() =>
 				this.setState({ fetchingPurchaseHistory: false }, () => {
-					purchaseHistoryPollId = setTimeout(() => this.fetchPurchaseHistory(projectId), 30000);
+					purchaseHistoryPollId = setTimeout(() => this.fetchPurchaseHistory(projectId), 15000);
 				})
 			);
 	};
@@ -247,7 +251,7 @@ class ProjectFund extends Component {
 			})
 			.finally(() =>
 				this.setState({ fetchingRecentPurchases: false }, () => {
-					recentPurchasesPollId = setTimeout(() => this.fetchRecentPurchases(projectId), 30000);
+					recentPurchasesPollId = setTimeout(() => this.fetchRecentPurchases(projectId), 15000);
 				})
 			);
 	};
@@ -394,7 +398,9 @@ class ProjectFund extends Component {
 																	<h1 className="tba">
 																		<span>{purchaseHistory.length}</span>
 																	</h1>
-																	<p className="project-id">Participants</p>
+																	<p className="project-id">
+																		Participant{purchaseHistory.length > 1 && "s"}
+																	</p>
 																</div>
 																<div className="img-data-box">
 																	<h1 className="tba">

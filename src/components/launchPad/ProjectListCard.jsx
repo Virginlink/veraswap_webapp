@@ -172,7 +172,11 @@ class ProjectListCard extends Component {
 													</span>
 												</h1>
 												<p className="tba-desc">
-													{participants ? "Participants" : minAlloc ? "Min alloc." : null}
+													{participants
+														? `Participant${participantCount > 1 ? "s" : ""}`
+														: minAlloc
+														? "Min alloc."
+														: null}
 												</p>
 											</div>
 										)}

@@ -115,7 +115,7 @@ class ProjectDetail extends Component {
 			.catch((_) => history.replace("/launchpad"))
 			.finally(() =>
 				this.setState({ fetchingProject: false }, () => {
-					projectPollId = setTimeout(() => this.fetchProject(projectId), 30000);
+					projectPollId = setTimeout(() => this.fetchProject(projectId), 15000);
 				})
 			);
 	};

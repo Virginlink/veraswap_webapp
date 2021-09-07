@@ -71,29 +71,34 @@ export default class BuyTokenModal extends Component {
 		const { walletAddress } = this.props;
 		const { purchaseToken } = this.state;
 		if (walletAddress) {
-			if (purchaseToken === "ETH") {
-				KOVAN_PROVIDER.getBalance(walletAddress).then((res) => {
-					const balance = ethers.utils.formatUnits(res, 18);
-					// console.log("ETH balance", balance);
-					this.setState({ balance });
-				});
-			} else {
-				const tokenAddress = IDO_PURCHASE_TOKENS.filter(
-					(token) => token.ticker === purchaseToken
-				)[0]?.address;
-				if (tokenAddress) {
-					const tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, KOVAN_PROVIDER);
-					tokenContract
-						.balanceOf(walletAddress)
+			this.setState({ fetchingBalance: true }, () => {
+				if (purchaseToken === "ETH") {
+					KOVAN_PROVIDER.getBalance(walletAddress)
 						.then((res) => {
 							const balance = ethers.utils.formatUnits(res, 18);
-							// console.log(`${purchaseToken} balance`, balance);
+							// console.log("ETH balance", balance);
 							this.setState({ balance });
 						})
 						.catch((err) => console.log(err))
 						.finally(() => this.setState({ fetchingBalance: false }));
+				} else {
+					const tokenAddress = IDO_PURCHASE_TOKENS.filter(
+						(token) => token.ticker === purchaseToken
+					)[0]?.address;
+					if (tokenAddress) {
+						const tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, KOVAN_PROVIDER);
+						tokenContract
+							.balanceOf(walletAddress)
+							.then((res) => {
+								const balance = ethers.utils.formatUnits(res, 18);
+								// console.log(`${purchaseToken} balance`, balance);
+								this.setState({ balance });
+							})
+							.catch((err) => console.log(err))
+							.finally(() => this.setState({ fetchingBalance: false }));
+					}
 				}
-			}
+			});
 		}
 	};
 
@@ -101,25 +106,27 @@ export default class BuyTokenModal extends Component {
 		const { walletAddress } = this.props;
 		const { purchaseToken } = this.state;
 		if (walletAddress) {
-			if (purchaseToken === "ETH") {
-				this.setState({ allowance: "0" });
-			} else {
-				const tokenAddress = IDO_PURCHASE_TOKENS.filter(
-					(token) => token.ticker === purchaseToken
-				)[0]?.address;
-				if (tokenAddress) {
-					const tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, KOVAN_PROVIDER);
-					tokenContract
-						.allowance(walletAddress, IDO_ADDRESS)
-						.then((res) => {
-							const allowance = ethers.utils.formatUnits(res, 18);
-							console.log(`${purchaseToken} allowance`, allowance);
-							this.setState({ allowance });
-						})
-						.catch((err) => console.log(err))
-						.finally(() => this.setState({ fetchingAllowance: false }));
+			this.setState({ fetchingAllowance: true }, () => {
+				if (purchaseToken === "ETH") {
+					this.setState({ allowance: "0", fetchingAllowance: false });
+				} else {
+					const tokenAddress = IDO_PURCHASE_TOKENS.filter(
+						(token) => token.ticker === purchaseToken
+					)[0]?.address;
+					if (tokenAddress) {
+						const tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, KOVAN_PROVIDER);
+						tokenContract
+							.allowance(walletAddress, IDO_ADDRESS)
+							.then((res) => {
+								const allowance = ethers.utils.formatUnits(res, 18);
+								console.log(`${purchaseToken} allowance`, allowance);
+								this.setState({ allowance });
+							})
+							.catch((err) => console.log(err))
+							.finally(() => this.setState({ fetchingAllowance: false }));
+					}
 				}
-			}
+			});
 		}
 	};
 
@@ -127,13 +134,16 @@ export default class BuyTokenModal extends Component {
 		const { purchaseToken } = this.state;
 		const tokenId =
 			IDO_PURCHASE_TOKENS.filter((token) => token.ticker === purchaseToken)[0]?.id || "veraswap";
-		getTokenPrice(tokenId)
-			.then((res) => {
-				console.log(`${purchaseToken} price`, res.price);
-				this.setState({ vrapPrice: res.price }, () => this.calculateTokenRate());
-			})
-			.catch((err) => console.log(err))
-			.finally(() => this.setState({ fetchingPrice: false }));
+		this.setState({ fetchingPrice: true }, () => {
+			getTokenPrice(tokenId)
+				.then((res) => {
+					process.env.NODE_ENV === "development" &&
+						console.log(`${purchaseToken} price`, res.price);
+					this.setState({ vrapPrice: res.price }, () => this.calculateTokenRate());
+				})
+				.catch((err) => console.log(err))
+				.finally(() => this.setState({ fetchingPrice: false }));
+		});
 	};
 
 	fetchAvailableTokens = () => {
@@ -339,7 +349,7 @@ export default class BuyTokenModal extends Component {
 						btn: <ExternalLink hash={res.data.hash}>View Transaction</ExternalLink>,
 						duration: 3,
 					});
-					this.setState({ amount: "" }, () => {
+					this.setState({ amount: "", purchaseAmount: "" }, () => {
 						this.fetchTokenBalance();
 						this.fetchTokenAllowance();
 						this.fetchAvailableTokens();

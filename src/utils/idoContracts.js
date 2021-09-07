@@ -1,4 +1,4 @@
-export const IDO_ADDRESS = "0xa64518dCcbe3f9d1D3668274a2BC32db73d4CBc2";
+export const IDO_ADDRESS = "0xeA43762f8Eb53Aaf4b5069Fe0b67E7fc7c2bE071";
 
 export const IDO_ABI = [
 	{
