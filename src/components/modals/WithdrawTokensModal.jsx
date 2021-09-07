@@ -42,7 +42,11 @@ export default class WithdrawTokensModal extends Component {
 					notification.info({
 						key: "withdrawProcessingNotification",
 						message: `${symbol} withdrawal is being processed. You can view the transaction here.`,
-						btn: <ExternalLink hash={res.data.hash}>View Transaction</ExternalLink>,
+						btn: (
+							<ExternalLink ethereum hash={res.data.hash}>
+								View Transaction
+							</ExternalLink>
+						),
 						icon: (
 							<CircularProgress
 								size={25}
@@ -61,7 +65,11 @@ export default class WithdrawTokensModal extends Component {
 					notification.success({
 						key: "withdrawSuccessNotification",
 						message: `${symbol} withdrawal successful. You can view the transaction here`,
-						btn: <ExternalLink hash={res.data.hash}>View Transaction</ExternalLink>,
+						btn: (
+							<ExternalLink ethereum hash={res.data.hash}>
+								View Transaction
+							</ExternalLink>
+						),
 						duration: 3,
 					});
 					this.setState({ amount: "" }, () => {

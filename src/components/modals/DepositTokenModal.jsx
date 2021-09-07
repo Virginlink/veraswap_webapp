@@ -109,7 +109,11 @@ export default class DepositTokenModal extends Component {
 					notification.info({
 						key: "approvalProcessingNotification",
 						message: `${symbol} approval is being processed. You can view the transaction here.`,
-						btn: <ExternalLink hash={tx.hash}>View Transaction</ExternalLink>,
+						btn: (
+							<ExternalLink ethereum hash={tx.hash}>
+								View Transaction
+							</ExternalLink>
+						),
 						icon: (
 							<CircularProgress
 								size={25}
@@ -128,7 +132,11 @@ export default class DepositTokenModal extends Component {
 					notification.success({
 						key: "approvalSuccessNotification",
 						message: `${symbol} approval successful. You can view the transaction here`,
-						btn: <ExternalLink hash={tx.hash}>View Transaction</ExternalLink>,
+						btn: (
+							<ExternalLink ethereum hash={tx.hash}>
+								View Transaction
+							</ExternalLink>
+						),
 						duration: 3,
 					});
 					this.setState({ allowance: amount }, () => this.fetchTokenAllowance());
@@ -161,7 +169,11 @@ export default class DepositTokenModal extends Component {
 					notification.info({
 						key: "depositProcessingNotification",
 						message: `${symbol} deposit is being processed. You can view the transaction here.`,
-						btn: <ExternalLink hash={res.data.hash}>View Transaction</ExternalLink>,
+						btn: (
+							<ExternalLink ethereum hash={res.data.hash}>
+								View Transaction
+							</ExternalLink>
+						),
 						icon: (
 							<CircularProgress
 								size={25}
@@ -180,7 +192,11 @@ export default class DepositTokenModal extends Component {
 					notification.success({
 						key: "depositSuccessNotification",
 						message: `${symbol} deposit successful. You can view the transaction here`,
-						btn: <ExternalLink hash={res.data.hash}>View Transaction</ExternalLink>,
+						btn: (
+							<ExternalLink ethereum hash={res.data.hash}>
+								View Transaction
+							</ExternalLink>
+						),
 						duration: 3,
 					});
 					this.setState({ amount: "" }, () => {

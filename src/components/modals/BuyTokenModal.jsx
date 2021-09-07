@@ -265,7 +265,11 @@ export default class BuyTokenModal extends Component {
 						notification.info({
 							key: "approvalProcessingNotification",
 							message: `${purchaseToken} approval is being processed. You can view the transaction here.`,
-							btn: <ExternalLink hash={tx.hash}>View Transaction</ExternalLink>,
+							btn: (
+								<ExternalLink ethereum hash={tx.hash}>
+									View Transaction
+								</ExternalLink>
+							),
 							icon: (
 								<CircularProgress
 									size={25}
@@ -284,7 +288,11 @@ export default class BuyTokenModal extends Component {
 						notification.success({
 							key: "approvalSuccessNotification",
 							message: `${purchaseToken} approval successful. You can view the transaction here`,
-							btn: <ExternalLink hash={tx.hash}>View Transaction</ExternalLink>,
+							btn: (
+								<ExternalLink ethereum hash={tx.hash}>
+									View Transaction
+								</ExternalLink>
+							),
 							duration: 3,
 						});
 						this.setState({ allowance: amount }, () => this.fetchTokenAllowance());
@@ -327,7 +335,11 @@ export default class BuyTokenModal extends Component {
 					notification.info({
 						key: "purchaseProcessingNotification",
 						message: `${symbol} purchase is being processed. You can view the transaction here.`,
-						btn: <ExternalLink hash={res.data.hash}>View Transaction</ExternalLink>,
+						btn: (
+							<ExternalLink ethereum hash={res.data.hash}>
+								View Transaction
+							</ExternalLink>
+						),
 						icon: (
 							<CircularProgress
 								size={25}
@@ -346,7 +358,11 @@ export default class BuyTokenModal extends Component {
 					notification.success({
 						key: "purchaseSuccessNotification",
 						message: `${symbol} purchase successful. You can view the transaction here`,
-						btn: <ExternalLink hash={res.data.hash}>View Transaction</ExternalLink>,
+						btn: (
+							<ExternalLink ethereum hash={res.data.hash}>
+								View Transaction
+							</ExternalLink>
+						),
 						duration: 3,
 					});
 					this.setState({ amount: "", purchaseAmount: "" }, () => {

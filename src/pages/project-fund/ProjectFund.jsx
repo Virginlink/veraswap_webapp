@@ -15,11 +15,7 @@ import {
 	GET_RECENT_PURCHASES_BY_PROJECT,
 } from "../../apollo/queries";
 import moment from "moment";
-import {
-	WithdrawTokensModal,
-	DepositTokenModal,
-	RemoveProjectModal,
-} from "../../components/modals";
+import { WithdrawTokensModal, DepositTokenModal } from "../../components/modals";
 import { Spin } from "antd";
 import { getVRAPPrice } from "../../utils/helpers";
 import { ethers } from "ethers";
@@ -41,7 +37,6 @@ class ProjectFund extends Component {
 			purchaseHistory: [],
 			depositModalVisible: false,
 			withdrawModalVisible: false,
-			removeProjectModalVisible: false,
 			fetchingRecentPurchases: true,
 			recentPurchases: [],
 		};
@@ -262,9 +257,6 @@ class ProjectFund extends Component {
 	toggleWithdrawModal = () =>
 		this.setState((state) => ({ withdrawModalVisible: !state.withdrawModalVisible }));
 
-	toggleProjectRemovalModal = () =>
-		this.setState((state) => ({ removeProjectModalVisible: !state.removeProjectModalVisible }));
-
 	render() {
 		const {
 			theme,
@@ -286,7 +278,6 @@ class ProjectFund extends Component {
 			tokenRate,
 			purchaseHistory,
 			withdrawModalVisible,
-			removeProjectModalVisible,
 			recentPurchases,
 		} = this.state;
 
@@ -527,32 +518,6 @@ class ProjectFund extends Component {
 								(parseFloat(project?.tokensWithdrawn) + parseFloat(project?.tokensSold))
 							}
 							onWithdraw={() => this.fetchProject(project?.id)}
-						/>
-						<RemoveProjectModal
-							visible={removeProjectModalVisible}
-							theme={theme}
-							onClose={this.toggleProjectRemovalModal}
-							projectWalletAddress={project?.owner}
-							walletAddress={walletAddress}
-							signer={signer}
-							projectId={project?.id}
-							token={{
-								address: project?.tokenAddress,
-								symbol: project?.tokenSymbol,
-								decimals: project?.tokenDecimals,
-							}}
-							deposited={
-								parseFloat(project?.tokensDeposited) -
-								(parseFloat(project?.tokensWithdrawn) + parseFloat(project?.tokensSold))
-							}
-							onWithdraw={() => {
-								this.toggleProjectRemovalModal();
-								this.toggleWithdrawModal();
-							}}
-							onRemove={() => {
-								this.toggleProjectRemovalModal();
-								history.replace("/my-projects");
-							}}
 						/>
 					</>
 				)}
