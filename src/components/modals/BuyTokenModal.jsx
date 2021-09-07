@@ -422,6 +422,10 @@ export default class BuyTokenModal extends Component {
 
 		const loading =
 			fetchingBalance || fetchingAllowance || fetchingPrice || fetchingAvailableTokens;
+		const maxCap =
+			purchaseToken !== "VRAP"
+				? parseFloat(maxCapInVrap) / parseFloat(inverted ? 1 / rate : rate)
+				: parseFloat(maxCapInVrap);
 
 		const purchaseTokensMenu = (
 			<Menu>
@@ -493,14 +497,7 @@ export default class BuyTokenModal extends Component {
 											<span style={{ textTransform: "none" }}>{purchaseToken}</span>
 										</div>
 										<div>
-											max cap:{" "}
-											<span style={{ fontFamily: "normal" }}>
-												{purchaseToken !== "VRAP"
-													? (
-															parseFloat(maxCapInVrap) / parseFloat(inverted ? 1 / rate : rate)
-													  ).toFixed(6)
-													: parseFloat(maxCapInVrap).toFixed(6)}
-											</span>{" "}
+											max cap: <span style={{ fontFamily: "normal" }}>{maxCap.toFixed(6)}</span>{" "}
 											<span style={{ textTransform: "none" }}>{purchaseToken}</span>
 										</div>
 									</div>
@@ -604,7 +601,7 @@ export default class BuyTokenModal extends Component {
 											approving ||
 											parseFloat(amount) > parseFloat(balance) ||
 											parseFloat(purchaseAmount) > parseFloat(availableTokens) ||
-											parseFloat(amount) > parseFloat(maxCapInVrap) ||
+											parseFloat(amount) > parseFloat(maxCap) ||
 											parseFloat(amount) <= parseFloat(allowance)
 										}
 										onClick={this.handleApproval}
@@ -613,7 +610,7 @@ export default class BuyTokenModal extends Component {
 											amount ? (
 												parseFloat(amount) > 0 ? (
 													parseFloat(amount) <= parseFloat(balance) ? (
-														parseFloat(amount) <= parseFloat(maxCapInVrap) ? (
+														parseFloat(amount) <= parseFloat(maxCap) ? (
 															parseFloat(purchaseAmount) <= parseFloat(availableTokens) ? (
 																parseFloat(amount) <= parseFloat(allowance) ? (
 																	`${purchaseToken} Approved`
@@ -624,7 +621,7 @@ export default class BuyTokenModal extends Component {
 																"Purchase limit exceeded"
 															)
 														) : (
-															"VRAP max cap exceeded"
+															`${purchaseToken} max cap exceeded`
 														)
 													) : (
 														`Insufficient ${purchaseToken} balance`
@@ -653,7 +650,7 @@ export default class BuyTokenModal extends Component {
 										parseFloat(amount) === 0 ||
 										(purchaseToken !== "ETH" && parseFloat(amount) > parseFloat(allowance)) ||
 										parseFloat(purchaseAmount) > parseFloat(availableTokens) ||
-										parseFloat(amount) > parseFloat(maxCapInVrap) ||
+										parseFloat(amount) > parseFloat(maxCap) ||
 										parseFloat(amount) > parseFloat(balance) ||
 										approving ||
 										purchasing
